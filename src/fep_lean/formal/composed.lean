@@ -16,6 +16,7 @@ import FepSketches.compositions.gaussian_filter
 import FepSketches.compositions.gaussian_control
 import FepSketches.compositions.gaussian_grid_path
 import FepSketches.compositions.smooth_reference_kernel
+import FepSketches.compositions.finite_kernel_category
 
 /-!
 This file is generated from the formal module manifest. Scientific cross-topic
