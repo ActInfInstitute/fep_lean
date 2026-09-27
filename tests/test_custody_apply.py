@@ -296,9 +296,7 @@ def test_gate_live_red_is_never_authorized(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("state", ("sealed", "forced"))
-def test_gate_all_clear_fixture_admits_the_pipeline(
-    tmp_path: Path, state: str
-) -> None:
+def test_gate_all_clear_fixture_admits_the_pipeline(tmp_path: Path, state: str) -> None:
     """A passing gate is not the blocker; the authorized pipeline completes."""
     root = fixture_root(tmp_path)
     specs_dir = root / "specs"
@@ -379,7 +377,9 @@ def test_byte_replace_abort_leaves_output_untouched(tmp_path: Path) -> None:
 
 def test_pin_evidence_toolchain_mismatch_refuses(tmp_path: Path) -> None:
     specs_dir = _stage_specs(tmp_path)
-    pin_path = specs_dir / "done/horizon-2-smooth-stochastic/readiness/pin_evidence.json"
+    pin_path = (
+        specs_dir / "done/horizon-2-smooth-stochastic/readiness/pin_evidence.json"
+    )
     _rewrite_json(
         pin_path, lambda record: record["stable_pair"].update({"tag": "v9.9.9"})
     )
@@ -392,7 +392,9 @@ def test_pin_evidence_toolchain_mismatch_refuses(tmp_path: Path) -> None:
 
 def test_pin_evidence_missing_repositories_refuses(tmp_path: Path) -> None:
     specs_dir = _stage_specs(tmp_path)
-    pin_path = specs_dir / "done/horizon-2-smooth-stochastic/readiness/pin_evidence.json"
+    pin_path = (
+        specs_dir / "done/horizon-2-smooth-stochastic/readiness/pin_evidence.json"
+    )
     _rewrite_json(pin_path, lambda record: record.pop("repositories"))
     out = _out_dir(tmp_path)
     census, expectations = _all_clear()
@@ -706,9 +708,7 @@ def test_cascade_serialization_discipline(tmp_path: Path, drift_class: str) -> N
     if drift_class == "probe_rewrite":
         assert LIFECYCLE_05D in mutated_json
         assert DIAGNOSTICS not in report.mutations
-        assert (
-            _out_bytes(out, DIAGNOSTICS) == spec_path(root, DIAGNOSTICS).read_bytes()
-        )
+        assert _out_bytes(out, DIAGNOSTICS) == spec_path(root, DIAGNOSTICS).read_bytes()
     else:
         assert DIAGNOSTICS in mutated_json
     for relative in mutated_json:

@@ -6,8 +6,8 @@ Full **Lake** workspace with **Mathlib4** dependency for FEP theorem verificatio
 
 ## Toolchain
 
-- **Lean**: `leanprover/lean4:v4.34.0` (see `lean-toolchain`)
-- **Mathlib**: `v4.34.0` — see `lakefile.lean` and the exact revision in
+- **Lean**: `leanprover/lean4:v4.34.1` (see `lean-toolchain`)
+- **Mathlib**: `v4.34.1` — see `lakefile.lean` and the exact revision in
   `lake-manifest.json`
 
 ## Layout

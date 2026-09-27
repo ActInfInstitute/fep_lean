@@ -116,9 +116,7 @@ def test_expansion_family_vars_derive_from_canonical_roster(
         (PROJ / "config" / "formalism_novelty.yaml").read_text(encoding="utf-8")
     )
     baseline = int(ledger["baseline_last_id"].split("-", 1)[1])
-    second_boundary = int(
-        manuscript_module._SECOND_EXPANSION_FIRST_ID.split("-", 1)[1]
-    )
+    second_boundary = int(manuscript_module._SECOND_EXPANSION_FIRST_ID.split("-", 1)[1])
     third_boundary = int(manuscript_module._THIRD_EXPANSION_FIRST_ID.split("-", 1)[1])
     base = {f: ids for f, ids in family_ids.items() if max(ids) <= baseline}
     first = {
@@ -154,9 +152,13 @@ def test_expansion_family_vars_derive_from_canonical_roster(
     assert variables["expansion_family_size"] == next(iter(first_second_sizes))
     assert variables["expansion_first_families"] == len(first)
     assert variables["expansion_second_families"] == len(second)
-    assert variables["expansion_second_topics"] == sum(len(ids) for ids in second.values())
+    assert variables["expansion_second_topics"] == sum(
+        len(ids) for ids in second.values()
+    )
     assert variables["expansion_third_families"] == len(third)
-    assert variables["expansion_third_topics"] == sum(len(ids) for ids in third.values())
+    assert variables["expansion_third_topics"] == sum(
+        len(ids) for ids in third.values()
+    )
     assert variables["expansion_third_family_size"] == (
         next(iter(third_sizes)) if third_sizes else 0
     )

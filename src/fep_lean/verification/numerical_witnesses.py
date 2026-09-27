@@ -1355,11 +1355,11 @@ def _two_state_master_equation() -> NumericalWitness:
         formal_alignment="theorem_instance",
     )
 
+
 def _standalone_efe_carrier() -> NumericalWitness:
     """Evaluate the exact EFE floor, perception chain rule, and affinity bound."""
-    def binary_kl(
-        left: tuple[float, ...], right: tuple[float, ...]
-    ) -> float:
+
+    def binary_kl(left: tuple[float, ...], right: tuple[float, ...]) -> float:
         return sum(
             mass * math.log(mass / base)
             for mass, base in zip(left, right, strict=True)
@@ -1405,9 +1405,7 @@ def _standalone_efe_carrier() -> NumericalWitness:
                 - kl_to_optimal
             ),
         )
-        posterior_minimal = posterior_minimal and (
-            objective >= control_floor - 1e-12
-        )
+        posterior_minimal = posterior_minimal and (objective >= control_floor - 1e-12)
 
     # Perception chain rule through a fully supported Boolean likelihood (fep-157).
     likelihood = ((0.9, 0.1), (0.3, 0.7))
@@ -1422,15 +1420,10 @@ def _standalone_efe_carrier() -> NumericalWitness:
         for outcome in range(2)
     )
 
-    def filtered(
-        law: tuple[float, ...], outcome: int
-    ) -> tuple[float, ...]:
-        evidence = sum(
-            law[source] * likelihood[source][outcome] for source in range(2)
-        )
+    def filtered(law: tuple[float, ...], outcome: int) -> tuple[float, ...]:
+        evidence = sum(law[source] * likelihood[source][outcome] for source in range(2))
         return tuple(
-            law[source] * likelihood[source][outcome] / evidence
-            for source in range(2)
+            law[source] * likelihood[source][outcome] / evidence for source in range(2)
         )
 
     gap_total = binary_kl(actual, reference)

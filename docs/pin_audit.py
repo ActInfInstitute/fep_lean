@@ -83,6 +83,7 @@ EXCLUDED_PATH_FRAGMENTS = (
     "/__pycache__/",
     "/.pytest_cache/",
     "/output/",
+    "/.herdr-project/",
     "/specs/done/",
 )
 
