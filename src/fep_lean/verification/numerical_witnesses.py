@@ -1568,6 +1568,156 @@ def _standalone_efe_carrier() -> NumericalWitness:
     )
 
 
+def _geometric_solenoidal() -> NumericalWitness:
+    """Evaluate the skew cancellations, expansion remainder, and witness current."""
+
+    # Plain-matrix helpers mirroring the Lean carrier definitions.
+    def dot(v: tuple[float, ...], w: tuple[float, ...]) -> float:
+        return sum(a * b for a, b in zip(v, w, strict=True))
+
+    def mul_vec(
+        m: tuple[tuple[float, ...], ...], v: tuple[float, ...]
+    ) -> tuple[float, ...]:
+        return tuple(sum(m[i][k] * v[k] for k in range(len(v))) for i in range(len(v)))
+
+    def trace_of(m: tuple[tuple[float, ...], ...]) -> float:
+        return sum(m[i][i] for i in range(len(m)))
+
+    def node_div(w: tuple[tuple[float, ...], ...], i: int) -> float:
+        return sum(w[i][j] - w[j][i] for j in range(len(w)))
+
+    # The manuscript honesty-guard carrier: Q = [[0,1],[-1,0]], g = (1,0).
+    witness_q = ((0.0, 1.0), (-1.0, 0.0))
+    witness_g = (1.0, 0.0)
+    witness_h = ((2.0, 0.5), (0.5, -1.0))  # symmetric Hessian-role datum
+    remainder_dq = ((1.0, 0.0), (0.0, 0.0))  # DQ 0 0 = 1, rest zero
+    remainder_g = (1.0, 1.0)
+
+    skew_q = all(
+        witness_q[i][j] == -witness_q[j][i] for i in range(2) for j in range(2)
+    )
+    sym_h = all(witness_h[i][j] == witness_h[j][i] for i in range(2) for j in range(2))
+    q_h_product = tuple(
+        tuple(
+            sum(witness_q[i][k] * witness_h[k][j] for k in range(2)) for j in range(2)
+        )
+        for i in range(2)
+    )
+    trace_residual = abs(trace_of(q_h_product))
+    quadratic_residual = abs(dot(witness_g, mul_vec(witness_q, witness_g)))
+    witness_current = mul_vec(witness_q, witness_g)
+    current_matches = witness_current == (0.0, -1.0)
+    div_q = tuple(node_div(witness_q, i) for i in range(2))
+    div_q_matches = div_q == (2.0, -2.0)
+    current_divergence = tuple(
+        node_div(
+            tuple(
+                tuple(witness_q[i][j] * witness_g[j] for j in range(2))
+                for i in range(2)
+            ),
+            i,
+        )
+        for i in range(2)
+    )
+    drop_fails = current_divergence[0] == 1.0 and current_divergence[1] == -1.0
+
+    # The expansion remainder slot: (div Q)^T g with divQ from DQ data.
+    div_q_field = tuple(sum(remainder_dq[k][l] for k in range(2)) for l in range(2))
+    remainder_value = dot(div_q_field, remainder_g)
+
+    symmetrized = tuple(
+        tuple((witness_h[i][j] + witness_h[j][i]) / 2 for j in range(2))
+        for i in range(2)
+    )
+    symmetrize_identity = all(
+        symmetrized[i][j] == witness_h[i][j] for i in range(2) for j in range(2)
+    )
+
+    return NumericalWitness(
+        id="geometric-solenoidal-drop",
+        family="geometric-mechanics-notation",
+        title=(
+            "Skew cancellations, three-term expansion remainder, "
+            "and the failing unconditional solenoidal drop"
+        ),
+        theorem_mirrors=(
+            "fep_fep161.FEP161.fep161_skewTrace_eq_zero",
+            "fep_fep161.FEP161.fep161_skewQuadratic_eq_zero",
+            "fep_fep162.FEP162.fep162_symmetrize_symmetric",
+            "fep_fep162.FEP162.fep162_skewTrace_symmetrize_eq_zero",
+            "fep_fep163.FEP163.fep163_solenoidal_expansion",
+            "fep_fep163.FEP163.fep163_expansion_remainder_witness",
+            "fep_fep164.FEP164.fep164_graphDecomposition",
+            "fep_fep165.FEP165.fep165_witness_current",
+            ("fep_fep165.FEP165.fep165_witness_drop_fails"),
+        ),
+        invariant=(
+            "the skew trace and quadratic cancellations hold exactly on the "
+            "symmetry hypotheses, the symmetrized discrete Hessian is "
+            "symmetric and coincides with symmetric data, the expansion "
+            "remainder slot evaluates to exactly 1 on the concrete derivative "
+            "datum, and the honesty-guard candidate current (0, -1) has node "
+            "divergence (1, -1) so the unconditional solenoidal drop fails"
+        ),
+        parameters=(
+            ("witness_q_01", witness_q[0][1]),
+            ("witness_q_10", witness_q[1][0]),
+            ("witness_g_0", witness_g[0]),
+            ("trace_residual", trace_residual),
+            ("quadratic_residual", quadratic_residual),
+            ("remainder_value", remainder_value),
+            ("node0_divergence", current_divergence[0]),
+        ),
+        columns=_columns(
+            ("node", "Node"),
+            ("transport", "Transport field entry"),
+            ("current", "Candidate current"),
+            ("divergence", "Node divergence"),
+        ),
+        rows=(
+            WitnessRow((0, div_q[0], witness_current[0], current_divergence[0])),
+            WitnessRow((1, div_q[1], witness_current[1], current_divergence[1])),
+        ),
+        checks=(
+            NumericalCheck("witness-q-skew", "predicate", skew_q and sym_h, True, 0.0),
+            NumericalCheck("trace-cancellation", "eq", trace_residual, 0.0, 1e-12),
+            NumericalCheck(
+                "quadratic-cancellation", "eq", quadratic_residual, 0.0, 1e-12
+            ),
+            NumericalCheck("witness-current", "predicate", current_matches, True, 0.0),
+            NumericalCheck("witness-divq", "predicate", div_q_matches, True, 0.0),
+            NumericalCheck("expansion-remainder", "eq", remainder_value, 1.0, 1e-12),
+            NumericalCheck(
+                "symmetrize-identity-on-symmetric-data",
+                "predicate",
+                symmetrize_identity,
+                True,
+                0.0,
+            ),
+            NumericalCheck(
+                "unconditional-drop-fails", "eq", current_divergence[0], 1.0, 1e-12
+            ),
+        ),
+        boundary_behavior=(
+            "On the honesty guard the transport divergence is (2, -2) at the "
+            "two nodes and the candidate current (0, -1) has node divergence "
+            "1 at node 0: the drop fails, matching the compiled witness."
+        ),
+        boundary_observed=(
+            drop_fails
+            and div_q_matches
+            and current_matches
+            and abs(remainder_value - 1.0) <= 1e-12
+        ),
+        plot=WitnessPlot(
+            "bar",
+            "node",
+            ("divergence",),
+        ),
+        formal_alignment="theorem_instance",
+    )
+
+
 def evaluate_numerical_witnesses(
     project_root: Path | None = None,
     *,
@@ -1598,6 +1748,7 @@ def evaluate_numerical_witnesses(
         _exponential_family_duality(),
         _two_state_master_equation(),
         _standalone_efe_carrier(),
+        _geometric_solenoidal(),
         scalar_terminal_witness(),
         fin4_blanket_witness(),
     )
