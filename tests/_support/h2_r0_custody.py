@@ -96,6 +96,40 @@ WAVE3_COMPOSITION_ADDED_MODULES = (
         "FEPComposed",
     ),
 )
+# Wave-4 expansion (commits 49d8dc0b93fcfd5c25ae3eba1cbb5154d9b47c57
+# Helmholtz-Ao NESS and a64ca6c9f3124f8c478bdd3f07a4bde92e76f3a2
+# geometric-mechanics foundation modules; the FORMAL_MODULES roster rows and
+# FEPComposed bridges landed in 8f1923769d8eadf40511f5590f48d2d4fa7d9eaf):
+# two standalone foundation modules and two FEPComposed bridge composition
+# modules joined the FORMAL_MODULES roster AFTER the R0 seal. Both
+# insertions are pure contiguous 2-block additions (verified byte-exact);
+# the reconstruction removes them before the gnn strip and the W4 swap, so
+# the sealed R0 digest still binds the historical owners while the approved
+# roster growth is explicit.
+WAVE4_FOUNDATION_ADDED_MODULES = (
+    (
+        "helmholtz_ao_ness.lean",
+        "FepSketches.helmholtz_ao_ness",
+        "FEP.HelmholtzAoNess",
+    ),
+    (
+        "geometric_mechanics.lean",
+        "FepSketches.geometric_mechanics",
+        "FEP.GeometricMechanics",
+    ),
+)
+WAVE4_COMPOSITION_ADDED_MODULES = (
+    (
+        "compositions/helmholtz_ao_ness.lean",
+        "FepSketches.compositions.helmholtz_ao_ness",
+        "FEPComposed",
+    ),
+    (
+        "compositions/geometric_mechanics.lean",
+        "FepSketches.compositions.geometric_mechanics",
+        "FEPComposed",
+    ),
+)
 # W4 code consolidation (commit 849691ba41033d6f64d5ed16032438405f4036f0)
 # replaced the R0-era literal released-shared-namespace frozenset with a
 # derived comprehension moved below the FORMAL_MODULES roster; semantics are
@@ -287,6 +321,16 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
     stripped_wave3 = manifest.replace(wave3_compositions, "", 1).replace(
         wave3_foundations, "", 1
     )
+    wave4_foundations = _module_blocks(WAVE4_FOUNDATION_ADDED_MODULES, "FOUNDATION")
+    wave4_compositions = _module_blocks(WAVE4_COMPOSITION_ADDED_MODULES, "COMPOSITION")
+    _require(
+        manifest.count(wave4_compositions) == 1
+        and manifest.count(wave4_foundations) == 1,
+        "approved wave-4 roster additions missing, duplicated, or changed",
+    )
+    stripped_wave4 = stripped_wave3.replace(wave4_compositions, "", 1).replace(
+        wave4_foundations, "", 1
+    )
     added = [
         {
             "resource": resource,
@@ -307,6 +351,14 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
                 (resource, module, namespace, "composition")
                 for resource, module, namespace in WAVE3_COMPOSITION_ADDED_MODULES
             ),
+            *(
+                (resource, module, namespace, "foundation")
+                for resource, module, namespace in WAVE4_FOUNDATION_ADDED_MODULES
+            ),
+            *(
+                (resource, module, namespace, "composition")
+                for resource, module, namespace in WAVE4_COMPOSITION_ADDED_MODULES
+            ),
         )
     ]
     blocks = [
@@ -319,15 +371,15 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
         for resource, module, namespace in ADDED_MODULES
     ]
     _require(
-        all(stripped_wave3.count(block) == 1 for block in blocks),
+        all(stripped_wave4.count(block) == 1 for block in blocks),
         "approved added owners missing, duplicated, or changed",
     )
     additions = "".join(blocks)
     _require(
-        stripped_wave3.count(additions) == 1,
+        stripped_wave4.count(additions) == 1,
         "approved additions must retain order",
     )
-    stripped_manifest = stripped_wave3.replace(additions, "", 1)
+    stripped_manifest = stripped_wave4.replace(additions, "", 1)
     _require(
         stripped_manifest.count(_W4_DERIVED_RESOURCES_BLOCK) == 1,
         "approved W4 code consolidation record missing, duplicated, or changed",

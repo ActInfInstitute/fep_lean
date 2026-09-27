@@ -31,6 +31,22 @@ boundaries. The roster-v23 source-owner coordinated refresh, native capture,
 render re-acceptance, and pin-cycle #32 re-seal ride the coordinator's
 remaining phases and are pending, not part of this wiring.
 
+### Coordinated evidence refresh: SOURCE_OWNER_ROSTER v23 (2026-09-27)
+
+`OWNER_MANIFEST_VERSION` 22 → 23 covering the wave-3 fold chore's custody
+cascade: the new `geometric_mechanics` catalogue body joins the roster via
+`body_source_relative_paths()` and the H2.7 evidence-custody chain
+(acceptance → matrix → R0 prior/successor custody receipts → 05d/05b/06a →
+terminal packet → H3 spike lockstep) was re-bound over the wave-3 wiring
+delta (two foundation modules + two bridge compositions in
+`FORMAL_MODULES`, their byte-identical `lean/FepSketches/` mirrors, and the
+expanded release seal). The strip model in `tests/_support/h2_r0_custody.py`
+gains the wave-4 group constants so the reconstruction still hashes to the
+sealed R0 manifest digest. Prerequisite for `fep-lean verify`
+claim-readiness at any tip containing the wave-3 catalogue (the native
+capture fails the roster pre-gate otherwise); the native capture and the
+render re-acceptance follow before the pin-cycle #32 re-seal.
+
 ## 1.3.0 — 2026-09-26 — toolchain co-bump and wave-2 delivery
 
 ### Joint Mathlib/Lean v4.34.1 co-bump and release promotion (2026-09-26)
