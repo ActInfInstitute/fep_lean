@@ -147,14 +147,14 @@ no planning depth, no precision modulation.
 
 ## Signature
 source_repository: fep_lean
-source_commit: 7121d9541e526625d946e1ae840a66e6b9e3c9a7
+source_commit: 4959628c189e4000e9708c0575f84e94abb28458
 pipeline_repository: GeneralizedNotationNotation
-pipeline_commit: 6ddd9dbce9a228a959deca1b286800e8b1fb296c
+pipeline_commit: 5a9623a209efa2d2fdb105a1daba8eb6836497f7
 lean_module: lean/FepSketches/active_inference.lean
 lean_structure: FEP.ActiveInference.GenerativeModel
 lean_instance: FEP.ActiveInference.symmetricBoolModel trueBiasedPolicyPrior
 projection_tool: fep_lean specs/gnn-bridge-p1-finite-spike/projection.py (bridge P1/P2 deterministic emitter)
 target_syntax: GNN v1 (doc/gnn/gnn_syntax.md v1.1 surface)
 rounding_policy: exact Lean rationals emitted as shortest exact terminating decimal strings; non-terminating expansions are a no-go, never rounded
-source_owners_sha256: 3df3dc907642efda6602bb954a0858fe6ad49c4b3e3beb27a639f8c552c1549a
+source_owners_sha256: eddbeed00c20e4f20f0c614aac84e16514deb67b6ebc908d0d6416ba0154df1d
 pipeline_owners_sha256: b050cffabbea97c4660da3f02a5533cc8c414a7c24108930fccf52e9d6fa2c40
