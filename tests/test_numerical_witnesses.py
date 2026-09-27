@@ -40,6 +40,7 @@ EXPECTED_IDS = (
     "exponential-family-duality",
     "two-state-master-equation",
     "boltzmann-efe-affinity-gap",
+    "geometric-solenoidal-drop",
     "h2-scalar-terminal",
     "h2-fin4-blanket",
 )

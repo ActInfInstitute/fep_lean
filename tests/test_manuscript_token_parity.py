@@ -169,19 +169,20 @@ def test_expansion_family_vars_derive_from_canonical_roster(
         variables["topics_before_second_expansion"]
         + variables["expansion_second_topics"]
     )
-    # Calibrated structural pins for the sealed 159-topic roster: a 50-topic
+    # Calibrated structural pins for the sealed 165-topic roster: a 50-topic
     # core, ten first-wave and five second-wave families of seven topics each,
-    # a second expansion running from 120 to 155, and the single wave-3
-    # standalone-EFE family holding exactly fep-156..159.
+    # a second expansion running from 120 to 155, and the two wave-3
+    # families: standalone-EFE holding exactly fep-156..160 and
+    # geometric-mechanics-notation holding exactly fep-161..165.
     assert variables["base_topic_count"] == 50
-    assert variables["expansion_families"] == 16
-    assert variables["expansion_family_topics"] == 109
+    assert variables["expansion_families"] == 17
+    assert variables["expansion_family_topics"] == 115
     assert variables["expansion_family_size"] == 7
     assert variables["expansion_first_families"] == 10
     assert variables["expansion_second_families"] == 5
     assert variables["expansion_second_topics"] == 35
-    assert variables["expansion_third_families"] == 1
-    assert variables["expansion_third_topics"] == 4
-    assert variables["expansion_third_family_size"] == 4
+    assert variables["expansion_third_families"] == 2
+    assert variables["expansion_third_topics"] == 10
+    assert variables["expansion_third_family_size"] == 5
     assert variables["topics_before_second_expansion"] == 120
     assert variables["topics_before_third_expansion"] == 155

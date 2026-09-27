@@ -119,6 +119,8 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "perception_action_loop.lean",
         "bayesian_model_reduction.lean",
         "efe_time_scale_separation.lean",
+        "helmholtz_ao_ness.lean",
+        "geometric_mechanics.lean",
     )
     released_composition_resources = (
         "compositions/core.lean",
@@ -146,6 +148,8 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "compositions/perception_action_loop.lean",
         "compositions/bayesian_model_reduction.lean",
         "compositions/efe_time_scale_separation.lean",
+        "compositions/helmholtz_ao_ness.lean",
+        "compositions/geometric_mechanics.lean",
     )
     aggregate_resources = ("composed.lean",)
     resources = (
@@ -201,6 +205,8 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "FEP.PerceptionActionLoop",
         "FEP.BayesianModelReduction",
         "FEP.TimeScaleEFE",
+        "FEP.HelmholtzAoNess",
+        "FEP.GeometricMechanics",
         *("FEPComposed",) * len(released_composition_resources),
         "FEPComposed.FiniteScientificImplications",
         "FEPComposed.FinitePolicyAction",
@@ -209,6 +215,8 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "FEPComposed.GaussianControl",
         "FEPComposed.GaussianGridPath",
         "FEPComposed.SmoothReferenceKernel",
+        "FEPComposed",
+        "FEPComposed",
         "FEPComposed",
         "FEPComposed",
         "FEPComposed",

@@ -105,6 +105,10 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.compositions.perception_action_loop": 1,
         "FepSketches.compositions.bayesian_model_reduction": 1,
         "FepSketches.compositions.efe_time_scale_separation": 1,
+        "FepSketches.helmholtz_ao_ness": 26,
+        "FepSketches.geometric_mechanics": 22,
+        "FepSketches.compositions.helmholtz_ao_ness": 1,
+        "FepSketches.compositions.geometric_mechanics": 5,
     }
 
 

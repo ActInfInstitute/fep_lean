@@ -57,9 +57,9 @@ def test_dashboard_uses_all_typed_witnesses_from_the_shared_join() -> None:
     dashboard = build_formal_kernel_dashboard(PROJECT_ROOT)
 
     assert isinstance(dashboard, FormalismPresentation)
-    assert len(dashboard.witnesses) == 16
-    assert len({witness.id for witness in dashboard.witnesses}) == 16
-    assert len({witness.family for witness in dashboard.witnesses}) == 16
+    assert len(dashboard.witnesses) == 17
+    assert len({witness.id for witness in dashboard.witnesses}) == 17
+    assert len({witness.family for witness in dashboard.witnesses}) == 17
     assert all(witness.accepted for witness in dashboard.witnesses)
     assert all(
         witness.evidence_kind == NON_PROOF_EVIDENCE for witness in dashboard.witnesses
@@ -99,7 +99,7 @@ def test_dashboard_explicitly_distinguishes_witness_formal_alignment() -> None:
     assert "<code>structural_analogue</code>" in subgaussian_html.group(0)
     assert "does not discharge all formal premises" in subgaussian_html.group(0)
     assert html.count('data-formal-alignment="structural_analogue"') == 3
-    assert html.count('data-formal-alignment="theorem_instance"') == 45
+    assert html.count('data-formal-alignment="theorem_instance"') == 48
     assert ".overview-viewport{overflow:auto;max-height" not in html
 
 
@@ -183,8 +183,20 @@ def test_bar_plots_use_and_disclose_a_zero_baseline() -> None:
 
     assert svg.count('data-zero-baseline="true"') == len(bar_witnesses)
     for witness in bar_witnesses:
+        values = [
+            float(
+                row.values[
+                    witness.columns.index(
+                        next(c for c in witness.columns if c.key in witness.plot.y_keys)
+                    )
+                ]
+            )
+            for row in witness.rows
+        ]
+        minimum = min(0.0, *values) if values else 0.0
         assert (
-            f'data-plot-for="{witness.id}" data-zero-baseline="true" data-y-min="0.0"'
+            f'data-plot-for="{witness.id}" data-zero-baseline="true" '
+            f'data-y-min="{minimum!r}"'
         ) in svg
     assert svg.count('class="scale-zero"') == len(bar_witnesses)
 
@@ -388,7 +400,7 @@ def test_desktop_legend_lines_fit_inside_each_summary_card() -> None:
         if "data-witness-summary" in group.attrib
     ]
 
-    assert len(groups) == 16
+    assert len(groups) == 17
     for group in groups:
         card = next(
             rectangle
@@ -685,7 +697,7 @@ def test_mobile_overview_uses_counted_three_plot_groups_with_direct_navigation()
     assert rendered.count('data-scroll-axis="vertical"') == 6
     assert rendered.count('data-mobile-group-jump="') == 6
     assert rendered.count('class="mobile-plot-group" open') == 0
-    assert "16 plots in 6 groups · at most 3 plots per group" in rendered
+    assert "17 plots in 6 groups · at most 3 plots per group" in rendered
     assert "Scroll inside an open group for its three complete plots." in rendered
     assert (
         ".mobile-plot-viewport{max-height:min(52vh,560px);overflow-y:auto;"
@@ -707,7 +719,7 @@ def test_mobile_overview_uses_counted_three_plot_groups_with_direct_navigation()
                 for element in root.iter()
             )
         )
-    assert group_sizes == [3, 3, 3, 3, 3, 1]
+    assert group_sizes == [3, 3, 3, 3, 3, 2]
     assert "mobilePlotGroups.forEach(group=>group.open=group===target)" in rendered
     assert 'target.querySelector("summary").focus()' in rendered
 
@@ -725,7 +737,7 @@ def test_mobile_group_index_exposes_every_group_without_horizontal_discovery() -
         ("Plots 7 through 9, 3 plots", "Plots 7–9"),
         ("Plots 10 through 12, 3 plots", "Plots 10–12"),
         ("Plots 13 through 15, 3 plots", "Plots 13–15"),
-        ("Plots 16 through 16, 1 plots", "Plots 16–16"),
+        ("Plots 16 through 17, 2 plots", "Plots 16–17"),
     )
     for group_index, (aria_label, link_text) in enumerate(expected_jumps, 1):
         assert (
@@ -748,7 +760,7 @@ def test_mobile_groups_keep_a_persistent_vertical_scroll_affordance() -> None:
 
     assert rendered.count('class="mobile-plot-scroll-cue"') == 6
     assert rendered.count("Scroll within this group · 3 complete plots") == 5
-    assert rendered.count("Scroll within this group · 1 complete plots") == 1
+    assert rendered.count("Scroll within this group · 2 complete plots") == 1
     assert ".mobile-plot-viewport{max-height:min(52vh,560px);" in rendered
     assert "scrollbar-gutter:stable" in rendered
     assert "box-shadow:inset 0 18px 14px -20px #1e3a8a" in rendered
@@ -766,7 +778,7 @@ def test_mobile_group_footer_copy_is_complete_and_fitted_to_two_lines() -> None:
             if text.attrib.get("class") == "mobile-footer"
         ]
         assert footer_lines == [
-            f"Group {group_index} · {3 if group_index <= 5 else 1} witnesses shown",
+            f"Group {group_index} · {3 if group_index <= 5 else 2} witnesses shown",
             "Exact values continue in accessible tables.",
         ]
         assert all("…" not in line for line in footer_lines)

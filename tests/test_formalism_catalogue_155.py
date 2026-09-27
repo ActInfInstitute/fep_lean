@@ -28,6 +28,7 @@ NEW_FAMILY_RANGES = {
     "finite-to-native-blanket-transfer": range(135, 142),
     "finite-exponential-family-dual-geometry": range(142, 149),
     "two-state-continuous-time-thermodynamics": range(149, 156),
+    "geometric-mechanics-notation": range(161, 166),
 }
 NEW_FAMILY_AREAS = {
     "finite-sample-risk-and-calibration": "FEP",
@@ -36,6 +37,7 @@ NEW_FAMILY_AREAS = {
     "finite-exponential-family-dual-geometry": "InfoGeometry",
     "two-state-continuous-time-thermodynamics": "Thermodynamics",
     "standalone-efe-formalizations": "ActiveInference",
+    "geometric-mechanics-notation": "Thermodynamics",
 }
 NEW_CAPABILITY_IDS = {
     "cap-closed-loop-policy-trees",
@@ -44,6 +46,7 @@ NEW_CAPABILITY_IDS = {
     "cap-finite-sample-risk-calibration",
     "cap-native-blanket-transfer",
     "cap-standalone-efe-theorems",
+    "cap-geometric-mechanics-solenoidal",
 }
 H1_0_FEP014_ASSUMPTION = (
     "Self-divergence uses SigmaFinite; zero-characterization and the chain rule use "
@@ -88,11 +91,11 @@ def test_expansion_vii_has_exact_roster_family_and_area_ownership() -> None:
     metadata = load_catalogue_metadata(
         PROJECT_ROOT / "config" / "catalogue_metadata.yaml"
     )
-    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 160))
+    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 166))
 
     assert metadata.topic_ids == expected_ids
     assert tuple(BODIES) == expected_ids
-    assert len(metadata.families) == 21
+    assert len(metadata.families) == 22
     assert set(NEW_FAMILY_RANGES) <= set(metadata.families)
 
     records = metadata.by_topic_id
@@ -108,16 +111,16 @@ def test_expansion_vii_has_exact_roster_family_and_area_ownership() -> None:
         area_counts[record.area] = area_counts.get(record.area, 0) + 1
     assert area_counts == {
         "FEP": 41,
-        "ActiveInference": 35,
+        "ActiveInference": 36,
         "BayesianMechanics": 41,
         "InfoGeometry": 21,
-        "Thermodynamics": 21,
+        "Thermodynamics": 26,
     }
 
 
 def test_expansion_vii_registers_one_body_and_foundation_owner_per_family() -> None:
     body_families = tuple(entry.family for entry in BODY_MODULE_MANIFEST)
-    assert len(body_families) == len(set(body_families)) == 21
+    assert len(body_families) == len(set(body_families)) == 22
     assert set(NEW_FAMILY_RANGES) <= set(body_families)
 
     foundations = {
@@ -149,12 +152,12 @@ def test_expansion_vii_registers_one_body_and_foundation_owner_per_family() -> N
 
 def test_expansion_vii_semantic_roster_is_complete_and_formalized() -> None:
     maturity = load_theorem_maturity(PROJECT_ROOT / "config" / "theorem_maturity.yaml")
-    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 160))
+    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 166))
 
     assert tuple(record.id for record in maturity.records) == expected_ids
     assert all(
         maturity.by_topic_id[f"fep-{index:03d}"].disposition.value == "formalized"
-        for index in range(121, 156)
+        for index in range(121, 166)
     )
 
 

@@ -150,6 +150,12 @@ EXPECTED_EXPANSION_TITLES = (
     "The Perception-Action Loop as a Closed-Loop Active-Inference Theorem",
     "Bayesian Model Reduction",
     "EFE and Entropy-Production Time-Scale Separation",
+    "Helmholtz–Ao Decomposition of Nonequilibrium Steady Currents",
+    "Skew Bilinear Cancellation of the Trace and Quadratic Terms",
+    "The Discrete Hessian as a Symmetrization Construction",
+    "The Three-Term Solenoidal Expansion and Its Conditional Drop",
+    "Graph Divergence of the Candidate Solenoidal Current",
+    "Necessity Witness for the Unconditional Solenoidal Drop",
 )
 
 
@@ -213,7 +219,7 @@ def test_historical_pre_cutover_body_ledger_remains_complete() -> None:
     )
     assert tuple(BODIES)[: len(expected)] == tuple(expected)
     assert tuple(BODIES)[len(expected) :] == tuple(
-        f"fep-{index:03d}" for index in range(51, 160)
+        f"fep-{index:03d}" for index in range(51, 166)
     )
 
 

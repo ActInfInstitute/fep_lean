@@ -201,6 +201,7 @@ EXPANSION_CAPABILITY_BY_FAMILY = {
     "two-state-continuous-time-thermodynamics": ("cap-continuous-time-thermodynamics"),
     "variational-duality-and-information-bounds": "cap-finite-variational-duality",
     "standalone-efe-formalizations": "cap-standalone-efe-theorems",
+    "geometric-mechanics-notation": "cap-geometric-mechanics-solenoidal",
 }
 
 EXPANSION_BOUNDARY_EVIDENCE = {
@@ -246,6 +247,9 @@ EXPANSION_BOUNDARY_EVIDENCE = {
         "fep_fep158.FEP158.fep158_reduction_free_energy_monotone"
     ),
     "cap-temporal-inference": "FEP.TemporalInference.forwardEvidence_zero_boundary",
+    "cap-geometric-mechanics-solenoidal": (
+        "fep_fep165.FEP165.fep165_witness_drop_fails"
+    ),
 }
 
 
@@ -287,7 +291,7 @@ def test_shipped_graph_conserves_relation_and_capability_state() -> None:
 
     assert Counter(edge.kind for edge in graph.edges) == {
         EdgeKind.FORMAL: 20,
-        EdgeKind.FORMAL_PAIRING: 109,
+        EdgeKind.FORMAL_PAIRING: 115,
         EdgeKind.CONCEPTUAL: 8,
     }
     assert all(edge.witness for edge in graph.edges if edge.kind.is_theorem_witnessed)
