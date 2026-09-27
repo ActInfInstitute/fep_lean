@@ -330,14 +330,14 @@ def test_h2_7_r0_is_source_bound_and_reuses_exact_owners() -> None:
 
 def test_h2_7_r0_uses_the_pinned_lean_mathlib_environment() -> None:
     assert (LEAN_ROOT / "lean-toolchain").read_text(encoding="utf-8").strip() == (
-        "leanprover/lean4:v4.34.0"
+        "leanprover/lean4:v4.34.1"
     )
     manifest = json.loads((LEAN_ROOT / "lake-manifest.json").read_text("utf-8"))
     mathlib = next(
         package for package in manifest["packages"] if package["name"] == "mathlib"
     )
-    assert mathlib["rev"] == "5ed2965256430c3649e86755f9576b54eca72435"
-    assert mathlib["inputRev"] == "v4.34.0"
+    assert mathlib["rev"] == "d13f23b723b8a846827a245b89c10fc7d3f11612"
+    assert mathlib["inputRev"] == "v4.34.1"
     result = run_lake_lean_probe(
         ["env", "lean", "--version"],
         cwd=LEAN_ROOT,
@@ -353,8 +353,8 @@ def test_h2_7_r0_uses_the_pinned_lean_mathlib_environment() -> None:
     # by host (the CI runner is x86_64-linux, local hosts may be aarch64-darwin)
     # and is not part of the source-bound environment claim the receipt records.
     version_line = result.stdout.strip()
-    assert version_line.startswith("Lean (version 4.34.0, "), version_line
-    assert "commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)" in version_line
+    assert version_line.startswith("Lean (version 4.34.1, "), version_line
+    assert "commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)" in version_line
 
 
 def test_h2_7_r0_surface_and_orientation_are_exact_and_fail_closed() -> None:

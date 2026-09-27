@@ -903,7 +903,7 @@ def test_pin_evidence_matrix_toolchain_mismatch_refuses(tmp_path: Path) -> None:
     specs_dir = _stage_specs(tmp_path)
     matrix = specs_dir / MATRIX[len("specs/") :]
     matrix.write_text(
-        matrix.read_text().replace("mathlib_tag: v4.34.0", "mathlib_tag: v4.33.1", 1)
+        matrix.read_text().replace("mathlib_tag: v4.34.1", "mathlib_tag: v4.33.1", 1)
     )
     out = _out_dir(tmp_path)
     census, expectations = _all_clear()

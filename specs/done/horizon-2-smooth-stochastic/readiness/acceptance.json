@@ -44,7 +44,7 @@
     "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
     "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
     "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
-    "specs/done/horizon-2-smooth-stochastic/readiness/pin_evidence.json": "e3668f31d3d68d2e62ea0af050089fcdedafc0ea4c6923bd0015cc07c2a1e692",
+    "specs/done/horizon-2-smooth-stochastic/readiness/pin_evidence.json": "89c86a77a39015d304cc9ddbf190dd4464ec52787f54281f99827acea021c0a6",
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/01_api_surface.lean": "075eb69e02c2fbe320be8afc12d199c6c582c7d1ac74cd74f288d618dc878ad3",
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/01_calculus.lean": "9e06bb5b8b0f351973e69c505d78118fb61cb87adaed65487d23140db827f4d4",
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/02_local_geometry.lean": "8e068955edd5741373d6b402039b0738cecac0f22a852571680856a6e8e1a21d",
@@ -56,9 +56,9 @@
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/08_gaussian_conditioning.lean": "5c848021ad605cbfb628811ad7ef69846e7fde0b24437a3d4ce9a289f0e18fa3",
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/09_finite_grid.lean": "27d48baeb8164c74df2351a9c88c40171c7e92d3d91a5c0a35acd465e23b672a",
     "specs/done/horizon-2-smooth-stochastic/readiness/probes/10_brownian_fdl.lean": "c06982104f54b9af61949669298bf8cc09fd52ba9e6891938d3b2590df34e689",
-    "specs/done/horizon-2-smooth-stochastic/readiness/probes/11_unsupported_api_search.yaml": "48c3a74eb7ec4f1f19b37187e65f839d695b85cf7261c0a0f4add9904ecfb03d",
+    "specs/done/horizon-2-smooth-stochastic/readiness/probes/11_unsupported_api_search.yaml": "ca9f47d45452cedeea60716fb152eff8e5c6ed10c7e1a931d207b6c46f585f25",
     "specs/done/horizon-2-smooth-stochastic/readiness/validate.py": "3acbd44bb28cf19809c329667ec0179e440e950ee10696f62237ae38d6d5197b",
-    "tests/test_horizon2_readiness.py": "f556b08f9ee90d2adc6a96e2bbe572649f4b98d37a73273c9936b34d0029ac85"
+    "tests/test_horizon2_readiness.py": "cdab5f8e7172a845a1093b64a47ee6a0ba5a57c1fa64836bf58366e90b81ee2b"
   },
   "tests": {
     "collected": 34,

@@ -1,5 +1,5 @@
 schema_version: 1
-mathlib_revision: 5ed2965256430c3649e86755f9576b54eca72435
+mathlib_revision: d13f23b723b8a846827a245b89c10fc7d3f11612
 root: lean/.lake/packages/mathlib/Mathlib
 searches:
   - id: general_native_markov_semigroup

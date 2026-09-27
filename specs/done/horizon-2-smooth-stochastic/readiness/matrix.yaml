@@ -2,9 +2,9 @@ schema_version: 1
 horizon: H2.0
 status: complete_with_boundaries
 toolchain:
-  lean: v4.34.0
-  mathlib_tag: v4.34.0
-  mathlib_revision: 5ed2965256430c3649e86755f9576b54eca72435
+  lean: v4.34.1
+  mathlib_tag: v4.34.1
+  mathlib_revision: d13f23b723b8a846827a245b89c10fc7d3f11612
   sources:
     lean_toolchain: lean/lean-toolchain
     lakefile: lean/lakefile.lean
@@ -79,7 +79,7 @@ row_order:
   - continuous_path_measure_density
 acceptance_evidence: &acceptance_evidence
   receipt_path: specs/done/horizon-2-smooth-stochastic/readiness/acceptance.json
-  receipt_sha256: bd45418847cb8ab3dfcc545b81d502d8c6f9cc264868d74671795b55b4c7171c
+  receipt_sha256: 834aecf37e4a9392261fcc6838cd87b0b01043650e5cbec0aac6708c99dc9f3b
 rows:
   - id: pin_identity
     criticality: fatal

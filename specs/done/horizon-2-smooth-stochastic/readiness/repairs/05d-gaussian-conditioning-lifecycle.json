@@ -10,7 +10,7 @@
   },
   "corrected_artifact": {
     "guard": "if not REPAIR.exists(): assert not MAINTAINED_OWNER.exists()",
-    "repair_sha256": "13a5577fa484cf63878a485e79b66d14f6fb7ae10d1ad91f997dcbc34c5a48db",
+    "repair_sha256": "e23cb39517cbadb3b9bac3d26e4d1969a994975f0f01f30499433ba7149d6fc9",
     "test_sha256": "e575c5597f0b3e7e945d4471aeb6caf4066da0ddcc38b13700963e96c32eb848"
   },
   "receipt_history": {
