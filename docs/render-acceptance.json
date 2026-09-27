@@ -8,8 +8,8 @@
     "tex_errors": 0,
     "uncaptioned_tables": 0
   },
-  "manuscript_source_digest": "d8b9d76b602d7f71f4f94b64998129af0dfa3bdf7f91fdbf818285b9cb169427",
-  "pages": 335,
+  "manuscript_source_digest": "a168362cfba91c313c5d7f0850d42d3f990dd7bd01d6391c0d8506b42db2607b",
+  "pages": 345,
   "receipt_version": 1,
   "source_digests": {
     "00_front_matter.md": "fd071cb817071f18032483c41b0ab1bb0a384f7ec3536dda2698a5ecd2e0683a",
@@ -26,7 +26,7 @@
     "04a_framework_fep.md": "58ce9bb3e71f5ffecf1abecb4cf87a1023c65cd768f1a5602d50eeb2ef4312d1",
     "04b_framework_active_inference.md": "08a49b058bebbd2cc5153767ad910a69b8b3e547d3c6729f70ad5de959f9a2cf",
     "04c_framework_sophisticated_dynamics.md": "61e7c3054f7b5942a55c258ddc6797ae34bd8f83263d6edd006823f494191bec",
-    "04d_framework_thermodynamics.md": "1e342fb7608add7b7d5cc1f1e49b5c71da5f28223e1b89c25bbe81b6830c2a56",
+    "04d_framework_thermodynamics.md": "9a9ceaff669463a5d830cfdf49feea4d23902bb305a755bd22e9e090d246c8c8",
     "04e_quantitative_metrics.md": "c571b82fb1f300eb4f60a1fd298c6db22d441b09db083a4165a3e83092b4cf0b",
     "04f_semantic_closure_and_validation.md": "853fefd3ac214bddab000d4cdc80fcf2ecaa6ad5b051d52a6718b907f4fc84d5",
     "04g_finite_active_inference_kernel.md": "af43d01a2d8f099ba4ad98d013c6f765c57b6e16d4598780269169e8d91b45ed",
@@ -41,7 +41,7 @@
     "06_conclusion.md": "3339d659607fb8e133af7fa5fd099ac5cd19a6293628556ece9f562f8256a6d8",
     "07_references.md": "b6132569eea5c54b542fff8754cee5c5d288873d8e920ce27c66a4a0318a7d94",
     "08_appendix_a_overview.md": "75bbd397cea0d9f532820c769da05b9913cd152043735b07a383748fe14a3292",
-    "09z_unified_formalism_catalogue.md": "12af4c090133d6cca73fd6cf1ec0e412fcd9dc654e7ff3565ecfe223e0ba3acd",
+    "09z_unified_formalism_catalogue.md": "bd054162346b9899180cde58924d6d494b2499d7972174a617a3638e2109030a",
     "preamble.md": "0ca6e7d06bf56f64e2e2850c96e7a802695f0225128d9a955ab9d1318651a6d9"
   }
 }
