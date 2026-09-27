@@ -1,6 +1,6 @@
 {
   "fep_lean": {
-    "commit": "7862a40ca6881b2498532aa948369fd47c8e78a1",
+    "commit": "7121d9541e526625d946e1ae840a66e6b9e3c9a7",
     "owners": {
       "docs/design/gnn-bridge/bridge-contract.md": "61102fa2602c482106365b1eb655c34f3d55ad5fc481637dbc6d0d6777612c53",
       "lean/lake-manifest.json": "e9a540f10f3a2eb912ba357823556940acfbf82a8e7603e55f8d031d81aa2b0c",
@@ -188,11 +188,11 @@
     }
   },
   "gnn": {
-    "commit": "773664f939c43eb77a23483ff410395bd8cd76a0",
+    "commit": "6ddd9dbce9a228a959deca1b286800e8b1fb296c",
     "owners": {
       "docs/gnn/gnn_syntax.md": "1a1feaaee71c12c384babcdbb752711453c03204ff443ed0579c9cc644bd557c",
       "docs/other/fep_lean/bridge-contract.md": "07ff3f32f82e5788e2669cb5401b6557be763010165ca2512e3ed522f79810dc",
-      "pyproject.toml": "7fd698532db42060ff763aa6a3236904a875d9989010501616950ed0b02028f1",
+      "pyproject.toml": "588f2d7432854d3a292bb6b11e573e3932b9f738f4b027562ea2f96bf6d4e1a6",
       "src/gnn/0_template.py": "88773455461192c3bd20a1d477ba42082fc0525236eae8c52284d3910b720bbb",
       "src/gnn/10_ontology.py": "ccbfd4a328cf50d16b840f51fbb5c3d44b0e2468c0778ea7158ad7c29cb17101",
       "src/gnn/11_render.py": "604f2bc29d1f5bb3b491988337d6e5781b606d266b3c92f41465e0b7f4a9b0ca",
@@ -267,7 +267,7 @@
       "src/gnn/analysis/rxinfer/__init__.py": "c55c302ca7c1de7bfe1ae337d15ba587753fbaf5443a139eb655093372bea0cd",
       "src/gnn/analysis/rxinfer/analyzer.py": "5063c5381966be55ee22425a42c59de3fc1e2c219d9e597fb46473a2f06fe74d",
       "src/gnn/analysis/rxinfer/animator.py": "2644996688f65ad44955ac6ad25fe954c2545a135455e8f671c92bd5d1487e96",
-      "src/gnn/analysis/rxinfer/cross_framework.py": "ab7f8974465d1b46ac27a4a0c9d28ac969bc8320b8309b76e0a61fdd277583c7",
+      "src/gnn/analysis/rxinfer/cross_framework.py": "70063eec5c06c6c5b5de70c8228c4ff508a5a6e9ee012a4b7d15a603097afbbd",
       "src/gnn/analysis/rxinfer/dashboard.py": "44dddbf77b49b38975c8762681ab7d1c2b04a8e16b8c8066f95c9e696bd0736a",
       "src/gnn/analysis/rxinfer/gif_animator.py": "71bdb5680e3ea6fe8ac7f291f7c0e12dc1cf628cfbdfe2bb3ecf796e2df82366",
       "src/gnn/analysis/simulation_visualizations.py": "7be1651b41b04833d70a58cda6c398436a032535428fb622de4721ed8f1fea5a",
@@ -356,7 +356,12 @@
       "src/gnn/execute/numpyro/__init__.py": "3ec236223481a1b67273ce2c321873f91243f3e25a17a41affbd4fb69bf8ef6f",
       "src/gnn/execute/numpyro/numpyro_runner.py": "ab339cd6b4a8a0f9c3a38f5341799464a0a89faeceb5c64211d0591386f91c44",
       "src/gnn/execute/planning.py": "ef754857e61be1013cefb1593417eb49e3bdd81f6b875a1505c4c1ab62e9166f",
-      "src/gnn/execute/processor.py": "e5da903165f7fa0330dd8c5d979634b864b7226a79bc98b58b21fb8e3d619be4",
+      "src/gnn/execute/processor/__init__.py": "baa89b1f39ccd83dbfaaa41e76ed4afa5e8e5c33dcac6de026bf4f848cb2a06d",
+      "src/gnn/execute/processor/envelope.py": "dd4ecf7306d2312d3a56b433f9e4d018a5ccb662286e8ba7d5597e7cfe9be5b5",
+      "src/gnn/execute/processor/pipeline.py": "e2e9cfc04fd939dcb1d43686896b27aa24263e45923baa3afffc1e65e94089d8",
+      "src/gnn/execute/processor/single.py": "8bacc52f9db005a5d59753f50aa53b8cceb371bb79adbb47a7af53939e4f4ffa",
+      "src/gnn/execute/processor/summary.py": "bc74331da9d66eb4871213cd6e730ed1d9dafffe8fb86551491e5e03a1f5c7b3",
+      "src/gnn/execute/processor/workers.py": "68d1f8a3ec32e5aacc2450c4c1d70039b46835f9c4624ccf308de5f978daeee9",
       "src/gnn/execute/pymdp/__init__.py": "5ec278d4a84fa554b2b9055b351e9403da4db9efe647d76afda69963f9747ef5",
       "src/gnn/execute/pymdp/context.py": "82ed31caf5b6fd4424461e6aae2c97f484d49d153915a472320b0ed097e34511",
       "src/gnn/execute/pymdp/execute_pymdp.py": "6ee17a4fc6bd824a6bca64b62603eade47d864eaed613317409c3893292adf69",
@@ -810,7 +815,7 @@
       "src/gnn/utils/pipeline_orchestration/pipeline_validator.py": "cc38850eea3cef63663a3bdb0a6f461003401fe4c24fda704a4ccd47ba3e8cb9",
       "src/gnn/utils/runtime_safety/__init__.py": "50545392d380534a3fdd0060314a426f31c737f9ec0dc9f4397ed947a18ee4b7",
       "src/gnn/utils/runtime_safety/dependency_validator.py": "b8585b9c03e4225a64888c891514720d61c8465df8d1f00dd591081db9156590",
-      "src/gnn/utils/runtime_safety/framework_availability.py": "3c61cb3e5ded171f03b01356eebb9ee97554959492ebbae640977b5c5046596a",
+      "src/gnn/utils/runtime_safety/framework_availability.py": "254859eac6c16237fb4923297dde8c18f031f1c5240605463b4eddad241c8955",
       "src/gnn/utils/runtime_safety/jax_stack_validation.py": "03b66246f38c5ab50847a3c320e5ec1ea4590ad04d9ead69b617bb04c72fd4c7",
       "src/gnn/utils/runtime_safety/resource_manager.py": "11bc4755cd72859bf67b649173cc1c08ede4530cf625734a592f42a118aabcab",
       "src/gnn/utils/runtime_safety/safe_eval.py": "54dcec0a6cad18bf20d72f7d2f43ea5859a64f4f802f2789766b31001895c67c",
@@ -887,7 +892,7 @@
       "src/gnn/website/renderer.py": "360b767d66859a6415719150995ec39138081eb31aaa1c8d2fde8572cebd7736",
       "src/gnn/website/serve.py": "2328a2c36632c0df4006dff28027dd5586e6543e8b6b238f99fa89887ec5bd9b",
       "src/gnn/website/steps.py": "3b6a08f261cf1f287cacacf926dcca73b66df5a43c2fdc05da6140ddcd6a3a91",
-      "uv.lock": "a933c55b2b16dd5a580d0f4eb5b0686f188fb692679d44a9ec7dfdc9d3d05fb4"
+      "uv.lock": "90c2bd3cf4d975e7046b36f5e450c9b6490155ef47077bd839c380f80310ffac"
     }
   },
   "schema_version": 1
