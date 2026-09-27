@@ -8,8 +8,8 @@
     "tex_errors": 0,
     "uncaptioned_tables": 0
   },
-  "manuscript_source_digest": "2ed7d916fa8cf643e32c8282040530800507c82e077674d1bd1b6bce71dcb770",
-  "pages": 314,
+  "manuscript_source_digest": "d8b9d76b602d7f71f4f94b64998129af0dfa3bdf7f91fdbf818285b9cb169427",
+  "pages": 335,
   "receipt_version": 1,
   "source_digests": {
     "00_front_matter.md": "fd071cb817071f18032483c41b0ab1bb0a384f7ec3536dda2698a5ecd2e0683a",
@@ -17,7 +17,7 @@
     "02a_introduction.md": "65ae104a10b7131a71bee3b38223a82bfbaab26144e46cefb603c1be94447055",
     "02b_background.md": "590d239a848da92238fa1e48b65b7d0c5c7e60d1b89160fffb8dcb2ea6c98bdb",
     "03_methodology.md": "ceced4f6ff8d176fcb611abf7e6db453b4e4cc469849df2eebbae1f1da51178e",
-    "03a_lean4_primer.md": "8391851e3126244d2ad9efea55db54fa3d0b993ea7e31c97f5e3d23516f086e5",
+    "03a_lean4_primer.md": "4e4d1223cd055ba43a5e5e0ece939f1ed7b3affc7825dcb105474a906b3bdf79",
     "03b_mathlib4_measure_theory.md": "cbc93a1b53a76fcb15c4a6b7016697b09fd589c4fd587eedea885edcb04da7eb",
     "03c_sorry_maturity.md": "79746e6265d0b8c0fc3518acc950a9a6c78f0416049e9f61fc685fa9fcec6fbb",
     "03d_hermes_llm_pipeline.md": "f0df64d24ceefe6d0603e2a2a50d9689a00a6ee373d60898fc011cdaaeb57f2e",
@@ -41,7 +41,7 @@
     "06_conclusion.md": "3339d659607fb8e133af7fa5fd099ac5cd19a6293628556ece9f562f8256a6d8",
     "07_references.md": "b6132569eea5c54b542fff8754cee5c5d288873d8e920ce27c66a4a0318a7d94",
     "08_appendix_a_overview.md": "75bbd397cea0d9f532820c769da05b9913cd152043735b07a383748fe14a3292",
-    "09z_unified_formalism_catalogue.md": "2f1f40b7623d239b6b9be20239828bd4cdb85d3349a0bd173f58cc7333be7735",
+    "09z_unified_formalism_catalogue.md": "12af4c090133d6cca73fd6cf1ec0e412fcd9dc654e7ff3565ecfe223e0ba3acd",
     "preamble.md": "0ca6e7d06bf56f64e2e2850c96e7a802695f0225128d9a955ab9d1318651a6d9"
   }
 }
