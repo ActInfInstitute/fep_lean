@@ -1,4 +1,4 @@
-# FEP / Active Inference / Bayesian Mechanics — 159-topic Lean4 catalogue
+# FEP / Active Inference / Bayesian Mechanics — 165-topic Lean4 catalogue
 # Each topic maps to one OpenGauss session when workflows are enabled.
 # Regenerate: uv run python scripts/_maint_build_topics_catalogue.py
 # Fields include compile maturity and a separately reviewed semantic disposition.
@@ -8,7 +8,7 @@
 schema_version: 2
 roster:
   first_id: fep-001
-  last_id: fep-159
+  last_id: fep-165
 families:
 - core-free-energy
 - core-active-inference
@@ -31,6 +31,7 @@ families:
 - finite-exponential-family-dual-geometry
 - two-state-continuous-time-thermodynamics
 - standalone-efe-formalizations
+- geometric-mechanics-notation
 topics:
 - id: fep-001
   title: Variational Free Energy Bound
@@ -13107,3 +13108,598 @@ topics:
     &/ (\mathsf{rates.stationaryTrue} \cdot \mathsf{rates.stationaryFalse}))
 
     \end{aligned}'
+- id: fep-160
+  title: Helmholtz–Ao Decomposition of Nonequilibrium Steady Currents
+  area: ActiveInference
+  family: standalone-efe-formalizations
+  mathlib_modules:
+  - Analysis.SpecialFunctions.Log.Basic
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep160_aoDecomposition
+  supporting_theorems:
+  - fep160_skewQuadratic_eq_zero
+  - fep160_skewTrace_eq_zero
+  - fep160_circulationPart_skew
+  - fep160_symmetricPart_reversible
+  - fep160_current_eq_twice_circulation
+  - fep160_probabilityCurrent_eq_twice_circulation
+  - fep160_symmetricPart_current_eq_zero
+  - fep160_detailedBalanced_iff_circulation_eq_zero
+  - fep160_forceSplit
+  - fep160_stationaryCurrent_divergence_zero
+  - fep160_circulation_divergence_zero
+  - fep160_cycle_ao_ness
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'On a finite state space with a full-support stationary law, every rate field decomposes exactly into a reversible part
+    (detailed-balanced relative to the law) plus a circulation part (skew in the law-weighted sense); the stationary edge
+    current equals twice the law-weighted circulation part, the reversible part carries no current, removing the circulation
+    part is exactly detailed balance, the log-affinity splits into the Ao-potential drop plus the skew force, stationarity
+    makes the node divergence of the stationary current vanish, and the directed three-cycle witness is stationary, divergence-free,
+    and circulating. Assumption scope: All statements are finite-carrier algebra: the Ao potential is the pointwise -log p*
+    mass field and is deliberately distinct from the thermodynamic Helmholtz free energy of fep-013; the continuum Fokker-Planck
+    equation, a state-dependent diffusion matrix field, and SDE noise are not formalized. Stationarity and the probability
+    current reuse the established FEP.ContinuousTimeMarkov generator contract. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: 'All statements are finite-carrier algebra: the Ao potential is the pointwise -log p* mass field and
+    is deliberately distinct from the thermodynamic Helmholtz free energy of fep-013; the continuum Fokker-Planck equation,
+    a state-dependent diffusion matrix field, and SDE noise are not formalized. Stationarity and the probability current reuse
+    the established FEP.ContinuousTimeMarkov generator contract.'
+  non_vacuity: The decomposition is unconditional for every rate field under the full-support hypothesis, and the directed
+    three-cycle exhibits a genuine NESS whose circulation part is 1/2 at the forward edge.
+  acceptance_probe: warning-free native Lean compile of all thirteen fep-160 declarations.
+  lean_sketch: "import FepSketches.helmholtz_ao_ness\n\nnamespace FEP160\n\nopen FEP.HelmholtzAoNess\nopen FEP FEP.ContinuousTimeMarkov\
+    \ Finset\nopen scoped BigOperators\nvariable {State : Type*} [Fintype State]\n\n/-- **The quadratic-term cancellation.**\
+    \  A skew-symmetric matrix\nannihilates its own quadratic form `gᵀ Q g = 0`. -/\ntheorem fep160_skewQuadratic_eq_zero\
+    \ {n : ℕ} (Q : Fin n → Fin n → ℝ)\n    (g : Fin n → ℝ) (hQ : SkewSymmetric Q) : dot g (mulVec Q g) = 0 :=\n  FEP.HelmholtzAoNess.skewQuadratic_eq_zero\
+    \ Q g hQ\n\n/-- **The trace-term cancellation.**  A skew matrix contracted against a\nsymmetric (Hessian-role) matrix\
+    \ has zero trace. -/\ntheorem fep160_skewTrace_eq_zero {n : ℕ} (Q H : Fin n → Fin n → ℝ)\n    (hQ : SkewSymmetric Q) (hH\
+    \ : SymmetricOf H) : traceOf (mulOf Q H) = 0 :=\n  FEP.HelmholtzAoNess.skewTrace_eq_zero Q H hQ hH\n\n/-- The Ao potential\
+    \ of a full-support law: `F = -log p*`. -/\nnoncomputable def fep160_aoPotential (law : FiniteLaw State) (i : State) :\
+    \ ℝ :=\n  FEP.HelmholtzAoNess.aoPotential law i\n\n/-- The reversible (dissipative) part of a rate field relative to `p*`.\
+    \ -/\nnoncomputable def fep160_symmetricPart (rate : State → State → ℝ)\n    (law : FiniteLaw State) (i j : State) : ℝ\
+    \ :=\n  FEP.HelmholtzAoNess.symmetricPart rate law i j\n\n/-- The solenoidal (circulation) part of a rate field relative\
+    \ to `p*`. -/\nnoncomputable def fep160_circulationPart (rate : State → State → ℝ)\n    (law : FiniteLaw State) (i j :\
+    \ State) : ℝ :=\n  FEP.HelmholtzAoNess.circulationPart rate law i j\n\n/-- **The Helmholtz–Ao split.**  Every rate field\
+    \ decomposes, relative to\na full-support stationary law, into its reversible plus circulation parts:\nthe finite `D +\
+    \ Q` ansatz is not a restriction on the drift. -/\ntheorem fep160_aoDecomposition {rate : State → State → ℝ}\n    {law\
+    \ : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    rate i j = symmetricPart rate law i j + circulationPart\
+    \ rate law i j :=\n  FEP.HelmholtzAoNess.aoDecomposition hSupport i j\n\n/-- **The generator-level current identity.**\
+    \  The stationary probability\ncurrent of the generator is carried entirely by the circulation part:\n`J_ij = 2 p*_i Q_ij`.\
+    \ -/\ntheorem fep160_probabilityCurrent_eq_twice_circulation\n    (generator : FiniteRateGenerator State) (law : FiniteLaw\
+    \ State)\n    (hSupport : ∀ i, 0 < law i) (i j : State) :\n    generator.probabilityCurrent law i j =\n      2 * law i\
+    \ * circulationPart generator.rate law i j :=\n  FEP.HelmholtzAoNess.probabilityCurrent_eq_twice_circulation generator\
+    \ law hSupport i j\n\n/-- The circulation part is skew in the `p*`-weighted sense: the finite\n`Qᵀ = -Q` clause of the\
+    \ ansatz. -/\ntheorem fep160_circulationPart_skew {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport :\
+    \ ∀ i, 0 < law i) (i j : State) :\n    law i * circulationPart rate law i j =\n      -(law j * circulationPart rate law\
+    \ j i) :=\n  FEP.HelmholtzAoNess.circulationPart_skew hSupport i j\n\n/-- The symmetric part is reversible: detailed balance\
+    \ of the\ndissipative term. -/\ntheorem fep160_symmetricPart_reversible {rate : State → State → ℝ}\n    {law : FiniteLaw\
+    \ State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    law i * symmetricPart rate law i j =\n      law j * symmetricPart\
+    \ rate law j i :=\n  FEP.HelmholtzAoNess.symmetricPart_reversible hSupport i j\n\n/-- The stationary edge current equals\
+    \ twice the `p*`-weighted\ncirculation part: the current is carried entirely by the solenoidal term. -/\ntheorem fep160_current_eq_twice_circulation\
+    \ {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    circulationNum\
+    \ rate law i j =\n      2 * law i * circulationPart rate law i j :=\n  FEP.HelmholtzAoNess.current_eq_twice_circulation\
+    \ hSupport i j\n\n/-- The reversible part carries no current at all. -/\ntheorem fep160_symmetricPart_current_eq_zero\
+    \ {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    law i * symmetricPart\
+    \ rate law i j -\n      law j * symmetricPart rate law j i = 0 :=\n  FEP.HelmholtzAoNess.symmetricPart_current_eq_zero\
+    \ hSupport i j\n\n/-- Removing the circulation part is exactly detailed balance: the finite\nconstructive counterpart\
+    \ of the manuscript's disclaimer about the\nsolenoidal term. -/\ntheorem fep160_detailedBalanced_iff_circulation_eq_zero\n\
+    \    {rate : State → State → ℝ} {law : FiniteLaw State}\n    (hSupport : ∀ i, 0 < law i) :\n    (∀ i j, law i * rate i\
+    \ j = law j * rate j i) ↔\n      ∀ i j, circulationPart rate law i j = 0 :=\n  FEP.HelmholtzAoNess.detailedBalanced_iff_circulation_eq_zero\
+    \ hSupport\n\n/-- The log-affinity splits into the potential drop plus the skew force. -/\ntheorem fep160_forceSplit {rate\
+    \ : State → State → ℝ} {law : FiniteLaw State}\n    (hSupport : ∀ i, 0 < law i) {i j : State}\n    (hij : 0 < rate i j)\
+    \ (hji : 0 < rate j i) :\n    Real.log (law i * rate i j / (law j * rate j i)) =\n      aoPotential law j - aoPotential\
+    \ law i +\n        Real.log (rate i j / rate j i) :=\n  FEP.HelmholtzAoNess.forceSplit hSupport hij hji\n\n/-- Under the\
+    \ generator contract and stationarity, the node divergence of\nthe stationary current vanishes: the finite form of the\
+    \ manuscript's\nexplicit stationarity constraint. -/\ntheorem fep160_stationaryCurrent_divergence_zero\n    (generator\
+    \ : FiniteRateGenerator State) (law : FiniteLaw State)\n    (hStat : generator.IsStationary law) (i : State) :\n    ∑\
+    \ j, generator.probabilityCurrent law j i = 0 :=\n  FEP.HelmholtzAoNess.stationaryCurrent_divergence_zero generator law\
+    \ hStat i\n\n/-- Restated over the circulation part: the divergence check constrains\nexactly the solenoidal contribution.\
+    \ -/\ntheorem fep160_circulation_divergence_zero\n    (generator : FiniteRateGenerator State) (law : FiniteLaw State)\n\
+    \    (hStat : generator.IsStationary law) (hSupport : ∀ i, 0 < law i)\n    (i : State) :\n    ∑ j, 2 * law j * circulationPart\
+    \ generator.rate law j i = 0 :=\n  FEP.HelmholtzAoNess.circulation_divergence_zero generator law hStat hSupport i\n\n\
+    /-- **The directed three-cycle NESS package.**  The cycle witness is\nstationary, divergence-free at every node, and carries\
+    \ a nonzero\ncirculation part: a genuine nonequilibrium steady state whose entire\ncurrent is solenoidal. -/\ntheorem\
+    \ fep160_cycle_ao_ness :\n    threeCycleGenerator.IsStationary threeCycleStationaryLaw ∧\n      (∀ i : Fin 3,\n      \
+    \  ∑ j, threeCycleGenerator.probabilityCurrent\n            threeCycleStationaryLaw j i = 0) ∧\n      circulationPart\
+    \ threeCycleGenerator.rate threeCycleStationaryLaw\n          (0 : Fin 3) (1 : Fin 3) ≠ 0 :=\n  FEP.HelmholtzAoNess.cycle_ao_ness\n\
+    \nend FEP160\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{n : \mathbb{N}\}\,(Q : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g : \mathsf{Fin}\,n \Rightarrow
+    \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q) \\
+
+    &\mathsf{dot}\,g\,(\mathsf{mulVec}\,Q\,g) = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{n : \mathbb{N}\}\,(Q\,H : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH}
+    : \mathsf{SymmetricOf}\,H) \\
+
+    &\mathsf{traceOf}\,(\mathsf{mulOf}\,Q\,H) = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(i\,j : \mathsf{State}) \\
+
+    &\mathsf{rate}\,i\,j = \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j + \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &(\mathsf{generator} : \mathsf{FiniteRateGenerator}\,\mathsf{State})\,(\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State})
+    \\
+
+    &(\mathsf{hSupport} : \forall i, 0 < \mathsf{law}\,i)\,(i\,j : \mathsf{State}) \\
+
+    &\mathsf{generator.probabilityCurrent}\,\mathsf{law}\,i\,j = 2 \cdot \mathsf{law}\,i \cdot \mathsf{circulationPart} \\
+
+    &\mathsf{generator.rate}\,\mathsf{law}\,i\,j
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(i\,j : \mathsf{State}) \\
+
+    &\mathsf{law}\,i \cdot \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j = -(\mathsf{law}\,j \cdot \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,j\,i)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(i\,j : \mathsf{State}) \\
+
+    &\mathsf{law}\,i \cdot \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j = \mathsf{law}\,j \cdot \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law}\,j\,i
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(i\,j : \mathsf{State}) \\
+
+    &\mathsf{circulationNum}\,\mathsf{rate}\,\mathsf{law}\,i\,j = 2 \cdot \mathsf{law}\,i \cdot \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(i\,j : \mathsf{State}) \\
+
+    &\mathsf{law}\,i \cdot \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j - \mathsf{law}\,j \cdot \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law}\,j\,i
+    = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &(\forall i\,j, \mathsf{law}\,i \cdot \mathsf{rate}\,i\,j = \mathsf{law}\,j \cdot \mathsf{rate}\,j\,i) \leftrightarrow
+    \forall i\,j, \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,i \\
+
+    &j = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\{\mathsf{rate} : \mathsf{State} \Rightarrow \mathsf{State} \Rightarrow \mathbb{R}\}\,\{\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State}\}\,(\mathsf{hSupport}
+    : \forall i, 0 < \mathsf{law}\,i) \\
+
+    &\{i\,j : \mathsf{State}\}\,(\mathsf{hij} : 0 < \mathsf{rate}\,i\,j)\,(\mathsf{hji} : 0 < \mathsf{rate}\,j\,i) \\
+
+    &\mathsf{Real.log}\,(\mathsf{law}\,i \cdot \mathsf{rate}\,i\,j / (\mathsf{law}\,j \cdot \mathsf{rate}\,j\,i)) = \mathsf{aoPotential}\,\mathsf{law}\,j
+    \\
+
+    &- \mathsf{aoPotential}\,\mathsf{law}\,i + \mathsf{Real.log}\,(\mathsf{rate}\,i\,j / \mathsf{rate}\,j\,i)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &(\mathsf{generator} : \mathsf{FiniteRateGenerator}\,\mathsf{State})\,(\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State})
+    \\
+
+    &(\mathsf{hStat} : \mathsf{generator.IsStationary}\,\mathsf{law})\,(i : \mathsf{State}) \\
+
+    &\sum j, \mathsf{generator.probabilityCurrent}\,\mathsf{law}\,j\,i = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &(\mathsf{generator} : \mathsf{FiniteRateGenerator}\,\mathsf{State})\,(\mathsf{law} : \mathsf{FiniteLaw}\,\mathsf{State})
+    \\
+
+    &(\mathsf{hStat} : \mathsf{generator.IsStationary}\,\mathsf{law})\,(\mathsf{hSupport} : \forall i, 0 < \mathsf{law}\,i)\,(i
+    : \mathsf{State}) \\
+
+    &\sum j, 2 \cdot \mathsf{law}\,j \cdot \mathsf{circulationPart}\,\mathsf{generator.rate}\,\mathsf{law}\,j\,i = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}] \\
+
+    &\mathsf{threeCycleGenerator.IsStationary}\,\mathsf{threeCycleStationaryLaw} \wedge (\forall i : \mathsf{Fin}\,3, \sum
+    j, \\
+
+    &\mathsf{threeCycleGenerator.probabilityCurrent}\,\mathsf{threeCycleStationaryLaw}\,j\,i = 0) \\
+
+    &\wedge \mathsf{circulationPart}\,\mathsf{threeCycleGenerator.rate}\,\mathsf{threeCycleStationaryLaw}\,(0 : \mathsf{Fin}\,3)
+    \\
+
+    &(1 : \mathsf{Fin}\,3) \ne 0
+
+    \end{aligned}'
+- id: fep-161
+  title: Skew Bilinear Cancellation of the Trace and Quadratic Terms
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep161_skewTrace_eq_zero
+  supporting_theorems:
+  - fep161_skewQuadratic_eq_zero
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'A skew-symmetric matrix contracted against a symmetric matrix has zero trace, and a skew-symmetric matrix annihilates
+    its own quadratic form: the two algebraic cancellations behind the manuscript''s solenoidal expansion, holding unconditionally
+    on the stated symmetry hypotheses. Assumption scope: Plain finite real matrices indexed by Fin n with explicit pointwise
+    symmetry hypotheses; no continuum Hessian, no smoothness structure, and no numerical witness is claimed. Semantic disposition:
+    `formalized`.
+
+    '
+  assumption_review: Plain finite real matrices indexed by Fin n with explicit pointwise symmetry hypotheses; no continuum
+    Hessian, no smoothness structure, and no numerical witness is claimed.
+  non_vacuity: Both cancellations are exact identities on their hypothesis classes, witnessed by any nonzero skew matrix against
+    a nonzero symmetric one.
+  acceptance_probe: warning-free native Lean compile of all two fep-161 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP161\n\nopen FEP.GeometricMechanics\n\n/-- **The trace-term\
+    \ cancellation:** a skew matrix contracted against a\nsymmetric (Hessian-role) matrix has zero trace — the finite form\
+    \ of\n`tr(Q ∇²F) = 0` under `Qᵀ = -Q`. -/\ntheorem fep161_skewTrace_eq_zero {n : ℕ} (Q H : Fin n → Fin n → ℝ)\n    (hQ\
+    \ : SkewSymmetric Q) (hH : SymmetricOf H) : traceOf (mulOf Q H) = 0 :=\n  FEP.GeometricMechanics.skewTrace_eq_zero Q H\
+    \ hQ hH\n\n/-- **The quadratic-term cancellation:** a skew-symmetric matrix\nannihilates its own quadratic form `gᵀ Q\
+    \ g = 0`. -/\ntheorem fep161_skewQuadratic_eq_zero {n : ℕ} (Q : Fin n → Fin n → ℝ)\n    (g : Fin n → ℝ) (hQ : SkewSymmetric\
+    \ Q) : dot g (mulVec Q g) = 0 :=\n  FEP.GeometricMechanics.skewQuadratic_eq_zero Q g hQ\n\nend FEP161\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH}
+    : \mathsf{SymmetricOf}\,H) \\
+
+    &\mathsf{traceOf}\,(\mathsf{mulOf}\,Q\,H) = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g : \mathsf{Fin}\,n \Rightarrow
+    \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q) \\
+
+    &\mathsf{dot}\,g\,(\mathsf{mulVec}\,Q\,g) = 0
+
+    \end{aligned}'
+- id: fep-162
+  title: The Discrete Hessian as a Symmetrization Construction
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep162_skewTrace_symmetrize_eq_zero
+  supporting_theorems:
+  - fep162_symmetrize_symmetric
+  - fep162_symmetrize_of_symmetric
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'Symmetrization of raw mixed-difference data constructs a symmetric discrete Hessian (the finite Clairaut property as
+    a construction), the trace cancellation holds against the constructed matrix with no hypothesis on the raw data, and on
+    already-symmetric data the construction is the identity. Assumption scope: The construction replaces the continuum Clairaut
+    theorem by finite algebra; it does not claim differentiability, a continuum Hessian, or convergence of mixed-difference
+    quotients. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: The construction replaces the continuum Clairaut theorem by finite algebra; it does not claim differentiability,
+    a continuum Hessian, or convergence of mixed-difference quotients.
+  non_vacuity: The symmetrized matrix is symmetric for every input and coincides with the given matrix exactly on the symmetric
+    subclass.
+  acceptance_probe: warning-free native Lean compile of all three fep-162 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP162\n\nopen FEP.GeometricMechanics\n\n/-- **Discrete-Hessian\
+    \ symmetry (finite Clairaut):** the symmetrized\nmixed-difference data is symmetric by construction, not by hypothesis.\
+    \ -/\ntheorem fep162_symmetrize_symmetric {n : ℕ} (H : Fin n → Fin n → ℝ) :\n    SymmetricOf (symmetrize H) :=\n  FEP.GeometricMechanics.symmetrize_symmetric\
+    \ H\n\n/-- The trace cancellation holds against the constructed discrete Hessian\nfor arbitrary raw mixed-difference data.\
+    \ -/\ntheorem fep162_skewTrace_symmetrize_eq_zero {n : ℕ} (Q H : Fin n → Fin n → ℝ)\n    (hQ : SkewSymmetric Q) : traceOf\
+    \ (mulOf Q (symmetrize H)) = 0 :=\n  FEP.GeometricMechanics.skewTrace_symmetrize_eq_zero Q H hQ\n\n/-- On already-symmetric\
+    \ data the symmetrization construction is the\nidentity: the discrete Hessian coincides with the given Hessian-role\n\
+    matrix. -/\ntheorem fep162_symmetrize_of_symmetric {n : ℕ} (H : Fin n → Fin n → ℝ)\n    (hH : SymmetricOf H) : symmetrize\
+    \ H = H :=\n  FEP.GeometricMechanics.symmetrize_of_symmetric H hH\n\nend FEP162\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(H : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &\mathsf{SymmetricOf}\,(\mathsf{symmetrize}\,H)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)
+    \\
+
+    &\mathsf{traceOf}\,(\mathsf{mulOf}\,Q\,(\mathsf{symmetrize}\,H)) = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(H : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)
+    \\
+
+    &\mathsf{symmetrize}\,H = H
+
+    \end{aligned}'
+- id: fep-163
+  title: The Three-Term Solenoidal Expansion and Its Conditional Drop
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep163_solenoidal_expansion
+  supporting_theorems:
+  - fep163_weightedDivergence_eq
+  - fep163_solenoidal_drop_of_orthogonal
+  - fep163_solenoidal_drop_of_constantQ
+  - fep163_expansion_remainder_witness
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'The weighted divergence of the candidate current decomposes exactly into the trace slot, the transport-divergence slot,
+    and the density coupling slot; under the stationary coupling the identity reads tr(Q H) - g^T Q g + (div Q)^T g; both
+    cancellable terms die on the skew and symmetric hypotheses, and the remaining drop holds only under an explicit extra
+    hypothesis (orthogonality or spatially constant Q), with a concrete remainder datum where it does not. Assumption scope:
+    Directional derivative data is explicit (H for the Hessian slot, DQ for the transport-divergence slot); the coupling is
+    an explicit hypothesis, not a solved PDE; the weighted divergence is defined by the exact Leibniz decomposition rather
+    than a discretization of Fokker-Planck. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: Directional derivative data is explicit (H for the Hessian slot, DQ for the transport-divergence slot);
+    the coupling is an explicit hypothesis, not a solved PDE; the weighted divergence is defined by the exact Leibniz decomposition
+    rather than a discretization of Fokker-Planck.
+  non_vacuity: The remainder witness evaluates to exactly 1 on concrete two-direction derivative data, so the unconditional
+    drop is not vacuously unreachable.
+  acceptance_probe: warning-free native Lean compile of all six fep-163 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP163\n\nopen FEP.GeometricMechanics\n\n/-- The finite\
+    \ `div(p* · Q g)/p*` from explicit directional derivative\ndata. -/\ndef fep163_weightedDivergence {n : ℕ} (Q H DQ : Fin\
+    \ n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) : ℝ :=\n  FEP.GeometricMechanics.weightedDivergence Q H DQ g dlogp\n\n/--\
+    \ The raw Leibniz expansion: trace slot + `∇·Q` slot + `p*`-coupling\nslot. -/\ntheorem fep163_weightedDivergence_eq {n\
+    \ : ℕ} (Q H DQ : Fin n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) :\n    weightedDivergence Q H DQ g dlogp\n      = traceOf\
+    \ (mulOf Q H) + dot (divQ DQ) g + dot (mulVec Q g) dlogp :=\n  FEP.GeometricMechanics.weightedDivergence_eq Q H DQ g dlogp\n\
+    \n/-- **The manuscript's three-term solenoidal identity** under the\nstationary coupling `∇log p* = -∇F = -g`. -/\ntheorem\
+    \ fep163_solenoidal_expansion {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) (hcoup : ∀ i, dlogp i =\
+    \ -g i) :\n    weightedDivergence Q H DQ g dlogp\n      = traceOf (mulOf Q H) - dot g (mulVec Q g) + dot (divQ DQ) g :=\n\
+    \  FEP.GeometricMechanics.solenoidal_expansion Q H DQ g dlogp hcoup\n\n/-- The conditional solenoidal drop under the explicit\
+    \ orthogonality\nhypothesis `g ⊥ (∇·Q)ᵀ`. -/\ntheorem fep163_solenoidal_drop_of_orthogonal {n : ℕ}\n    (Q H DQ : Fin\
+    \ n → Fin n → ℝ) (g dlogp : Fin n → ℝ)\n    (hQ : SkewSymmetric Q) (hH : SymmetricOf H)\n    (hcoup : ∀ i, dlogp i = -g\
+    \ i) (horth : dot (divQ DQ) g = 0) :\n    weightedDivergence Q H DQ g dlogp = 0 :=\n  FEP.GeometricMechanics.solenoidal_drop_of_orthogonal\
+    \ Q H DQ g dlogp hQ hH hcoup horth\n\n/-- The conditional solenoidal drop for spatially constant `Q`. -/\ntheorem fep163_solenoidal_drop_of_constantQ\
+    \ {n : ℕ}\n    (Q H DQ : Fin n → Fin n → ℝ) (g dlogp : Fin n → ℝ)\n    (hQ : SkewSymmetric Q) (hH : SymmetricOf H)\n \
+    \   (hcoup : ∀ i, dlogp i = -g i) (hconst : ∀ k l, DQ k l = 0) :\n    weightedDivergence Q H DQ g dlogp = 0 :=\n  FEP.GeometricMechanics.solenoidal_drop_of_constantQ\
+    \ Q H DQ g dlogp hQ hH hcoup hconst\n\n/-- The concrete expansion remainder `(∇·Q)ᵀ g = 1 ≠ 0` on explicit\nderivative\
+    \ data: without the extra hypothesis the drop genuinely fails. -/\ntheorem fep163_expansion_remainder_witness :\n    dot\
+    \ (divQ remainderDQ) remainderG = 1 :=\n  FEP.GeometricMechanics.expansion_remainder_witness\n\nend FEP163\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp} = \mathsf{traceOf}\,(\mathsf{mulOf}\,Q\,H) + \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,g
+    + \mathsf{dot} \\
+
+    &(\mathsf{mulVec}\,Q\,g)\,\mathsf{dlogp}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i = -g\,i) \\
+
+    &\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp} = \mathsf{traceOf}\,(\mathsf{mulOf}\,Q\,H) - \mathsf{dot}\,g\,(\mathsf{mulVec}\,Q\,g)
+    \\
+
+    &+ \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,g
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)\,(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i
+    = -g\,i) \\
+
+    &(\mathsf{horth} : \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,g = 0) \\
+
+    &\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp} = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)\,(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i
+    = -g\,i) \\
+
+    &(\mathsf{hconst} : \forall k\,l, \mathsf{DQ}\,k\,l = 0) \\
+
+    &\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp} = 0
+
+    \end{aligned}'
+  - \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{remainderDQ})\,\mathsf{remainderG} = 1
+- id: fep-164
+  title: Graph Divergence of the Candidate Solenoidal Current
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep164_graphDecomposition
+  supporting_theorems:
+  - fep164_nodeDiv_skew
+  - fep164_weightedNodeDiv_eq
+  - fep164_weightedCurrent_div_eq
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'On a finite node set the node divergence of the skew transport field is twice its row sum; the node divergence of the
+    edge current splits into the transport slot plus the discrete-divergence slot; and the weighted node divergence obeys
+    an exact Leibniz rule whose p-residual does not vanish by skewness alone. Assumption scope: Edge fields are plain real
+    matrices with the flux convention W i j = flux i to j; the weighted statements assume a strictly positive density; no
+    continuum graph limit or first-order asymptotic identification is claimed. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: Edge fields are plain real matrices with the flux convention W i j = flux i to j; the weighted statements
+    assume a strictly positive density; no continuum graph limit or first-order asymptotic identification is claimed.
+  non_vacuity: The decomposition and the Leibniz rule are exact on every finite node set, and the residual term is generically
+    nonzero by nodeDiv_skew.
+  acceptance_probe: warning-free native Lean compile of all four fep-164 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP164\n\nopen FEP.GeometricMechanics\n\n/-- For skew\
+    \ `Q` the node divergence of the transport field is twice its\nrow sum: the discrete divergence slot is generically nonzero.\
+    \ -/\ntheorem fep164_nodeDiv_skew {n : ℕ} {Q : Fin n → Fin n → ℝ} (hQ : SkewSymmetric Q)\n    (i : Fin n) : nodeDiv Q\
+    \ i = 2 * rowSum Q i :=\n  FEP.GeometricMechanics.nodeDiv_skew hQ i\n\n/-- **The graph decomposition** of the candidate\
+    \ current's node\ndivergence into the transport slot plus the discrete-divergence slot. -/\ntheorem fep164_graphDecomposition\
+    \ {n : ℕ} (Q : Fin n → Fin n → ℝ)\n    (g : Fin n → ℝ) (hQ : SkewSymmetric Q) (i : Fin n) :\n    nodeDiv (currentOf Q\
+    \ g) i = mulVec Q g i + g i * rowSum Q i :=\n  FEP.GeometricMechanics.graphDecomposition Q g hQ i\n\n/-- The exact finite\
+    \ Leibniz rule for the weighted node divergence. -/\ntheorem fep164_weightedNodeDiv_eq {n : ℕ} (W : Fin n → Fin n → ℝ)\n\
+    \    {p : Fin n → ℝ} (hp : ∀ i, 0 < p i) (i : Fin n) :\n    weightedNodeDiv p W i =\n      nodeDiv W i + ∑ j, (1 - p j\
+    \ / p i) * W j i :=\n  FEP.GeometricMechanics.weightedNodeDiv_eq W hp i\n\n/-- The three-term graph expansion of the weighted\
+    \ candidate current. -/\ntheorem fep164_weightedCurrent_div_eq {n : ℕ} (Q : Fin n → Fin n → ℝ)\n    (g : Fin n → ℝ) {p\
+    \ : Fin n → ℝ} (hQ : SkewSymmetric Q)\n    (hp : ∀ i, 0 < p i) (i : Fin n) :\n    weightedNodeDiv p (currentOf Q g) i\n\
+    \      = mulVec Q g i + g i * rowSum Q i\n        + g i * ∑ j, (1 - p j / p i) * Q j i :=\n  FEP.GeometricMechanics.weightedCurrent_div_eq\
+    \ Q g hQ hp i\n\nend FEP164\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,\{Q : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R}\}\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(i
+    : \mathsf{Fin}\,n) \\
+
+    &\mathsf{nodeDiv}\,Q\,i = 2 \cdot \mathsf{rowSum}\,Q\,i
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g : \mathsf{Fin}\,n \Rightarrow
+    \mathbb{R})\,(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q) \\
+
+    &(i : \mathsf{Fin}\,n) \\
+
+    &\mathsf{nodeDiv}\,(\mathsf{currentOf}\,Q\,g)\,i = \mathsf{mulVec}\,Q\,g\,i + g\,i \cdot \mathsf{rowSum}\,Q\,i
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(W : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,\{p : \mathsf{Fin}\,n \Rightarrow
+    \mathbb{R}\}\,(\mathsf{hp} : \forall i, 0 < p\,i)\,(i : \mathsf{Fin}\,n) \\
+
+    &\mathsf{weightedNodeDiv}\,p\,W\,i = \mathsf{nodeDiv}\,W\,i + \sum j, (1 - p\,j / p\,i) \cdot W\,j\,i
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g : \mathsf{Fin}\,n \Rightarrow
+    \mathbb{R})\,\{p : \mathsf{Fin}\,n \Rightarrow \mathbb{R}\} \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hp} : \forall i, 0 < p\,i)\,(i : \mathsf{Fin}\,n) \\
+
+    &\mathsf{weightedNodeDiv}\,p\,(\mathsf{currentOf}\,Q\,g)\,i = \mathsf{mulVec}\,Q\,g\,i + g\,i \cdot \mathsf{rowSum}\,Q\,i
+    + g\,i \cdot \sum \\
+
+    &j, (1 - p\,j / p\,i) \cdot Q\,j\,i
+
+    \end{aligned}'
+- id: fep-165
+  title: Necessity Witness for the Unconditional Solenoidal Drop
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep165_witness_drop_fails
+  supporting_theorems:
+  - fep165_witnessQ_skew
+  - fep165_witness_current
+  - fep165_witness_divQ
+  - fep165_witness_divergence
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'For the exact 2-node transport matrix [[0,1],[-1,0]] and gradient (1,0) the candidate current is (0,-1), the discrete
+    divergence of the transport field is (2,-2), the node divergence of the current is (1,-1), and in particular equals 1
+    at node 0: the unconditional solenoidal drop is false, and neither the orthogonality nor the constant-Q hypothesis is
+    available on this witness. Assumption scope: A concrete finite counterexample only; it shows the manuscript''s honesty
+    guard is necessary rather than decorative and claims nothing about systems satisfying the extra hypotheses of fep-163.
+    Semantic disposition: `formalized`.
+
+    '
+  assumption_review: A concrete finite counterexample only; it shows the manuscript's honesty guard is necessary rather than
+    decorative and claims nothing about systems satisfying the extra hypotheses of fep-163.
+  non_vacuity: The witness evaluates to exactly 1 at node 0, refuting the unconditional drop on its exact hypothesis class.
+  acceptance_probe: warning-free native Lean compile of all five fep-165 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP165\n\nopen FEP.GeometricMechanics\n\n/-- The manuscript\
+    \ honesty-guard transport matrix is skew. -/\ntheorem fep165_witnessQ_skew : SkewSymmetric witnessQ :=\n  FEP.GeometricMechanics.witnessQ_skew\n\
+    \n/-- The candidate current of the honesty guard: `Q g = (0, -1)`. -/\ntheorem fep165_witness_current :\n    mulVec witnessQ\
+    \ witnessG = fun i => if i = 0 then 0 else -1 :=\n  FEP.GeometricMechanics.witness_current\n\n/-- The discrete divergence\
+    \ of the witness transport field is `(2, -2) ≠ 0`. -/\ntheorem fep165_witness_divQ :\n    nodeDiv witnessQ = fun i =>\
+    \ if i = 0 then 2 else -2 :=\n  FEP.GeometricMechanics.witness_divQ\n\n/-- The node divergence of the witness current\
+    \ is `(1, -1) ≠ 0`. -/\ntheorem fep165_witness_divergence :\n    nodeDiv (currentOf witnessQ witnessG) = fun i => if i\
+    \ = 0 then 1 else -1 :=\n  FEP.GeometricMechanics.witness_divergence\n\n/-- **The unconditional solenoidal drop is FALSE:**\
+    \ on the exact 2-node\ncounterexample the node divergence of the candidate current is `1 ≠ 0`\nat node `0`. -/\ntheorem\
+    \ fep165_witness_drop_fails : nodeDiv (currentOf witnessQ witnessG) 0 = 1 :=\n  FEP.GeometricMechanics.witness_drop_fails\n\
+    \nend FEP165\n"
+  latex_equations:
+  - \mathsf{SkewSymmetric}\,\mathsf{witnessQ}
+  - \mathsf{mulVec}\,\mathsf{witnessQ}\,\mathsf{witnessG} = \lambda\,i \mapsto \mathsf{if}\,i = 0\,\mathsf{then}\,0\,\mathsf{else}
+    -1
+  - \mathsf{nodeDiv}\,\mathsf{witnessQ} = \lambda\,i \mapsto \mathsf{if}\,i = 0\,\mathsf{then}\,2\,\mathsf{else} -2
+  - \mathsf{nodeDiv}\,(\mathsf{currentOf}\,\mathsf{witnessQ}\,\mathsf{witnessG}) = \lambda\,i \mapsto \mathsf{if}\,i = 0\,\mathsf{then}\,1\,\mathsf{else}
+    -1
+  - \mathsf{nodeDiv}\,(\mathsf{currentOf}\,\mathsf{witnessQ}\,\mathsf{witnessG})\,0 = 1

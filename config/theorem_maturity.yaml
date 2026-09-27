@@ -3342,3 +3342,161 @@ topics:
   acceptance_probe: >-
     warning-free native Lean compile of all nine fep-159 declarations.
   disposition: formalized
+- id: fep-160
+  primary_theorem: fep160_aoDecomposition
+  supporting_theorems:
+  - fep160_skewQuadratic_eq_zero
+  - fep160_skewTrace_eq_zero
+  - fep160_circulationPart_skew
+  - fep160_symmetricPart_reversible
+  - fep160_current_eq_twice_circulation
+  - fep160_probabilityCurrent_eq_twice_circulation
+  - fep160_symmetricPart_current_eq_zero
+  - fep160_detailedBalanced_iff_circulation_eq_zero
+  - fep160_forceSplit
+  - fep160_stationaryCurrent_divergence_zero
+  - fep160_circulation_divergence_zero
+  - fep160_cycle_ao_ness
+  boundary_theorems: []
+  invariant: >-
+    On a finite state space with a full-support stationary law, every rate
+    field decomposes exactly into a reversible part (detailed-balanced
+    relative to the law) plus a circulation part (skew in the law-weighted
+    sense); the stationary edge current equals twice the law-weighted
+    circulation part, the reversible part carries no current, removing the
+    circulation part is exactly detailed balance, the log-affinity splits
+    into the Ao-potential drop plus the skew force, stationarity makes the
+    node divergence of the stationary current vanish, and the directed
+    three-cycle witness is stationary, divergence-free, and circulating.
+  assumption_review: >-
+    All statements are finite-carrier algebra: the Ao potential is the
+    pointwise -log p* mass field and is deliberately distinct from the
+    thermodynamic Helmholtz free energy of fep-013; the continuum
+    Fokker-Planck equation, a state-dependent diffusion matrix field, and
+    SDE noise are not formalized. Stationarity and the probability current
+    reuse the established FEP.ContinuousTimeMarkov generator contract.
+  non_vacuity: >-
+    The decomposition is unconditional for every rate field under the
+    full-support hypothesis, and the directed three-cycle exhibits a
+    genuine NESS whose circulation part is 1/2 at the forward edge.
+  acceptance_probe: >-
+    warning-free native Lean compile of all thirteen fep-160 declarations.
+  disposition: formalized
+- id: fep-161
+  primary_theorem: fep161_skewTrace_eq_zero
+  supporting_theorems:
+  - fep161_skewQuadratic_eq_zero
+  boundary_theorems: []
+  invariant: >-
+    A skew-symmetric matrix contracted against a symmetric matrix has zero
+    trace, and a skew-symmetric matrix annihilates its own quadratic form:
+    the two algebraic cancellations behind the manuscript's solenoidal
+    expansion, holding unconditionally on the stated symmetry hypotheses.
+  assumption_review: >-
+    Plain finite real matrices indexed by Fin n with explicit pointwise
+    symmetry hypotheses; no continuum Hessian, no smoothness structure, and
+    no numerical witness is claimed.
+  non_vacuity: >-
+    Both cancellations are exact identities on their hypothesis classes,
+    witnessed by any nonzero skew matrix against a nonzero symmetric one.
+  acceptance_probe: >-
+    warning-free native Lean compile of all two fep-161 declarations.
+  disposition: formalized
+- id: fep-162
+  primary_theorem: fep162_skewTrace_symmetrize_eq_zero
+  supporting_theorems:
+  - fep162_symmetrize_symmetric
+  - fep162_symmetrize_of_symmetric
+  boundary_theorems: []
+  invariant: >-
+    Symmetrization of raw mixed-difference data constructs a symmetric
+    discrete Hessian (the finite Clairaut property as a construction), the
+    trace cancellation holds against the constructed matrix with no
+    hypothesis on the raw data, and on already-symmetric data the
+    construction is the identity.
+  assumption_review: >-
+    The construction replaces the continuum Clairaut theorem by finite
+    algebra; it does not claim differentiability, a continuum Hessian, or
+    convergence of mixed-difference quotients.
+  non_vacuity: >-
+    The symmetrized matrix is symmetric for every input and coincides with
+    the given matrix exactly on the symmetric subclass.
+  acceptance_probe: >-
+    warning-free native Lean compile of all three fep-162 declarations.
+  disposition: formalized
+- id: fep-163
+  primary_theorem: fep163_solenoidal_expansion
+  supporting_theorems:
+  - fep163_weightedDivergence_eq
+  - fep163_solenoidal_drop_of_orthogonal
+  - fep163_solenoidal_drop_of_constantQ
+  - fep163_expansion_remainder_witness
+  boundary_theorems: []
+  invariant: >-
+    The weighted divergence of the candidate current decomposes exactly
+    into the trace slot, the transport-divergence slot, and the density
+    coupling slot; under the stationary coupling the identity reads
+    tr(Q H) - g^T Q g + (div Q)^T g; both cancellable terms die on the skew
+    and symmetric hypotheses, and the remaining drop holds only under an
+    explicit extra hypothesis (orthogonality or spatially constant Q),
+    with a concrete remainder datum where it does not.
+  assumption_review: >-
+    Directional derivative data is explicit (H for the Hessian slot, DQ for
+    the transport-divergence slot); the coupling is an explicit hypothesis,
+    not a solved PDE; the weighted divergence is defined by the exact
+    Leibniz decomposition rather than a discretization of Fokker-Planck.
+  non_vacuity: >-
+    The remainder witness evaluates to exactly 1 on concrete two-direction
+    derivative data, so the unconditional drop is not vacuously unreachable.
+  acceptance_probe: >-
+    warning-free native Lean compile of all six fep-163 declarations.
+  disposition: formalized
+- id: fep-164
+  primary_theorem: fep164_graphDecomposition
+  supporting_theorems:
+  - fep164_nodeDiv_skew
+  - fep164_weightedNodeDiv_eq
+  - fep164_weightedCurrent_div_eq
+  boundary_theorems: []
+  invariant: >-
+    On a finite node set the node divergence of the skew transport field is
+    twice its row sum; the node divergence of the edge current splits into
+    the transport slot plus the discrete-divergence slot; and the weighted
+    node divergence obeys an exact Leibniz rule whose p-residual does not
+    vanish by skewness alone.
+  assumption_review: >-
+    Edge fields are plain real matrices with the flux convention W i j =
+    flux i to j; the weighted statements assume a strictly positive density;
+    no continuum graph limit or first-order asymptotic identification is
+    claimed.
+  non_vacuity: >-
+    The decomposition and the Leibniz rule are exact on every finite node
+    set, and the residual term is generically nonzero by nodeDiv_skew.
+  acceptance_probe: >-
+    warning-free native Lean compile of all four fep-164 declarations.
+  disposition: formalized
+- id: fep-165
+  primary_theorem: fep165_witness_drop_fails
+  supporting_theorems:
+  - fep165_witnessQ_skew
+  - fep165_witness_current
+  - fep165_witness_divQ
+  - fep165_witness_divergence
+  boundary_theorems: []
+  invariant: >-
+    For the exact 2-node transport matrix [[0,1],[-1,0]] and gradient
+    (1,0) the candidate current is (0,-1), the discrete divergence of the
+    transport field is (2,-2), the node divergence of the current is
+    (1,-1), and in particular equals 1 at node 0: the unconditional
+    solenoidal drop is false, and neither the orthogonality nor the
+    constant-Q hypothesis is available on this witness.
+  assumption_review: >-
+    A concrete finite counterexample only; it shows the manuscript's
+    honesty guard is necessary rather than decorative and claims nothing
+    about systems satisfying the extra hypotheses of fep-163.
+  non_vacuity: >-
+    The witness evaluates to exactly 1 at node 0, refuting the
+    unconditional drop on its exact hypothesis class.
+  acceptance_probe: >-
+    warning-free native Lean compile of all five fep-165 declarations.
+  disposition: formalized

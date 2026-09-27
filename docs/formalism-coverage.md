@@ -10,32 +10,32 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 
 | Metric | Count |
 | --- | ---: |
-| Stable topics | 159 |
-| Maintained formal modules | 64 |
-| Foundation modules | 41 |
-| Topic theorem declarations | 528 |
-| Formal-resource theorem declarations | 1098 |
-| Foundation theorem declarations | 868 |
-| Total theorem declarations | 1626 |
-| Topic definitions | 91 |
-| Formal-resource definitions | 645 |
-| Total definitions | 736 |
+| Stable topics | 165 |
+| Maintained formal modules | 68 |
+| Foundation modules | 43 |
+| Topic theorem declarations | 560 |
+| Formal-resource theorem declarations | 1152 |
+| Foundation theorem declarations | 916 |
+| Total theorem declarations | 1712 |
+| Topic definitions | 95 |
+| Formal-resource definitions | 674 |
+| Total definitions | 769 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 21 |
 | Total abbreviations | 28 |
 | Formal-resource structures | 50 |
-| Distinct Mathlib imports | 67 |
-| Topic-to-import edges | 216 |
-| Formal-resource import edges | 243 |
-| Internal formal-module dependencies | 142 |
-| Authored formalism relations | 137 |
+| Distinct Mathlib imports | 69 |
+| Topic-to-import edges | 222 |
+| Formal-resource import edges | 252 |
+| Internal formal-module dependencies | 147 |
+| Authored formalism relations | 143 |
 | Derivational formal relations | 20 |
-| Checked formal pairings | 109 |
-| All theorem-witnessed relations | 129 |
-| Composed theorem declarations | 230 |
-| Capability nodes (retained history) | 49 |
+| Checked formal pairings | 115 |
+| All theorem-witnessed relations | 135 |
+| Composed theorem declarations | 236 |
+| Capability nodes (retained history) | 50 |
 | Unresolved capability nodes | 0 |
-| Satisfied capability nodes | 49 |
+| Satisfied capability nodes | 50 |
 
 ## Semantic disposition matrix
 
@@ -43,12 +43,12 @@ Compilation and semantic adequacy are deliberately different axes. `formalized` 
 
 | Area | formalized | proxy | conditional_proxy | structural_proxy | scope_gap | assumption_gap | Total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| ActiveInference | 31 | 0 | 1 | 3 | 0 | 0 | 35 |
+| ActiveInference | 32 | 0 | 1 | 3 | 0 | 0 | 36 |
 | BayesianMechanics | 34 | 0 | 6 | 1 | 0 | 0 | 41 |
 | FEP | 39 | 0 | 1 | 1 | 0 | 0 | 41 |
 | InfoGeometry | 18 | 0 | 3 | 0 | 0 | 0 | 21 |
-| Thermodynamics | 18 | 0 | 2 | 1 | 0 | 0 | 21 |
-| **Total** | 140 | 0 | 13 | 6 | 0 | 0 | **159** |
+| Thermodynamics | 23 | 0 | 2 | 1 | 0 | 0 | 26 |
+| **Total** | 146 | 0 | 13 | 6 | 0 | 0 | **165** |
 
 ## Per-topic coverage
 
@@ -213,6 +213,12 @@ Compilation and semantic adequacy are deliberately different axes. `formalized` 
 | fep-157 | ActiveInference | `fep157_loop_invariant_surprisal_bound` | `formalized` | 13 | 0 | 1 |
 | fep-158 | ActiveInference | `fep158_reduction_free_energy_monotone` | `formalized` | 10 | 0 | 1 |
 | fep-159 | ActiveInference | `fep159_epistemic_gain_bounded_by_affinity` | `formalized` | 9 | 0 | 1 |
+| fep-160 | ActiveInference | `fep160_aoDecomposition` | `formalized` | 13 | 3 | 1 |
+| fep-161 | Thermodynamics | `fep161_skewTrace_eq_zero` | `formalized` | 2 | 0 | 1 |
+| fep-162 | Thermodynamics | `fep162_skewTrace_symmetrize_eq_zero` | `formalized` | 3 | 0 | 1 |
+| fep-163 | Thermodynamics | `fep163_solenoidal_expansion` | `formalized` | 5 | 1 | 1 |
+| fep-164 | Thermodynamics | `fep164_graphDecomposition` | `formalized` | 4 | 0 | 1 |
+| fep-165 | Thermodynamics | `fep165_witness_drop_fails` | `formalized` | 5 | 0 | 1 |
 
 ## Open semantic obligations
 
@@ -265,6 +271,8 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.perception_action_loop` | `foundation` | 22 | 6 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.controlled_markov`, `FepSketches.finite_markov_dynamics`, `FepSketches.temporal_inference` |
 | `FepSketches.bayesian_model_reduction` | `foundation` | 10 | 3 | 0 | `FepSketches.gaussian_information_geometry`, `FepSketches.variational_duality` |
 | `FepSketches.efe_time_scale_separation` | `foundation` | 37 | 8 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.ness_flow`, `FepSketches.path_thermodynamics` |
+| `FepSketches.helmholtz_ao_ness` | `foundation` | 26 | 11 | 0 | `FepSketches.continuous_time_markov` |
+| `FepSketches.geometric_mechanics` | `foundation` | 22 | 18 | 0 | — |
 | `FepSketches.compositions.core` | `composition` | 22 | 1 | 0 | `FepSketches.active_inference`, `FepSketches.information_geometry`, `FepSketches.markov_blanket`, `FepSketches.statistical_convergence` |
 | `FepSketches.compositions.measure_variational` | `composition` | 14 | 0 | 0 | `FepSketches.measure_bayes`, `FepSketches.variational_duality` |
 | `FepSketches.compositions.control_temporal` | `composition` | 14 | 0 | 0 | `FepSketches.controlled_markov`, `FepSketches.temporal_inference` |
@@ -287,7 +295,9 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.compositions.perception_action_loop` | `composition` | 1 | 0 | 0 | `FepSketches.perception_action_loop` |
 | `FepSketches.compositions.bayesian_model_reduction` | `composition` | 1 | 0 | 0 | `FepSketches.bayesian_model_reduction` |
 | `FepSketches.compositions.efe_time_scale_separation` | `composition` | 1 | 0 | 0 | `FepSketches.efe_time_scale_separation` |
-| `FepSketches.composed` | `aggregate` | 0 | 0 | 0 | `FepSketches.compositions.bayesian_model_reduction`, `FepSketches.compositions.causal_predictive`, `FepSketches.compositions.collective_learning`, `FepSketches.compositions.continuous_time`, `FepSketches.compositions.control_temporal`, `FepSketches.compositions.core`, `FepSketches.compositions.efe_policy_selection`, `FepSketches.compositions.efe_time_scale_separation`, `FepSketches.compositions.exponential_family`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_reference_agent`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.measure_variational`, `FepSketches.compositions.native_blanket_transfer`, `FepSketches.compositions.perception_action_loop`, `FepSketches.compositions.policy_trees`, `FepSketches.compositions.risk_calibration`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.compositions.thermo_geometry` |
+| `FepSketches.compositions.helmholtz_ao_ness` | `composition` | 1 | 0 | 0 | `FepSketches.helmholtz_ao_ness` |
+| `FepSketches.compositions.geometric_mechanics` | `composition` | 5 | 0 | 0 | `FepSketches.geometric_mechanics` |
+| `FepSketches.composed` | `aggregate` | 0 | 0 | 0 | `FepSketches.compositions.bayesian_model_reduction`, `FepSketches.compositions.causal_predictive`, `FepSketches.compositions.collective_learning`, `FepSketches.compositions.continuous_time`, `FepSketches.compositions.control_temporal`, `FepSketches.compositions.core`, `FepSketches.compositions.efe_policy_selection`, `FepSketches.compositions.efe_time_scale_separation`, `FepSketches.compositions.exponential_family`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_reference_agent`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.geometric_mechanics`, `FepSketches.compositions.helmholtz_ao_ness`, `FepSketches.compositions.measure_variational`, `FepSketches.compositions.native_blanket_transfer`, `FepSketches.compositions.perception_action_loop`, `FepSketches.compositions.policy_trees`, `FepSketches.compositions.risk_calibration`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.compositions.thermo_geometry` |
 
 ## Authored formalism relations
 
@@ -432,6 +442,12 @@ These edges are maintained scientific review data. `conceptual` means explanator
 | fep-157 | `formal_pairing` | fep-065 | `FEPComposed.fep157_loopInvariant_extends_fep065_controlledKernel` | The perception-action loop's invariant surprisal bound factors through one action-conditioned controlled-kernel step, paired with fep-065's row-normalization law, without claiming a general POMDP fixed-point theorem. |
 | fep-158 | `formal_pairing` | fep-058 | `FEPComposed.fep158_reductionFreeEnergy_extends_fep058_gibbsLowerBound` | Masked evidence never lowers evidence free energy, paired with fep-058's exact Gibbs lower bound on the same finiteKL and gibbsFreeEnergy carriers, without claiming a variational characterization of arbitrary model reductions. |
 | fep-159 | `formal_pairing` | fep-153 | `FEPComposed.fep159_epistemicGain_extends_fep153_stationary` | The finite KL divergence of the EFE time-scale separation is bounded by the log-affinity of its two-state rate carrier, paired with fep-153's nonuniform stationary semigroup law, without claiming a physical entropy-production identity. |
+| fep-160 | `formal_pairing` | fep-025 | `FEPComposed.fep160_aoNess_extends_fep025_current` | The Helmholtz–Ao decomposition's stationary current is carried entirely by the circulation part and its node divergence vanishes under stationarity, paired with fep-025's edge-current divergence law and nonzero cycle current, without identifying the finite rate-field ansatz with a continuum Fokker-Planck solution. |
+| fep-161 | `formal_pairing` | fep-160 | `FEPComposed.fep161_skewCancellation_extends_fep160_aoNess` | The plain-matrix trace and quadratic cancellations are paired with the rate-field decomposition whose skew clause they justify, without deriving the finite carrier's law-weighted skewness from the plain pointwise property. |
+| fep-162 | `formal_pairing` | fep-161 | `FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation` | The symmetrization construction discharges exactly the symmetric-matrix hypothesis of the trace cancellation it is paired with, without claiming a continuum Clairaut theorem or smooth Hessian. |
+| fep-163 | `formal_pairing` | fep-025 | `FEPComposed.fep163_solenoidalExpansion_extends_fep025_current` | The exact three-term weighted-divergence expansion and its conditional drop are paired with fep-025's node-divergence current carrier, without asserting that the continuum first-order step has a finite graph analogue. |
+| fep-164 | `formal_pairing` | fep-025 | `FEPComposed.fep164_graphCurrent_extends_fep025_current` | The graph-plane decomposition and weighted Leibniz rule of the candidate current are paired with fep-025's edge-current node divergence, without equating the plain flux-matrix residual with a transition-row stationarity identity. |
+| fep-165 | `formal_pairing` | fep-025 | `FEPComposed.fep165_necessityWitness_extends_fep025_current` | The compiled 2-node counterexample refuting the unconditional solenoidal drop is paired with fep-025's divergence-free cycle witness, jointly bounding exactly what stationarity and antisymmetry imply. |
 
 ## Capability roster
 
@@ -465,6 +481,7 @@ Satisfied nodes remain visible so resolved gaps retain auditable declaration evi
 | `cap-finite-sample-risk-calibration` — Finite-sample risk and calibration transfer | `satisfied` | — | `FEP.EmpiricalRisk.brierExcess_eq_sqError`, `FEP.EmpiricalRisk.laplaceBadEvent_probability_le`, `FEP.EmpiricalRisk.laplaceBias_nonzero_witness`, `FEP.EmpiricalRisk.laplaceBrierRisk_le`, `FEP.EmpiricalRisk.laplaceError_identity` | Add-one Bernoulli smoothing has an exact affine error decomposition, bounded and explicitly nonzero bias, absolute- and squared-error transfer, normalized finite-law risk bounds, an exact Brier-excess identity, and monotone transfer of supplied tail probabilities. These are deterministic and finite-law certificates; no empirical calibration result or automatically derived concentration premise is claimed. |
 | `cap-finite-variational-duality` — Finite variational duality and information bounds | `satisfied` | — | `FEP.VariationalDuality.dvObjective_eq_logPartition_iff`, `FEP.VariationalDuality.finiteChannel_dataProcessing`, `FEP.VariationalDuality.fixedSampleImportanceJensen`, `FEP.VariationalDuality.meanFieldCoordinate_optimum_iff`, `FEP.VariationalDuality.rateDistortion_weak_duality`, `FEP.VariationalDuality.sampleMeanWeight_pos`, `fep_fep064.FEP064.fep064_zeroMultiplier_boundary` | Full-support finite laws prove Gibbs and Donsker--Varadhan optimizer identities, coordinate and mean-field decompositions, fixed-sample importance-weighted Jensen control, channel data processing, and rate-distortion weak duality, with positive-weight and zero-multiplier witnesses. No strong-duality or extended-divergence claim is inferred. |
 | `cap-gaussian-thermodynamic-model` — Gaussian thermodynamic model | `satisfied` | — | `fep_fep040.FEP040.fep040_gaussianEntropy_hasDerivAt`, `fep_fep040.FEP040.fep040_gaussian_mass_one`, `fep_fep040.FEP040.fep040_gaussian_mean`, `fep_fep040.FEP040.fep040_gaussian_variance`, `fep_fep040.FEP040.fep040_heatCapacity_eq_half`, `fep_fep040.FEP040.fep040_thermalEntropy_hasDerivAt` | Mathlib's normalized real Gaussian law with exact mean and variance, a positive-variance closed-form entropy functional, thermal variance parameterization, exact entropy derivative, and heat-capacity relation. |
+| `cap-geometric-mechanics-solenoidal` — Geometric mechanics of the solenoidal term | `satisfied` | — | `FEPComposed.fep160_aoNess_extends_fep025_current`, `FEPComposed.fep161_skewCancellation_extends_fep160_aoNess`, `FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation`, `FEPComposed.fep163_solenoidalExpansion_extends_fep025_current`, `FEPComposed.fep164_graphCurrent_extends_fep025_current`, `FEPComposed.fep165_necessityWitness_extends_fep025_current`, `fep_fep163.FEP163.fep163_solenoidal_expansion`, `fep_fep165.FEP165.fep165_witness_drop_fails` | Plain finite carriers prove the two skew-algebra cancellations behind the Helmholtz–Ao solenoidal expansion (zero trace against a symmetric matrix, zero quadratic form), the discrete-Hessian symmetrization that discharges the Hessian symmetry premise, the exact three-term expansion of the weighted candidate-current divergence under the stationary coupling, the conditional drops under explicit orthogonality or constant-Q hypotheses, the graph-plane decomposition and exact weighted Leibniz rule with its generically nonzero density residual, and a compiled 2-node counterexample refuting the unconditional drop. No continuum Fokker-Planck discretization, PDE solution, or physical entropy-production identification is claimed. |
 | `cap-geometric-optimization` — Finite information-geometric optimization | `satisfied` | — | `FEP.GeometricOptimization.affineProjection_minimizes`, `FEP.GeometricOptimization.categoricalFisher_pos`, `FEP.GeometricOptimization.duplicatedScore_nullDirection_example`, `FEP.GeometricOptimization.fairBernoulli_fullRank_example`, `FEP.GeometricOptimization.mirrorDescent_threePoint_identity`, `FEP.GeometricOptimization.naturalGradient_equivariant`, `FEP.GeometricOptimization.replicatorVector_isSimplexTangent`, `FEP.GeometricOptimization.replicator_naturalGradient_equivalence`, `FEP.GeometricOptimization.weightedCauchySchwarz_of_right_pos` | Finite score models prove categorical Fisher positivity on nonzero simplex tangents, pullback composition, natural-gradient chart equivariance, a scalar Cramer--Rao bound, mirror-descent and affine Bregman identities, and replicator natural-gradient equivalence, with both full-rank and rank-deficient witnesses. No global smooth-manifold convergence theorem is claimed. |
 | `cap-hierarchical-factorization` — Hierarchical probability factorization | `satisfied` | — | `fep_fep027.FEP027.fep027_hierarchical_assoc`, `fep_fep027.FEP027.fep027_hierarchical_fst`, `fep_fep027.FEP027.fep027_hierarchical_mass_one`, `fep_fep027.FEP027.fep027_hierarchical_snd` | Normalized kernels at each level and a theorem composing them into the advertised hierarchical joint law. |
 | `cap-markov-blanket-dynamics` — Markov-blanket factorization and dynamics | `satisfied` | — | `FEP.MarkovBlanket.boolDynamics_nontrivial`, `FEP.MarkovBlanket.conditional_internal_external_factorization`, `FEP.MarkovBlanket.conditional_mutualInformation_zero`, `FEP.MarkovBlanket.transition_eq_staticJoint_nextStaticModel`, `FEP.MarkovBlanket.transition_factorization`, `FEP.MarkovBlanket.transition_row_conditional_factorization`, `FEP.MarkovBlanket.transition_row_conditional_mutualInformation_zero` | A normalized internal-blanket-external joint factorizes conditionally; every row of a four-component typed transition is exactly an induced static blanket model with zero conditional internal-external mutual information; and a nontrivial Boolean witness changes state. |
@@ -504,7 +521,9 @@ Shared imports indicate library reuse, not logical dependencies between catalogu
 | `FepSketches.efe_time_scale_separation` | 1 | fep-159 |
 | `FepSketches.empirical_risk` | 7 | fep-121, fep-122, fep-123, fep-124, fep-125, fep-126, fep-127 |
 | `FepSketches.exponential_family` | 7 | fep-142, fep-143, fep-144, fep-145, fep-146, fep-147, fep-148 |
+| `FepSketches.geometric_mechanics` | 5 | fep-161, fep-162, fep-163, fep-164, fep-165 |
 | `FepSketches.geometric_optimization` | 7 | fep-100, fep-101, fep-102, fep-103, fep-104, fep-105, fep-106 |
+| `FepSketches.helmholtz_ao_ness` | 1 | fep-160 |
 | `FepSketches.learning_theory` | 7 | fep-114, fep-115, fep-116, fep-117, fep-118, fep-119, fep-120 |
 | `FepSketches.measure_bayes` | 7 | fep-051, fep-052, fep-053, fep-054, fep-055, fep-056, fep-057 |
 | `FepSketches.native_blanket` | 7 | fep-135, fep-136, fep-137, fep-138, fep-139, fep-140, fep-141 |

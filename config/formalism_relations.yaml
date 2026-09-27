@@ -280,6 +280,19 @@ capabilities:
       - fep_fep040.FEP040.fep040_gaussian_variance
       - fep_fep040.FEP040.fep040_heatCapacity_eq_half
       - fep_fep040.FEP040.fep040_thermalEntropy_hasDerivAt
+  - id: cap-geometric-mechanics-solenoidal
+    title: Geometric mechanics of the solenoidal term
+    description: Plain finite carriers prove the two skew-algebra cancellations behind the Helmholtz–Ao solenoidal expansion (zero trace against a symmetric matrix, zero quadratic form), the discrete-Hessian symmetrization that discharges the Hessian symmetry premise, the exact three-term expansion of the weighted candidate-current divergence under the stationary coupling, the conditional drops under explicit orthogonality or constant-Q hypotheses, the graph-plane decomposition and exact weighted Leibniz rule with its generically nonzero density residual, and a compiled 2-node counterexample refuting the unconditional drop. No continuum Fokker-Planck discretization, PDE solution, or physical entropy-production identification is claimed.
+    status: satisfied
+    evidence:
+      - FEPComposed.fep160_aoNess_extends_fep025_current
+      - FEPComposed.fep161_skewCancellation_extends_fep160_aoNess
+      - FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation
+      - FEPComposed.fep163_solenoidalExpansion_extends_fep025_current
+      - FEPComposed.fep164_graphCurrent_extends_fep025_current
+      - FEPComposed.fep165_necessityWitness_extends_fep025_current
+      - fep_fep163.FEP163.fep163_solenoidal_expansion
+      - fep_fep165.FEP165.fep165_witness_drop_fails
   - id: cap-geometric-optimization
     title: Finite information-geometric optimization
     description: Finite score models prove categorical Fisher positivity on nonzero simplex tangents, pullback composition, natural-gradient chart equivariance, a scalar Cramer--Rao bound, mirror-descent and affine Bregman identities, and replicator natural-gradient equivalence, with both full-rank and rank-deficient witnesses. No global smooth-manifold convergence theorem is claimed.
@@ -1228,3 +1241,33 @@ edges:
     kind: formal_pairing
     rationale: The finite KL divergence of the EFE time-scale separation is bounded by the log-affinity of its two-state rate carrier, paired with fep-153's nonuniform stationary semigroup law, without claiming a physical entropy-production identity.
     witness: FEPComposed.fep159_epistemicGain_extends_fep153_stationary
+  - source: fep-160
+    target: fep-025
+    kind: formal_pairing
+    rationale: The Helmholtz–Ao decomposition's stationary current is carried entirely by the circulation part and its node divergence vanishes under stationarity, paired with fep-025's edge-current divergence law and nonzero cycle current, without identifying the finite rate-field ansatz with a continuum Fokker-Planck solution.
+    witness: FEPComposed.fep160_aoNess_extends_fep025_current
+  - source: fep-161
+    target: fep-160
+    kind: formal_pairing
+    rationale: The plain-matrix trace and quadratic cancellations are paired with the rate-field decomposition whose skew clause they justify, without deriving the finite carrier's law-weighted skewness from the plain pointwise property.
+    witness: FEPComposed.fep161_skewCancellation_extends_fep160_aoNess
+  - source: fep-162
+    target: fep-161
+    kind: formal_pairing
+    rationale: The symmetrization construction discharges exactly the symmetric-matrix hypothesis of the trace cancellation it is paired with, without claiming a continuum Clairaut theorem or smooth Hessian.
+    witness: FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation
+  - source: fep-163
+    target: fep-025
+    kind: formal_pairing
+    rationale: The exact three-term weighted-divergence expansion and its conditional drop are paired with fep-025's node-divergence current carrier, without asserting that the continuum first-order step has a finite graph analogue.
+    witness: FEPComposed.fep163_solenoidalExpansion_extends_fep025_current
+  - source: fep-164
+    target: fep-025
+    kind: formal_pairing
+    rationale: The graph-plane decomposition and weighted Leibniz rule of the candidate current are paired with fep-025's edge-current node divergence, without equating the plain flux-matrix residual with a transition-row stationarity identity.
+    witness: FEPComposed.fep164_graphCurrent_extends_fep025_current
+  - source: fep-165
+    target: fep-025
+    kind: formal_pairing
+    rationale: The compiled 2-node counterexample refuting the unconditional solenoidal drop is paired with fep-025's divergence-free cycle witness, jointly bounding exactly what stationarity and antisymmetry imply.
+    witness: FEPComposed.fep165_necessityWitness_extends_fep025_current

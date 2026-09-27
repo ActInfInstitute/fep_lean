@@ -22,6 +22,7 @@ from .bodies import (
     core_thermodynamics,
     exponential_family_geometry,
     finite_sample_risk_calibration,
+    geometric_mechanics,
     geometric_optimization,
     learning_theory,
     measure_bayesian_inversion,
@@ -134,6 +135,10 @@ BODY_MODULE_MANIFEST: tuple[BodyModule, ...] = (
     BodyModule(
         "standalone-efe-formalizations",
         standalone_efe_formalizations,
+    ),
+    BodyModule(
+        "geometric-mechanics-notation",
+        geometric_mechanics,
     ),
 )
 

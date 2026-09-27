@@ -20,6 +20,8 @@ import FepSketches.compositions.efe_policy_selection
 import FepSketches.compositions.perception_action_loop
 import FepSketches.compositions.bayesian_model_reduction
 import FepSketches.compositions.efe_time_scale_separation
+import FepSketches.compositions.helmholtz_ao_ness
+import FepSketches.compositions.geometric_mechanics
 
 /-!
 This file is generated from the formal module manifest. Scientific cross-topic

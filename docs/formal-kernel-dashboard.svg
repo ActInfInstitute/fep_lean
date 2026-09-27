@@ -13,7 +13,7 @@
         </style>
 <rect class="background" width="1600" height="3256"/>
 <text class="title" x="40" y="52">Formalism numerical witness workbench</text>
-<text class="subtitle" x="40" y="81">16 typed witnesses · 16 formal families · exact evaluated schemas</text>
+<text class="subtitle" x="40" y="81">17 typed witnesses · 17 formal families · exact evaluated schemas</text>
 <rect class="banner" x="40" y="101" width="1520" height="68" rx="9"/>
 <text class="banner-label" x="58" y="123">Evidence boundary</text>
 <text class="banner-line" x="58.0" y="143.0">Deterministic numerical witnesses are explanatory non-proof evidence. They can expose finite sign, normalization, support, rank,</text>
@@ -645,6 +645,33 @@
 <text class="legend" data-series-key="squared_relaxation_bound" x="366.00" y="2938"><title>squared_relaxation_bound</title><tspan x="366.00" y="2938.00">Squared relaxation</tspan><tspan x="366.00" y="2956.00">envelope</tspan></text>
 <line class="legend-swatch" data-series-key="affinity_bound" data-overlap-role="independent" x1="346" y1="2979" x2="356" y2="2979" stroke="#7c3aed" stroke-width="2.8"/>
 <text class="legend" data-series-key="affinity_bound" x="366.00" y="2983"><title>affinity_bound</title><tspan x="366.00" y="2983.00">Affinity production</tspan><tspan x="366.00" y="3001.00">bound</tspan></text>
+</g>
+</g>
+<g class="witness-summary" data-witness-summary="geometric-solenoidal-drop" data-witness-id="geometric-solenoidal-drop" data-family="geometric-mechanics-notation" data-witness-status="accepted" data-check-count="8" data-max-check-residual="0.0" data-formal-alignment="theorem_instance" data-boundary-observed="true" data-footer-band-top="3110" role="listitem" tabindex="0" aria-label="Skew cancellations, three-term expansion remainder, and the failing unconditional solenoidal drop, accepted, Theorem Instance">
+<title>Skew cancellations, three-term expansion remainder, and the failing unconditional solenoidal drop · geometric-solenoidal-drop · geometric-mechanics-notation</title>
+<desc>the skew trace and quadratic cancellations hold exactly on the symmetry hypotheses, the symmetrized discrete Hessian is symmetric and coincides with symmetric data, the expansion remainder slot evaluates to exactly 1 on the concrete derivative datum, and the honesty-guard candidate current (0, -1) has node divergence (1, -1) so the unconditional solenoidal drop fails Boundary: On the honesty guard the transport divergence is (2, -2) at the two nodes and the candidate current (0, -1) has node divergence 1 at node 0: the drop fails, matching the compiled witness. Theorem mirrors: fep_fep161.FEP161.fep161_skewTrace_eq_zero, fep_fep161.FEP161.fep161_skewQuadratic_eq_zero, fep_fep162.FEP162.fep162_symmetrize_symmetric, fep_fep162.FEP162.fep162_skewTrace_symmetrize_eq_zero, fep_fep163.FEP163.fep163_solenoidal_expansion, fep_fep163.FEP163.fep163_expansion_remainder_witness, fep_fep164.FEP164.fep164_graphDecomposition, fep_fep165.FEP165.fep165_witness_current, fep_fep165.FEP165.fep165_witness_drop_fails Formal alignment: theorem_instance. Typed checks: witness-q-skew: predicate(True, True), tolerance 0.0, residual 0.0, accepted; trace-cancellation: eq(0.0, 0.0), tolerance 1e-12, residual 0.0, accepted; quadratic-cancellation: eq(0.0, 0.0), tolerance 1e-12, residual 0.0, accepted; witness-current: predicate(True, True), tolerance 0.0, residual 0.0, accepted; witness-divq: predicate(True, True), tolerance 0.0, residual 0.0, accepted; expansion-remainder: eq(1.0, 1.0), tolerance 1e-12, residual 0.0, accepted; symmetrize-identity-on-symmetric-data: predicate(True, True), tolerance 0.0, residual 0.0, accepted; unconditional-drop-fails: eq(1.0, 1.0), tolerance 1e-12, residual 0.0, accepted.</desc>
+<rect class="card" x="545" y="2704" width="510" height="460" rx="13"/>
+<text class="card-title" x="563" y="2777">Skew cancellations, three-term expansion</text>
+<text class="card-title" x="563" y="2798">remainder, and the failing unconditional…</text>
+<text class="family" x="563" y="2819">geometric-mechanics-notation · 2 rows · bar</text>
+<text class="metric" x="563" y="2839">8 typed checks · max residual 0</text>
+<text class="check-passed" x="563" y="2729">TYPED CHECKS PASSED</text>
+<text class="non-proof" x="563" y="2749">NON-PROOF WITNESS</text>
+<line class="card-footer-rule" x1="563" y1="3110" x2="1037" y2="3110"/>
+<text class="alignment" x="563" y="3128">Formal alignment · Theorem Instance</text>
+<text class="alignment" x="563" y="3146">Boundary observed · yes · 9 theorem mirrors</text>
+<g class="plot" data-plot-for="geometric-solenoidal-drop" data-zero-baseline="true" data-y-min="-1.0" data-y-max="1.0" data-x-quantity="Node" data-x-unit="dimensionless" data-y-quantities="Node divergence" data-y-unit="dimensionless" data-legend-layout="direct" data-native-plot-height="145" data-category-count="0" data-category-key-columns="0" data-annotation-band-bottom="3082.00">
+<text class="axis-label axis-y-label" x="565" y="2865"><tspan x="565" y="2865">y · Node divergence · unit: dimensionless</tspan></text>
+<line class="axis" x1="647" y1="3024" x2="856" y2="3024"/>
+<line class="axis" x1="647" y1="2879" x2="647" y2="3024"/>
+<text class="scale-zero" x="565" y="3019">y min -1</text>
+<text class="scale-maximum" x="565" y="2892">y max 1</text>
+<rect class="plot-bar" data-category-index="0" data-series-key="divergence" data-value="1.0" data-zero-value="false" x="662.67" y="2879.00" width="73.15" height="72.50" fill="#0f766e" opacity="0.82"><title>divergence</title></rect>
+<rect class="plot-bar" data-category-index="1" data-series-key="divergence" data-value="-1.0" data-zero-value="false" x="767.17" y="2951.50" width="73.15" height="72.50" fill="#0f766e" opacity="0.82"><title>divergence</title></rect>
+<text class="axis-label axis-x-label" x="647" y="3046"><tspan x="647" y="3046">x · Node · unit: dimensionless</tspan></text>
+<text class="x-domain" data-x-domain="Node: 0 · 1" x="647" y="3066"><tspan x="647" y="3066.00">Node: 0 · 1</tspan></text>
+<circle cx="879" cy="2888" r="4" fill="#0f766e"/>
+<text class="legend" data-series-key="divergence" x="894.00" y="2892"><title>divergence</title><tspan x="894.00" y="2892.00">Node divergence</tspan></text>
 </g>
 </g>
 </g>

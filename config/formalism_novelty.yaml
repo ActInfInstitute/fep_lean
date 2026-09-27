@@ -547,3 +547,33 @@ topics:
   new_invariant: The policy-relevant information gap of any fully supported two-state belief is bounded by the generator entropy-production rate scaled by the relaxation time one over the decay rate.
   carrier_delta: Anchors the finite KL-to-stationarity functional on the exact two-state continuous-time semigroup whose stationary law is invariant at every time.
   required_bridge: FEPComposed.fep159_epistemicGain_extends_fep153_stationary
+- id: fep-160
+  nearest_topics: [fep-025]
+  new_invariant: Every rate field on a finite state space with full-support stationary law splits exactly into a detailed-balanced reversible part plus a law-weighted-skew circulation part, and the stationary edge current is carried entirely by the circulation part.
+  carrier_delta: Replaces the manuscript's constant-diffusion drift ansatz by an unconditional finite decomposition of the rate field itself, with the explicit stationarity divergence check and a directed three-cycle NESS witness.
+  required_bridge: FEPComposed.fep160_aoNess_extends_fep025_current
+- id: fep-161
+  nearest_topics: [fep-160]
+  new_invariant: On plain finite matrices a skew matrix contracted against a symmetric matrix has zero trace and annihilates its own quadratic form, unconditionally.
+  carrier_delta: Isolates the two pointwise cancellation laws behind the solenoidal expansion from any stationary-state structure, on the plain Fin-indexed carrier.
+  required_bridge: FEPComposed.fep161_skewCancellation_extends_fep160_aoNess
+- id: fep-162
+  nearest_topics: [fep-161]
+  new_invariant: Symmetrizing raw mixed-difference data constructs a symmetric discrete Hessian for which the trace cancellation holds with no hypothesis on the raw data, and the construction is the identity exactly on symmetric data.
+  carrier_delta: Turns the continuum Clairaut symmetry of the Hessian from a smoothness hypothesis into a finite construction, discharging the symmetry premise of the trace cancellation.
+  required_bridge: FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation
+- id: fep-163
+  nearest_topics: [fep-025]
+  new_invariant: The weighted divergence of the candidate solenoidal current is exactly the three-term expansion tr(Q H) - gᵀ Q g + (∇·Q)ᵀ g under the stationary coupling, and the drop of the remainder requires an explicit orthogonality or constant-Q hypothesis with a concrete failing datum otherwise.
+  carrier_delta: Adds explicit directional-derivative data (Hessian slot and transport-divergence slot) plus the stationary-density coupling so the manuscript's expansion identity becomes an exact finite theorem with a scoped conditional drop.
+  required_bridge: FEPComposed.fep163_solenoidalExpansion_extends_fep025_current
+- id: fep-164
+  nearest_topics: [fep-025]
+  new_invariant: On a finite node set the node divergence of a skew edge field is twice its row sum, the edge current's divergence splits into transport plus discrete-divergence slots, and the weighted node divergence obeys an exact Leibniz rule with a generically nonzero density residual.
+  carrier_delta: Transfers the candidate-current divergence check from fep-025's transition-row carrier to a plain flux-matrix carrier with explicit weighted-node divergence, exposing the residual that skewness alone cannot kill.
+  required_bridge: FEPComposed.fep164_graphCurrent_extends_fep025_current
+- id: fep-165
+  nearest_topics: [fep-025]
+  new_invariant: For the 2-node transport [[0,1],[-1,0]] and gradient (1,0) the candidate current is (0,-1) with node divergence 1 at node 0, so the unconditional solenoidal drop is refuted exactly.
+  carrier_delta: Pins the manuscript honesty guard as a compiled counterexample, separating the conditional drops of fep-163 from any unconditional claim.
+  required_bridge: FEPComposed.fep165_necessityWitness_extends_fep025_current

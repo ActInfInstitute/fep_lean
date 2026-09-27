@@ -531,4 +531,140 @@ theorem fep159_epistemicGain_rateScaling (rates : TwoStateRates) (belief : Finit
 
 end FEP159
 """,
+    "fep-160": """import FepSketches.helmholtz_ao_ness
+
+namespace FEP160
+
+open FEP.HelmholtzAoNess
+open FEP FEP.ContinuousTimeMarkov Finset
+open scoped BigOperators
+variable {State : Type*} [Fintype State]
+
+/-- **The quadratic-term cancellation.**  A skew-symmetric matrix
+annihilates its own quadratic form `gᵀ Q g = 0`. -/
+theorem fep160_skewQuadratic_eq_zero {n : ℕ} (Q : Fin n → Fin n → ℝ)
+    (g : Fin n → ℝ) (hQ : SkewSymmetric Q) : dot g (mulVec Q g) = 0 :=
+  FEP.HelmholtzAoNess.skewQuadratic_eq_zero Q g hQ
+
+/-- **The trace-term cancellation.**  A skew matrix contracted against a
+symmetric (Hessian-role) matrix has zero trace. -/
+theorem fep160_skewTrace_eq_zero {n : ℕ} (Q H : Fin n → Fin n → ℝ)
+    (hQ : SkewSymmetric Q) (hH : SymmetricOf H) : traceOf (mulOf Q H) = 0 :=
+  FEP.HelmholtzAoNess.skewTrace_eq_zero Q H hQ hH
+
+/-- The Ao potential of a full-support law: `F = -log p*`. -/
+noncomputable def fep160_aoPotential (law : FiniteLaw State) (i : State) : ℝ :=
+  FEP.HelmholtzAoNess.aoPotential law i
+
+/-- The reversible (dissipative) part of a rate field relative to `p*`. -/
+noncomputable def fep160_symmetricPart (rate : State → State → ℝ)
+    (law : FiniteLaw State) (i j : State) : ℝ :=
+  FEP.HelmholtzAoNess.symmetricPart rate law i j
+
+/-- The solenoidal (circulation) part of a rate field relative to `p*`. -/
+noncomputable def fep160_circulationPart (rate : State → State → ℝ)
+    (law : FiniteLaw State) (i j : State) : ℝ :=
+  FEP.HelmholtzAoNess.circulationPart rate law i j
+
+/-- **The Helmholtz–Ao split.**  Every rate field decomposes, relative to
+a full-support stationary law, into its reversible plus circulation parts:
+the finite `D + Q` ansatz is not a restriction on the drift. -/
+theorem fep160_aoDecomposition {rate : State → State → ℝ}
+    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :
+    rate i j = symmetricPart rate law i j + circulationPart rate law i j :=
+  FEP.HelmholtzAoNess.aoDecomposition hSupport i j
+
+/-- **The generator-level current identity.**  The stationary probability
+current of the generator is carried entirely by the circulation part:
+`J_ij = 2 p*_i Q_ij`. -/
+theorem fep160_probabilityCurrent_eq_twice_circulation
+    (generator : FiniteRateGenerator State) (law : FiniteLaw State)
+    (hSupport : ∀ i, 0 < law i) (i j : State) :
+    generator.probabilityCurrent law i j =
+      2 * law i * circulationPart generator.rate law i j :=
+  FEP.HelmholtzAoNess.probabilityCurrent_eq_twice_circulation generator law hSupport i j
+
+/-- The circulation part is skew in the `p*`-weighted sense: the finite
+`Qᵀ = -Q` clause of the ansatz. -/
+theorem fep160_circulationPart_skew {rate : State → State → ℝ}
+    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :
+    law i * circulationPart rate law i j =
+      -(law j * circulationPart rate law j i) :=
+  FEP.HelmholtzAoNess.circulationPart_skew hSupport i j
+
+/-- The symmetric part is reversible: detailed balance of the
+dissipative term. -/
+theorem fep160_symmetricPart_reversible {rate : State → State → ℝ}
+    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :
+    law i * symmetricPart rate law i j =
+      law j * symmetricPart rate law j i :=
+  FEP.HelmholtzAoNess.symmetricPart_reversible hSupport i j
+
+/-- The stationary edge current equals twice the `p*`-weighted
+circulation part: the current is carried entirely by the solenoidal term. -/
+theorem fep160_current_eq_twice_circulation {rate : State → State → ℝ}
+    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :
+    circulationNum rate law i j =
+      2 * law i * circulationPart rate law i j :=
+  FEP.HelmholtzAoNess.current_eq_twice_circulation hSupport i j
+
+/-- The reversible part carries no current at all. -/
+theorem fep160_symmetricPart_current_eq_zero {rate : State → State → ℝ}
+    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :
+    law i * symmetricPart rate law i j -
+      law j * symmetricPart rate law j i = 0 :=
+  FEP.HelmholtzAoNess.symmetricPart_current_eq_zero hSupport i j
+
+/-- Removing the circulation part is exactly detailed balance: the finite
+constructive counterpart of the manuscript's disclaimer about the
+solenoidal term. -/
+theorem fep160_detailedBalanced_iff_circulation_eq_zero
+    {rate : State → State → ℝ} {law : FiniteLaw State}
+    (hSupport : ∀ i, 0 < law i) :
+    (∀ i j, law i * rate i j = law j * rate j i) ↔
+      ∀ i j, circulationPart rate law i j = 0 :=
+  FEP.HelmholtzAoNess.detailedBalanced_iff_circulation_eq_zero hSupport
+
+/-- The log-affinity splits into the potential drop plus the skew force. -/
+theorem fep160_forceSplit {rate : State → State → ℝ} {law : FiniteLaw State}
+    (hSupport : ∀ i, 0 < law i) {i j : State}
+    (hij : 0 < rate i j) (hji : 0 < rate j i) :
+    Real.log (law i * rate i j / (law j * rate j i)) =
+      aoPotential law j - aoPotential law i +
+        Real.log (rate i j / rate j i) :=
+  FEP.HelmholtzAoNess.forceSplit hSupport hij hji
+
+/-- Under the generator contract and stationarity, the node divergence of
+the stationary current vanishes: the finite form of the manuscript's
+explicit stationarity constraint. -/
+theorem fep160_stationaryCurrent_divergence_zero
+    (generator : FiniteRateGenerator State) (law : FiniteLaw State)
+    (hStat : generator.IsStationary law) (i : State) :
+    ∑ j, generator.probabilityCurrent law j i = 0 :=
+  FEP.HelmholtzAoNess.stationaryCurrent_divergence_zero generator law hStat i
+
+/-- Restated over the circulation part: the divergence check constrains
+exactly the solenoidal contribution. -/
+theorem fep160_circulation_divergence_zero
+    (generator : FiniteRateGenerator State) (law : FiniteLaw State)
+    (hStat : generator.IsStationary law) (hSupport : ∀ i, 0 < law i)
+    (i : State) :
+    ∑ j, 2 * law j * circulationPart generator.rate law j i = 0 :=
+  FEP.HelmholtzAoNess.circulation_divergence_zero generator law hStat hSupport i
+
+/-- **The directed three-cycle NESS package.**  The cycle witness is
+stationary, divergence-free at every node, and carries a nonzero
+circulation part: a genuine nonequilibrium steady state whose entire
+current is solenoidal. -/
+theorem fep160_cycle_ao_ness :
+    threeCycleGenerator.IsStationary threeCycleStationaryLaw ∧
+      (∀ i : Fin 3,
+        ∑ j, threeCycleGenerator.probabilityCurrent
+            threeCycleStationaryLaw j i = 0) ∧
+      circulationPart threeCycleGenerator.rate threeCycleStationaryLaw
+          (0 : Fin 3) (1 : Fin 3) ≠ 0 :=
+  FEP.HelmholtzAoNess.cycle_ao_ness
+
+end FEP160
+""",
 }

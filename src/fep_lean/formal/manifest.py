@@ -309,6 +309,18 @@ FORMAL_MODULES: tuple[FormalModule, ...] = (
         declaration_namespace="FEP.TimeScaleEFE",
     ),
     FormalModule(
+        resource="helmholtz_ao_ness.lean",
+        lean_module="FepSketches.helmholtz_ao_ness",
+        role=FormalModuleRole.FOUNDATION,
+        declaration_namespace="FEP.HelmholtzAoNess",
+    ),
+    FormalModule(
+        resource="geometric_mechanics.lean",
+        lean_module="FepSketches.geometric_mechanics",
+        role=FormalModuleRole.FOUNDATION,
+        declaration_namespace="FEP.GeometricMechanics",
+    ),
+    FormalModule(
         resource="compositions/core.lean",
         lean_module="FepSketches.compositions.core",
         role=FormalModuleRole.COMPOSITION,
@@ -437,6 +449,18 @@ FORMAL_MODULES: tuple[FormalModule, ...] = (
     FormalModule(
         resource="compositions/efe_time_scale_separation.lean",
         lean_module="FepSketches.compositions.efe_time_scale_separation",
+        role=FormalModuleRole.COMPOSITION,
+        declaration_namespace="FEPComposed",
+    ),
+    FormalModule(
+        resource="compositions/helmholtz_ao_ness.lean",
+        lean_module="FepSketches.compositions.helmholtz_ao_ness",
+        role=FormalModuleRole.COMPOSITION,
+        declaration_namespace="FEPComposed",
+    ),
+    FormalModule(
+        resource="compositions/geometric_mechanics.lean",
+        lean_module="FepSketches.compositions.geometric_mechanics",
         role=FormalModuleRole.COMPOSITION,
         declaration_namespace="FEPComposed",
     ),

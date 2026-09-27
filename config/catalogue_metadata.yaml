@@ -3,7 +3,7 @@
 schema_version: 2
 roster:
   first_id: fep-001
-  last_id: fep-159
+  last_id: fep-165
 families:
 - core-free-energy
 - core-active-inference
@@ -26,6 +26,7 @@ families:
 - finite-exponential-family-dual-geometry
 - two-state-continuous-time-thermodynamics
 - standalone-efe-formalizations
+- geometric-mechanics-notation
 topics:
 - id: fep-001
   title: Variational Free Energy Bound
@@ -1187,4 +1188,47 @@ topics:
   mathlib_modules:
   - Analysis.SpecialFunctions.ExpDeriv
   - Probability.Kernel.Invariance
+  mathlib_status: real
+- id: fep-160
+  title: Helmholtz–Ao Decomposition of Nonequilibrium Steady Currents
+  area: ActiveInference
+  family: standalone-efe-formalizations
+  mathlib_modules:
+  - Analysis.SpecialFunctions.Log.Basic
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-161
+  title: Skew Bilinear Cancellation of the Trace and Quadratic Terms
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-162
+  title: The Discrete Hessian as a Symmetrization Construction
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-163
+  title: The Three-Term Solenoidal Expansion and Its Conditional Drop
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-164
+  title: Graph Divergence of the Candidate Solenoidal Current
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-165
+  title: Necessity Witness for the Unconditional Solenoidal Drop
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
   mathlib_status: real
