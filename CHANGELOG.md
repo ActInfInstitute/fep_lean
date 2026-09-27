@@ -1,4 +1,16 @@
-## Unreleased
+## 1.3.0 — 2026-09-26 — toolchain co-bump and wave-2 delivery
+
+### Joint Mathlib/Lean v4.34.1 co-bump and release promotion (2026-09-26)
+
+User-approved G20 co-bump: `lean/lean-toolchain` and `lean/lakefile.lean`
+moved to v4.34.1, `lean/lake-manifest.json` re-resolved at Mathlib
+`d13f23b7`; `lake build FepSketches` green (8990 jobs, zero errors and
+warnings) with the catalogue-compile spot-check, mypy, ruff, and
+pin-audit gates green. Wave-2 delivery (lean-5 archive under `done/`,
+owner roster v22, 159-topic wave-3 catalogue, cycles #27-#29 custody
+seals) ships with this release; the coordinated native capture and the
+pin cycle #31 re-seal follow before the `v1.3.0` tag.
+
 ### Coordinated evidence refresh: SOURCE_OWNER_ROSTER v21 (2026-09-24)
 
 `OWNER_MANIFEST_VERSION` 20 → 21 and six `src/fep_lean/custody/*` modules

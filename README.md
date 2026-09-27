@@ -1,6 +1,6 @@
 # fep_lean
 
-`fep_lean` is a standalone catalogue of 155 Free Energy Principle, Active
+`fep_lean` is a standalone catalogue of 159 Free Energy Principle, Active
 Inference, Bayesian Mechanics, Information Geometry, and Thermodynamics topics.
 Each row contains a reviewed invariant, explicit assumptions, a Lean 4 theorem
 body, and typeset signatures. The pinned Lean workspace is the compilation
@@ -13,8 +13,8 @@ exponential-family dual geometry, and exact two-state continuous time.
 
 ## Release
 
-Version `1.2.0` is the 155-topic publication cut. The canonical software
-release is [GitHub `v1.2.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.2.0),
+Version `1.3.0` is the 159-topic publication cut. The canonical software
+release is [GitHub `v1.3.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.3.0),
 and the evolving scholarly record is identified by the
 [Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233). The GitHub
 release notes cross-reference the immutable Zenodo version DOI and publish the
