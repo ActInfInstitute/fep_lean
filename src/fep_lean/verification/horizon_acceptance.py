@@ -33,18 +33,18 @@ CAPTURED_COLLECTION_SHA256 = (
 )
 PREDECESSORS = {
     BASE
-    + "acceptance.json": "18ec35609fb5e00c9f44a25c3769b193558127d29615969daf816bf0d029a3f5",
+    + "acceptance.json": "bd45418847cb8ab3dfcc545b81d502d8c6f9cc264868d74671795b55b4c7171c",
     BASE
-    + "repairs/05b-transition-covariance.json": "625a26dada45f090ecfdd781338f025875c3a5acf60ef8b128f3cc01e7308750",
+    + "repairs/05b-transition-covariance.json": "05d1c3e76c24a7b5bddb376803993229dd790cb8e9973b72e60592e84eed30e3",
     BASE
-    + "repairs/05d-gaussian-conditioning.json": "13a5577fa484cf63878a485e79b66d14f6fb7ae10d1ad91f997dcbc34c5a48db",
+    + "repairs/05d-gaussian-conditioning.json": "3e3f9dc6562b08949c525b0ef6d014a9d9c97b927e1bea6c5128028687c7f038",
     BASE
     + "repairs/05d-gaussian-conditioning-lifecycle.json": "d46f6b9c0b7be2a83647440f2d8bbd345c77c448aa0d72a9b868f5d01c8f9bde",
     BASE
-    + "repairs/06a-native-filter-posterior.json": "f45132628eba920b05bd5550e610598776b27e5f71996835dddfa1be2509a685",
+    + "repairs/06a-native-filter-posterior.json": "71a04ffba479b6355070e1b5a9d7284622171ed524ec5d4c218926772fdd2263",
     BASE
-    + "repairs/07-gaussian-vfe-natural-gradient.json": "6c654a45fcbb4d3b62a165619d847a31ecf7c56cb8e345cda1920fad4e9ce728",
-    R0_SUCCESSOR: "df54291c4e9f1e2f0373a9a6aebc1b0d187b569104a7379253cc30edff68b7ed",
+    + "repairs/07-gaussian-vfe-natural-gradient.json": "1179b40b9ccc8c10e6342557200d4cf368504795ad8e10d094dff7adc54146c4",
+    R0_SUCCESSOR: "8b704fc8cb08728b7996f9fb9f230e1e3694c827b4e7963cfeea2bb2aaadcb95",
 }
 MANDATORY_TEST_FILES = tuple(
     "tests/test_" + name + ".py"

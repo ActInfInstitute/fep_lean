@@ -29,8 +29,8 @@
     "src/fep_lean/formal/declarations.py": "4e405d5a9ec228e9d85d0e90fd017224924a722835d9e4caf8a38cca746a0215",
     "src/fep_lean/lean_source.py": "56b3b0ad14245c91e183ad6765dfe73f73fbf717eeec632d683406c44bf5f3d5",
     "src/fep_lean/verification/_horizon_numerical_witnesses.py": "70944d232b67e194b00bbcd38090d2b8e38439e66dbb24e94f7be1ff02f50941",
-    "src/fep_lean/verification/horizon_acceptance.py": "ab285041133efc6263b8849a393495b56e4750b2682917505ce1c57e205d5fa4",
-    "src/fep_lean/verification/numerical_witnesses.py": "a209ecbc6832e1107383366dc715b18a56093ed5b3bc848c9495b15f07164074",
+    "src/fep_lean/verification/horizon_acceptance.py": "515e0db5c81fa66be1e187cb901358f58bcb93581415fd8e5955e17153e67089",
+    "src/fep_lean/verification/numerical_witnesses.py": "4a2563f182433be7b293bbf4a1c38471b8f03a956b1b2cef77c230591f5dc61a",
     "tests/test_horizon_acceptance.py": "8a39a79bde83346948fe9b3d7f665db73f389fa1d9a876ab2189fe0694edbcc1",
     "tests/test_horizon_numerical_witnesses.py": "bd0e3d5eaf0dad7d757d873ee28bc718b854b6a145665b6446a5aada15034d31",
     "tests/test_numerical_witnesses.py": "93edc5aa4dbaedb9ab6c2733fc2cc73ef29b6bd5e635bab0c230e325fd8b6cc1"
@@ -38,7 +38,7 @@
   "decision": "accepted",
   "diagnostics": {
     "path": "specs/done/horizon-2-smooth-stochastic/readiness/evidence/20260904-wave2/diagnostics.json",
-    "sha256": "1746abbad7c2696facc57e5d19b696c88b5e2ed8b4e492f406f7736588cfaf2e"
+    "sha256": "4b91e7e3d212f1dd5925c22cdf0698e1bf4bf02f1d9f7057c5dbb182d192e3f3"
   },
   "downstream": {
     "closed": [
@@ -128,9 +128,9 @@
         "lean/FepSketches/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
         "lean/FepSketches/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
         "lean/FepSketches/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-        "lean/lake-manifest.json": "e9a540f10f3a2eb912ba357823556940acfbf82a8e7603e55f8d031d81aa2b0c",
-        "lean/lakefile.lean": "b610f5279a448bf420bfa0fa2482ff4428a6761f6169014ca810ee619aec608b",
-        "lean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+        "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+        "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+        "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
         "src/fep_lean/formal/active_inference.lean": "ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5",
         "src/fep_lean/formal/bayesian_model_reduction.lean": "264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a",
         "src/fep_lean/formal/causal_dynamics.lean": "5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e",
@@ -196,7 +196,7 @@
         "src/fep_lean/formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
         "src/fep_lean/formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
         "src/fep_lean/formal/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-        "tests/_support/h2_r0_custody.py": "5b13fdfeef4fb6c0293699e3101f939d8852a2882e2d97ae1d0e199de198cd21",
+        "tests/_support/h2_r0_custody.py": "6adef4e7bd5e9d0a2fbfb040f450c17c1ad560f52d131925035c8e17c5d77153",
         "tests/_support/lean_runner.py": "75f1ee88c5f468a593d28ee472efe4eec2ebf81b06e3f9023b867868c7742fac",
         "tests/conftest.py": "3df672912cf6c07ea9a78b2f8a06dfed413b6d7ff165dc5399b99739290a1c40",
         "tests/test_formal_composition.py": "d23b3f5e02023a64e03aeec4c98b9f4ae69a388a63608124f5bd22fa0ef3ce4d",
@@ -293,9 +293,9 @@
         "lean/FepSketches/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
         "lean/FepSketches/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
         "lean/FepSketches/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-        "lean/lake-manifest.json": "e9a540f10f3a2eb912ba357823556940acfbf82a8e7603e55f8d031d81aa2b0c",
-        "lean/lakefile.lean": "b610f5279a448bf420bfa0fa2482ff4428a6761f6169014ca810ee619aec608b",
-        "lean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+        "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+        "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+        "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
         "src/fep_lean/formal/active_inference.lean": "ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5",
         "src/fep_lean/formal/bayesian_model_reduction.lean": "264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a",
         "src/fep_lean/formal/causal_dynamics.lean": "5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e",
@@ -361,7 +361,7 @@
         "src/fep_lean/formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
         "src/fep_lean/formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
         "src/fep_lean/formal/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-        "tests/_support/h2_r0_custody.py": "5b13fdfeef4fb6c0293699e3101f939d8852a2882e2d97ae1d0e199de198cd21",
+        "tests/_support/h2_r0_custody.py": "6adef4e7bd5e9d0a2fbfb040f450c17c1ad560f52d131925035c8e17c5d77153",
         "tests/_support/lean_runner.py": "75f1ee88c5f468a593d28ee472efe4eec2ebf81b06e3f9023b867868c7742fac",
         "tests/conftest.py": "3df672912cf6c07ea9a78b2f8a06dfed413b6d7ff165dc5399b99739290a1c40",
         "tests/test_formal_composition.py": "d23b3f5e02023a64e03aeec4c98b9f4ae69a388a63608124f5bd22fa0ef3ce4d",
@@ -464,9 +464,9 @@
       "lean/FepSketches/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
       "lean/FepSketches/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
       "lean/FepSketches/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-      "lean/lake-manifest.json": "e9a540f10f3a2eb912ba357823556940acfbf82a8e7603e55f8d031d81aa2b0c",
-      "lean/lakefile.lean": "b610f5279a448bf420bfa0fa2482ff4428a6761f6169014ca810ee619aec608b",
-      "lean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+      "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+      "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+      "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
       "src/fep_lean/formal/active_inference.lean": "ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5",
       "src/fep_lean/formal/bayesian_model_reduction.lean": "264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a",
       "src/fep_lean/formal/causal_dynamics.lean": "5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e",
@@ -532,7 +532,7 @@
       "src/fep_lean/formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
       "src/fep_lean/formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
       "src/fep_lean/formal/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-      "tests/_support/h2_r0_custody.py": "5b13fdfeef4fb6c0293699e3101f939d8852a2882e2d97ae1d0e199de198cd21",
+      "tests/_support/h2_r0_custody.py": "6adef4e7bd5e9d0a2fbfb040f450c17c1ad560f52d131925035c8e17c5d77153",
       "tests/_support/lean_runner.py": "75f1ee88c5f468a593d28ee472efe4eec2ebf81b06e3f9023b867868c7742fac",
       "tests/conftest.py": "3df672912cf6c07ea9a78b2f8a06dfed413b6d7ff165dc5399b99739290a1c40",
       "tests/test_formal_composition.py": "d23b3f5e02023a64e03aeec4c98b9f4ae69a388a63608124f5bd22fa0ef3ce4d",
@@ -629,9 +629,9 @@
       "lean/FepSketches/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
       "lean/FepSketches/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
       "lean/FepSketches/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-      "lean/lake-manifest.json": "e9a540f10f3a2eb912ba357823556940acfbf82a8e7603e55f8d031d81aa2b0c",
-      "lean/lakefile.lean": "b610f5279a448bf420bfa0fa2482ff4428a6761f6169014ca810ee619aec608b",
-      "lean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+      "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+      "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+      "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
       "src/fep_lean/formal/active_inference.lean": "ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5",
       "src/fep_lean/formal/bayesian_model_reduction.lean": "264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a",
       "src/fep_lean/formal/causal_dynamics.lean": "5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e",
@@ -697,7 +697,7 @@
       "src/fep_lean/formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
       "src/fep_lean/formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
       "src/fep_lean/formal/variational_duality.lean": "691b0918d73d8c109b4a2dd8cf12845cab778c6d387e9a3bc3f21b31f5c078c0",
-      "tests/_support/h2_r0_custody.py": "5b13fdfeef4fb6c0293699e3101f939d8852a2882e2d97ae1d0e199de198cd21",
+      "tests/_support/h2_r0_custody.py": "6adef4e7bd5e9d0a2fbfb040f450c17c1ad560f52d131925035c8e17c5d77153",
       "tests/_support/lean_runner.py": "75f1ee88c5f468a593d28ee472efe4eec2ebf81b06e3f9023b867868c7742fac",
       "tests/conftest.py": "3df672912cf6c07ea9a78b2f8a06dfed413b6d7ff165dc5399b99739290a1c40",
       "tests/test_formal_composition.py": "d23b3f5e02023a64e03aeec4c98b9f4ae69a388a63608124f5bd22fa0ef3ce4d",
@@ -731,26 +731,26 @@
     }
   },
   "predecessors": {
-    "specs/done/horizon-2-smooth-stochastic/readiness/acceptance.json": "18ec35609fb5e00c9f44a25c3769b193558127d29615969daf816bf0d029a3f5",
-    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/05b-transition-covariance.json": "625a26dada45f090ecfdd781338f025875c3a5acf60ef8b128f3cc01e7308750",
+    "specs/done/horizon-2-smooth-stochastic/readiness/acceptance.json": "bd45418847cb8ab3dfcc545b81d502d8c6f9cc264868d74671795b55b4c7171c",
+    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/05b-transition-covariance.json": "05d1c3e76c24a7b5bddb376803993229dd790cb8e9973b72e60592e84eed30e3",
+    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/05d-gaussian-conditioning.json": "3e3f9dc6562b08949c525b0ef6d014a9d9c97b927e1bea6c5128028687c7f038",
     "specs/done/horizon-2-smooth-stochastic/readiness/repairs/05d-gaussian-conditioning-lifecycle.json": "d46f6b9c0b7be2a83647440f2d8bbd345c77c448aa0d72a9b868f5d01c8f9bde",
-    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/05d-gaussian-conditioning.json": "13a5577fa484cf63878a485e79b66d14f6fb7ae10d1ad91f997dcbc34c5a48db",
-    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/06a-native-filter-posterior.json": "f45132628eba920b05bd5550e610598776b27e5f71996835dddfa1be2509a685",
-    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient-custody.json": "df54291c4e9f1e2f0373a9a6aebc1b0d187b569104a7379253cc30edff68b7ed",
-    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient.json": "6c654a45fcbb4d3b62a165619d847a31ecf7c56cb8e345cda1920fad4e9ce728"
+    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/06a-native-filter-posterior.json": "71a04ffba479b6355070e1b5a9d7284622171ed524ec5d4c218926772fdd2263",
+    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient.json": "1179b40b9ccc8c10e6342557200d4cf368504795ad8e10d094dff7adc54146c4",
+    "specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient-custody.json": "8b704fc8cb08728b7996f9fb9f230e1e3694c827b4e7963cfeea2bb2aaadcb95"
   },
   "reviews": [
     {
       "path": "specs/done/horizon-2-smooth-stochastic/readiness/evidence/20260904-wave2/review-lean.json",
-      "sha256": "45fb94e4ee8bd8192671dde98ee9f02303554349d69cf2e00014358f1d4c0a45"
+      "sha256": "a014ee6f918805c4c9522e69861081075265af71e2f1b1cd6ab07207c1f456a5"
     },
     {
       "path": "specs/done/horizon-2-smooth-stochastic/readiness/evidence/20260904-wave2/review-domain.json",
-      "sha256": "beb5ac51ce3b591938cb553c3a5a37e8971935921395a16ffa90851206630a43"
+      "sha256": "3a97633ba22abb9914a71d65e5ec0a9c4768fd7c3bbbc7fc2948c1da76e8cacf"
     },
     {
       "path": "specs/done/horizon-2-smooth-stochastic/readiness/evidence/20260904-wave2/review-skeptical.json",
-      "sha256": "b6963620166be9d6bf8da1f6a2b765d8600cb7a8eeede705e14d39d14f94cba5"
+      "sha256": "2c3d84d832c7545da27ed784e5e81951e9cfd6ffe974920867d9ceb34d8a5060"
     }
   ],
   "schema_version": 1
