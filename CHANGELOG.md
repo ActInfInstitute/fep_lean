@@ -1,3 +1,36 @@
+## Unreleased — wave-3 catalogue delivery
+
+### Wave-3 catalogue wiring: 165 topics / 22 families (2026-09-27)
+
+The catalogue grows 159 → 165 topics and 21 → 22 families with the wave-3
+formalizations. fep-160 (Helmholtz–Ao Decomposition of Nonequilibrium Steady
+Currents, area ActiveInference) joins the `standalone-efe-formalizations`
+family; a new `geometric-mechanics-notation` family (area Thermodynamics)
+carries fep-161..165: skew trace/quadratic cancellation, the discrete-Hessian
+symmetrization (finite Clairaut), the three-term solenoidal expansion with its
+conditional drops, the graph-plane divergence decomposition, and the necessity
+witness refuting the unconditional solenoidal drop. The `FEP.HelmholtzAoNess`
+module contributes 25 public declarations (13 main theorems aliased into the
+body); the `FEP.GeometricMechanics` module contributes 22 declarations of
+which 19 public theorems are aliased (including the symmetrize/Clairaut
+family — the pushed module commit message under-counted and is not the
+inventory). Two new FEPComposed composition files carry 6 novelty bridges
+(fep-160→fep-025, fep-161→fep-160, fep-162→fep-161, fep-163/164/165→fep-025),
+a `cap-geometric-mechanics-solenoidal` capability node lands with 8 evidence
+entries, and the `geometric-solenoidal-drop` numerical witness gives the new
+family its typed non-proof evidence (17 witnesses total). The release seal
+moves to 165 topics / 22 families / 5 areas / 17 witnesses / 143 relations /
+50 capabilities. The 143/50 relation and capability planes correct a
+pre-existing seal drift: a0f4ed3 added `cap-standalone-efe-theorems` and four
+formal_pairing edges without bumping `RELEASE_SEAL` (live counts were 49/137
+against a 48/133 seal at a64ca6c). Manuscript 04d's NESS disclaimers are
+retired against the now-compiled statements (ansatz-universality, trace
+quadratic and Hessian cancellations, conditional solenoidal drop, and the
+2-node failing witness), keeping the state-dependent-diffusion and PDE/SDE
+boundaries. The roster-v23 source-owner coordinated refresh, native capture,
+render re-acceptance, and pin-cycle #32 re-seal ride the coordinator's
+remaining phases and are pending, not part of this wiring.
+
 ## 1.3.0 — 2026-09-26 — toolchain co-bump and wave-2 delivery
 
 ### Joint Mathlib/Lean v4.34.1 co-bump and release promotion (2026-09-26)

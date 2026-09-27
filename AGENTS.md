@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Standalone 155-topic FEP / Active Inference / Bayesian Mechanics / Information
+Standalone 165-topic FEP / Active Inference / Bayesian Mechanics / Information
 Geometry / Thermodynamics catalogue with Lean 4 source, Hermes integration,
 OpenGauss SQLite persistence, deterministic manuscript artifacts, and strict
 reports.
