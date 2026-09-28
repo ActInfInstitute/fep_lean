@@ -66,6 +66,21 @@ entries:
     symbols correspond; the Python selection loop is not a Lean proof.
   reference: >-
     Parr & Friston (2018), "The anatomy of choice: active inference and decision-making", Neuropsychologia
+- concept: row-normalized transition kernel under stationary probability current
+  fep_lean:
+    topic_id: fep-025
+    symbol: fep025_transitionCurrent_stationary
+  geo_anchor: GEO-INFER-ACT/src/geo_infer_act/core/markov_decision_process.py::MarkovDecisionProcess
+  correspondence: >-
+    MarkovDecisionProcess validates every per-action transition slice
+    P[s, :, a] as finite, nonnegative, and summing to one; fep-025 takes
+    exactly such row-normalized transition rows (its hrow hypothesis),
+    together with a stationary real mass vector, and derives zero divergence
+    of the probability current pi_i P_ij - pi_j P_ji at every state. The
+    correspondence is limited to the row-normalized kernel: the Python class
+    computes no stationary law and no probability current.
+  reference: >-
+    Schnakenberg (1976), "Network theory of microscopic and macroscopic behavior of master equation systems", Reviews of Modern Physics 48(4)
 - concept: softmax policy weights
   fep_lean:
     topic_id: fep-028
