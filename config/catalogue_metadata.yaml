@@ -3,7 +3,7 @@
 schema_version: 2
 roster:
   first_id: fep-001
-  last_id: fep-165
+  last_id: fep-168
 families:
 - core-free-energy
 - core-active-inference
@@ -1227,6 +1227,27 @@ topics:
   mathlib_status: real
 - id: fep-165
   title: Necessity Witness for the Unconditional Solenoidal Drop
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-166
+  title: Uniqueness of the Law-Weighted Reversible/Circulation Split
+  area: ActiveInference
+  family: standalone-efe-formalizations
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-167
+  title: Frobenius Least-Squares Projection of the Symmetrizer
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+- id: fep-168
+  title: Quantitative Control of the Uncancelled Divergence Remainder
   area: Thermodynamics
   family: geometric-mechanics-notation
   mathlib_modules:

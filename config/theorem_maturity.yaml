@@ -3500,3 +3500,83 @@ topics:
   acceptance_probe: >-
     warning-free native Lean compile of all five fep-165 declarations.
   disposition: formalized
+- id: fep-166
+  primary_theorem: fep166_split_unique
+  supporting_theorems:
+  - fep166_reversible_split_unique
+  - fep166_twoByTwo_support
+  - fep166_twoByTwo_predicates
+  - fep166_twoByTwo_split_canonical
+  - fep166_twoByTwo_circulation_nonzero
+  - fep166_twoByTwo_circulation_negative
+  boundary_theorems: []
+  invariant: >-
+    Any competing pair S, A with W = S + A, p-weighted reversibility of S
+    and p-weighted skewness of A coincides pointwise with the canonical
+    symmetricPart and circulationPart of the rate field; the reversible
+    boundary is in uniqueness form (a p-reversible field has the split
+    (W, 0)), and on the concrete two-state datum the constraint-satisfying
+    split is the canonical one with genuinely nonzero forward circulation
+    1/2 and strictly negative reverse entry -1/4.
+  assumption_review: >-
+    Positivity of the finite law is the only analytic input and licenses the
+    divisions; no stationarity hypothesis, no generator contract, and no
+    nonnegativity claim for the circulation part enter the statements.
+  non_vacuity: >-
+    The t-0060 datum with weight law p = (1/3, 2/3) and rate entries 1, 5/2,
+    3/4, and -1 satisfies
+    every constraint clause, its split is forced to be the canonical one, and
+    the circulation entries 1/2 and -1/4 are computed exactly, so the
+    uniqueness characterization is exercised on nontrivial data.
+  acceptance_probe: >-
+    warning-free native Lean compile of all seven fep-166 declarations.
+  disposition: formalized
+- id: fep-167
+  primary_theorem: fep167_frobenius_pythagoras
+  supporting_theorems:
+  - fep167_symmetrize_minimizes
+  - fep167_projection_unique
+  - fep167_residual_example
+  boundary_theorems: []
+  invariant: >-
+    For symmetric S the squared Frobenius norm splits exactly as
+    ||H - S||^2 = ||H - symmetrize H||^2 + ||symmetrize H - S||^2, the
+    symmetrizer minimizes the squared distance among symmetric matrices with
+    equality exactly at the symmetrizer, the symmetric minimizer is unique,
+    and the concrete nonsymmetric datum [[0,1],[0,0]] carries residual
+    exactly 1/2.
+  assumption_review: >-
+    Matrix projection only, no differentiability, no continuum Clairaut
+    theorem, no Bregman-projection existence/uniqueness claim.
+  non_vacuity: >-
+    The residual example evaluates to exactly 1/2 on nonsymmetric data, and
+    symmetric data attains the zero residual exactly at the symmetrizer, so
+    both the strict and the degenerate boundary are realized.
+  acceptance_probe: >-
+    warning-free native Lean compile of all four fep-167 declarations.
+  disposition: formalized
+- id: fep-168
+  primary_theorem: fep168_weightedDivergence_eq_remainderDot
+  supporting_theorems:
+  - fep168_remainder_sq_budget
+  - fep168_absolute_budget
+  - fep168_equality_attained
+  boundary_theorems: []
+  invariant: >-
+    On the fep-163 carrier the weighted divergence equals dot (divQ DQ) g
+    under the cancellation hypotheses, the squared Cauchy-Schwarz budget
+    (weightedDivergence)^2 <= (sum r_i^2)(sum g_i^2) bounds the uncancelled
+    remainder with its abs-product corollary, and equality is attained on
+    aligned nonzero data with ||g||^2 = 1.
+  assumption_review: >-
+    Quantitative budget on the fep-163 finite derivative-data carrier; the
+    coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp));
+    no PDE-discretization or entropy-production claim.
+  non_vacuity: >-
+    The aligned datum Q = [[0,1],[-1,0]], H = diag(1, 2), DQ with divQ
+    (1, 0), and g = (1, 0) attains the budget with equality, while the pinned
+    remainderG = (1, 1) datum is strict with gap 1, so both the equality and
+    the strict boundary are realized.
+  acceptance_probe: >-
+    warning-free native Lean compile of all four fep-168 declarations.
+  disposition: formalized

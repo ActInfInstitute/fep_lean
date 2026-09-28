@@ -667,4 +667,68 @@ theorem fep160_cycle_ao_ness :
 
 end FEP160
 """,
+    "fep-166": """import FepSketches.law_weighted_split
+
+namespace FEP166
+
+open FEP.LawWeightedSplit FEP.HelmholtzAoNess FEP
+
+variable {State : Type*} [Fintype State] {rate S A : State → State → ℝ}
+  {law : FiniteLaw State}
+
+/-- **Competing-pair uniqueness of the law-weighted split.**  A positive
+finite law `p` and a rate field written `rate = S + A` with `S` `p`-reversible
+and `A` `p`-skew force `S` and `A` to be exactly the canonical
+`symmetricPart` and `circulationPart` of fep-160. -/
+theorem fep166_split_unique
+    (hSupport : ∀ i, 0 < law i)
+    (hS : ∀ i j, law i * S i j = law j * S j i)
+    (hA : ∀ i j, law i * A i j = -(law j * A j i))
+    (hSum : ∀ i j, rate i j = S i j + A i j) :
+    S = symmetricPart rate law ∧ A = circulationPart rate law :=
+  FEP.LawWeightedSplit.fep166_split_unique hSupport hS hA hSum
+
+/-- The reversible boundary in uniqueness form: a `p`-reversible rate field
+has the canonical split `(W, 0)`. -/
+theorem fep166_reversible_split_unique
+    (hSupport : ∀ i, 0 < law i)
+    (hRev : ∀ i j, law i * rate i j = law j * rate j i) :
+    rate = symmetricPart rate law ∧ (∀ i j, circulationPart rate law i j = 0) :=
+  FEP.LawWeightedSplit.fep166_reversible_split_unique hSupport hRev
+
+/-- Full support of the t-0060 witness law `p = (1/3, 2/3)`. -/
+theorem fep166_twoByTwo_support (i : Fin 2) :
+    0 < twoByTwoLaw i :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_support i
+
+/-- The t-0060 datum satisfies every constraint clause of the law-weighted
+split: `S` is `p`-reversible, `A` is `p`-skew, and `W = S + A` entrywise. -/
+theorem fep166_twoByTwo_predicates :
+    (∀ i j : Fin 2, twoByTwoLaw i * twoByTwoS i j = twoByTwoLaw j * twoByTwoS j i) ∧
+      (∀ i j : Fin 2,
+        twoByTwoLaw i * twoByTwoA i j = -(twoByTwoLaw j * twoByTwoA j i)) ∧
+      (∀ i j : Fin 2, twoByTwoW i j = twoByTwoS i j + twoByTwoA i j) :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_predicates
+
+/-- The datum's constraint-satisfying split is exactly the canonical
+`symmetricPart`/`circulationPart` pair. -/
+theorem fep166_twoByTwo_split_canonical :
+    twoByTwoS = symmetricPart twoByTwoW twoByTwoLaw ∧
+      twoByTwoA = circulationPart twoByTwoW twoByTwoLaw :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_split_canonical
+
+/-- The datum exhibits a genuinely nonzero circulation `1/2` on the forward
+edge. -/
+theorem fep166_twoByTwo_circulation_nonzero :
+    circulationPart twoByTwoW twoByTwoLaw (0 : Fin 2) (1 : Fin 2) = 1 / 2 :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_nonzero
+
+/-- The reverse edge carries the opposite, strictly negative circulation
+`-1/4`: the circulation part is not a nonnegative rate field. -/
+theorem fep166_twoByTwo_circulation_negative :
+    circulationPart twoByTwoW twoByTwoLaw (1 : Fin 2) (0 : Fin 2) = -1 / 4 :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_negative
+
+end FEP166
+""",
 }

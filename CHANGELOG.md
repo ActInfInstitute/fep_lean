@@ -1,4 +1,33 @@
-## Unreleased — wave-3 catalogue delivery
+## Unreleased — wave-4 catalogue delivery
+
+### Wave-4 catalogue wiring: 168 topics / 22 families (2026-09-28)
+
+The catalogue grows 165 → 168 topics (families unchanged at 22) with the
+wave-4 formalizations. fep-166 (Uniqueness of the Law-Weighted
+Reversible/Circulation Split, area ActiveInference) joins the
+`standalone-efe-formalizations` family through a new canonical
+`FEP.LawWeightedSplit` module whose 7 public theorems are aliased into the
+body: competing-pair uniqueness of the Helmholtz–Ao split, the reversible
+boundary in uniqueness form, and the t-0060 two-state oracle datum with
+nonzero forward circulation 1/2 and strictly negative reverse entry -1/4.
+fep-167 (Frobenius Least-Squares Projection of the Symmetrizer) and fep-168
+(Quantitative Control of the Uncancelled Divergence Remainder) extend
+`geometric-mechanics-notation` (area Thermodynamics); the
+`FEP.GeometricMechanics` module grows to 37 qualified declarations with the
+exact Frobenius Pythagoras/minimality/uniqueness layer and the squared
+Cauchy–Schwarz remainder budget with its equality witness on aligned data.
+Three new FEPComposed bridges pair the new topics with their nearest
+endpoints (fep-166→fep-160, fep-167→fep-162, fep-168→fep-163; seven bridges
+total in the two geometric-mechanics composition files), and both extended
+numerical witnesses grow typed checks and theorem mirrors
+(`boltzmann-efe-affinity-gap` 18 mirrors / 14 checks,
+`geometric-solenoidal-drop` 17 mirrors / 16 checks; 17 witnesses total).
+The release seal moves to 168 topics / 22 families / 5 areas / 17 witnesses /
+146 relations / 50 capabilities, and the third-expansion manuscript shape is
+sealed at {standalone-efe-formalizations: 6, geometric-mechanics-notation: 7}
+with the per-family size pin replacing the uniform-size singleton assertion.
+Native capture and render re-acceptance ride the coordinator's remaining
+phases and are pending, not part of this wiring.
 
 ### Wave-3 catalogue wiring: 165 topics / 22 families (2026-09-27)
 

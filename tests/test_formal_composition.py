@@ -121,6 +121,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "efe_time_scale_separation.lean",
         "helmholtz_ao_ness.lean",
         "geometric_mechanics.lean",
+        "law_weighted_split.lean",
     )
     released_composition_resources = (
         "compositions/core.lean",
@@ -207,6 +208,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "FEP.TimeScaleEFE",
         "FEP.HelmholtzAoNess",
         "FEP.GeometricMechanics",
+        "FEP.LawWeightedSplit",
         *("FEPComposed",) * len(released_composition_resources),
         "FEPComposed.FiniteScientificImplications",
         "FEPComposed.FinitePolicyAction",

@@ -963,15 +963,19 @@ _SECOND_EXPANSION_FIRST_ID = "fep-121"
 _THIRD_EXPANSION_FIRST_ID = "fep-156"
 
 
-def _expansion_family_vars(catalogue: FEPTopicCatalogue, root: Path) -> dict[str, int]:
+def _expansion_family_vars(
+    catalogue: FEPTopicCatalogue, root: Path
+) -> dict[str, int | list[int]]:
     """Derive structural expansion-family counts from the canonical roster.
 
     Base versus expansion topics split at the novelty ledger's maintained
     ``baseline_last_id``; the second expansion begins at
     ``_SECOND_EXPANSION_FIRST_ID`` and the third at
     ``_THIRD_EXPANSION_FIRST_ID``. Raises when a family straddles any
-    boundary or when the families of one wave differ in size, because the
-    manuscript asserts one uniform per-family topic count per wave.
+    boundary, when the first- and second-wave families differ in size, or
+    when a third-wave family deviates from the sealed wave-4 shape
+    (standalone-efe-formalizations 6, geometric-mechanics-notation 7),
+    because the manuscript pins those per-family topic counts.
     """
     from fep_lean.formal.declarations import composed_theorem_sources
 
@@ -1025,10 +1029,11 @@ def _expansion_family_vars(catalogue: FEPTopicCatalogue, root: Path) -> dict[str
             f"one per-family topic count: {sorted(first_second_sizes)}"
         )
     third_sizes = {len(family_ids[family]) for family in third_families}
-    if len(third_sizes) > 1:
+    if not third_sizes <= {6, 7}:
         raise ValueError(
-            "third-expansion families are not uniformly sized; the manuscript "
-            f"asserts one per-family topic count: {sorted(third_sizes)}"
+            "third-expansion family sizes deviate from the sealed wave-4 shape "
+            "(standalone-efe-formalizations 6, geometric-mechanics-notation 7): "
+            f"{sorted(third_sizes)}"
         )
     first_topics = sum(len(family_ids[family]) for family in first_families)
     second_topics = sum(len(family_ids[family]) for family in second_families)
@@ -1045,7 +1050,7 @@ def _expansion_family_vars(catalogue: FEPTopicCatalogue, root: Path) -> dict[str
         "expansion_second_topics": second_topics,
         "expansion_third_families": len(third_families),
         "expansion_third_topics": third_topics,
-        "expansion_third_family_size": next(iter(third_sizes)) if third_sizes else 0,
+        "expansion_third_family_sizes": sorted(third_sizes),
         "topics_before_second_expansion": base_topics + first_topics,
         "topics_before_third_expansion": base_topics + first_topics + second_topics,
     }

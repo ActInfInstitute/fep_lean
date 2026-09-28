@@ -105,14 +105,14 @@ def _valid_contents(payload: dict[str, bytes]) -> dict[str, bytes]:
         "kind": "fep-lean-evidence-bundle",
         "source_date_epoch": 0,
         "catalogue": {
-            "topics": 165,
+            "topics": 168,
             "families": 22,
             "areas": 5,
             "first_id": "fep-001",
-            "last_id": "fep-165",
+            "last_id": "fep-168",
         },
         "formalism": {
-            "relations": 143,
+            "relations": 146,
             "capabilities": 50,
             "formal_modules": 1,
             "numerical_witnesses": 17,
@@ -730,7 +730,7 @@ def test_archive_validator_rejects_self_consistent_semantic_manifest_tampering(
 
     assert validation.valid is False
     expected_errors = {
-        "manifest catalogue does not match the 165-topic release seal",
+        "manifest catalogue does not match the 168-topic release seal",
         "manifest formalism.relations is stale",
         "manifest formalism.formal_modules must be positive",
         "manifest Lean version does not match its toolchain pin",
@@ -1589,10 +1589,10 @@ def test_browser_receipt_is_bound_to_canonical_projections_and_screenshots(
             }
         )
     expected = {
-        "topics": 165,
+        "topics": 168,
         "families": 22,
         "witnesses": 17,
-        "relations": 143,
+        "relations": 146,
         "capabilities": 50,
         "external_requests": [],
         "atlas": {
@@ -1603,12 +1603,12 @@ def test_browser_receipt_is_bound_to_canonical_projections_and_screenshots(
             "escapeCleared": True,
             "families": 22,
             "fepVisible": 41,
-            "pairingVisible": 115,
-            "relationCards": 143,
-            "relations": 143,
+            "pairingVisible": 118,
+            "relationCards": 146,
+            "relations": 146,
             "searchVisible": 1,
             "slashFocused": True,
-            "topics": 165,
+            "topics": 168,
         },
         "atlas_mobile": {
             "areas": 5,
@@ -1618,8 +1618,8 @@ def test_browser_receipt_is_bound_to_canonical_projections_and_screenshots(
             "detailsInitiallyOpen": 0,
             "families": 22,
             "mobileSummaryVisible": True,
-            "relationCards": 143,
-            "topics": 165,
+            "relationCards": 146,
+            "topics": 168,
         },
         "dashboard": {
             "acceptedVisible": 17,
@@ -1704,10 +1704,10 @@ def test_browser_receipt_is_bound_to_canonical_projections_and_screenshots(
         bundle_module,
         "build_formalism_presentation",
         lambda _root: SimpleNamespace(
-            topics=(None,) * 165,
+            topics=(None,) * 168,
             families=(None,) * 22,
             witnesses=(None,) * 17,
-            relations=(None,) * 143,
+            relations=(None,) * 146,
             capabilities=(None,) * 50,
         ),
     )

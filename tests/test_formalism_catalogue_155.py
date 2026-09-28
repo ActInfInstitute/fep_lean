@@ -28,7 +28,9 @@ NEW_FAMILY_RANGES = {
     "finite-to-native-blanket-transfer": range(135, 142),
     "finite-exponential-family-dual-geometry": range(142, 149),
     "two-state-continuous-time-thermodynamics": range(149, 156),
-    "geometric-mechanics-notation": range(161, 166),
+    # fep-166 lands in standalone-efe-formalizations, so the geometric-
+    # mechanics family is no longer a contiguous roster interval.
+    "geometric-mechanics-notation": (161, 162, 163, 164, 165, 167, 168),
 }
 NEW_FAMILY_AREAS = {
     "finite-sample-risk-and-calibration": "FEP",
@@ -91,7 +93,7 @@ def test_expansion_vii_has_exact_roster_family_and_area_ownership() -> None:
     metadata = load_catalogue_metadata(
         PROJECT_ROOT / "config" / "catalogue_metadata.yaml"
     )
-    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 166))
+    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 169))
 
     assert metadata.topic_ids == expected_ids
     assert tuple(BODIES) == expected_ids
@@ -111,10 +113,10 @@ def test_expansion_vii_has_exact_roster_family_and_area_ownership() -> None:
         area_counts[record.area] = area_counts.get(record.area, 0) + 1
     assert area_counts == {
         "FEP": 41,
-        "ActiveInference": 36,
+        "ActiveInference": 37,
         "BayesianMechanics": 41,
         "InfoGeometry": 21,
-        "Thermodynamics": 26,
+        "Thermodynamics": 28,
     }
 
 
@@ -152,12 +154,12 @@ def test_expansion_vii_registers_one_body_and_foundation_owner_per_family() -> N
 
 def test_expansion_vii_semantic_roster_is_complete_and_formalized() -> None:
     maturity = load_theorem_maturity(PROJECT_ROOT / "config" / "theorem_maturity.yaml")
-    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 166))
+    expected_ids = tuple(f"fep-{index:03d}" for index in range(1, 169))
 
     assert tuple(record.id for record in maturity.records) == expected_ids
     assert all(
         maturity.by_topic_id[f"fep-{index:03d}"].disposition.value == "formalized"
-        for index in range(121, 166)
+        for index in range(121, 169)
     )
 
 

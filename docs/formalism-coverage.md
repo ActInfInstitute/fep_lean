@@ -10,29 +10,29 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 
 | Metric | Count |
 | --- | ---: |
-| Stable topics | 165 |
-| Maintained formal modules | 68 |
-| Foundation modules | 43 |
-| Topic theorem declarations | 560 |
-| Formal-resource theorem declarations | 1152 |
-| Foundation theorem declarations | 916 |
-| Total theorem declarations | 1712 |
+| Stable topics | 168 |
+| Maintained formal modules | 69 |
+| Foundation modules | 44 |
+| Topic theorem declarations | 575 |
+| Formal-resource theorem declarations | 1177 |
+| Foundation theorem declarations | 938 |
+| Total theorem declarations | 1752 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 674 |
-| Total definitions | 769 |
+| Formal-resource definitions | 684 |
+| Total definitions | 779 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 21 |
 | Total abbreviations | 28 |
 | Formal-resource structures | 50 |
-| Distinct Mathlib imports | 69 |
-| Topic-to-import edges | 222 |
-| Formal-resource import edges | 252 |
-| Internal formal-module dependencies | 147 |
-| Authored formalism relations | 143 |
+| Distinct Mathlib imports | 70 |
+| Topic-to-import edges | 225 |
+| Formal-resource import edges | 254 |
+| Internal formal-module dependencies | 148 |
+| Authored formalism relations | 146 |
 | Derivational formal relations | 20 |
-| Checked formal pairings | 115 |
-| All theorem-witnessed relations | 135 |
-| Composed theorem declarations | 236 |
+| Checked formal pairings | 118 |
+| All theorem-witnessed relations | 138 |
+| Composed theorem declarations | 239 |
 | Capability nodes (retained history) | 50 |
 | Unresolved capability nodes | 0 |
 | Satisfied capability nodes | 50 |
@@ -43,12 +43,12 @@ Compilation and semantic adequacy are deliberately different axes. `formalized` 
 
 | Area | formalized | proxy | conditional_proxy | structural_proxy | scope_gap | assumption_gap | Total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| ActiveInference | 32 | 0 | 1 | 3 | 0 | 0 | 36 |
+| ActiveInference | 33 | 0 | 1 | 3 | 0 | 0 | 37 |
 | BayesianMechanics | 34 | 0 | 6 | 1 | 0 | 0 | 41 |
 | FEP | 39 | 0 | 1 | 1 | 0 | 0 | 41 |
 | InfoGeometry | 18 | 0 | 3 | 0 | 0 | 0 | 21 |
-| Thermodynamics | 23 | 0 | 2 | 1 | 0 | 0 | 26 |
-| **Total** | 146 | 0 | 13 | 6 | 0 | 0 | **165** |
+| Thermodynamics | 25 | 0 | 2 | 1 | 0 | 0 | 28 |
+| **Total** | 149 | 0 | 13 | 6 | 0 | 0 | **168** |
 
 ## Per-topic coverage
 
@@ -219,6 +219,9 @@ Compilation and semantic adequacy are deliberately different axes. `formalized` 
 | fep-163 | Thermodynamics | `fep163_solenoidal_expansion` | `formalized` | 5 | 1 | 1 |
 | fep-164 | Thermodynamics | `fep164_graphDecomposition` | `formalized` | 4 | 0 | 1 |
 | fep-165 | Thermodynamics | `fep165_witness_drop_fails` | `formalized` | 5 | 0 | 1 |
+| fep-166 | ActiveInference | `fep166_split_unique` | `formalized` | 7 | 0 | 1 |
+| fep-167 | Thermodynamics | `fep167_frobenius_pythagoras` | `formalized` | 4 | 0 | 1 |
+| fep-168 | Thermodynamics | `fep168_weightedDivergence_eq_remainderDot` | `formalized` | 4 | 0 | 1 |
 
 ## Open semantic obligations
 
@@ -272,7 +275,8 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.bayesian_model_reduction` | `foundation` | 10 | 3 | 0 | `FepSketches.gaussian_information_geometry`, `FepSketches.variational_duality` |
 | `FepSketches.efe_time_scale_separation` | `foundation` | 37 | 8 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.ness_flow`, `FepSketches.path_thermodynamics` |
 | `FepSketches.helmholtz_ao_ness` | `foundation` | 26 | 11 | 0 | `FepSketches.continuous_time_markov` |
-| `FepSketches.geometric_mechanics` | `foundation` | 22 | 18 | 0 | — |
+| `FepSketches.geometric_mechanics` | `foundation` | 37 | 23 | 0 | — |
+| `FepSketches.law_weighted_split` | `foundation` | 7 | 5 | 0 | `FepSketches.helmholtz_ao_ness` |
 | `FepSketches.compositions.core` | `composition` | 22 | 1 | 0 | `FepSketches.active_inference`, `FepSketches.information_geometry`, `FepSketches.markov_blanket`, `FepSketches.statistical_convergence` |
 | `FepSketches.compositions.measure_variational` | `composition` | 14 | 0 | 0 | `FepSketches.measure_bayes`, `FepSketches.variational_duality` |
 | `FepSketches.compositions.control_temporal` | `composition` | 14 | 0 | 0 | `FepSketches.controlled_markov`, `FepSketches.temporal_inference` |
@@ -295,8 +299,8 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.compositions.perception_action_loop` | `composition` | 1 | 0 | 0 | `FepSketches.perception_action_loop` |
 | `FepSketches.compositions.bayesian_model_reduction` | `composition` | 1 | 0 | 0 | `FepSketches.bayesian_model_reduction` |
 | `FepSketches.compositions.efe_time_scale_separation` | `composition` | 1 | 0 | 0 | `FepSketches.efe_time_scale_separation` |
-| `FepSketches.compositions.helmholtz_ao_ness` | `composition` | 1 | 0 | 0 | `FepSketches.helmholtz_ao_ness` |
-| `FepSketches.compositions.geometric_mechanics` | `composition` | 5 | 0 | 0 | `FepSketches.geometric_mechanics` |
+| `FepSketches.compositions.helmholtz_ao_ness` | `composition` | 2 | 0 | 0 | `FepSketches.helmholtz_ao_ness` |
+| `FepSketches.compositions.geometric_mechanics` | `composition` | 7 | 0 | 0 | `FepSketches.geometric_mechanics` |
 | `FepSketches.composed` | `aggregate` | 0 | 0 | 0 | `FepSketches.compositions.bayesian_model_reduction`, `FepSketches.compositions.causal_predictive`, `FepSketches.compositions.collective_learning`, `FepSketches.compositions.continuous_time`, `FepSketches.compositions.control_temporal`, `FepSketches.compositions.core`, `FepSketches.compositions.efe_policy_selection`, `FepSketches.compositions.efe_time_scale_separation`, `FepSketches.compositions.exponential_family`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_reference_agent`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.geometric_mechanics`, `FepSketches.compositions.helmholtz_ao_ness`, `FepSketches.compositions.measure_variational`, `FepSketches.compositions.native_blanket_transfer`, `FepSketches.compositions.perception_action_loop`, `FepSketches.compositions.policy_trees`, `FepSketches.compositions.risk_calibration`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.compositions.thermo_geometry` |
 
 ## Authored formalism relations
@@ -448,6 +452,9 @@ These edges are maintained scientific review data. `conceptual` means explanator
 | fep-163 | `formal_pairing` | fep-025 | `FEPComposed.fep163_solenoidalExpansion_extends_fep025_current` | The exact three-term weighted-divergence expansion and its conditional drop are paired with fep-025's node-divergence current carrier, without asserting that the continuum first-order step has a finite graph analogue. |
 | fep-164 | `formal_pairing` | fep-025 | `FEPComposed.fep164_graphCurrent_extends_fep025_current` | The graph-plane decomposition and weighted Leibniz rule of the candidate current are paired with fep-025's edge-current node divergence, without equating the plain flux-matrix residual with a transition-row stationarity identity. |
 | fep-165 | `formal_pairing` | fep-025 | `FEPComposed.fep165_necessityWitness_extends_fep025_current` | The compiled 2-node counterexample refuting the unconditional solenoidal drop is paired with fep-025's divergence-free cycle witness, jointly bounding exactly what stationarity and antisymmetry imply. |
+| fep-166 | `formal_pairing` | fep-160 | `FEPComposed.fep166_splitUnique_extends_fep160_aoNess` | The competing-pair uniqueness of the law-weighted split is paired with fep-160's unconditional existence decomposition, so on the same finite rate-field carrier the canonical split exists and any constraint-satisfying competitor coincides with it, without introducing a stationarity hypothesis or a nonnegativity claim for the circulation part. |
+| fep-167 | `formal_pairing` | fep-162 | `FEPComposed.fep167_frobeniusProjection_extends_fep162_clairautSymmetrize` | The Frobenius least-squares projection layer is paired with fep-162's algebraic symmetrization construction, so the constructed discrete Hessian is exactly the unique symmetric minimizer, without claiming a continuum Clairaut theorem or a general Bregman-projection existence result. |
+| fep-168 | `formal_pairing` | fep-163 | `FEPComposed.fep168_remainderBound_extends_fep163_solenoidalExpansion` | The quantitative remainder budget is paired with fep-163's exact three-term expansion, so the uncancelled divergence remainder is bounded and its equality case attained instead of being assumed to vanish, without an unconditional-drop claim. |
 
 ## Capability roster
 
@@ -521,9 +528,10 @@ Shared imports indicate library reuse, not logical dependencies between catalogu
 | `FepSketches.efe_time_scale_separation` | 1 | fep-159 |
 | `FepSketches.empirical_risk` | 7 | fep-121, fep-122, fep-123, fep-124, fep-125, fep-126, fep-127 |
 | `FepSketches.exponential_family` | 7 | fep-142, fep-143, fep-144, fep-145, fep-146, fep-147, fep-148 |
-| `FepSketches.geometric_mechanics` | 5 | fep-161, fep-162, fep-163, fep-164, fep-165 |
+| `FepSketches.geometric_mechanics` | 7 | fep-161, fep-162, fep-163, fep-164, fep-165, fep-167, fep-168 |
 | `FepSketches.geometric_optimization` | 7 | fep-100, fep-101, fep-102, fep-103, fep-104, fep-105, fep-106 |
 | `FepSketches.helmholtz_ao_ness` | 1 | fep-160 |
+| `FepSketches.law_weighted_split` | 1 | fep-166 |
 | `FepSketches.learning_theory` | 7 | fep-114, fep-115, fep-116, fep-117, fep-118, fep-119, fep-120 |
 | `FepSketches.measure_bayes` | 7 | fep-051, fep-052, fep-053, fep-054, fep-055, fep-056, fep-057 |
 | `FepSketches.native_blanket` | 7 | fep-135, fep-136, fep-137, fep-138, fep-139, fep-140, fep-141 |

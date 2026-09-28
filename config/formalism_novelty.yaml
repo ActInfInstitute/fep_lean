@@ -577,3 +577,18 @@ topics:
   new_invariant: For the 2-node transport [[0,1],[-1,0]] and gradient (1,0) the candidate current is (0,-1) with node divergence 1 at node 0, so the unconditional solenoidal drop is refuted exactly.
   carrier_delta: Pins the manuscript honesty guard as a compiled counterexample, separating the conditional drops of fep-163 from any unconditional claim.
   required_bridge: FEPComposed.fep165_necessityWitness_extends_fep025_current
+- id: fep-166
+  nearest_topics: [fep-160]
+  new_invariant: Any competing pair S′, A′ with W = S′ + A′, p-weighted reversibility of S′ and p-weighted skewness of A′ coincides pointwise with symmetricPart W p and circulationPart W p; the diagonal of A′ vanishes and a p-reversible W has the unique split (W, 0).
+  carrier_delta: Adds the competing-pair uniqueness characterization to fep-160's existence decomposition; positivity licenses the division; no stationarity input.
+  required_bridge: FEPComposed.fep166_splitUnique_extends_fep160_aoNess
+- id: fep-167
+  nearest_topics: [fep-162, fep-105]
+  new_invariant: "Symmetrization is the unique Frobenius least-squares projection onto the symmetric matrices: exact Pythagoras, minimality with equality exactly at the symmetrizer, and uniqueness among symmetric candidates."
+  carrier_delta: Adds the constructed-projection metric layer (Pythagoras + minimality + proven uniqueness) absent from fep-162's algebraic construction and from fep-105's assumed AffineBregmanProjection certificate, whose row explicitly withholds projection uniqueness.
+  required_bridge: FEPComposed.fep167_frobeniusProjection_extends_fep162_clairautSymmetrize
+- id: fep-168
+  nearest_topics: [fep-163, fep-165]
+  new_invariant: On the fep-163 carrier the uncancelled remainder satisfies weightedDivergence = dot r g and the squared budget (dot r g)² ≤ (∑ r_i²)(∑ g_i²), with equality attained by aligned nonzero data.
+  carrier_delta: Adds quantitative residual budgets (norm control with attainable equality) to fep-163's exact expansion and fep-165's refuting witness; bounds the remainder instead of assuming it vanishes.
+  required_bridge: FEPComposed.fep168_remainderBound_extends_fep163_solenoidalExpansion

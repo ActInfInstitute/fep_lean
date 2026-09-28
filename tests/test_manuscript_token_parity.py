@@ -140,8 +140,10 @@ def test_expansion_family_vars_derive_from_canonical_roster(
     assert len(first_second_sizes) == 1, (
         f"expansion families are not uniformly sized: {first_second_sizes}"
     )
-    assert len(third_sizes) <= 1, (
-        f"third-expansion families are not uniformly sized: {third_sizes}"
+    assert third_sizes <= {6, 7}, (
+        "third-expansion family sizes deviate from the sealed wave-4 shape "
+        "(standalone-efe-formalizations 6, geometric-mechanics-notation 7): "
+        f"{third_sizes}"
     )
     assert variables["base_topic_count"] == sum(len(ids) for ids in base.values())
     assert variables["expansion_families"] == len(first) + len(second) + len(third)
@@ -159,9 +161,7 @@ def test_expansion_family_vars_derive_from_canonical_roster(
     assert variables["expansion_third_topics"] == sum(
         len(ids) for ids in third.values()
     )
-    assert variables["expansion_third_family_size"] == (
-        next(iter(third_sizes)) if third_sizes else 0
-    )
+    assert variables["expansion_third_family_sizes"] == sorted(third_sizes)
     assert variables["topics_before_second_expansion"] == (
         variables["base_topic_count"] + sum(len(ids) for ids in first.values())
     )
@@ -169,20 +169,20 @@ def test_expansion_family_vars_derive_from_canonical_roster(
         variables["topics_before_second_expansion"]
         + variables["expansion_second_topics"]
     )
-    # Calibrated structural pins for the sealed 165-topic roster: a 50-topic
+    # Calibrated structural pins for the sealed 168-topic roster: a 50-topic
     # core, ten first-wave and five second-wave families of seven topics each,
-    # a second expansion running from 120 to 155, and the two wave-3
-    # families: standalone-EFE holding exactly fep-156..160 and
-    # geometric-mechanics-notation holding exactly fep-161..165.
+    # a second expansion running from 120 to 155, and the two wave-3/4
+    # families: standalone-EFE holding exactly fep-156..160 plus fep-166 and
+    # geometric-mechanics-notation holding exactly fep-161..168.
     assert variables["base_topic_count"] == 50
     assert variables["expansion_families"] == 17
-    assert variables["expansion_family_topics"] == 115
+    assert variables["expansion_family_topics"] == 118
     assert variables["expansion_family_size"] == 7
     assert variables["expansion_first_families"] == 10
     assert variables["expansion_second_families"] == 5
     assert variables["expansion_second_topics"] == 35
     assert variables["expansion_third_families"] == 2
-    assert variables["expansion_third_topics"] == 10
-    assert variables["expansion_third_family_size"] == 5
+    assert variables["expansion_third_topics"] == 13
+    assert variables["expansion_third_family_sizes"] == [6, 7]
     assert variables["topics_before_second_expansion"] == 120
     assert variables["topics_before_third_expansion"] == 155

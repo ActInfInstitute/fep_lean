@@ -1,16 +1,16 @@
 {
   "area_counts": {
-    "ActiveInference": 36,
+    "ActiveInference": 37,
     "BayesianMechanics": 41,
     "FEP": 41,
     "InfoGeometry": 21,
-    "Thermodynamics": 26
+    "Thermodynamics": 28
   },
   "area_dispositions": {
     "ActiveInference": {
       "assumption_gap": 0,
       "conditional_proxy": 1,
-      "formalized": 32,
+      "formalized": 33,
       "proxy": 0,
       "scope_gap": 0,
       "structural_proxy": 3
@@ -42,7 +42,7 @@
     "Thermodynamics": {
       "assumption_gap": 0,
       "conditional_proxy": 2,
-      "formalized": 23,
+      "formalized": 25,
       "proxy": 0,
       "scope_gap": 0,
       "structural_proxy": 1
@@ -812,7 +812,7 @@
   },
   "disposition_counts": {
     "conditional_proxy": 13,
-    "formalized": 146,
+    "formalized": 149,
     "structural_proxy": 6
   },
   "evidence_boundary": "Counts describe canonical source coverage. Compilation evidence and full external-run evidence are separate receipt contracts.",
@@ -829,13 +829,13 @@
     "finite-exponential-family-dual-geometry": 7,
     "finite-sample-risk-and-calibration": 7,
     "finite-to-native-blanket-transfer": 7,
-    "geometric-mechanics-notation": 5,
+    "geometric-mechanics-notation": 7,
     "information-geometry-and-geometric-optimization": 7,
     "learning-concentration-and-model-evidence": 7,
     "measure-bayesian-inversion": 7,
     "path-space-stochastic-thermodynamics": 7,
     "predictive-coding-and-generalized-coordinates": 7,
-    "standalone-efe-formalizations": 5,
+    "standalone-efe-formalizations": 6,
     "temporal-and-hierarchical-inference": 7,
     "two-state-continuous-time-thermodynamics": 7,
     "variational-duality-and-information-bounds": 7
@@ -2610,7 +2610,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 18,
+      "definition_count": 23,
       "formal_dependencies": [],
       "id": "formal-module-geometric-mechanics",
       "imports": [
@@ -2620,10 +2620,23 @@
       "resource": "geometric_mechanics.lean",
       "role": "foundation",
       "structure_count": 0,
-      "theorem_count": 22,
+      "theorem_count": 37,
       "theorems": [
+        "FEP.GeometricMechanics.dot_sq_le_sq_mul_sq",
         "FEP.GeometricMechanics.expansion_remainder_witness",
+        "FEP.GeometricMechanics.fep167_frobenius_pythagoras",
+        "FEP.GeometricMechanics.fep167_projection_unique",
+        "FEP.GeometricMechanics.fep167_residual_example",
+        "FEP.GeometricMechanics.fep167_symmetrize_minimizes",
+        "FEP.GeometricMechanics.fep168AlignedH_symmetric",
+        "FEP.GeometricMechanics.fep168_absolute_budget",
+        "FEP.GeometricMechanics.fep168_equality_attained",
+        "FEP.GeometricMechanics.fep168_remainder_sq_budget",
+        "FEP.GeometricMechanics.fep168_weightedDivergence_eq_remainderDot",
         "FEP.GeometricMechanics.fluxDivergence_eq",
+        "FEP.GeometricMechanics.frobeniusInner_skew_symmetric",
+        "FEP.GeometricMechanics.frobeniusSq_add",
+        "FEP.GeometricMechanics.frobeniusSq_eq_zero",
         "FEP.GeometricMechanics.graphDecomposition",
         "FEP.GeometricMechanics.nodeDiv_skew",
         "FEP.GeometricMechanics.skewQuadratic_eq_zero",
@@ -2632,6 +2645,8 @@
         "FEP.GeometricMechanics.solenoidal_drop_of_constantQ",
         "FEP.GeometricMechanics.solenoidal_drop_of_orthogonal",
         "FEP.GeometricMechanics.solenoidal_expansion",
+        "FEP.GeometricMechanics.sub_symmetric",
+        "FEP.GeometricMechanics.sub_symmetrize_skew",
         "FEP.GeometricMechanics.sum_negPairs",
         "FEP.GeometricMechanics.sum_swapPairs",
         "FEP.GeometricMechanics.symmetrize_of_symmetric",
@@ -2644,6 +2659,32 @@
         "FEP.GeometricMechanics.witness_divQ",
         "FEP.GeometricMechanics.witness_divergence",
         "FEP.GeometricMechanics.witness_drop_fails"
+      ]
+    },
+    {
+      "abbreviation_count": 0,
+      "definition_count": 5,
+      "formal_dependencies": [
+        "FepSketches.helmholtz_ao_ness"
+      ],
+      "id": "formal-module-law-weighted-split",
+      "imports": [
+        "FepSketches.helmholtz_ao_ness",
+        "Mathlib.Tactic"
+      ],
+      "lean_module": "FepSketches.law_weighted_split",
+      "resource": "law_weighted_split.lean",
+      "role": "foundation",
+      "structure_count": 0,
+      "theorem_count": 7,
+      "theorems": [
+        "FEP.LawWeightedSplit.fep166_reversible_split_unique",
+        "FEP.LawWeightedSplit.fep166_split_unique",
+        "FEP.LawWeightedSplit.fep166_twoByTwo_circulation_negative",
+        "FEP.LawWeightedSplit.fep166_twoByTwo_circulation_nonzero",
+        "FEP.LawWeightedSplit.fep166_twoByTwo_predicates",
+        "FEP.LawWeightedSplit.fep166_twoByTwo_split_canonical",
+        "FEP.LawWeightedSplit.fep166_twoByTwo_support"
       ]
     },
     {
@@ -3379,9 +3420,10 @@
       "resource": "compositions/helmholtz_ao_ness.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 1,
+      "theorem_count": 2,
       "theorems": [
-        "FEPComposed.fep160_aoNess_extends_fep025_current"
+        "FEPComposed.fep160_aoNess_extends_fep025_current",
+        "FEPComposed.fep166_splitUnique_extends_fep160_aoNess"
       ]
     },
     {
@@ -3399,13 +3441,15 @@
       "resource": "compositions/geometric_mechanics.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 5,
+      "theorem_count": 7,
       "theorems": [
         "FEPComposed.fep161_skewCancellation_extends_fep160_aoNess",
         "FEPComposed.fep162_clairautSymmetrize_extends_fep161_skewCancellation",
         "FEPComposed.fep163_solenoidalExpansion_extends_fep025_current",
         "FEPComposed.fep164_graphCurrent_extends_fep025_current",
-        "FEPComposed.fep165_necessityWitness_extends_fep025_current"
+        "FEPComposed.fep165_necessityWitness_extends_fep025_current",
+        "FEPComposed.fep167_frobeniusProjection_extends_fep162_clairautSymmetrize",
+        "FEPComposed.fep168_remainderBound_extends_fep163_solenoidalExpansion"
       ]
     },
     {
@@ -3574,13 +3618,15 @@
     },
     {
       "module": "FepSketches.geometric_mechanics",
-      "topic_count": 5,
+      "topic_count": 7,
       "topic_ids": [
         "fep-161",
         "fep-162",
         "fep-163",
         "fep-164",
-        "fep-165"
+        "fep-165",
+        "fep-167",
+        "fep-168"
       ]
     },
     {
@@ -3601,6 +3647,13 @@
       "topic_count": 1,
       "topic_ids": [
         "fep-160"
+      ]
+    },
+    {
+      "module": "FepSketches.law_weighted_split",
+      "topic_count": 1,
+      "topic_ids": [
+        "fep-166"
       ]
     },
     {
@@ -4112,36 +4165,36 @@
   ],
   "metrics": {
     "abbreviations": 28,
-    "authored_relation_edges": 143,
+    "authored_relation_edges": 146,
     "capability_nodes": 50,
-    "composed_theorems": 236,
-    "definitions": 769,
-    "distinct_mathlib_imports": 69,
-    "formal_module_dependency_edges": 147,
-    "formal_module_import_edges": 252,
-    "formal_modules": 68,
-    "formal_pairing_witnesses": 115,
+    "composed_theorems": 239,
+    "definitions": 779,
+    "distinct_mathlib_imports": 70,
+    "formal_module_dependency_edges": 148,
+    "formal_module_import_edges": 254,
+    "formal_modules": 69,
+    "formal_pairing_witnesses": 118,
     "formal_relation_witnesses": 20,
     "formal_resource_abbreviations": 21,
-    "formal_resource_definitions": 674,
+    "formal_resource_definitions": 684,
     "formal_resource_structures": 50,
-    "formal_resource_theorems": 1152,
-    "foundation_modules": 43,
-    "foundation_theorems": 916,
+    "formal_resource_theorems": 1177,
+    "foundation_modules": 44,
+    "foundation_theorems": 938,
     "open_capabilities": 0,
     "satisfied_capabilities": 50,
-    "theorem_witnessed_relations": 135,
-    "theorems": 1712,
+    "theorem_witnessed_relations": 138,
+    "theorems": 1752,
     "topic_abbreviations": 7,
     "topic_definitions": 95,
-    "topic_import_edges": 222,
-    "topic_theorems": 560,
-    "topics": 165
+    "topic_import_edges": 225,
+    "topic_theorems": 575,
+    "topics": 168
   },
   "relation_counts": {
     "conceptual": 8,
     "formal": 20,
-    "formal_pairing": 115
+    "formal_pairing": 118
   },
   "relations": [
     {
@@ -5144,6 +5197,27 @@
       "source": "fep-165",
       "target": "fep-025",
       "witness": "FEPComposed.fep165_necessityWitness_extends_fep025_current"
+    },
+    {
+      "kind": "formal_pairing",
+      "rationale": "The competing-pair uniqueness of the law-weighted split is paired with fep-160's unconditional existence decomposition, so on the same finite rate-field carrier the canonical split exists and any constraint-satisfying competitor coincides with it, without introducing a stationarity hypothesis or a nonnegativity claim for the circulation part.",
+      "source": "fep-166",
+      "target": "fep-160",
+      "witness": "FEPComposed.fep166_splitUnique_extends_fep160_aoNess"
+    },
+    {
+      "kind": "formal_pairing",
+      "rationale": "The Frobenius least-squares projection layer is paired with fep-162's algebraic symmetrization construction, so the constructed discrete Hessian is exactly the unique symmetric minimizer, without claiming a continuum Clairaut theorem or a general Bregman-projection existence result.",
+      "source": "fep-167",
+      "target": "fep-162",
+      "witness": "FEPComposed.fep167_frobeniusProjection_extends_fep162_clairautSymmetrize"
+    },
+    {
+      "kind": "formal_pairing",
+      "rationale": "The quantitative remainder budget is paired with fep-163's exact three-term expansion, so the uncancelled divergence remainder is bounded and its equality case attained instead of being assumed to vanish, without an unconditional-drop claim.",
+      "source": "fep-168",
+      "target": "fep-163",
+      "witness": "FEPComposed.fep168_remainderBound_extends_fep163_solenoidalExpansion"
     }
   ],
   "review_date": "2026-08-21",
@@ -8719,6 +8793,69 @@
       "semantic_disposition": "formalized",
       "theorem_count": 5,
       "title": "Necessity Witness for the Unconditional Solenoidal Drop"
+    },
+    {
+      "abbreviation_count": 0,
+      "acceptance_probe": "warning-free native Lean compile of all seven fep-166 declarations.",
+      "area": "ActiveInference",
+      "assumption_review": "Positivity of the finite law is the only analytic input and licenses the divisions; no stationarity hypothesis, no generator contract, and no nonnegativity claim for the circulation part enter the statements.",
+      "definition_count": 0,
+      "family": "standalone-efe-formalizations",
+      "id": "fep-166",
+      "imports": [
+        "FepSketches.law_weighted_split"
+      ],
+      "invariant": "Any competing pair S, A with W = S + A, p-weighted reversibility of S and p-weighted skewness of A coincides pointwise with the canonical symmetricPart and circulationPart of the rate field; the reversible boundary is in uniqueness form (a p-reversible field has the split (W, 0)), and on the concrete two-state datum the constraint-satisfying split is the canonical one with genuinely nonzero forward circulation 1/2 and strictly negative reverse entry -1/4.",
+      "mathlib_hints": [
+        "Algebra.BigOperators.Group.Finset"
+      ],
+      "non_vacuity": "The t-0060 datum with weight law p = (1/3, 2/3) and rate entries 1, 5/2, 3/4, and -1 satisfies every constraint clause, its split is forced to be the canonical one, and the circulation entries 1/2 and -1/4 are computed exactly, so the uniqueness characterization is exercised on nontrivial data.",
+      "primary_theorem": "fep166_split_unique",
+      "semantic_disposition": "formalized",
+      "theorem_count": 7,
+      "title": "Uniqueness of the Law-Weighted Reversible/Circulation Split"
+    },
+    {
+      "abbreviation_count": 0,
+      "acceptance_probe": "warning-free native Lean compile of all four fep-167 declarations.",
+      "area": "Thermodynamics",
+      "assumption_review": "Matrix projection only, no differentiability, no continuum Clairaut theorem, no Bregman-projection existence/uniqueness claim.",
+      "definition_count": 0,
+      "family": "geometric-mechanics-notation",
+      "id": "fep-167",
+      "imports": [
+        "FepSketches.geometric_mechanics"
+      ],
+      "invariant": "For symmetric S the squared Frobenius norm splits exactly as ||H - S||^2 = ||H - symmetrize H||^2 + ||symmetrize H - S||^2, the symmetrizer minimizes the squared distance among symmetric matrices with equality exactly at the symmetrizer, the symmetric minimizer is unique, and the concrete nonsymmetric datum [[0,1],[0,0]] carries residual exactly 1/2.",
+      "mathlib_hints": [
+        "Algebra.BigOperators.Group.Finset"
+      ],
+      "non_vacuity": "The residual example evaluates to exactly 1/2 on nonsymmetric data, and symmetric data attains the zero residual exactly at the symmetrizer, so both the strict and the degenerate boundary are realized.",
+      "primary_theorem": "fep167_frobenius_pythagoras",
+      "semantic_disposition": "formalized",
+      "theorem_count": 4,
+      "title": "Frobenius Least-Squares Projection of the Symmetrizer"
+    },
+    {
+      "abbreviation_count": 0,
+      "acceptance_probe": "warning-free native Lean compile of all four fep-168 declarations.",
+      "area": "Thermodynamics",
+      "assumption_review": "Quantitative budget on the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp)); no PDE-discretization or entropy-production claim.",
+      "definition_count": 0,
+      "family": "geometric-mechanics-notation",
+      "id": "fep-168",
+      "imports": [
+        "FepSketches.geometric_mechanics"
+      ],
+      "invariant": "On the fep-163 carrier the weighted divergence equals dot (divQ DQ) g under the cancellation hypotheses, the squared Cauchy-Schwarz budget (weightedDivergence)^2 <= (sum r_i^2)(sum g_i^2) bounds the uncancelled remainder with its abs-product corollary, and equality is attained on aligned nonzero data with ||g||^2 = 1.",
+      "mathlib_hints": [
+        "Algebra.BigOperators.Group.Finset"
+      ],
+      "non_vacuity": "The aligned datum Q = [[0,1],[-1,0]], H = diag(1, 2), DQ with divQ (1, 0), and g = (1, 0) attains the budget with equality, while the pinned remainderG = (1, 1) datum is strict with gap 1, so both the equality and the strict boundary are realized.",
+      "primary_theorem": "fep168_weightedDivergence_eq_remainderDot",
+      "semantic_disposition": "formalized",
+      "theorem_count": 4,
+      "title": "Quantitative Control of the Uncancelled Divergence Remainder"
     }
   ]
 }

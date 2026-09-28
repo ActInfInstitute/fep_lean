@@ -4,7 +4,7 @@ import FepSketches.geometric_mechanics
 /-!
 # Geometric-mechanics topic compositions
 
-Five bridges pair the new geometric-mechanics theorems with their nearest
+Seven bridges pair the new geometric-mechanics theorems with their nearest
 catalogue endpoints.  Each conjunction keeps both endpoint laws visible
 instead of asserting an unproved reduction; the necessity witness is paired
 with the divergence-free cycle carrier to bound exactly what stationarity
@@ -96,5 +96,40 @@ theorem fep165_necessityWitness_extends_fep025_current :
   exact
     ⟨fep_fep165.FEP165.fep165_witness_drop_fails,
       fep_fep025.FEP025.fep025_cycleCurrent_stationary 0⟩
+
+/-- The Frobenius least-squares projection layer is paired with fep-162's
+algebraic symmetrization construction: the exact Pythagoras split and the
+minimality boundary hold against the constructed symmetric matrix, and the
+construction is symmetric; no continuum Clairaut theorem and no
+Bregman-projection existence claim enter. -/
+theorem fep167_frobeniusProjection_extends_fep162_clairautSymmetrize
+    {n : ℕ} (H S : Fin n → Fin n → ℝ) (hS : SymmetricOf S) :
+    (frobeniusSq (H - S)
+        = frobeniusSq (H - symmetrize H) + frobeniusSq (symmetrize H - S)) ∧
+      (frobeniusSq (H - symmetrize H) ≤ frobeniusSq (H - S)) ∧
+      SymmetricOf (FEP.GeometricMechanics.symmetrize H) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact fep_fep167.FEP167.fep167_frobenius_pythagoras H S hS
+  · exact (fep_fep167.FEP167.fep167_symmetrize_minimizes H S hS).1
+  · exact fep_fep162.FEP162.fep162_symmetrize_symmetric H
+
+/-- The quantitative remainder budget is paired with fep-163's exact
+three-term expansion: under the cancellation hypotheses the weighted
+divergence is the expansion remainder `dot (divQ DQ) g`, and the squared
+Cauchy–Schwarz budget bounds it instead of assuming it vanishes. -/
+theorem fep168_remainderBound_extends_fep163_solenoidalExpansion
+    {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ) (g dlogp : Fin n → ℝ)
+    (hQ : SkewSymmetric Q) (hH : SymmetricOf H) (hcoup : ∀ i, dlogp i = -g i) :
+    (weightedDivergence Q H DQ g dlogp
+        = FEP.GeometricMechanics.traceOf (FEP.GeometricMechanics.mulOf Q H)
+          - FEP.GeometricMechanics.dot g (FEP.GeometricMechanics.mulVec Q g)
+          + FEP.GeometricMechanics.dot (FEP.GeometricMechanics.divQ DQ) g) ∧
+      ((weightedDivergence Q H DQ g dlogp) ^ 2
+        ≤ FEP.GeometricMechanics.dot (FEP.GeometricMechanics.divQ DQ)
+            (FEP.GeometricMechanics.divQ DQ)
+          * FEP.GeometricMechanics.dot g g) := by
+  exact
+    ⟨fep_fep163.FEP163.fep163_solenoidal_expansion Q H DQ g dlogp hcoup,
+      fep_fep168.FEP168.fep168_remainder_sq_budget Q H DQ g dlogp hQ hH hcoup⟩
 
 end FEPComposed

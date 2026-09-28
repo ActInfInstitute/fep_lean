@@ -18,6 +18,7 @@ import FepSketches.exponential_family
 import FepSketches.geometric_mechanics
 import FepSketches.geometric_optimization
 import FepSketches.helmholtz_ao_ness
+import FepSketches.law_weighted_split
 import FepSketches.learning_theory
 import FepSketches.measure_bayes
 import FepSketches.native_blanket
@@ -7715,3 +7716,164 @@ theorem fep165_witness_drop_fails : nodeDiv (currentOf witnessQ witnessG) 0 = 1 
 end FEP165
 
 end fep_fep165
+
+namespace fep_fep166
+
+namespace FEP166
+
+open FEP.LawWeightedSplit FEP.HelmholtzAoNess FEP
+
+variable {State : Type*} [Fintype State] {rate S A : State → State → ℝ}
+  {law : FiniteLaw State}
+
+/-- **Competing-pair uniqueness of the law-weighted split.**  A positive
+finite law `p` and a rate field written `rate = S + A` with `S` `p`-reversible
+and `A` `p`-skew force `S` and `A` to be exactly the canonical
+`symmetricPart` and `circulationPart` of fep-160. -/
+theorem fep166_split_unique
+    (hSupport : ∀ i, 0 < law i)
+    (hS : ∀ i j, law i * S i j = law j * S j i)
+    (hA : ∀ i j, law i * A i j = -(law j * A j i))
+    (hSum : ∀ i j, rate i j = S i j + A i j) :
+    S = symmetricPart rate law ∧ A = circulationPart rate law :=
+  FEP.LawWeightedSplit.fep166_split_unique hSupport hS hA hSum
+
+/-- The reversible boundary in uniqueness form: a `p`-reversible rate field
+has the canonical split `(W, 0)`. -/
+theorem fep166_reversible_split_unique
+    (hSupport : ∀ i, 0 < law i)
+    (hRev : ∀ i j, law i * rate i j = law j * rate j i) :
+    rate = symmetricPart rate law ∧ (∀ i j, circulationPart rate law i j = 0) :=
+  FEP.LawWeightedSplit.fep166_reversible_split_unique hSupport hRev
+
+/-- Full support of the t-0060 witness law `p = (1/3, 2/3)`. -/
+theorem fep166_twoByTwo_support (i : Fin 2) :
+    0 < twoByTwoLaw i :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_support i
+
+/-- The t-0060 datum satisfies every constraint clause of the law-weighted
+split: `S` is `p`-reversible, `A` is `p`-skew, and `W = S + A` entrywise. -/
+theorem fep166_twoByTwo_predicates :
+    (∀ i j : Fin 2, twoByTwoLaw i * twoByTwoS i j = twoByTwoLaw j * twoByTwoS j i) ∧
+      (∀ i j : Fin 2,
+        twoByTwoLaw i * twoByTwoA i j = -(twoByTwoLaw j * twoByTwoA j i)) ∧
+      (∀ i j : Fin 2, twoByTwoW i j = twoByTwoS i j + twoByTwoA i j) :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_predicates
+
+/-- The datum's constraint-satisfying split is exactly the canonical
+`symmetricPart`/`circulationPart` pair. -/
+theorem fep166_twoByTwo_split_canonical :
+    twoByTwoS = symmetricPart twoByTwoW twoByTwoLaw ∧
+      twoByTwoA = circulationPart twoByTwoW twoByTwoLaw :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_split_canonical
+
+/-- The datum exhibits a genuinely nonzero circulation `1/2` on the forward
+edge. -/
+theorem fep166_twoByTwo_circulation_nonzero :
+    circulationPart twoByTwoW twoByTwoLaw (0 : Fin 2) (1 : Fin 2) = 1 / 2 :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_nonzero
+
+/-- The reverse edge carries the opposite, strictly negative circulation
+`-1/4`: the circulation part is not a nonnegative rate field. -/
+theorem fep166_twoByTwo_circulation_negative :
+    circulationPart twoByTwoW twoByTwoLaw (1 : Fin 2) (0 : Fin 2) = -1 / 4 :=
+  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_negative
+
+end FEP166
+
+end fep_fep166
+
+namespace fep_fep167
+
+namespace FEP167
+
+open FEP.GeometricMechanics
+
+/-- **fep-167 (exact Frobenius Pythagoras).**  For symmetric `S` the squared
+Frobenius norm splits exactly across the symmetrization residual and the
+projection residual. -/
+theorem fep167_frobenius_pythagoras {n : ℕ} (H S : Fin n → Fin n → ℝ)
+    (hS : SymmetricOf S) :
+    frobeniusSq (H - S)
+      = frobeniusSq (H - symmetrize H) + frobeniusSq (symmetrize H - S) :=
+  FEP.GeometricMechanics.fep167_frobenius_pythagoras H S hS
+
+/-- **fep-167 (minimality with the equality boundary).**  `symmetrize H` is
+the Frobenius least-squares approximation of `H` among symmetric matrices,
+with equality exactly at `S = symmetrize H`. -/
+theorem fep167_symmetrize_minimizes {n : ℕ} (H S : Fin n → Fin n → ℝ)
+    (hS : SymmetricOf S) :
+    frobeniusSq (H - symmetrize H) ≤ frobeniusSq (H - S)
+      ∧ (frobeniusSq (H - symmetrize H) = frobeniusSq (H - S) ↔ S = symmetrize H) :=
+  FEP.GeometricMechanics.fep167_symmetrize_minimizes H S hS
+
+/-- **fep-167 (uniqueness).**  Any symmetric `S` attaining the minimal
+squared Frobenius distance to `H` coincides with `symmetrize H`. -/
+theorem fep167_projection_unique {n : ℕ} (H S : Fin n → Fin n → ℝ)
+    (hS : SymmetricOf S)
+    (hmin : ∀ T : Fin n → Fin n → ℝ, SymmetricOf T →
+      frobeniusSq (H - S) ≤ frobeniusSq (H - T)) :
+    S = symmetrize H :=
+  FEP.GeometricMechanics.fep167_projection_unique H S hS hmin
+
+/-- **fep-167 (residual example).**  The nonsymmetric datum
+`[[0, 1], [0, 0]]` has squared Frobenius projection residual `1/2 ≠ 0`. -/
+theorem fep167_residual_example :
+    frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) = 1 / 2
+      ∧ frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) ≠ 0 :=
+  FEP.GeometricMechanics.fep167_residual_example
+
+end FEP167
+
+end fep_fep167
+
+namespace fep_fep168
+
+namespace FEP168
+
+open FEP.GeometricMechanics
+
+/-- **fep-168 (remainder identity).**  Under `Q` skew, `H` symmetric, and the
+stationary coupling `dlogp = -g`, the weighted divergence of the candidate
+current is exactly the remainder dot product `dot (divQ DQ) g`. -/
+theorem fep168_weightedDivergence_eq_remainderDot {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    weightedDivergence Q H DQ g dlogp = dot (divQ DQ) g :=
+  FEP.GeometricMechanics.fep168_weightedDivergence_eq_remainderDot Q H DQ g dlogp
+    hQ hH hcoup
+
+/-- **fep-168 (squared remainder budget).**  The uncancelled remainder obeys
+the squared Cauchy–Schwarz budget `(weightedDivergence …)² ≤ (∑ rᵢ²)(∑ gᵢ²)`
+with `r = divQ DQ`. -/
+theorem fep168_remainder_sq_budget {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    (weightedDivergence Q H DQ g dlogp) ^ 2
+      ≤ dot (divQ DQ) (divQ DQ) * dot g g :=
+  FEP.GeometricMechanics.fep168_remainder_sq_budget Q H DQ g dlogp hQ hH hcoup
+
+/-- **fep-168 (absolute budget).**  The squared budget restated over `abs`
+products, with no square roots. -/
+theorem fep168_absolute_budget {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    abs (weightedDivergence Q H DQ g dlogp) * abs (weightedDivergence Q H DQ g dlogp)
+      ≤ dot (divQ DQ) (divQ DQ) * dot g g :=
+  FEP.GeometricMechanics.fep168_absolute_budget Q H DQ g dlogp hQ hH hcoup
+
+/-- **fep-168 (equality attained).**  On the aligned datum — `witnessQ` skew,
+`fep168AlignedH = diag(1, 2)` symmetric, `DQ = remainderDQ` (so
+`divQ DQ = (1, 0)`), and the aligned gradient `fep168AlignedG = (1, 0)` with
+the canonical coupling — the squared budget is attained with equality and the
+data is nonzero. -/
+theorem fep168_equality_attained :
+    (weightedDivergence witnessQ fep168AlignedH remainderDQ fep168AlignedG
+        (fun i => -fep168AlignedG i)) ^ 2
+      = dot (divQ remainderDQ) (divQ remainderDQ) * dot fep168AlignedG fep168AlignedG
+      ∧ dot fep168AlignedG fep168AlignedG ≠ 0 :=
+  FEP.GeometricMechanics.fep168_equality_attained
+
+end FEP168
+
+end fep_fep168

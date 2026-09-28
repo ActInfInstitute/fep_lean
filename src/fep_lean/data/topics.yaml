@@ -1,4 +1,4 @@
-# FEP / Active Inference / Bayesian Mechanics — 165-topic Lean4 catalogue
+# FEP / Active Inference / Bayesian Mechanics — 168-topic Lean4 catalogue
 # Each topic maps to one OpenGauss session when workflows are enabled.
 # Regenerate: uv run python scripts/_maint_build_topics_catalogue.py
 # Fields include compile maturity and a separately reviewed semantic disposition.
@@ -8,7 +8,7 @@
 schema_version: 2
 roster:
   first_id: fep-001
-  last_id: fep-165
+  last_id: fep-168
 families:
 - core-free-energy
 - core-active-inference
@@ -13703,3 +13703,318 @@ topics:
   - \mathsf{nodeDiv}\,(\mathsf{currentOf}\,\mathsf{witnessQ}\,\mathsf{witnessG}) = \lambda\,i \mapsto \mathsf{if}\,i = 0\,\mathsf{then}\,1\,\mathsf{else}
     -1
   - \mathsf{nodeDiv}\,(\mathsf{currentOf}\,\mathsf{witnessQ}\,\mathsf{witnessG})\,0 = 1
+- id: fep-166
+  title: Uniqueness of the Law-Weighted Reversible/Circulation Split
+  area: ActiveInference
+  family: standalone-efe-formalizations
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep166_split_unique
+  supporting_theorems:
+  - fep166_reversible_split_unique
+  - fep166_twoByTwo_support
+  - fep166_twoByTwo_predicates
+  - fep166_twoByTwo_split_canonical
+  - fep166_twoByTwo_circulation_nonzero
+  - fep166_twoByTwo_circulation_negative
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'Any competing pair S, A with W = S + A, p-weighted reversibility of S and p-weighted skewness of A coincides pointwise
+    with the canonical symmetricPart and circulationPart of the rate field; the reversible boundary is in uniqueness form
+    (a p-reversible field has the split (W, 0)), and on the concrete two-state datum the constraint-satisfying split is the
+    canonical one with genuinely nonzero forward circulation 1/2 and strictly negative reverse entry -1/4. Assumption scope:
+    Positivity of the finite law is the only analytic input and licenses the divisions; no stationarity hypothesis, no generator
+    contract, and no nonnegativity claim for the circulation part enter the statements. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: Positivity of the finite law is the only analytic input and licenses the divisions; no stationarity hypothesis,
+    no generator contract, and no nonnegativity claim for the circulation part enter the statements.
+  non_vacuity: The t-0060 datum W = [[1, 5/2], [3/4, -1]] with p = (1/3, 2/3) satisfies every constraint clause, its split
+    is forced to be the canonical one, and the circulation entries 1/2 and -1/4 are computed exactly, so the uniqueness characterization
+    is exercised on nontrivial data.
+  acceptance_probe: warning-free native Lean compile of all seven fep-166 declarations.
+  lean_sketch: "import FepSketches.law_weighted_split\n\nnamespace FEP166\n\nopen FEP.LawWeightedSplit FEP.HelmholtzAoNess\
+    \ FEP\n\nvariable {State : Type*} [Fintype State] {rate S A : State → State → ℝ}\n  {law : FiniteLaw State}\n\n/-- **Competing-pair\
+    \ uniqueness of the law-weighted split.**  A positive\nfinite law `p` and a rate field written `rate = S + A` with `S`\
+    \ `p`-reversible\nand `A` `p`-skew force `S` and `A` to be exactly the canonical\n`symmetricPart` and `circulationPart`\
+    \ of fep-160. -/\ntheorem fep166_split_unique\n    (hSupport : ∀ i, 0 < law i)\n    (hS : ∀ i j, law i * S i j = law j\
+    \ * S j i)\n    (hA : ∀ i j, law i * A i j = -(law j * A j i))\n    (hSum : ∀ i j, rate i j = S i j + A i j) :\n    S\
+    \ = symmetricPart rate law ∧ A = circulationPart rate law :=\n  FEP.LawWeightedSplit.fep166_split_unique hSupport hS hA\
+    \ hSum\n\n/-- The reversible boundary in uniqueness form: a `p`-reversible rate field\nhas the canonical split `(W, 0)`.\
+    \ -/\ntheorem fep166_reversible_split_unique\n    (hSupport : ∀ i, 0 < law i)\n    (hRev : ∀ i j, law i * rate i j = law\
+    \ j * rate j i) :\n    rate = symmetricPart rate law ∧ (∀ i j, circulationPart rate law i j = 0) :=\n  FEP.LawWeightedSplit.fep166_reversible_split_unique\
+    \ hSupport hRev\n\n/-- Full support of the t-0060 witness law `p = (1/3, 2/3)`. -/\ntheorem fep166_twoByTwo_support (i\
+    \ : Fin 2) :\n    0 < twoByTwoLaw i :=\n  FEP.LawWeightedSplit.fep166_twoByTwo_support i\n\n/-- The t-0060 datum satisfies\
+    \ every constraint clause of the law-weighted\nsplit: `S` is `p`-reversible, `A` is `p`-skew, and `W = S + A` entrywise.\
+    \ -/\ntheorem fep166_twoByTwo_predicates :\n    (∀ i j : Fin 2, twoByTwoLaw i * twoByTwoS i j = twoByTwoLaw j * twoByTwoS\
+    \ j i) ∧\n      (∀ i j : Fin 2,\n        twoByTwoLaw i * twoByTwoA i j = -(twoByTwoLaw j * twoByTwoA j i)) ∧\n      (∀\
+    \ i j : Fin 2, twoByTwoW i j = twoByTwoS i j + twoByTwoA i j) :=\n  FEP.LawWeightedSplit.fep166_twoByTwo_predicates\n\n\
+    /-- The datum's constraint-satisfying split is exactly the canonical\n`symmetricPart`/`circulationPart` pair. -/\ntheorem\
+    \ fep166_twoByTwo_split_canonical :\n    twoByTwoS = symmetricPart twoByTwoW twoByTwoLaw ∧\n      twoByTwoA = circulationPart\
+    \ twoByTwoW twoByTwoLaw :=\n  FEP.LawWeightedSplit.fep166_twoByTwo_split_canonical\n\n/-- The datum exhibits a genuinely\
+    \ nonzero circulation `1/2` on the forward\nedge. -/\ntheorem fep166_twoByTwo_circulation_nonzero :\n    circulationPart\
+    \ twoByTwoW twoByTwoLaw (0 : Fin 2) (1 : Fin 2) = 1 / 2 :=\n  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_nonzero\n\
+    \n/-- The reverse edge carries the opposite, strictly negative circulation\n`-1/4`: the circulation part is not a nonnegative\
+    \ rate field. -/\ntheorem fep166_twoByTwo_circulation_negative :\n    circulationPart twoByTwoW twoByTwoLaw (1 : Fin 2)\
+    \ (0 : Fin 2) = -1 / 4 :=\n  FEP.LawWeightedSplit.fep166_twoByTwo_circulation_negative\n\nend FEP166\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &(\mathsf{hSupport} : \forall i, 0 < \mathsf{law}\,i)\,(\mathsf{hS} : \forall i\,j, \mathsf{law}\,i \cdot S\,i\,j = \mathsf{law}\,j
+    \cdot S\,j\,i) \\
+
+    &(\mathsf{hA} : \forall i\,j, \mathsf{law}\,i \cdot A\,i\,j = -(\mathsf{law}\,j \cdot A\,j\,i)) \\
+
+    &(\mathsf{hSum} : \forall i\,j, \mathsf{rate}\,i\,j = S\,i\,j + A\,i\,j) \\
+
+    &S = \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law} \wedge A = \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &(\mathsf{hSupport} : \forall i, 0 < \mathsf{law}\,i)\,(\mathsf{hRev} : \forall i\,j, \mathsf{law}\,i \cdot \mathsf{rate}\,i\,j
+    = \mathsf{law}\,j \cdot \mathsf{rate}\,j\,i) \\
+
+    &\mathsf{rate} = \mathsf{symmetricPart}\,\mathsf{rate}\,\mathsf{law} \wedge (\forall i\,j, \mathsf{circulationPart}\,\mathsf{rate}\,\mathsf{law}\,i\,j
+    = 0)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &(i : \mathsf{Fin}\,2) \\
+
+    &0 < \mathsf{twoByTwoLaw}\,i
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &(\forall i\,j : \mathsf{Fin}\,2, \mathsf{twoByTwoLaw}\,i \cdot \mathsf{twoByTwoS}\,i\,j = \mathsf{twoByTwoLaw}\,j \cdot
+    \mathsf{twoByTwoS}\,j\,i) \\
+
+    &\wedge (\forall i\,j : \mathsf{Fin}\,2, \mathsf{twoByTwoLaw}\,i \cdot \mathsf{twoByTwoA}\,i\,j = -(\mathsf{twoByTwoLaw}\,j
+    \cdot \mathsf{twoByTwoA}\,j \\
+
+    &i)) \wedge (\forall i\,j : \mathsf{Fin}\,2, \mathsf{twoByTwoW}\,i\,j = \mathsf{twoByTwoS}\,i\,j + \mathsf{twoByTwoA}\,i\,j)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &\mathsf{twoByTwoS} = \mathsf{symmetricPart}\,\mathsf{twoByTwoW}\,\mathsf{twoByTwoLaw} \wedge \mathsf{twoByTwoA} = \mathsf{circulationPart}
+    \\
+
+    &\mathsf{twoByTwoW}\,\mathsf{twoByTwoLaw}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &\mathsf{circulationPart}\,\mathsf{twoByTwoW}\,\mathsf{twoByTwoLaw}\,(0 : \mathsf{Fin}\,2)\,(1 : \mathsf{Fin}\,2) = 1
+    / 2
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{State} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{State}]\,\{\mathsf{rate}\,S\,A : \mathsf{State} \Rightarrow
+    \mathsf{State} \Rightarrow \mathbb{R}\} \\
+
+    &\mathsf{circulationPart}\,\mathsf{twoByTwoW}\,\mathsf{twoByTwoLaw}\,(1 : \mathsf{Fin}\,2)\,(0 : \mathsf{Fin}\,2) = -1
+    / 4
+
+    \end{aligned}'
+- id: fep-167
+  title: Frobenius Least-Squares Projection of the Symmetrizer
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep167_frobenius_pythagoras
+  supporting_theorems:
+  - fep167_symmetrize_minimizes
+  - fep167_projection_unique
+  - fep167_residual_example
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'For symmetric S the squared Frobenius norm splits exactly as ||H - S||^2 = ||H - symmetrize H||^2 + ||symmetrize H
+    - S||^2, the symmetrizer minimizes the squared distance among symmetric matrices with equality exactly at the symmetrizer,
+    the symmetric minimizer is unique, and the concrete nonsymmetric datum [[0, 1], [0, 0]] carries residual exactly 1/2.
+    Assumption scope: Matrix projection only, no differentiability, no continuum Clairaut theorem, no Bregman-projection existence/uniqueness
+    claim. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: Matrix projection only, no differentiability, no continuum Clairaut theorem, no Bregman-projection existence/uniqueness
+    claim.
+  non_vacuity: The residual example evaluates to exactly 1/2 on nonsymmetric data, and symmetric data attains the zero residual
+    exactly at the symmetrizer, so both the strict and the degenerate boundary are realized.
+  acceptance_probe: warning-free native Lean compile of all four fep-167 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP167\n\nopen FEP.GeometricMechanics\n\n/-- **fep-167\
+    \ (exact Frobenius Pythagoras).**  For symmetric `S` the squared\nFrobenius norm splits exactly across the symmetrization\
+    \ residual and the\nprojection residual. -/\ntheorem fep167_frobenius_pythagoras {n : ℕ} (H S : Fin n → Fin n → ℝ)\n \
+    \   (hS : SymmetricOf S) :\n    frobeniusSq (H - S)\n      = frobeniusSq (H - symmetrize H) + frobeniusSq (symmetrize\
+    \ H - S) :=\n  FEP.GeometricMechanics.fep167_frobenius_pythagoras H S hS\n\n/-- **fep-167 (minimality with the equality\
+    \ boundary).**  `symmetrize H` is\nthe Frobenius least-squares approximation of `H` among symmetric matrices,\nwith equality\
+    \ exactly at `S = symmetrize H`. -/\ntheorem fep167_symmetrize_minimizes {n : ℕ} (H S : Fin n → Fin n → ℝ)\n    (hS :\
+    \ SymmetricOf S) :\n    frobeniusSq (H - symmetrize H) ≤ frobeniusSq (H - S)\n      ∧ (frobeniusSq (H - symmetrize H)\
+    \ = frobeniusSq (H - S) ↔ S = symmetrize H) :=\n  FEP.GeometricMechanics.fep167_symmetrize_minimizes H S hS\n\n/-- **fep-167\
+    \ (uniqueness).**  Any symmetric `S` attaining the minimal\nsquared Frobenius distance to `H` coincides with `symmetrize\
+    \ H`. -/\ntheorem fep167_projection_unique {n : ℕ} (H S : Fin n → Fin n → ℝ)\n    (hS : SymmetricOf S)\n    (hmin : ∀\
+    \ T : Fin n → Fin n → ℝ, SymmetricOf T →\n      frobeniusSq (H - S) ≤ frobeniusSq (H - T)) :\n    S = symmetrize H :=\n\
+    \  FEP.GeometricMechanics.fep167_projection_unique H S hS hmin\n\n/-- **fep-167 (residual example).**  The nonsymmetric\
+    \ datum\n`[[0, 1], [0, 0]]` has squared Frobenius projection residual `1/2 ≠ 0`. -/\ntheorem fep167_residual_example :\n\
+    \    frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) = 1 / 2\n      ∧ frobeniusSq (fep167ResidualH - symmetrize\
+    \ fep167ResidualH) ≠ 0 :=\n  FEP.GeometricMechanics.fep167_residual_example\n\nend FEP167\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(H\,S : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hS} : \mathsf{SymmetricOf}\,S)
+    \\
+
+    &\mathsf{frobeniusSq}\,(H - S) = \mathsf{frobeniusSq}\,(H - \mathsf{symmetrize}\,H) + \mathsf{frobeniusSq} \\
+
+    &(\mathsf{symmetrize}\,H - S)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(H\,S : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hS} : \mathsf{SymmetricOf}\,S)
+    \\
+
+    &\mathsf{frobeniusSq}\,(H - \mathsf{symmetrize}\,H) \le \mathsf{frobeniusSq}\,(H - S) \wedge (\mathsf{frobeniusSq}\,(H
+    \\
+
+    &- \mathsf{symmetrize}\,H) = \mathsf{frobeniusSq}\,(H - S) \leftrightarrow S = \mathsf{symmetrize}\,H)
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(H\,S : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(\mathsf{hS} : \mathsf{SymmetricOf}\,S)\,(\mathsf{hmin}
+    : \forall T : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin} \\
+
+    &n \Rightarrow \mathbb{R}, \mathsf{SymmetricOf}\,T \Rightarrow \mathsf{frobeniusSq}\,(H - S) \le \mathsf{frobeniusSq}\,(H
+    - T)) \\
+
+    &S = \mathsf{symmetrize}\,H
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\mathsf{frobeniusSq}\,(\mathsf{fep167ResidualH} - \mathsf{symmetrize}\,\mathsf{fep167ResidualH}) = 1 / 2 \wedge \mathsf{frobeniusSq}
+    \\
+
+    &(\mathsf{fep167ResidualH} - \mathsf{symmetrize}\,\mathsf{fep167ResidualH}) \ne 0
+
+    \end{aligned}'
+- id: fep-168
+  title: Quantitative Control of the Uncancelled Divergence Remainder
+  area: Thermodynamics
+  family: geometric-mechanics-notation
+  mathlib_modules:
+  - Algebra.BigOperators.Group.Finset
+  mathlib_status: real
+  primary_theorem: fep168_weightedDivergence_eq_remainderDot
+  supporting_theorems:
+  - fep168_remainder_sq_budget
+  - fep168_absolute_budget
+  - fep168_equality_attained
+  boundary_theorems: []
+  semantic_disposition: formalized
+  nl: 'On the fep-163 carrier the weighted divergence equals dot (divQ DQ) g under the cancellation hypotheses, the squared
+    Cauchy-Schwarz budget (weightedDivergence)^2 <= (sum r_i^2)(sum g_i^2) bounds the uncancelled remainder with its abs-product
+    corollary, and equality is attained on aligned nonzero data with ||g||^2 = 1. Assumption scope: Quantitative budget on
+    the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp));
+    no PDE-discretization or entropy-production claim. Semantic disposition: `formalized`.
+
+    '
+  assumption_review: Quantitative budget on the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary
+    (slot = dot(Qg, dlogp)); no PDE-discretization or entropy-production claim.
+  non_vacuity: The aligned datum Q = [[0, 1], [-1, 0]], H = diag(1, 2), DQ with divQ (1, 0), and g = (1, 0) attains the budget
+    with equality, while the pinned remainderG = (1, 1) datum is strict with gap 1, so both the equality and the strict boundary
+    are realized.
+  acceptance_probe: warning-free native Lean compile of all four fep-168 declarations.
+  lean_sketch: "import FepSketches.geometric_mechanics\n\nnamespace FEP168\n\nopen FEP.GeometricMechanics\n\n/-- **fep-168\
+    \ (remainder identity).**  Under `Q` skew, `H` symmetric, and the\nstationary coupling `dlogp = -g`, the weighted divergence\
+    \ of the candidate\ncurrent is exactly the remainder dot product `dot (divQ DQ) g`. -/\ntheorem fep168_weightedDivergence_eq_remainderDot\
+    \ {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)\n    (hcoup\
+    \ : ∀ i, dlogp i = -g i) :\n    weightedDivergence Q H DQ g dlogp = dot (divQ DQ) g :=\n  FEP.GeometricMechanics.fep168_weightedDivergence_eq_remainderDot\
+    \ Q H DQ g dlogp\n    hQ hH hcoup\n\n/-- **fep-168 (squared remainder budget).**  The uncancelled remainder obeys\nthe\
+    \ squared Cauchy–Schwarz budget `(weightedDivergence …)² ≤ (∑ rᵢ²)(∑ gᵢ²)`\nwith `r = divQ DQ`. -/\ntheorem fep168_remainder_sq_budget\
+    \ {n : ℕ} (Q H DQ : Fin n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)\n    (hcoup\
+    \ : ∀ i, dlogp i = -g i) :\n    (weightedDivergence Q H DQ g dlogp) ^ 2\n      ≤ dot (divQ DQ) (divQ DQ) * dot g g :=\n\
+    \  FEP.GeometricMechanics.fep168_remainder_sq_budget Q H DQ g dlogp hQ hH hcoup\n\n/-- **fep-168 (absolute budget).**\
+    \  The squared budget restated over `abs`\nproducts, with no square roots. -/\ntheorem fep168_absolute_budget {n : ℕ}\
+    \ (Q H DQ : Fin n → Fin n → ℝ)\n    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)\n    (hcoup : ∀\
+    \ i, dlogp i = -g i) :\n    abs (weightedDivergence Q H DQ g dlogp) * abs (weightedDivergence Q H DQ g dlogp)\n      ≤\
+    \ dot (divQ DQ) (divQ DQ) * dot g g :=\n  FEP.GeometricMechanics.fep168_absolute_budget Q H DQ g dlogp hQ hH hcoup\n\n\
+    /-- **fep-168 (equality attained).**  On the aligned datum — `witnessQ` skew,\n`fep168AlignedH = diag(1, 2)` symmetric,\
+    \ `DQ = remainderDQ` (so\n`divQ DQ = (1, 0)`), and the aligned gradient `fep168AlignedG = (1, 0)` with\nthe canonical\
+    \ coupling — the squared budget is attained with equality and the\ndata is nonzero. -/\ntheorem fep168_equality_attained\
+    \ :\n    (weightedDivergence witnessQ fep168AlignedH remainderDQ fep168AlignedG\n        (fun i => -fep168AlignedG i))\
+    \ ^ 2\n      = dot (divQ remainderDQ) (divQ remainderDQ) * dot fep168AlignedG fep168AlignedG\n      ∧ dot fep168AlignedG\
+    \ fep168AlignedG ≠ 0 :=\n  FEP.GeometricMechanics.fep168_equality_attained\n\nend FEP168\n"
+  latex_equations:
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)\,(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i
+    = -g\,i) \\
+
+    &\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp} = \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,g
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)\,(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i
+    = -g\,i) \\
+
+    &(\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp}) ^ 2 \le \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,(\mathsf{divQ}\,\mathsf{DQ})
+    \cdot \mathsf{dot}\,g\,g
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{n : \mathbb{N}\}\,(Q\,H\,\mathsf{DQ} : \mathsf{Fin}\,n \Rightarrow \mathsf{Fin}\,n \Rightarrow \mathbb{R})\,(g\,\mathsf{dlogp}
+    : \mathsf{Fin}\,n \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{hQ} : \mathsf{SkewSymmetric}\,Q)\,(\mathsf{hH} : \mathsf{SymmetricOf}\,H)\,(\mathsf{hcoup} : \forall i, \mathsf{dlogp}\,i
+    = -g\,i) \\
+
+    &\mathsf{abs}\,(\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp}) \cdot \mathsf{abs} \\
+
+    &(\mathsf{weightedDivergence}\,Q\,H\,\mathsf{DQ}\,g\,\mathsf{dlogp}) \le \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{DQ})\,(\mathsf{divQ}\,\mathsf{DQ})
+    \cdot \mathsf{dot}\,g\,g
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &(\mathsf{weightedDivergence}\,\mathsf{witnessQ}\,\mathsf{fep168AlignedH}\,\mathsf{remainderDQ}\,\mathsf{fep168AlignedG}\,(\lambda\,i
+    \mapsto -\mathsf{fep168AlignedG} \\
+
+    &i)) ^ 2 = \mathsf{dot}\,(\mathsf{divQ}\,\mathsf{remainderDQ})\,(\mathsf{divQ}\,\mathsf{remainderDQ}) \cdot \mathsf{dot}\,\mathsf{fep168AlignedG}
+    \\
+
+    &\mathsf{fep168AlignedG} \wedge \mathsf{dot}\,\mathsf{fep168AlignedG}\,\mathsf{fep168AlignedG} \ne 0
+
+    \end{aligned}'

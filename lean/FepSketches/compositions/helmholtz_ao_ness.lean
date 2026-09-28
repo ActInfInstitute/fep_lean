@@ -38,4 +38,22 @@ theorem fep160_aoNess_extends_fep025_current
         generator law hStat,
       fep_fep025.FEP025.fep025_cycleCurrent_nonzero⟩
 
+/-- The competing-pair uniqueness of the law-weighted split is paired with
+fep-160's unconditional decomposition: on the same finite rate-field carrier
+the canonical split exists (`rate i j = symmetricPart + circulationPart`)
+and any constraint-satisfying competitor coincides with it; no stationarity
+hypothesis and no nonnegativity claim for the circulation part enter. -/
+theorem fep166_splitUnique_extends_fep160_aoNess
+    {State : Type*} [Fintype State] {rate S A : State → State → ℝ}
+    {law : FiniteLaw State}
+    (hSupport : ∀ i, 0 < law i)
+    (hS : ∀ i j, law i * S i j = law j * S j i)
+    (hA : ∀ i j, law i * A i j = -(law j * A j i))
+    (hSum : ∀ i j, rate i j = S i j + A i j) (i j : State) :
+    (S = symmetricPart rate law ∧ A = circulationPart rate law) ∧
+      (rate i j = symmetricPart rate law i j + circulationPart rate law i j) := by
+  exact
+    ⟨fep_fep166.FEP166.fep166_split_unique hSupport hS hA hSum,
+      fep_fep160.FEP160.fep160_aoDecomposition hSupport i j⟩
+
 end FEPComposed

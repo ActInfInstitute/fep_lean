@@ -291,7 +291,7 @@ def test_shipped_graph_conserves_relation_and_capability_state() -> None:
 
     assert Counter(edge.kind for edge in graph.edges) == {
         EdgeKind.FORMAL: 20,
-        EdgeKind.FORMAL_PAIRING: 115,
+        EdgeKind.FORMAL_PAIRING: 118,
         EdgeKind.CONCEPTUAL: 8,
     }
     assert all(edge.witness for edge in graph.edges if edge.kind.is_theorem_witnessed)

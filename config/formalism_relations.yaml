@@ -1271,3 +1271,18 @@ edges:
     kind: formal_pairing
     rationale: The compiled 2-node counterexample refuting the unconditional solenoidal drop is paired with fep-025's divergence-free cycle witness, jointly bounding exactly what stationarity and antisymmetry imply.
     witness: FEPComposed.fep165_necessityWitness_extends_fep025_current
+  - source: fep-166
+    target: fep-160
+    kind: formal_pairing
+    rationale: The competing-pair uniqueness of the law-weighted split is paired with fep-160's unconditional existence decomposition, so on the same finite rate-field carrier the canonical split exists and any constraint-satisfying competitor coincides with it, without introducing a stationarity hypothesis or a nonnegativity claim for the circulation part.
+    witness: FEPComposed.fep166_splitUnique_extends_fep160_aoNess
+  - source: fep-167
+    target: fep-162
+    kind: formal_pairing
+    rationale: The Frobenius least-squares projection layer is paired with fep-162's algebraic symmetrization construction, so the constructed discrete Hessian is exactly the unique symmetric minimizer, without claiming a continuum Clairaut theorem or a general Bregman-projection existence result.
+    witness: FEPComposed.fep167_frobeniusProjection_extends_fep162_clairautSymmetrize
+  - source: fep-168
+    target: fep-163
+    kind: formal_pairing
+    rationale: The quantitative remainder budget is paired with fep-163's exact three-term expansion, so the uncancelled divergence remainder is bounded and its equality case attained instead of being assumed to vanish, without an unconditional-drop claim.
+    witness: FEPComposed.fep168_remainderBound_extends_fep163_solenoidalExpansion

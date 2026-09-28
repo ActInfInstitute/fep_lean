@@ -156,6 +156,9 @@ EXPECTED_EXPANSION_TITLES = (
     "The Three-Term Solenoidal Expansion and Its Conditional Drop",
     "Graph Divergence of the Candidate Solenoidal Current",
     "Necessity Witness for the Unconditional Solenoidal Drop",
+    "Uniqueness of the Law-Weighted Reversible/Circulation Split",
+    "Frobenius Least-Squares Projection of the Symmetrizer",
+    "Quantitative Control of the Uncancelled Divergence Remainder",
 )
 
 
@@ -219,7 +222,7 @@ def test_historical_pre_cutover_body_ledger_remains_complete() -> None:
     )
     assert tuple(BODIES)[: len(expected)] == tuple(expected)
     assert tuple(BODIES)[len(expected) :] == tuple(
-        f"fep-{index:03d}" for index in range(51, 166)
+        f"fep-{index:03d}" for index in range(51, 169)
     )
 
 

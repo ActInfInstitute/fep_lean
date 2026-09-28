@@ -243,7 +243,7 @@ def canonical_browser_observations(
             "escapeCleared": True,
             "families": counts["families"],
             "fepVisible": 41,
-            "pairingVisible": 115,
+            "pairingVisible": 118,
             "relationCards": counts["relations"],
             "relations": counts["relations"],
             "searchVisible": 1,

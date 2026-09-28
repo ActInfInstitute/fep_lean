@@ -10,6 +10,7 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
+from fractions import Fraction
 from itertools import pairwise
 from pathlib import Path
 from typing import Literal
@@ -1466,6 +1467,96 @@ def _standalone_efe_carrier() -> NumericalWitness:
             WitnessRow((time, rho, evolved_true, gain, envelope, affinity_bound))
         )
 
+    # Law-weighted split on the t-0060 oracle datum (fep-166):
+    # W = [[1, 5/2], [3/4, -1]], p = (1/3, 2/3); the canonical split is
+    # S = [[1, 2], [1, -1]], A = [[0, 1/2], [-1/4, 0]].  All arithmetic is
+    # exact via fractions.Fraction.
+    fep166_law = (Fraction(1, 3), Fraction(2, 3))
+    fep166_w = (
+        (Fraction(1), Fraction(5, 2)),
+        (Fraction(3, 4), Fraction(-1)),
+    )
+    fep166_s = (
+        (Fraction(1), Fraction(2)),
+        (Fraction(1), Fraction(-1)),
+    )
+    fep166_a = (
+        (Fraction(0), Fraction(1, 2)),
+        (Fraction(-1, 4), Fraction(0)),
+    )
+
+    def fep166_sym_part(
+        rate: tuple[tuple[Fraction, ...], ...], i: int, j: int
+    ) -> Fraction:
+        return (fep166_law[i] * rate[i][j] + fep166_law[j] * rate[j][i]) / (
+            2 * fep166_law[i]
+        )
+
+    def fep166_circ_part(
+        rate: tuple[tuple[Fraction, ...], ...], i: int, j: int
+    ) -> Fraction:
+        return (fep166_law[i] * rate[i][j] - fep166_law[j] * rate[j][i]) / (
+            2 * fep166_law[i]
+        )
+
+    fep166_circ_01 = fep166_circ_part(fep166_w, 0, 1)
+    fep166_circ_10 = fep166_circ_part(fep166_w, 1, 0)
+    fep166_canonical_split = all(
+        fep166_sym_part(fep166_w, i, j) == fep166_s[i][j]
+        and fep166_circ_part(fep166_w, i, j) == fep166_a[i][j]
+        for i in range(2)
+        for j in range(2)
+    )
+
+    # Competing-pair uniqueness: enumerate every step-1/4 grid pair with
+    # A = W - S, enforce the p-reversibility of S and the p-skewness of A
+    # directly (which forces S_ii = W_ii and A_ii = 0), and require that
+    # exactly one pair survives and equals the canonical split.
+    fep166_grid = [Fraction(k, 4) for k in range(-8, 9)]
+    fep166_solutions: list[tuple[tuple[tuple[Fraction, ...], ...], ...]] = []
+    for s00 in fep166_grid:
+        for s01 in fep166_grid:
+            for s10 in fep166_grid:
+                for s11 in fep166_grid:
+                    s_pair = ((s00, s01), (s10, s11))
+                    a_pair = tuple(
+                        tuple(fep166_w[i][j] - s_pair[i][j] for j in range(2))
+                        for i in range(2)
+                    )
+                    reversible = all(
+                        fep166_law[i] * s_pair[i][j] == fep166_law[j] * s_pair[j][i]
+                        for i in range(2)
+                        for j in range(2)
+                    )
+                    skew = all(
+                        fep166_law[i] * a_pair[i][j] == -(fep166_law[j] * a_pair[j][i])
+                        for i in range(2)
+                        for j in range(2)
+                    )
+                    if reversible and skew:
+                        fep166_solutions.append((s_pair, a_pair))
+    fep166_unique = len(fep166_solutions) == 1 and fep166_solutions[0] == (
+        fep166_s,
+        fep166_a,
+    )
+
+    # Reversible boundary: on W_rev = [[1, 4], [2, 3]] the canonical split
+    # is (W, 0) — the symmetric part is the field and the circulation dies.
+    fep166_w_rev = (
+        (Fraction(1), Fraction(4)),
+        (Fraction(2), Fraction(3)),
+    )
+    fep166_reversible = all(
+        fep166_law[i] * fep166_w_rev[i][j] == fep166_law[j] * fep166_w_rev[j][i]
+        for i in range(2)
+        for j in range(2)
+    ) and all(
+        fep166_sym_part(fep166_w_rev, i, j) == fep166_w_rev[i][j]
+        and fep166_circ_part(fep166_w_rev, i, j) == 0
+        for i in range(2)
+        for j in range(2)
+    )
+
     return NumericalWitness(
         id="boltzmann-efe-affinity-gap",
         family="standalone-efe-formalizations",
@@ -1488,6 +1579,13 @@ def _standalone_efe_carrier() -> NumericalWitness:
             ),
             "fep_fep159.FEP159.fep159_slow_fast_separation_statement",
             "fep_fep159.FEP159.fep159_productionRate_nonneg",
+            "fep_fep166.FEP166.fep166_split_unique",
+            "fep_fep166.FEP166.fep166_reversible_split_unique",
+            "fep_fep166.FEP166.fep166_twoByTwo_support",
+            "fep_fep166.FEP166.fep166_twoByTwo_predicates",
+            "fep_fep166.FEP166.fep166_twoByTwo_split_canonical",
+            "fep_fep166.FEP166.fep166_twoByTwo_circulation_nonzero",
+            "fep_fep166.FEP166.fep166_twoByTwo_circulation_negative",
         ),
         invariant=(
             "the KL-regularized EFE objective attains exactly the inverse-precision "
@@ -1495,7 +1593,12 @@ def _standalone_efe_carrier() -> NumericalWitness:
             "inverse-precision KL gaps, the perception channel splits the belief "
             "information gap exactly into outcome-marginal plus posterior-averaged "
             "parts without increasing it, and the two-state epistemic gain is the "
-            "relaxation-decaying KL bounded by the affinity production rate"
+            "relaxation-decaying KL bounded by the affinity production rate, and "
+            "the law-weighted reversible/circulation split is unique: the "
+            "t-0060 datum's constraint-satisfying split is exactly the canonical "
+            "symmetricPart/circulationPart pair, a p-reversible field has the "
+            "split (W, 0), and the forward circulation 1/2 with reverse entry "
+            "-1/4 is genuinely nonzero and strictly negative"
         ),
         parameters=(
             ("prior_true", prior[1]),
@@ -1509,6 +1612,10 @@ def _standalone_efe_carrier() -> NumericalWitness:
             ("backward_rate", backward),
             ("belief_true", belief_true),
             ("production_rate", production_rate),
+            ("fep166_law_0", float(fep166_law[0])),
+            ("fep166_law_1", float(fep166_law[1])),
+            ("fep166_circulation_01", float(fep166_circ_01)),
+            ("fep166_circulation_10", float(fep166_circ_10)),
         ),
         columns=_columns(
             ("time", "Time"),
@@ -1547,17 +1654,43 @@ def _standalone_efe_carrier() -> NumericalWitness:
                 True,
                 0.0,
             ),
+            NumericalCheck(
+                "fep166-canonical-split", "predicate", fep166_canonical_split, True, 0.0
+            ),
+            NumericalCheck(
+                "fep166-competing-pair-unique", "predicate", fep166_unique, True, 0.0
+            ),
+            NumericalCheck(
+                "fep166-reversible-boundary", "predicate", fep166_reversible, True, 0.0
+            ),
+            NumericalCheck(
+                "fep166-circulation-nonzero", "eq", float(fep166_circ_01), 0.5, 1e-12
+            ),
+            NumericalCheck(
+                "fep166-circulation-negative-reverse",
+                "eq",
+                float(fep166_circ_10),
+                -0.25,
+                1e-12,
+            ),
         ),
         boundary_behavior=(
             "At time zero the identity kernel returns the full belief gap "
             "0.0610605352, the squared-relaxation envelope 0.1071428571 stays loose "
             "by 0.0460823220, and the affinity bound 0.1330954793 leaves slack "
-            "0.0720349441."
+            "0.0720349441. The law-weighted datum splits canonically, its "
+            "competing pair is unique on the step-1/4 grid, and the reversible "
+            "datum W_rev = [[1, 4], [2, 3]] carries the split (W, 0)."
         ),
         boundary_observed=(
             abs(float(rows[0].values[3]) - initial_gap) <= 1e-12
             and abs(initial_gap_form - initial_gap - 0.04608232195203506) <= 1e-15
             and abs(affinity_bound - initial_gap - 0.07203494405931334) <= 1e-15
+            and fep166_canonical_split
+            and fep166_unique
+            and fep166_reversible
+            and fep166_circ_01 == Fraction(1, 2)
+            and fep166_circ_10 == Fraction(-1, 4)
         ),
         plot=WitnessPlot(
             "line",
@@ -1633,6 +1766,86 @@ def _geometric_solenoidal() -> NumericalWitness:
         symmetrized[i][j] == witness_h[i][j] for i in range(2) for j in range(2)
     )
 
+    # fep-167: Frobenius least-squares projection of the symmetrizer.  The
+    # Pythagoras identity runs on the symmetric datum H = ((0.5, 0.5),
+    # (0.5, -1.0)); minimality and uniqueness run on the nonsymmetric
+    # residual datum [[0, 1], [0, 0]] against every step-1/4 symmetric grid
+    # competitor.
+
+    def frobenius_sq(m: tuple[tuple[float, ...], ...]) -> float:
+        return sum(m[i][j] ** 2 for i in range(2) for j in range(2))
+
+    def sub_matrix(
+        a: tuple[tuple[float, ...], ...], b: tuple[tuple[float, ...], ...]
+    ) -> tuple[tuple[float, ...], ...]:
+        return tuple(tuple(a[i][j] - b[i][j] for j in range(2)) for i in range(2))
+
+    fep167_h = ((0.5, 0.5), (0.5, -1.0))
+    fep167_sym_h = tuple(
+        tuple((fep167_h[i][j] + fep167_h[j][i]) / 2 for j in range(2)) for i in range(2)
+    )
+    fep167_s = fep167_sym_h
+    fep167_pythagoras_residual = abs(
+        frobenius_sq(sub_matrix(fep167_h, fep167_s))
+        - (
+            frobenius_sq(sub_matrix(fep167_h, fep167_sym_h))
+            + frobenius_sq(sub_matrix(fep167_sym_h, fep167_s))
+        )
+    )
+    fep167_residual_h = ((0.0, 1.0), (0.0, 0.0))
+    fep167_residual_sym = tuple(
+        tuple((fep167_residual_h[i][j] + fep167_residual_h[j][i]) / 2 for j in range(2))
+        for i in range(2)
+    )
+    fep167_residual_sq = frobenius_sq(
+        sub_matrix(fep167_residual_h, fep167_residual_sym)
+    )
+    fep167_grid = [k / 4 for k in range(-8, 9)]
+    fep167_target = frobenius_sq(sub_matrix(fep167_residual_h, fep167_residual_sym))
+    fep167_minimality_violation = -math.inf
+    fep167_attainers: list[tuple[tuple[float, ...], ...]] = []
+    for s00 in fep167_grid:
+        for s11 in fep167_grid:
+            for off in fep167_grid:
+                candidate = ((s00, off), (off, s11))  # symmetric competitor
+                sq = frobenius_sq(sub_matrix(fep167_residual_h, candidate))
+                fep167_minimality_violation = max(
+                    fep167_minimality_violation, fep167_target - sq
+                )
+                if abs(sq - fep167_target) <= 1e-12:
+                    fep167_attainers.append(candidate)
+    fep167_projection_unique = len(fep167_attainers) == 1 and all(
+        abs(fep167_attainers[0][i][j] - fep167_residual_sym[i][j]) <= 1e-12
+        for i in range(2)
+        for j in range(2)
+    )
+
+    # fep-168: quantitative control of the uncancelled divergence remainder
+    # on Q = witnessQ, H = diag(1, 2), DQ = remainderDQ (divQ = (1, 0)), and
+    # the pinned gradient remainderG = (1, 1) under the coupling dlogp = -g.
+    fep168_h = ((1.0, 0.0), (0.0, 2.0))
+    fep168_q_h = tuple(
+        tuple(sum(witness_q[i][k] * fep168_h[k][j] for k in range(2)) for j in range(2))
+        for i in range(2)
+    )
+    fep168_trace = trace_of(fep168_q_h)
+    fep168_quadratic = dot(remainder_g, mul_vec(witness_q, remainder_g))
+    fep168_r = div_q_field
+    fep168_wd = fep168_trace - fep168_quadratic + dot(fep168_r, remainder_g)
+    fep168_identity_residual = abs(fep168_wd - dot(fep168_r, remainder_g))
+    fep168_cs_violation = dot(fep168_r, remainder_g) ** 2 - dot(
+        fep168_r, fep168_r
+    ) * dot(remainder_g, remainder_g)
+    fep168_aligned_g = (1.0, 0.0)
+    fep168_aligned_gap = dot(fep168_r, fep168_aligned_g) ** 2 - dot(
+        fep168_r, fep168_r
+    ) * dot(fep168_aligned_g, fep168_aligned_g)
+    fep168_aligned_nonzero = dot(fep168_aligned_g, fep168_aligned_g) != 0.0
+    fep168_remainder_g_gap = (
+        dot(fep168_r, fep168_r) * dot(remainder_g, remainder_g)
+        - dot(fep168_r, remainder_g) ** 2
+    )
+
     return NumericalWitness(
         id="geometric-solenoidal-drop",
         family="geometric-mechanics-notation",
@@ -1650,6 +1863,14 @@ def _geometric_solenoidal() -> NumericalWitness:
             "fep_fep164.FEP164.fep164_graphDecomposition",
             "fep_fep165.FEP165.fep165_witness_current",
             ("fep_fep165.FEP165.fep165_witness_drop_fails"),
+            "fep_fep167.FEP167.fep167_frobenius_pythagoras",
+            "fep_fep167.FEP167.fep167_symmetrize_minimizes",
+            "fep_fep167.FEP167.fep167_projection_unique",
+            "fep_fep167.FEP167.fep167_residual_example",
+            "fep_fep168.FEP168.fep168_weightedDivergence_eq_remainderDot",
+            "fep_fep168.FEP168.fep168_remainder_sq_budget",
+            "fep_fep168.FEP168.fep168_absolute_budget",
+            "fep_fep168.FEP168.fep168_equality_attained",
         ),
         invariant=(
             "the skew trace and quadratic cancellations hold exactly on the "
@@ -1657,7 +1878,13 @@ def _geometric_solenoidal() -> NumericalWitness:
             "symmetric and coincides with symmetric data, the expansion "
             "remainder slot evaluates to exactly 1 on the concrete derivative "
             "datum, and the honesty-guard candidate current (0, -1) has node "
-            "divergence (1, -1) so the unconditional solenoidal drop fails"
+            "divergence (1, -1) so the unconditional solenoidal drop fails; "
+            "symmetrization is the unique Frobenius least-squares projection "
+            "(exact Pythagoras, minimality with equality exactly at the "
+            "symmetrizer, residual 1/2 on the nonsymmetric datum), and the "
+            "uncancelled remainder obeys the squared Cauchy-Schwarz budget "
+            "with equality attained on aligned data and gap 1 on the pinned "
+            "remainderG datum"
         ),
         parameters=(
             ("witness_q_01", witness_q[0][1]),
@@ -1667,6 +1894,9 @@ def _geometric_solenoidal() -> NumericalWitness:
             ("quadratic_residual", quadratic_residual),
             ("remainder_value", remainder_value),
             ("node0_divergence", current_divergence[0]),
+            ("fep167_residual_sq", fep167_residual_sq),
+            ("fep168_aligned_gap", fep168_aligned_gap),
+            ("fep168_remainderG_gap", fep168_remainder_g_gap),
         ),
         columns=_columns(
             ("node", "Node"),
@@ -1697,17 +1927,71 @@ def _geometric_solenoidal() -> NumericalWitness:
             NumericalCheck(
                 "unconditional-drop-fails", "eq", current_divergence[0], 1.0, 1e-12
             ),
+            NumericalCheck(
+                "fep167-pythagoras-residual",
+                "eq",
+                fep167_pythagoras_residual,
+                0.0,
+                1e-12,
+            ),
+            NumericalCheck(
+                "fep167-minimality-gap",
+                "le",
+                fep167_minimality_violation,
+                0.0,
+                1e-12,
+            ),
+            NumericalCheck(
+                "fep167-projection-unique",
+                "predicate",
+                fep167_projection_unique,
+                True,
+                0.0,
+            ),
+            NumericalCheck(
+                "fep167-residual-example", "eq", fep167_residual_sq, 0.5, 1e-12
+            ),
+            NumericalCheck(
+                "fep168-remainder-identity",
+                "eq",
+                fep168_identity_residual,
+                0.0,
+                1e-12,
+            ),
+            NumericalCheck("fep168-cs-budget", "le", fep168_cs_violation, 0.0, 1e-12),
+            NumericalCheck(
+                "fep168-equality-attained", "eq", fep168_aligned_gap, 0.0, 1e-12
+            ),
+            NumericalCheck(
+                "fep168-remainder-g-not-aligned",
+                "eq",
+                fep168_remainder_g_gap,
+                1.0,
+                1e-12,
+            ),
         ),
         boundary_behavior=(
             "On the honesty guard the transport divergence is (2, -2) at the "
             "two nodes and the candidate current (0, -1) has node divergence "
-            "1 at node 0: the drop fails, matching the compiled witness."
+            "1 at node 0: the drop fails, matching the compiled witness.  The "
+            "Frobenius projection residual is exactly 1/2 on the nonsymmetric "
+            "datum, the budget is attained on the aligned gradient (1, 0), and "
+            "the pinned remainderG = (1, 1) datum stays strict with gap 1."
         ),
         boundary_observed=(
             drop_fails
             and div_q_matches
             and current_matches
             and abs(remainder_value - 1.0) <= 1e-12
+            and fep167_pythagoras_residual <= 1e-12
+            and fep167_minimality_violation <= 1e-12
+            and fep167_projection_unique
+            and abs(fep167_residual_sq - 0.5) <= 1e-12
+            and fep168_identity_residual <= 1e-12
+            and fep168_cs_violation <= 1e-12
+            and abs(fep168_aligned_gap) <= 1e-12
+            and fep168_aligned_nonzero
+            and abs(fep168_remainder_g_gap - 1.0) <= 1e-12
         ),
         plot=WitnessPlot(
             "bar",

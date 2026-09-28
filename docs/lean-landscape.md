@@ -107,7 +107,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `perception_action_loop` | foundation | `FEP.PerceptionActionLoop` | active_inference, controlled_markov, finite_markov_dynamics, temporal_inference, continuous_time_markov |
 | `posterior_convergence` | foundation | `FEP.PosteriorConvergence` | gaussian_information_geometry, finite_posterior_learning, measure_bayes |
 
-## Layer 7 (5 modules)
+## Layer 7 (6 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
@@ -115,6 +115,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `compositions.finite_reference_agent` | composition | `FEPComposed.FiniteReferenceAgent` | finite_posterior_learning, compositions.finite_policy_action, compositions.finite_scientific_implications, native_blanket, continuous_time_markov |
 | `compositions.helmholtz_ao_ness` | composition | `FEPComposed` | fep_all, helmholtz_ao_ness |
 | `compositions.perception_action_loop` | composition | `FEPComposed` | fep_all, perception_action_loop |
+| `law_weighted_split` | foundation | `FEP.LawWeightedSplit` | helmholtz_ao_ness |
 | `scalar_gaussian_semigroup` | foundation | `FEP.ScalarGaussianSemigroup` | gaussian_information_geometry, markov_semigroup |
 
 ## Layer 8 (3 modules)
@@ -151,7 +152,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | --- | --- | --- | --- |
 | `composed` | aggregate | `—` | compositions.core, compositions.measure_variational, compositions.control_temporal, compositions.causal_predictive, compositions.thermo_geometry, compositions.collective_learning, compositions.risk_calibration, compositions.policy_trees, compositions.native_blanket_transfer, compositions.exponential_family, compositions.continuous_time, compositions.finite_scientific_implications, compositions.finite_policy_action, compositions.finite_reference_agent, compositions.gaussian_filter, compositions.gaussian_control, compositions.gaussian_grid_path, compositions.smooth_reference_kernel, compositions.efe_policy_selection, compositions.perception_action_loop, compositions.bayesian_model_reduction, compositions.efe_time_scale_separation, compositions.helmholtz_ao_ness, compositions.geometric_mechanics |
 
-Total maintained formal modules: **68** across **13** dependency layers.
+Total maintained formal modules: **69** across **13** dependency layers.
 
 
 ## Reading order
