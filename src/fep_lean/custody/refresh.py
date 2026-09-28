@@ -63,6 +63,7 @@ import json
 import os
 import shutil
 import subprocess
+import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
@@ -98,8 +99,26 @@ CUSTODY_TEST_FILES = (
 )
 #: Journal layout under the project root (``--journal-dir`` overrides it).
 JOURNAL_DIR = "output/custody-journal"
-#: The journal schema this lane writes; resume (phase 3) consumes it.
+#: The journal schema this lane writes; the resume mode (phase 3) consumes it.
 JOURNAL_SCHEMA_VERSION = 1
+#: Journal lifecycle states: the plan/fixpoint producers, the render barrier,
+#: and the resume terminal state.
+JOURNAL_STATES = (
+    "planned",
+    "awaiting-commit",
+    "awaiting-render-acceptance",
+    "captured",
+)
+#: Manuscript/render surfaces the coordinator re-accepts after a refresh;
+#: a resume whose changed paths intersect this set stops at the barrier.
+RENDER_INPUTS = (
+    "manuscript/",
+    "src/fep_lean/output/rendering.py",
+    "scripts/render_publication.py",
+    "render.py",
+    "scripts/render_manuscript.py",
+    "docs/",
+)
 #: Default round bound for the staged fixpoint (``--max-rounds``).
 DEFAULT_MAX_ROUNDS = 4
 #: The plan-mode pin check this lane performs directly (the census/verify gate
@@ -592,6 +611,11 @@ def plan_refresh(
         "reason": reason,
         "authorized": list(authorized),
         "pre_commit_head": gates["head"],
+        "changed_paths": {
+            entry["path"]: entry["sha256"]
+            for entry in gates["owner_snapshot"]
+            if entry["sha256"] != "missing"
+        },
         "owner_snapshot": gates["owner_snapshot"],
         "owner_errors": gates["owner_errors"],
         "census": {
@@ -761,6 +785,12 @@ def fixpoint_refresh(
             f"fixpoint did not converge within {max_rounds} rounds; last "
             f"candidate state hash {input_hash[:16]}"
         )
+    candidate_digests: dict[str, str] = {
+        "specs/" + relative: hashlib.sha256(data).hexdigest()
+        for relative, data in _tree_bytes_map(round_dir).items()
+    }
+    for path, data in carry.items():
+        candidate_digests[path] = hashlib.sha256(data).hexdigest()
     journal: dict[str, Any] = {
         "schema_version": JOURNAL_SCHEMA_VERSION,
         "mode": "fixpoint",
@@ -782,6 +812,7 @@ def fixpoint_refresh(
         "phases": rounds,
         "rounds_completed": converged_round,
         "staged_candidate": str(round_dir),
+        "changed_paths": dict(sorted(candidate_digests.items())),
         "state": "awaiting-commit",
         "next_action": (
             "coordinator commit; then fep-lean custody refresh --resume <journal-dir>"
@@ -839,3 +870,263 @@ def _git_head(root: Path) -> str:
     if result.returncode != 0:
         return f"git rev-parse failed: {result.stderr.strip()[:200]}"
     return result.stdout.strip()
+
+
+def _git_show(root: Path, path: str) -> bytes | None:
+    """The committed bytes of ``path`` at HEAD; ``None`` when untracked/absent."""
+    result = subprocess.run(
+        ["git", "show", f"HEAD:{path}"],
+        cwd=str(root),
+        check=False,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout
+
+
+def _load_journal(journal_arg: Path, root: Path) -> dict[str, Any]:
+    """Locate and parse the operation journal for ``--resume``.
+
+    ``journal_arg`` may be the operation directory itself (containing
+    ``journal.json``) or its parent (exactly one operation child). Anything
+    else — including malformed JSON — fails closed as a missing journal.
+    """
+    candidates: tuple[Path, ...] = (journal_arg,)
+    if journal_arg.is_dir():
+        children = sorted(child for child in journal_arg.iterdir() if child.is_dir())
+        if len(children) == 1 and (children[0] / "journal.json").is_file():
+            candidates = (children[0], *candidates)
+    for candidate in candidates:
+        target = candidate / "journal.json"
+        if target.is_file():
+            try:
+                journal = json.loads(target.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise RefreshRefused(
+                    f"journal not found: {target} is unreadable ({exc})"
+                ) from exc
+            if not isinstance(journal, dict):
+                raise RefreshRefused(f"journal not found: {target} must be an object")
+            return journal
+    raise RefreshRefused(f"journal not found under: {journal_arg}")
+
+
+def _validate_journal(journal: dict[str, Any]) -> dict[str, Any]:
+    """Schema/mode/state gate on the loaded journal; returns the digest map.
+
+    The expected post-commit digest map is derived per mode: a plan journal
+    digests its ``changed_paths`` record (the reviewed owner snapshot, the
+    only paths its candidate may move); a fixpoint journal digests its own
+    ``changed_paths`` (the full candidate: re-issued receipts plus the
+    projected repo-side directives). Resumable states are the producers'
+    terminal states plus ``awaiting-render-acceptance`` (the re-invocation
+    after the coordinator's render re-acceptance acknowledges the barrier);
+    an already-``captured`` journal refuses rather than re-running.
+    """
+    if journal.get("schema_version") != JOURNAL_SCHEMA_VERSION:
+        raise RefreshRefused(
+            f"journal schema {journal.get('schema_version')!r} is not "
+            f"{JOURNAL_SCHEMA_VERSION} (regenerate the journal at the "
+            "current schema)"
+        )
+    mode = journal.get("mode")
+    if mode not in ("plan", "fixpoint"):
+        raise RefreshRefused(f"journal mode {mode!r} is not resumable")
+    state = journal.get("state")
+    if state not in ("planned", "awaiting-commit", "awaiting-render-acceptance"):
+        raise RefreshRefused(
+            f"journal state {state!r} is not resumable; expected planned, "
+            "awaiting-commit, or awaiting-render-acceptance"
+        )
+    if state == "planned" and mode != "plan":
+        raise RefreshRefused(
+            f"journal mode {mode!r} cannot be resumed from state planned"
+        )
+    expected: dict[str, str] = {}
+    for path, digest in journal["changed_paths"].items():
+        if not isinstance(digest, str) or len(digest) != 64:
+            raise RefreshRefused(
+                f"journal changed_paths[{path!r}] digest is not a sha256"
+            )
+        expected[path] = digest
+    pre_commit_head = journal.get("pre_commit_head")
+    if not isinstance(pre_commit_head, str) or not pre_commit_head.strip():
+        raise RefreshRefused("journal pre_commit_head missing")
+    if not journal.get("reason") or not str(journal["reason"]).strip():
+        raise RefreshRefused("journal reason missing")
+    return {"mode": mode, "state": state, "expected": expected}
+
+
+def _validate_committed_bytes(root: Path, expected: dict[str, str]) -> list[str]:
+    """Every expected path must be tracked at HEAD with the expected bytes."""
+    problems: list[str] = []
+    for path in sorted(expected):
+        committed = _git_show(root, path)
+        if committed is None:
+            problems.append(f"{path} is not tracked at HEAD")
+            continue
+        digest = hashlib.sha256(committed).hexdigest()
+        if digest != expected[path]:
+            problems.append(
+                f"{path} committed bytes do not match the journal's expected "
+                "candidate (amended or wrong commit): "
+                f"{digest[:12]} != {expected[path][:12]}"
+            )
+    return problems
+
+
+def _changed_paths(journal: dict[str, Any]) -> list[str]:
+    """The journal's changed-path record (the resume digest + barrier keys)."""
+    return sorted(journal["changed_paths"])
+
+
+def _render_barrier_paths(changed: list[str]) -> list[str]:
+    """The changed paths that touch a manuscript/render input."""
+    hits: list[str] = []
+    for path in changed:
+        for surface in RENDER_INPUTS:
+            if path == surface or (surface.endswith("/") and path.startswith(surface)):
+                hits.append(path)
+                break
+    return hits
+
+
+def _record_barriers(journal: dict[str, Any], hits: list[str]) -> None:
+    """Record the barrier trigger (render paths plus the re-arm history)."""
+    journal["render_barrier_paths"] = list(hits)
+    journal.setdefault("render_barriers", []).append(
+        {"triggered_at": _utc_now_iso(), "paths": list(hits)}
+    )
+
+
+def _rewrite_journal(journal: dict[str, Any], journal_path: Path) -> None:
+    """Atomically rewrite the journal in place, preserving its landed path."""
+    journal["journal_path"] = str(journal_path)
+    tmp = journal_path.parent / f".{journal_path.name}.{os.getpid()}.tmp"
+    text = json.dumps(journal, indent=2, allow_nan=False) + "\n"
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, journal_path)
+
+
+def resume_refresh(
+    specs_dir: Path,
+    root: Path,
+    output_dir: Path,
+    journal_arg: Path,
+    authorized: tuple[str, ...] = (),
+    reason: str = "",
+    *,
+    run_native: bool = False,
+) -> dict[str, Any]:
+    """Resume a plan/fixpoint journal against the committed candidate tip.
+
+    Fail-closed order: journal load/schema/mode/state, clean tip, HEAD moved
+    past the journal's ``pre_commit_head``, committed bytes matching the
+    journal's expected post-commit digests, clean owner snapshot, live
+    census, the strict ``GATE_EXPECTATIONS`` verify gate, one zero-effect
+    verification walk (zero mutations and zero directives — the committed
+    tip must already be the agreed candidate), the render-acceptance
+    barrier, and only then the composed verify set plus the optional
+    fail-closed native capture via :func:`refresh`. Terminal journal state
+    ``captured`` (``awaiting-render-acceptance`` while the barrier holds).
+    """
+    if not reason.strip():
+        raise RefreshRefused("a non-empty --reason is required for the audit trail")
+    if not specs_dir.is_dir():
+        raise RefreshRefused(f"specs dir not found: {specs_dir}")
+    if not root.is_dir():
+        raise RefreshRefused(f"repo root not found: {root}")
+    journal = _load_journal(journal_arg, root)
+    check = _validate_journal(journal)
+    dirty = _git_dirty(root)
+    if dirty:
+        raise RefreshRefused(
+            "resume requires a committed clean tip; dirty: " + ", ".join(dirty)
+        )
+    head = _git_head(root)
+    if head.startswith("git "):
+        raise RefreshRefused(f"resume requires a committed HEAD; got {head[:120]}")
+    if head == journal["pre_commit_head"]:
+        raise RefreshRefused(
+            "resume requires the candidate to be committed first "
+            "(HEAD unchanged since the plan/fixpoint journal)"
+        )
+    problems = _validate_committed_bytes(root, check["expected"])
+    if problems:
+        raise RefreshRefused("committed candidate mismatch: " + "; ".join(problems))
+    owner_errors = report_owner_errors(root)
+    if owner_errors:
+        raise RefreshRefused("resume owner gate refused: " + "; ".join(owner_errors))
+    census = census_from_tree(specs_dir, root)
+    ok, gate_problems = verify_gate(census, GATE_EXPECTATIONS)
+    if not ok:
+        raise RefreshRefused(
+            "custody verify gate refused at the committed tip: "
+            + "; ".join(gate_problems)
+        )
+    with tempfile.TemporaryDirectory(prefix="fep-lean-custody-resume-") as tmp:
+        report = apply_refresh(
+            specs_dir,
+            root,
+            Path(tmp),
+            GATE_EXPECTATIONS,
+            census=census,
+            authorized_changes=journal["authorized"],
+        )
+    if report.mutations or report.directives:
+        raise RefreshRefused(
+            "the committed tip is not the agreed candidate (walk is not a "
+            f"no-op): mutations={sorted(report.mutations)} "
+            f"directives={[directive.path for directive in report.directives]}"
+        )
+    journal_path = Path(journal["journal_path"])
+    changed = _changed_paths(journal)
+    hits = _render_barrier_paths(changed)
+    recorded = journal.get("render_barrier_paths")
+    if hits and recorded != hits:
+        # A fresh render input (or the first hit) re-arms the barrier: the
+        # coordinator's render re-acceptance is the acknowledgment, and the
+        # re-invocation with the recorded paths unchanged proceeds.
+        _record_barriers(journal, hits)
+        journal["state"] = "awaiting-render-acceptance"
+        journal["next_action"] = (
+            "coordinator performs render re-acceptance at the committed "
+            "tip; then re-invoke fep-lean custody refresh --resume"
+        )
+        _rewrite_journal(journal, journal_path)
+        raise RefreshRefused(
+            "render-acceptance barrier: the candidate changes manuscript or "
+            "render inputs (" + ", ".join(hits) + "); the journal is in state "
+            "awaiting-render-acceptance — perform render re-acceptance, then "
+            "re-invoke --resume"
+        )
+    if check["state"] == "awaiting-render-acceptance":
+        # The re-invocation after the coordinator's render re-acceptance is
+        # the acknowledgment; the gates above re-validated the candidate.
+        journal["state"] = "awaiting-commit"
+        journal["render_barrier_paths"] = []
+        _rewrite_journal(journal, journal_path)
+    journal["resume_attempts"] = int(journal.get("resume_attempts", 0)) + 1
+    journal["resume_head"] = head
+    completed = refresh(
+        specs_dir,
+        root,
+        output_dir,
+        authorized=authorized,
+        reason=reason,
+        run_native=run_native,
+    )
+    journal["state"] = "captured"
+    journal["native"] = (
+        completed.native if run_native else {"status": "capture_not_requested"}
+    )
+    journal["verify_set"] = completed.verify_set
+    journal["apply"] = {
+        "phases": list(completed.apply.phases),
+        "mutations": list(completed.apply.mutations),
+        "directives": _directive_records(completed.apply.directives),
+    }
+    journal["updated_at"] = _utc_now_iso()
+    _rewrite_journal(journal, journal_path)
+    return journal

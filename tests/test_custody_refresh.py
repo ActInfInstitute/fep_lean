@@ -27,11 +27,15 @@ from fep_lean.custody.apply import SUCCESSOR_07
 from fep_lean.custody.model import INTACT, LIVE_RED, STALE, Census, CensusRecord
 from fep_lean.custody.refresh import (
     NATIVE_RECEIPT,
+    RENDER_INPUTS,
     RefreshRefused,
     _bridge_warning,
+    _load_journal,
+    _render_barrier_paths,
     fixpoint_refresh,
     plan_refresh,
     refresh,
+    resume_refresh,
 )
 from fep_lean.output.evidence import (
     build_native_lean_receipt,
@@ -874,15 +878,21 @@ def test_cli_refresh_modes_are_mutually_exclusive() -> None:
     assert args.journal_dir is None
 
 
-def test_cli_resume_mode_refuses_with_a_clear_stop(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+def test_cli_resume_refuses_without_output_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
+    """Resume mode is an evidence-composing mode: it requires --output-dir."""
+    _mode_ready(monkeypatch)
+    monkeypatch.setattr(
+        refresh_module, "_git_head", lambda root: "not-the-journal-head"
+    )
     exit_code = main_with_root(tmp_path, ["--resume", "some/journal", "--reason", "r"])
     assert exit_code == 1
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "error"
-    assert "resume" in payload["error"]
-    assert "not yet implemented" in payload["error"]
+    assert "--output-dir" in payload["error"]
 
 
 # ---------------------------------------------------------------------------
@@ -1072,3 +1082,694 @@ def test_cli_fixpoint_happy_path_payload(
         assert Path(payload["staged_candidate"]).is_dir()
     finally:
         shutil.rmtree(Path(payload["journal_path"]).parent, ignore_errors=True)
+
+
+# ---------------------------------------------------------------------------
+# Resume mode (t-0057 phase 3): commit barrier, render-acceptance gate,
+# composed verify set, optional native capture, journal terminal state.
+# ---------------------------------------------------------------------------
+
+
+FIXTURE_PATH = "tests/_support/custody_fixture_knobs.py"
+
+
+def _resume_journal(
+    tmp_path: Path,
+    *,
+    mode: str = "fixpoint",
+    state: str = "awaiting-commit",
+    pre_commit_head: str = "journal-head",
+    changed_paths: dict[str, str] | None = None,
+    render_barrier_paths: list[str] | None = None,
+) -> Path:
+    """Land a journal in a temp dir; returns the operation directory."""
+    if changed_paths is None:
+        data = (REPO_ROOT / FIXTURE_PATH).read_bytes()
+        changed_paths = {FIXTURE_PATH: _sha(data)}
+    journals = tmp_path / "journals"
+    journals.mkdir(exist_ok=True)
+    operation = journals / f"op-{len(list(journals.iterdir())) + 1}"
+    operation.mkdir(parents=True)
+    journal_path = operation / "journal.json"
+    journal: dict[str, Any] = {
+        "schema_version": 1,
+        "mode": mode,
+        "reason": "resume fixture",
+        "authorized": [FIXTURE_PATH],
+        "pre_commit_head": pre_commit_head,
+        "changed_paths": changed_paths,
+        "owner_snapshot": [],
+        "owner_errors": [],
+        "census": {"stale": [], "live_red": [], "authorized": [FIXTURE_PATH]},
+        "verify_gate": {"ok": True, "problems": []},
+        "pin_check": "fixture",
+        "state": state,
+        "updated_at": "2026-01-01T00:00:00+00:00",
+    }
+    if mode == "fixpoint":
+        journal["phases"] = []
+        journal["rounds_completed"] = 1
+        journal["staged_candidate"] = str(tmp_path / "candidate")
+        journal["evidence_note"] = "receipt re-issues are dependency re-binds"
+    journal["render_barrier_paths"] = render_barrier_paths or []
+    journal["journal_path"] = str(journal_path)
+    journal_path.write_text(json.dumps(journal, indent=2) + "\n", encoding="utf-8")
+    return operation
+
+
+def _resume_ready(
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    head: str = "committed-tip",
+) -> list[list[str]]:
+    """Stub the resume seams for a committed candidate tip; returns _run calls."""
+    calls: list[list[str]] = []
+
+    def spy_run(*command: str, root: Path) -> dict[str, object]:
+        calls.append(list(command))
+        return _ok_run(*command, root=root)
+
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", spy_run)
+    monkeypatch.setattr(refresh_module, "_bridge_warning", lambda root: None)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: head)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    return calls
+
+
+def test_resume_happy_path_completes_verify_set_without_capture(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Committed candidate + clean gates → verify set at the tip, state captured."""
+    calls = _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, pre_commit_head="journal-head")
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation,
+        reason="resume fixture",
+    )
+    assert journal["state"] == "captured"
+    assert set(journal["verify_set"]) == VERIFY_SET_KEYS
+    assert journal["native"] == {"status": "capture_not_requested"}
+    assert journal["resume_head"] == "committed-tip"
+    assert journal["resume_attempts"] == 1
+    # The three verify-set subprocesses ran through the composed refresh().
+    assert len(calls) == 3
+    assert all(command[0] == "uv" for command in calls)
+    assert not any(command[2:4] == ["fep-lean", "verify"] for command in calls)
+    landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert landed["state"] == "captured"
+    assert landed["native"] == {"status": "capture_not_requested"}
+
+
+def test_resume_refuses_a_missing_journal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    with pytest.raises(RefreshRefused, match="journal not found"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            tmp_path / "nope",
+            reason="r",
+        )
+
+
+def test_resume_parent_directory_with_one_operation_child_resolves(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, pre_commit_head="journal-head")
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation.parent,
+        reason="resume fixture",
+    )
+    assert journal["state"] == "captured"
+    assert len(calls) == 3
+
+
+def test_resume_refuses_an_already_captured_journal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, state="captured")
+    with pytest.raises(RefreshRefused, match="not resumable"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_an_unknown_mode(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, mode="apply")
+    with pytest.raises(RefreshRefused, match="not resumable"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_when_head_is_unchanged(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch, head="journal-head")
+    operation = _resume_journal(tmp_path, pre_commit_head="journal-head")
+    with pytest.raises(RefreshRefused, match="committed first"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_a_dirty_tip(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [" M src/x.py"])
+    operation = _resume_journal(tmp_path)
+    with pytest.raises(RefreshRefused, match="committed clean tip"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_on_committed_bytes_mismatch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A journal digest differing from HEAD's bytes means amended/wrong commit."""
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, changed_paths={FIXTURE_PATH: "f" * 64})
+    with pytest.raises(RefreshRefused, match="do not match") as exc:
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+    assert FIXTURE_PATH in str(exc.value)
+
+
+def test_resume_refuses_an_untracked_changed_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, changed_paths={"specs/nope.json": "0" * 64})
+    with pytest.raises(RefreshRefused, match="not tracked at HEAD"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_owner_errors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    monkeypatch.setattr(
+        refresh_module,
+        "report_owner_errors",
+        lambda root: ("source owner is absent from manifest v23: x.py",),
+    )
+    operation = _resume_journal(tmp_path)
+    with pytest.raises(RefreshRefused, match="resume owner gate refused"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_a_live_red_census(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _resume_ready(monkeypatch)
+    record = CensusRecord(
+        path="tests/test_horizon1_policy_action.py", status=LIVE_RED, detail="break"
+    )
+    monkeypatch.setattr(
+        refresh_module, "census_from_tree", lambda specs, root: Census((record,))
+    )
+    operation = _resume_journal(tmp_path)
+    with pytest.raises(RefreshRefused, match="live-red"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+
+
+def test_resume_refuses_when_the_walk_is_not_a_noop(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """One mutation in the verification round means the commit is not agreed."""
+    from fep_lean.custody.apply import ApplyReport
+
+    _resume_ready(monkeypatch)
+
+    def spy_apply(*args: Any, **kwargs: Any) -> ApplyReport:
+        return ApplyReport(
+            phases=("stub-phase",),
+            mutations=("specs/done/x/receipt.json",),
+            directives=(),
+            output_dir="stub",
+            files_written=0,
+        )
+
+    monkeypatch.setattr(refresh_module, "apply_refresh", spy_apply)
+    operation = _resume_journal(tmp_path)
+    with pytest.raises(RefreshRefused, match="not the agreed candidate") as exc:
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+    assert "receipt.json" in str(exc.value)
+
+
+def test_resume_barrier_fires_before_any_capture(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The render barrier precedes the verify set and any native capture argv."""
+
+    def bomb(*command: str, root: Path) -> dict[str, object]:
+        raise AssertionError(f"resume ran a subprocess at the barrier: {command}")
+
+    _resume_ready(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", bomb)
+    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    operation = _resume_journal(
+        tmp_path, changed_paths={"docs/development.md": _sha(docs)}
+    )
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier") as exc:
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+    assert "docs/development.md" in str(exc.value)
+    landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert landed["state"] == "awaiting-render-acceptance"
+    assert landed["render_barrier_paths"] == ["docs/development.md"]
+    assert landed["render_barriers"][-1]["paths"] == ["docs/development.md"]
+    assert "render re-acceptance" in landed["next_action"]
+
+
+def test_resume_barrier_acknowledged_on_reinvocation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Second resume with unchanged barrier paths: re-validate, then proceed."""
+    calls = _resume_ready(monkeypatch)
+    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    changed = {"docs/development.md": _sha(docs)}
+    operation = _resume_journal(tmp_path, changed_paths=changed)
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+    # The coordinator re-accepts the render and re-invokes --resume.
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation,
+        reason="r",
+    )
+    assert journal["state"] == "captured"
+    assert journal["render_barrier_paths"] == []
+    assert journal["resume_attempts"] == 1  # the barrier stop never counted
+    assert len(calls) == 3  # verify set ran only on the acknowledged pass
+    landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert landed["state"] == "captured"
+    assert len(landed["render_barriers"]) == 1
+    barrier = landed["render_barriers"][0]
+    assert barrier["paths"] == ["docs/development.md"]
+    assert barrier["triggered_at"].endswith("+00:00")
+
+
+def test_resume_barrier_rearms_on_a_new_render_input(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A changed-path set with a NEW render input re-triggers the barrier."""
+    _resume_ready(monkeypatch)
+    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    knobs = (REPO_ROOT / FIXTURE_PATH).read_bytes()
+    changed = {
+        "docs/development.md": _sha(docs),
+        FIXTURE_PATH: _sha(knobs),
+        "src/fep_lean/output/rendering.py": _sha(
+            (REPO_ROOT / "src/fep_lean/output/rendering.py").read_bytes()
+        ),
+    }
+    operation = _resume_journal(tmp_path, changed_paths=changed)
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            operation,
+            reason="r",
+        )
+    first = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert first["state"] == "awaiting-render-acceptance"
+    assert first["render_barrier_paths"] == [
+        "docs/development.md",
+        "src/fep_lean/output/rendering.py",
+    ]
+    # Acknowledge with the recorded paths: the re-invocation proceeds.
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation,
+        reason="r",
+    )
+    assert journal["state"] == "captured"
+    # A NEW render input after acknowledgment re-arms the barrier: rebuild a
+    # fresh resumable journal (state awaiting-commit) with the new path added.
+    render_script = (REPO_ROOT / "scripts/render_manuscript.py").read_bytes()
+    rearmed_operation = _resume_journal(
+        tmp_path,
+        changed_paths={
+            **changed,
+            "scripts/render_manuscript.py": _sha(render_script),
+        },
+    )
+    landed_path = rearmed_operation / "journal.json"
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+        resume_refresh(
+            REPO_ROOT / "specs",
+            REPO_ROOT,
+            tmp_path / "output",
+            rearmed_operation,
+            reason="r",
+        )
+    rearmed = json.loads(landed_path.read_text(encoding="utf-8"))
+    assert rearmed["state"] == "awaiting-render-acceptance"
+    assert rearmed["render_barrier_paths"] == [
+        "docs/development.md",
+        "scripts/render_manuscript.py",
+        "src/fep_lean/output/rendering.py",
+    ]
+
+
+def test_resume_native_happy_path_captures_claim_ready(
+    claim_ready_receipt: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """--native on resume: the composed capture runs and the journal records it."""
+    calls = _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path)
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation,
+        reason="resume fixture",
+        run_native=True,
+    )
+    assert journal["state"] == "captured"
+    assert journal["native"]["validation"]["claim_ready"] is True
+    capture = [c for c in calls if c[2:4] == ["fep-lean", "verify"]]
+    assert len(capture) == 1
+    assert capture[0][:2] == ["uv", "run"]
+
+
+def test_resume_journal_atomic_rewrite_preserves_landed_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The terminal rewrite keeps the operation id directory and no tmp litter."""
+    calls = _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path)
+    journal = resume_refresh(
+        REPO_ROOT / "specs",
+        REPO_ROOT,
+        tmp_path / "output",
+        operation,
+        reason="resume fixture",
+    )
+    assert journal["journal_path"] == str(operation / "journal.json")
+    assert (operation / "journal.json").is_file()
+    assert list(operation.iterdir()) == [operation / "journal.json"]
+    assert len(calls) == 3
+
+
+def test_render_barrier_paths_matches_the_documented_surface() -> None:
+    """Exact-match files and manuscript/docs prefix hits, per the docs table."""
+    assert _render_barrier_paths(
+        [
+            "manuscript/sections/intro.tex",
+            "src/fep_lean/output/rendering.py",
+            "scripts/render_publication.py",
+            "render.py",
+            "scripts/render_manuscript.py",
+            "docs/pin_audit.py",
+            "src/fep_lean/custody/refresh.py",
+        ]
+    ) == [
+        "manuscript/sections/intro.tex",
+        "src/fep_lean/output/rendering.py",
+        "scripts/render_publication.py",
+        "render.py",
+        "scripts/render_manuscript.py",
+        "docs/pin_audit.py",
+    ]
+    assert RENDER_INPUTS == (
+        "manuscript/",
+        "src/fep_lean/output/rendering.py",
+        "scripts/render_publication.py",
+        "render.py",
+        "scripts/render_manuscript.py",
+        "docs/",
+    )
+
+
+def test_journal_loader_supports_operation_dir_and_parent(
+    tmp_path: Path,
+) -> None:
+    operation = _resume_journal(tmp_path)
+    journal = _load_journal(operation, REPO_ROOT)
+    assert journal["mode"] == "fixpoint"
+    parent = _load_journal(operation.parent, REPO_ROOT)
+    assert parent == journal
+    with pytest.raises(RefreshRefused, match="journal not found"):
+        _load_journal(tmp_path, REPO_ROOT)
+
+
+def test_fixpoint_journal_carries_changed_paths_for_resume(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The phase-2 producer now records the candidate digests resume digests."""
+    root, authorized = _fixpoint_drift_fixture(tmp_path)
+    _mode_ready(monkeypatch)
+    journal = fixpoint_refresh(
+        root / "specs", root, tmp_path / "output", authorized, "fixpoint"
+    )
+    changed = journal["changed_paths"]
+    assert changed, "the candidate must record its changed paths"
+    assert SUCCESSOR_07 in changed
+    staged = Path(journal["staged_candidate"])
+    staged_digest = _sha((staged / SUCCESSOR_07[len("specs/") :]).read_bytes())
+    assert changed[SUCCESSOR_07] == staged_digest
+    # The projected directive path enters the record with its digest too.
+    directives = journal["phases"][0]["directives"]
+    assert all(directive["path"] in changed for directive in directives)
+
+
+def test_plan_journal_changed_paths_match_owner_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _mode_ready(monkeypatch)
+    journal = plan_refresh(_stage_specs(tmp_path), REPO_ROOT, (), "planning pass")
+    landed = Path(journal["journal_path"])
+    try:
+        expected = {
+            entry["path"]: entry["sha256"]
+            for entry in journal["owner_snapshot"]
+            if entry["sha256"] != "missing"
+        }
+        assert journal["changed_paths"] == expected
+        on_disk = json.loads(landed.read_text(encoding="utf-8"))
+        assert on_disk["changed_paths"] == expected
+    finally:
+        shutil.rmtree(landed.parent, ignore_errors=True)
+
+
+def test_cli_resume_happy_path_payload(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    calls = _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, pre_commit_head="journal-head")
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--resume",
+            str(operation),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--reason",
+            "resume fixture",
+        ],
+    )
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "ok"
+    assert payload["state"] == "captured"
+    assert payload["native_status"] == "not_requested"
+    assert payload["native"] == {"status": "capture_not_requested"}
+    assert set(payload["verify_set"]) == VERIFY_SET_KEYS
+    assert len(calls) == 3
+    landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert landed["state"] == "captured"
+
+
+def test_cli_resume_committed_bytes_mismatch_exits_one(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path, changed_paths={FIXTURE_PATH: "f" * 64})
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--resume",
+            str(operation),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--reason",
+            "r",
+        ],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "do not match" in payload["error"]
+
+
+def test_cli_resume_render_barrier_exits_one_with_state(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _resume_ready(monkeypatch)
+    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    operation = _resume_journal(
+        tmp_path, changed_paths={"docs/development.md": _sha(docs)}
+    )
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--resume",
+            str(operation),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--reason",
+            "r",
+        ],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "render-acceptance barrier" in payload["error"]
+    landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
+    assert landed["state"] == "awaiting-render-acceptance"
+
+
+def test_cli_resume_missing_journal_exits_one(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _resume_ready(monkeypatch)
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--resume",
+            str(tmp_path / "nope"),
+            "--output-dir",
+            str(tmp_path / "output"),
+            "--reason",
+            "r",
+        ],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "journal not found" in payload["error"]
+
+
+def test_cli_resume_requires_a_reason(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _resume_ready(monkeypatch)
+    operation = _resume_journal(tmp_path)
+    exit_code = main_with_root(
+        tmp_path,
+        ["--resume", str(operation), "--output-dir", str(tmp_path / "output")],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "--reason" in payload["error"]

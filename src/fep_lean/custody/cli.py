@@ -7,8 +7,10 @@ apply, the read-only verify set, the pre-capture owner gate, and the
 optional native capture in one sanctioned command, with mutually exclusive
 orchestration modes: ``--plan`` (read-only planning pass journaling state
 ``planned``), ``--fixpoint`` (bounded staged fixpoint journaling state
-``awaiting-commit``), and ``--resume <journal-dir>`` (phase 3; the parser
-accepts it and the mode refuses with a clear stop until that lane lands).
+``awaiting-commit``), and ``--resume <journal-dir>`` (phase 3; completes
+the operation against a committed tip: journal/candidate validation, the
+render-acceptance barrier, the full verify set, and the optional native
+capture; terminal journal state ``captured``).
 Exit codes follow the CLI contract: 0 when the requested report composed,
 the apply landed, or the refresh completed (which now implies a claim-ready
 native capture whenever ``--native`` was requested), 1 when a gate or a
@@ -102,8 +104,10 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
         default=None,
         metavar="JOURNAL-DIR",
         help=(
-            "refresh resume mode: resumes a plan/fixpoint journal against "
-            "a committed tip (phase 3; currently refuses with a clear stop)"
+            "refresh resume mode: completes a plan/fixpoint journal "
+            "against a committed tip — journal/candidate validation, the "
+            "render-acceptance barrier, the full verify set, and the "
+            "optional --native capture; terminal journal state captured"
         ),
     )
     parser.add_argument(
@@ -240,6 +244,38 @@ def _fixpoint_payload(journal: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _resume_payload(journal: dict[str, Any]) -> dict[str, Any]:
+    """Serialize one resumed journal under the CLI's JSON output convention.
+
+    ``native_status`` mirrors :func:`_refresh_payload`'s taxonomy; the
+    payload carries the recorded verify set and native summary rather than
+    re-deriving them from a live report.
+    """
+    native = journal.get("native") or {}
+    validation = native.get("validation")
+    native_status = (
+        "captured_claim_ready"
+        if validation and validation["claim_ready"]
+        else "not_requested"
+    )
+    return {
+        "status": "ok",
+        "operation": "refresh",
+        "mode": journal["mode"],
+        "state": journal["state"],
+        "journal_path": journal["journal_path"],
+        "reason": journal["reason"],
+        "authorized": journal["authorized"],
+        "resume_head": journal["resume_head"],
+        "changed_paths": journal["changed_paths"],
+        "verify_set": journal["verify_set"],
+        "native": native,
+        "native_status": native_status,
+        "apply": journal["apply"],
+        "render_barrier_paths": journal.get("render_barrier_paths", []),
+    }
+
+
 def run(root: Path, args: argparse.Namespace) -> int:
     from fep_lean.custody.apply import ApplyRefused, apply_refresh
     from fep_lean.custody.refresh import RefreshRefused
@@ -282,11 +318,21 @@ def run(root: Path, args: argparse.Namespace) -> int:
                 print(json.dumps(_fixpoint_payload(journal), indent=2, allow_nan=False))
                 return 0
             if args.resume is not None:
-                raise RefreshRefused(
-                    "resume mode is not yet implemented in this lane "
-                    f"(t-0057 phase 3); journal dir {args.resume} preserved "
-                    "for the resume lane"
+                from fep_lean.custody.refresh import resume_refresh
+
+                if args.output_dir is None:
+                    raise RefreshRefused("resume mode requires --output-dir")
+                journal = resume_refresh(
+                    specs_dir,
+                    root,
+                    args.output_dir.resolve(),
+                    args.resume,
+                    authorized,
+                    args.reason,
+                    run_native=args.native,
                 )
+                print(json.dumps(_resume_payload(journal), indent=2, allow_nan=False))
+                return 0
             output_dir = (
                 args.output_dir.resolve()
                 if args.output_dir is not None
