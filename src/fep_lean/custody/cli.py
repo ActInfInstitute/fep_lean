@@ -4,11 +4,15 @@
 14-phase order behind the verify gate and writes only into the explicit
 ``--output-dir`` staging tree; ``refresh`` composes census, the stop-gate,
 apply, the read-only verify set, the pre-capture owner gate, and the
-optional native capture in one sanctioned command. Exit codes follow the
-CLI contract: 0 when the requested report composed, the apply landed, or
-the refresh completed (which now implies a claim-ready native capture
-whenever ``--native`` was requested), 1 when a gate or a fail-closed
-check refused.
+optional native capture in one sanctioned command, with mutually exclusive
+orchestration modes: ``--plan`` (read-only planning pass journaling state
+``planned``), ``--fixpoint`` (bounded staged fixpoint journaling state
+``awaiting-commit``), and ``--resume <journal-dir>`` (phase 3; the parser
+accepts it and the mode refuses with a clear stop until that lane lands).
+Exit codes follow the CLI contract: 0 when the requested report composed,
+the apply landed, or the refresh completed (which now implies a claim-ready
+native capture whenever ``--native`` was requested), 1 when a gate or a
+fail-closed check refused.
 Imports stay lazy so parser assembly stays cheap.
 """
 
@@ -36,7 +40,8 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
         help=(
             "explicit staging output for apply (required); never the live "
             "specs tree. For refresh, an explicit staging directory; the "
-            "default is a fresh temporary directory"
+            "default is a fresh temporary directory. For fixpoint mode it "
+            "is required and holds one fresh round directory per round"
         ),
     )
     parser.add_argument(
@@ -68,6 +73,53 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
             "output/native-verification.json). Requires a committed clean "
             "tip: the receipt binds live source bytes, so the tree must "
             "stay frozen for the ~77-minute run"
+        ),
+    )
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
+        "--plan",
+        action="store_true",
+        help=(
+            "refresh plan mode: read-only pass over the fail-closed gates "
+            "(reason, clean tip, owner inventory, census, verify gate, "
+            "authorized roster, pin check); writes the plan journal and "
+            "stops in state planned. Never runs test/audit subprocesses"
+        ),
+    )
+    mode.add_argument(
+        "--fixpoint",
+        action="store_true",
+        help=(
+            "refresh fixpoint mode: bounded staged fixpoint over the "
+            "settled 14-phase order with the directive chain carried "
+            "between rounds; requires --output-dir; stops in state "
+            "awaiting-commit (default bound 4 rounds, --max-rounds)"
+        ),
+    )
+    mode.add_argument(
+        "--resume",
+        type=Path,
+        default=None,
+        metavar="JOURNAL-DIR",
+        help=(
+            "refresh resume mode: resumes a plan/fixpoint journal against "
+            "a committed tip (phase 3; currently refuses with a clear stop)"
+        ),
+    )
+    parser.add_argument(
+        "--max-rounds",
+        type=int,
+        default=4,
+        help="fixpoint only: maximum number of rounds (>= 1; default 4)",
+    )
+    parser.add_argument(
+        "--journal-dir",
+        type=Path,
+        default=None,
+        help=(
+            "override of the default journal parent "
+            "output/custody-journal; the operation id is the last "
+            "directory component"
         ),
     )
 
@@ -144,6 +196,50 @@ def _refresh_payload(report: Any) -> dict[str, Any]:
     }
 
 
+def _plan_payload(journal: dict[str, Any]) -> dict[str, Any]:
+    """Serialize one plan journal under the CLI's JSON output convention."""
+    return {
+        "status": "ok",
+        "operation": "refresh",
+        "mode": journal["mode"],
+        "state": journal["state"],
+        "journal_path": journal["journal_path"],
+        "reason": journal["reason"],
+        "authorized": journal["authorized"],
+        "pre_commit_head": journal["pre_commit_head"],
+        "census": journal["census"],
+        "verify_gate": journal["verify_gate"],
+        "pin_check": journal["pin_check"],
+        "next_action": journal["next_action"],
+        "owner_snapshot": journal["owner_snapshot"],
+        "owner_errors": journal["owner_errors"],
+    }
+
+
+def _fixpoint_payload(journal: dict[str, Any]) -> dict[str, Any]:
+    """Serialize one fixpoint journal under the CLI's JSON output convention."""
+    return {
+        "status": "ok",
+        "operation": "refresh",
+        "mode": journal["mode"],
+        "state": journal["state"],
+        "journal_path": journal["journal_path"],
+        "reason": journal["reason"],
+        "authorized": journal["authorized"],
+        "pre_commit_head": journal["pre_commit_head"],
+        "census": journal["census"],
+        "verify_gate": journal["verify_gate"],
+        "pin_check": journal["pin_check"],
+        "phases": journal["phases"],
+        "rounds_completed": journal["rounds_completed"],
+        "staged_candidate": journal["staged_candidate"],
+        "evidence_note": journal["evidence_note"],
+        "next_action": journal["next_action"],
+        "owner_snapshot": journal["owner_snapshot"],
+        "owner_errors": journal["owner_errors"],
+    }
+
+
 def run(root: Path, args: argparse.Namespace) -> int:
     from fep_lean.custody.apply import ApplyRefused, apply_refresh
     from fep_lean.custody.refresh import RefreshRefused
@@ -158,6 +254,39 @@ def run(root: Path, args: argparse.Namespace) -> int:
         if args.operation == "refresh":
             import tempfile
 
+            from fep_lean.custody.refresh import fixpoint_refresh, plan_refresh
+
+            authorized = tuple(args.authorized or ())
+            if args.plan:
+                journal = plan_refresh(
+                    specs_dir,
+                    root,
+                    authorized,
+                    args.reason,
+                    journal_dir=args.journal_dir,
+                )
+                print(json.dumps(_plan_payload(journal), indent=2, allow_nan=False))
+                return 0
+            if args.fixpoint:
+                if args.output_dir is None:
+                    raise RefreshRefused("fixpoint mode requires --output-dir")
+                journal = fixpoint_refresh(
+                    specs_dir,
+                    root,
+                    args.output_dir.resolve(),
+                    authorized,
+                    args.reason,
+                    max_rounds=args.max_rounds,
+                    journal_dir=args.journal_dir,
+                )
+                print(json.dumps(_fixpoint_payload(journal), indent=2, allow_nan=False))
+                return 0
+            if args.resume is not None:
+                raise RefreshRefused(
+                    "resume mode is not yet implemented in this lane "
+                    f"(t-0057 phase 3); journal dir {args.resume} preserved "
+                    "for the resume lane"
+                )
             output_dir = (
                 args.output_dir.resolve()
                 if args.output_dir is not None
@@ -169,7 +298,7 @@ def run(root: Path, args: argparse.Namespace) -> int:
                 specs_dir,
                 root,
                 output_dir,
-                authorized=tuple(args.authorized or ()),
+                authorized=authorized,
                 reason=args.reason,
                 run_native=args.native,
             )

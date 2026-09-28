@@ -16,17 +16,21 @@ import json
 import shutil
 from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from fep_lean.catalogue.topics import FEPTopicCatalogue
 from fep_lean.cli import build_parser, main
 from fep_lean.custody import refresh as refresh_module
-from fep_lean.custody.model import INTACT, LIVE_RED, Census, CensusRecord
+from fep_lean.custody.apply import SUCCESSOR_07
+from fep_lean.custody.model import INTACT, LIVE_RED, STALE, Census, CensusRecord
 from fep_lean.custody.refresh import (
     NATIVE_RECEIPT,
     RefreshRefused,
     _bridge_warning,
+    fixpoint_refresh,
+    plan_refresh,
     refresh,
 )
 from fep_lean.output.evidence import (
@@ -35,6 +39,12 @@ from fep_lean.output.evidence import (
     write_native_lean_receipt,
 )
 from fep_lean.verification._toolchain import pinned_lean_semver
+from tests._support.custody_fixture_knobs import (
+    JSON_WHITESPACE_DRIFT,
+    drift_file,
+    fixture_root,
+    spec_path,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 VERIFY_SET_KEYS = frozenset(
@@ -662,3 +672,403 @@ def claim_ready_receipt() -> Iterator[Path]:
         yield receipt
     finally:
         _restore_receipt(receipt, backup)
+
+
+# ---------------------------------------------------------------------------
+# Plan mode (t-0057 phase 1): read-only, journal state planned.
+# ---------------------------------------------------------------------------
+
+
+def _mode_ready(monkeypatch: pytest.MonkeyPatch, head: str = "plan-head") -> None:
+    """Stub the shared plan/fixpoint seams for a clean committed tip."""
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: head)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+
+
+def test_plan_mode_writes_planned_journal_without_subprocesses(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+
+    def bomb(*command: str, root: Path) -> dict[str, object]:
+        raise AssertionError(f"plan mode ran a subprocess: {command}")
+
+    monkeypatch.setattr(refresh_module, "_run", bomb)
+    # Default location: REPO_ROOT/output/custody-journal/<operation-id>/,
+    # deterministic from (head stub, reason, mode); cleaned up below.
+    landed = (
+        REPO_ROOT
+        / refresh_module.JOURNAL_DIR
+        / refresh_module._operation_id("plan-head", "planning pass", "plan")
+        / "journal.json"
+    )
+    journal = plan_refresh(_stage_specs(tmp_path), REPO_ROOT, (), "planning pass")
+    try:
+        assert journal["state"] == "planned"
+        assert journal["mode"] == "plan"
+        assert journal["schema_version"] == 1
+        assert journal["pre_commit_head"] == "plan-head"
+        assert journal["reason"] == "planning pass"
+        assert journal["owner_snapshot"], "owner snapshot must list owner digests"
+        assert journal["owner_snapshot"][0]["path"]
+        assert all(len(entry["sha256"]) == 64 for entry in journal["owner_snapshot"])
+        assert journal["owner_errors"] == []
+        assert journal["census"]["stale"] == []
+        assert journal["census"]["live_red"] == []
+        assert journal["verify_gate"] == {"ok": True, "problems": []}
+        assert journal["pin_check"].startswith("direct check:")
+        assert journal["phases"] == []
+        assert journal["next_action"].startswith("coordinator commit")
+        assert Path(journal["journal_path"]) == landed
+        assert landed.is_file()
+        on_disk = json.loads(landed.read_text(encoding="utf-8"))
+        assert on_disk == journal
+        assert on_disk["updated_at"].endswith("+00:00")
+    finally:
+        shutil.rmtree(landed.parent, ignore_errors=True)
+
+
+def test_plan_mode_refuses_an_unreviewed_authorized_path(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+    with pytest.raises(RefreshRefused, match="unreviewed roster growth") as exc:
+        plan_refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            ("tests/test_horizon1_policy_action.py",),
+            "r",
+        )
+    assert "tests/test_horizon1_policy_action.py" in str(exc.value)
+
+
+def test_plan_mode_refuses_a_live_red_census(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+    record = CensusRecord(
+        path="tests/test_horizon1_policy_action.py", status=LIVE_RED, detail="break"
+    )
+    monkeypatch.setattr(
+        refresh_module, "census_from_tree", lambda specs, root: Census((record,))
+    )
+    with pytest.raises(RefreshRefused, match="live-red") as exc:
+        plan_refresh(_stage_specs(tmp_path), REPO_ROOT, (), "r")
+    assert "tests/test_horizon1_policy_action.py" in str(exc.value)
+
+
+def test_plan_mode_refuses_a_dirty_tip(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [" M src/x.py"])
+    with pytest.raises(RefreshRefused, match="committed clean tip"):
+        plan_refresh(_stage_specs(tmp_path), REPO_ROOT, (), "r")
+
+
+def test_plan_mode_authorizes_declared_staleness(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Stale inside --authorized passes the mode gate; outside refuses."""
+    _mode_ready(monkeypatch)
+    from fep_lean.custody.verify import GATE_EXPECTATIONS
+
+    capture = "src/fep_lean/verification/numerical_witnesses.py"
+    stale = CensusRecord(path=capture, status=STALE, detail="capture predates")
+
+    def census_stub(specs: Path, root: Path) -> Census:
+        required = tuple(
+            CensusRecord(path=path, status=INTACT, detail="fixture intact")
+            for path in GATE_EXPECTATIONS.required_intact
+        )
+        return Census((*required, stale))
+
+    monkeypatch.setattr(refresh_module, "census_from_tree", census_stub)
+    specs_dir = _stage_specs(tmp_path)
+    with pytest.raises(RefreshRefused, match="custody verify gate refused"):
+        plan_refresh(specs_dir, REPO_ROOT, (), "r")
+    journal = plan_refresh(specs_dir, REPO_ROOT, (capture,), "authorized residual")
+    assert journal["census"]["stale"] == [capture]
+    assert journal["census"]["authorized"] == [capture]
+    assert journal["state"] == "planned"
+
+
+def test_plan_mode_refuses_a_pin_toolchain_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+    specs_dir = _stage_specs(tmp_path)
+    matrix = specs_dir / "done/horizon-2-smooth-stochastic/readiness/matrix.yaml"
+    matrix.write_text(
+        matrix.read_text(encoding="utf-8").replace("lean: v4.34.1", "lean: v4.33.1", 1)
+    )
+    with pytest.raises(RefreshRefused, match="pin/toolchain mismatch"):
+        plan_refresh(specs_dir, REPO_ROOT, (), "r")
+
+
+def test_plan_journal_dir_override_lands_the_journal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _mode_ready(monkeypatch)
+    override = tmp_path / "journal-override"
+    journal = plan_refresh(
+        _stage_specs(tmp_path), REPO_ROOT, (), "r", journal_dir=override
+    )
+    landed = Path(journal["journal_path"])
+    assert landed.parent.parent == override
+    assert landed.name == "journal.json"
+    assert landed.is_file()
+
+
+def test_cli_plan_missing_reason_stops(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = main_with_root(tmp_path, ["--plan"])
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "--reason" in payload["error"]
+
+
+def test_cli_plan_happy_path_journals_under_the_override(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _mode_ready(monkeypatch)
+
+    def bomb(*command: str, root: Path) -> dict[str, object]:
+        raise AssertionError(f"plan mode ran a subprocess: {command}")
+
+    monkeypatch.setattr(refresh_module, "_run", bomb)
+    override = tmp_path / "journals"
+    exit_code = main_with_root(
+        tmp_path,
+        ["--plan", "--reason", "cli plan", "--journal-dir", str(override)],
+    )
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "ok"
+    assert payload["mode"] == "plan"
+    assert payload["state"] == "planned"
+    assert Path(payload["journal_path"]).is_file()
+    assert Path(payload["journal_path"]).parent.parent == override
+
+
+def test_cli_refresh_modes_are_mutually_exclusive() -> None:
+    with pytest.raises(SystemExit):
+        build_parser().parse_args(
+            ["custody", "refresh", "--plan", "--fixpoint", "--reason", "r"]
+        )
+    with pytest.raises(SystemExit):
+        build_parser().parse_args(
+            ["custody", "refresh", "--plan", "--resume", "j", "--reason", "r"]
+        )
+    args = build_parser().parse_args(
+        ["custody", "refresh", "--resume", "some/journal", "--reason", "r"]
+    )
+    assert args.resume == Path("some/journal")
+    assert args.max_rounds == 4
+    assert args.journal_dir is None
+
+
+def test_cli_resume_mode_refuses_with_a_clear_stop(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    exit_code = main_with_root(tmp_path, ["--resume", "some/journal", "--reason", "r"])
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "resume" in payload["error"]
+    assert "not yet implemented" in payload["error"]
+
+
+# ---------------------------------------------------------------------------
+# Fixpoint mode (t-0057 phase 2): bounded staged fixpoint with the chain.
+# ---------------------------------------------------------------------------
+
+
+def _fixpoint_drift_fixture(tmp_path: Path) -> tuple[Path, tuple[str, ...]]:
+    """The historical two-pass shape: re-issues in round 1, settled by round 2."""
+    root = fixture_root(tmp_path)
+    drifted = ("tests/test_horizon_acceptance.py", "tests/test_numerical_witnesses.py")
+    for name in drifted:
+        drift_file(root / name)
+    drift_file(spec_path(root, SUCCESSOR_07), JSON_WHITESPACE_DRIFT)
+    return root, (*drifted, SUCCESSOR_07)
+
+
+def test_fixpoint_converges_by_round_two_with_the_carry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, authorized = _fixpoint_drift_fixture(tmp_path)
+    _mode_ready(monkeypatch)
+    out = tmp_path / "output"
+    journal = fixpoint_refresh(root / "specs", root, out, authorized, "fixpoint")
+    assert journal["state"] == "awaiting-commit"
+    assert journal["mode"] == "fixpoint"
+    rounds = journal["phases"]
+    assert len(rounds) == 2
+    first, second = rounds
+    assert first["mutations"], "round 1 must mutate the staged receipts"
+    assert first["directives"], "round 1 must emit the predecessors directive"
+    assert first["converged"] is False
+    assert second["zero_mutations"] is True
+    assert second["zero_directives"] is True
+    assert second["byte_identical_reapplication"] is True
+    assert second["converged"] is True
+    # Cycle evidence: no state hash repeats before convergence.
+    assert first["input_state_hash"] != second["input_state_hash"]
+    assert second["input_state_hash"] == first["output_state_hash"]
+    assert journal["evidence_note"].startswith("receipt re-issues")
+    candidate = Path(journal["staged_candidate"])
+    assert candidate.is_dir()
+    assert Path(
+        candidate / "done/horizon-2-smooth-stochastic/readiness/matrix.yaml"
+    ).is_file()
+    landed = Path(journal["journal_path"])
+    assert json.loads(landed.read_text(encoding="utf-8"))["state"] == "awaiting-commit"
+
+
+def test_fixpoint_sealed_tree_converges_at_round_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = fixture_root(tmp_path)
+    _mode_ready(monkeypatch)
+    journal = fixpoint_refresh(
+        root / "specs", root, tmp_path / "output", reason="sealed"
+    )
+    assert journal["state"] == "awaiting-commit"
+    assert len(journal["phases"]) == 1
+    only = journal["phases"][0]
+    assert only["round"] == 1
+    assert only["converged"] is True
+    assert only["byte_identical_reapplication"] is True
+    assert only["mutations"] == []
+    assert only["directives"] == []
+
+
+def test_fixpoint_did_not_converge_within_the_bound(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, authorized = _fixpoint_drift_fixture(tmp_path)
+    _mode_ready(monkeypatch)
+    with pytest.raises(RefreshRefused, match="did not converge within 1 rounds"):
+        fixpoint_refresh(
+            root / "specs", root, tmp_path / "output", authorized, "bound", max_rounds=1
+        )
+
+
+def test_fixpoint_cycle_detection_refuses_a_repeated_state_hash(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root, authorized = _fixpoint_drift_fixture(tmp_path)
+    _mode_ready(monkeypatch)
+    monkeypatch.setattr(
+        refresh_module, "_state_hash", lambda specs, overlay: "constant-hash"
+    )
+    with pytest.raises(RefreshRefused, match="fixpoint cycle detected at round 2"):
+        fixpoint_refresh(root / "specs", root, tmp_path / "output", authorized, "cycle")
+
+
+def test_fixpoint_mode_gates_mirror_plan_mode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = fixture_root(tmp_path)
+    _mode_ready(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [" M src/x.py"])
+    with pytest.raises(RefreshRefused, match="fixpoint requires a committed clean tip"):
+        fixpoint_refresh(root / "specs", root, tmp_path / "output", reason="r")
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ("boom",))
+    with pytest.raises(RefreshRefused, match="fixpoint owner gate refused"):
+        fixpoint_refresh(root / "specs", root, tmp_path / "output", reason="r")
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    record = CensusRecord(
+        path="tests/test_horizon1_policy_action.py", status=LIVE_RED, detail="break"
+    )
+    monkeypatch.setattr(
+        refresh_module, "census_from_tree", lambda specs, root: Census((record,))
+    )
+    with pytest.raises(RefreshRefused, match="custody verify gate refused"):
+        fixpoint_refresh(root / "specs", root, tmp_path / "output", reason="r")
+
+
+def test_cli_fixpoint_refuses_without_output_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _mode_ready(monkeypatch)
+    exit_code = main_with_root(tmp_path, ["--fixpoint", "--reason", "r"])
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "--output-dir" in payload["error"]
+
+
+def test_cli_fixpoint_gate_refusal_exits_one(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    _mode_ready(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [" M src/x.py"])
+    exit_code = main_with_root(
+        tmp_path,
+        ["--fixpoint", "--reason", "r", "--output-dir", str(tmp_path / "out")],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "committed clean tip" in payload["error"]
+
+
+def test_cli_fixpoint_happy_path_payload(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Specs-side drift drives a round-1 directive; the carry settles round 2.
+
+    The CLI pins the project root to this checkout, so the drift lives in
+    the staged specs tree: the drifted successor receipt's digest breaks its
+    PREDECESSORS pin, round 1 emits the directive, and the carried
+    projection settles round 2 to awaiting-commit.
+    """
+    _mode_ready(monkeypatch)
+    specs_dir = _stage_specs(tmp_path)
+    successor = specs_dir / SUCCESSOR_07[len("specs/") :]
+    successor.write_bytes(successor.read_bytes() + JSON_WHITESPACE_DRIFT)
+    out = tmp_path / "output"
+    payload: dict[str, Any] = {}
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--specs-dir",
+            str(specs_dir),
+            "--output-dir",
+            str(out),
+            "--reason",
+            "cli fixpoint",
+            "--fixpoint",
+            "--authorized",
+            SUCCESSOR_07,
+        ],
+    )
+    try:
+        assert exit_code == 0
+        payload = json.loads(capsys.readouterr().out)
+        assert payload["status"] == "ok"
+        assert payload["mode"] == "fixpoint"
+        assert payload["state"] == "awaiting-commit"
+        assert payload["rounds_completed"] == 2
+        assert len(payload["phases"]) == 2
+        assert payload["phases"][0]["directives"], "round 1 must emit the pin patch"
+        assert payload["phases"][1]["converged"] is True
+        assert Path(payload["journal_path"]).is_file()
+        assert Path(payload["staged_candidate"]).is_dir()
+    finally:
+        shutil.rmtree(Path(payload["journal_path"]).parent, ignore_errors=True)

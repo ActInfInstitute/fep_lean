@@ -17,9 +17,14 @@ Write discipline:
   directory only after every phase completes; a refusal leaves the output
   directory untouched. The live specs tree is never a write target.
 - Repo-side phases (h2_r0_custody PRIOR_SHA256, precision-test constants, the
-  PREDECESSORS constant) are byte-pinned/re-seal territory: this machinery
-  computes count-validated byte-replacement directives against the live bytes
-  and never writes those files; the coordinator applies them at the fold tip.
+  ``PREDECESSORS`` constant) are byte-pinned/re-seal territory: this machinery
+  computes count-validated byte-replacement directives against the projected
+  directive chain — live bytes with the walk's earlier directives for the same
+  path re-applied in order — and never writes those files; the coordinator
+  applies them at the fold tip. The projections also feed the same walk's
+  digest phases and are carried into a fixpoint's next round (via
+  ``seeded_projections``), so a re-walk over an already-projected state emits
+  nothing new.
 - Every JSON re-issue serializes ``sort_keys=True`` except
   ``05d-gaussian-conditioning-lifecycle.json`` and ``diagnostics.json``, which
   keep insertion order.
@@ -44,6 +49,9 @@ from fep_lean.custody.model import Census
 from fep_lean.custody.verify import Expectations, gate_expectations
 from fep_lean.custody.verify import verify as verify_gate
 from fep_lean.verification._jsonutil import load_strict_json
+from fep_lean.verification.horizon_acceptance import (
+    BASE as ACCEPTANCE_BASE,
+)
 from fep_lean.verification.horizon_acceptance import (
     CURRENT_FILES,
     diagnostic_record,
@@ -133,6 +141,7 @@ class ApplyReport:
     directives: tuple[PatchDirective, ...]
     output_dir: str
     files_written: int
+    projections: dict[str, bytes] = field(default_factory=dict)
 
 
 class _StagedView:
@@ -183,6 +192,19 @@ class _StagedView:
         self._digests[relative] = hashlib.sha256(data).hexdigest()
         return True
 
+    def seed(self, relative: str, data: bytes) -> None:
+        """Carry a prior round's directive projection into this walk.
+
+        Seeded bytes become visible to reads and digests — a later fixpoint
+        round walks the previous round's staged candidate, which already
+        contains the projected directive bytes — but they never enter
+        ``issued``: the carry is the previous round's work, not this round's
+        mutation. A directive re-emitted onto a seeded path still flows
+        through :meth:`put` and is counted normally.
+        """
+        self._modified[relative] = data
+        self._digests[relative] = hashlib.sha256(data).hexdigest()
+
     def flush(self, output_dir: Path) -> int:
         """Write the full staged tree (source bytes plus buffered re-issues)."""
         written = 0
@@ -202,11 +224,19 @@ class _StagedView:
 
 @dataclass
 class _PhaseContext:
-    """Per-walk state threaded through the ordered phases."""
+    """Per-walk state threaded through the ordered phases.
+
+    ``projections`` is the directive chain: repo-relative path → the bytes
+    the recorded repo-side directives produce when applied in order from the
+    live bytes. Directive-emitting phases validate anchors against the chain
+    and later rounds resume from it, so a walk over an already-projected
+    state emits nothing new (the fixpoint's convergence core).
+    """
 
     view: _StagedView
     authorized: frozenset[str]
     directives: list[PatchDirective] = field(default_factory=list)
+    projections: dict[str, bytes] = field(default_factory=dict)
 
 
 def _load_json(view: _StagedView, relative: str, label: str) -> dict[str, Any]:
@@ -269,14 +299,35 @@ def _reissue_source_map(
 def _emit_directive(
     ctx: _PhaseContext, path: str, old: str, new: str, phase: str
 ) -> None:
-    """Validate a repo-side replacement against live bytes, then record it."""
-    live = (ctx.view.repo_root / path).read_bytes()
+    """Record a repo-side replacement against the directive chain.
+
+    The anchor is validated against the chain bytes — the live bytes with
+    every previously recorded directive for the same path re-applied in
+    order — not against the live bytes alone, so a second directive on one
+    path sees the first's projection. The projected bytes also enter the
+    view so same-round downstream digest phases see them; repo-side paths
+    never reach :meth:`_StagedView.flush`, so the staged tree boundary and
+    the CLI's directive serialization stay exactly as before.
+    """
+    chain = ctx.projections.get(path)
+    if chain is None:
+        chain = (ctx.view.repo_root / path).read_bytes()
     anchor = old.encode("ascii")
     replacement = new.encode("ascii")
-    byte_replace(live, anchor, replacement)
+    projected = byte_replace(chain, anchor, replacement)
+    ctx.projections[path] = projected
+    ctx.view.put(path, projected)
     ctx.directives.append(
         PatchDirective(path=path, anchor=anchor, replacement=replacement, phase=phase)
     )
+
+
+def _chain_bytes(ctx: _PhaseContext, path: str) -> bytes:
+    """The current projected bytes for a repo-side path (live when unprojected)."""
+    projected = ctx.projections.get(path)
+    if projected is not None:
+        return projected
+    return (ctx.view.repo_root / path).read_bytes()
 
 
 # ---------------------------------------------------------------------------
@@ -366,9 +417,14 @@ def _phase_prior_07_reissue(ctx: _PhaseContext) -> None:
 
 
 def _phase_h2_r0_custody_prior_sha256(ctx: _PhaseContext) -> None:
-    """Directive phase: PRIOR_SHA256 must follow the re-issued prior receipt."""
+    """Directive phase: PRIOR_SHA256 must follow the re-issued prior receipt.
+
+    The recorded constant is read from the projected chain bytes so a later
+    fixpoint round that already carries the directive sees the new digest
+    and emits nothing (re-reading live bytes would re-emit forever).
+    """
     new_digest = ctx.view.digest(PRIOR_07)
-    live = (ctx.view.repo_root / H2_R0_CUSTODY).read_bytes()
+    live = _chain_bytes(ctx, H2_R0_CUSTODY)
     pattern = re.compile(rb'PRIOR_SHA256 = "([0-9a-f]{64})"')
     matches = pattern.findall(live)
     if len(matches) != 1:
@@ -468,8 +524,13 @@ def _phase_lifecycle_repair_sha256(ctx: _PhaseContext) -> None:
 
 
 def _phase_precision_test_constants(ctx: _PhaseContext) -> None:
-    """Directive phase: precision-test digest constants follow the re-issues."""
-    live = (ctx.view.repo_root / PRECISION_TEST).read_bytes()
+    """Directive phase: precision-test digest constants follow the re-issues.
+
+    Recorded constants resolve from the projected chain bytes: the second
+    constant on the same file sees the first directive's projection, and a
+    later fixpoint round that carries both directives emits nothing.
+    """
+    live = _chain_bytes(ctx, PRECISION_TEST)
     constants: tuple[tuple[str, str], ...] = (
         ("R0_REPAIR_SHA256", REPAIR_05D),
         ("R0_LIFECYCLE_SHA256", LIFECYCLE_05D),
@@ -494,11 +555,63 @@ def _phase_precision_test_constants(ctx: _PhaseContext) -> None:
         )
 
 
-def _phase_predecessors_patch(ctx: _PhaseContext) -> None:
-    """Directive phase: the PREDECESSORS constant follows the re-issued chain."""
-    from fep_lean.verification import horizon_acceptance
+_PREDECESSORS_BLOCK = re.compile(
+    r"PREDECESSORS\s*(?::[^=]*)?=\s*\{(?P<body>.*?)\n\}", re.DOTALL
+)
+_PREDECESSORS_ENTRY = re.compile(
+    r'(?:\+\s*"(?P<relative>[^"\n]+)"|(?P<bare>[A-Za-z_][A-Za-z0-9_]*))'
+    r'\s*:\s*"(?P<digest>[0-9a-f]{64})"'
+)
+_PREDECESSORS_KEYED = re.compile(r'"(?P<relative>[^"\n]+)":')
 
-    for relative, old_digest in sorted(horizon_acceptance.PREDECESSORS.items()):
+
+def _predecessors_from_bytes(data: bytes) -> dict[str, str]:
+    """Parse the PREDECESSORS constant out of module bytes.
+
+    Returns ``BASE + relative -> recorded digest`` for every entry, keyed
+    exactly like the validator's dict so directives can be emitted from the
+    staged view's bytes rather than the live import.
+    """
+    text = data.decode("utf-8")
+    match = _PREDECESSORS_BLOCK.search(text)
+    if match is None:
+        raise ApplyRefused("predecessors: PREDECESSORS block missing")
+    body = match["body"]
+    entries: dict[str, str] = {}
+    for item in _PREDECESSORS_ENTRY.finditer(body):
+        if item["relative"] is not None:
+            relative = item["relative"]
+        else:
+            from fep_lean.verification import horizon_acceptance
+
+            bare = item["bare"]
+            resolved = getattr(horizon_acceptance, bare, None)
+            if not isinstance(resolved, str) or not resolved.startswith("specs/"):
+                raise ApplyRefused(
+                    f"predecessors: bare key {bare!r} does not resolve to a specs path"
+                )
+            relative = resolved[len(ACCEPTANCE_BASE) :]
+        entries[relative] = item["digest"]
+    keyed = {item["relative"] for item in _PREDECESSORS_KEYED.finditer(body)}
+    missing = keyed - set(entries)
+    if missing or not entries:
+        raise ApplyRefused(
+            f"predecessors: entries without 64-hex digests: {sorted(missing)}"
+        )
+    return {ACCEPTANCE_BASE + relative: digest for relative, digest in entries.items()}
+
+
+def _phase_predecessors_patch(ctx: _PhaseContext) -> None:
+    """Directive phase: the PREDECESSORS constant follows the re-issued chain.
+
+    Old digests are parsed from the projected bytes of the validator module
+    (the directive chain), never from the live import: the import is
+    captured at module load time and cannot see projections, so a fixpoint's
+    later rounds would re-emit the same patch forever and never converge.
+    """
+    for relative, old_digest in sorted(
+        _predecessors_from_bytes(_chain_bytes(ctx, HORIZON_ACCEPTANCE_MODULE)).items()
+    ):
         new_digest = ctx.view.digest(relative)
         if old_digest == new_digest:
             continue
@@ -716,6 +829,7 @@ def apply_refresh(
     *,
     census: Census | None = None,
     authorized_changes: Collection[str] = (),
+    seeded_projections: Mapping[str, bytes] | None = None,
 ) -> ApplyReport:
     """Gate, then walk the settled 14-phase order onto ``output_dir``.
 
@@ -726,6 +840,12 @@ def apply_refresh(
     before anything runs, and the buffered staged writes flush into
     ``output_dir`` only after every phase completes — a refusal leaves the
     output directory untouched and the live specs tree unmodified.
+
+    ``seeded_projections`` carries a fixpoint's prior-round directive chain
+    (path → projected bytes) into this walk: the seeded bytes are visible to
+    reads and digests and to directive-chain validation, but never counted
+    as this round's mutations. The report returns the walk's final chain so
+    the next round resumes from the staged candidate.
     """
     if not specs_dir.is_dir():
         raise ValueError(f"specs dir not found: {specs_dir}")
@@ -743,7 +863,13 @@ def apply_refresh(
     if not ok:
         raise ApplyRefused("custody verify gate refused: " + "; ".join(reasons))
     view = _StagedView(specs_dir, repo_root)
-    ctx = _PhaseContext(view=view, authorized=frozenset(authorized_changes))
+    for relative, data in sorted((seeded_projections or {}).items()):
+        view.seed(relative, data)
+    ctx = _PhaseContext(
+        view=view,
+        authorized=frozenset(authorized_changes),
+        projections=dict(seeded_projections or {}),
+    )
     effects: list[str] = []
     for name, phase in _PHASES:
         before = (len(view.issued), len(ctx.directives))
@@ -752,10 +878,15 @@ def apply_refresh(
         if after != before:
             effects.append(name)
     files_written = view.flush(output_dir)
+    # Directive projections ride the view only for same-round digest
+    # visibility; they are coordinator inputs, not staged-tree mutations,
+    # so the ledger reports the re-issued specs surfaces alone.
+    mutations = sorted(view.issued - set(ctx.projections))
     return ApplyReport(
         phases=tuple(effects),
-        mutations=tuple(sorted(view.issued)),
+        mutations=tuple(mutations),
         directives=tuple(ctx.directives),
         output_dir=str(output_dir),
         files_written=files_written,
+        projections=dict(ctx.projections),
     )
