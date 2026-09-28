@@ -145,3 +145,34 @@ entries:
     numerical agreement is owned by certificate comparisons, not notation.
   reference: >-
     Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
+- concept: Boltzmann control posterior over expected free energy
+  fep_lean:
+    topic_id: fep-156
+    symbol: fep156_boltzmann_control_posterior_minimizes_efe
+  geo_anchor: GEO-INFER-ACT/src/geo_infer_act/core/policy_selection.py::PolicySelector
+  correspondence: >-
+    PolicySelector.compose_policy_posterior forms q(pi) as the softmax of
+    -gamma * G plus the log habit prior divided by prior_temperature; at
+    prior_temperature 1 this is the Boltzmann control posterior proportional
+    to prior(pi) * exp(-gamma * G(pi)). fep-156 proves that for fixed
+    precision gamma > 0 and a strictly positive prior on a finite policy
+    carrier this posterior is the unique minimizer of expected EFE plus
+    gamma^-1 KL to the prior. Notation-level correspondence of the posterior
+    construct; the Python method is not claimed to minimize anything.
+  reference: >-
+    Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
+- concept: perception update as forward filter
+  fep_lean:
+    topic_id: fep-157
+    symbol: fep157_filteredBelief_eq_forwardFilter
+  geo_anchor: GEO-INFER-ACT/src/geo_infer_act/core/markov_decision_process.py::MarkovDecisionProcess
+  correspondence: >-
+    MarkovDecisionProcess.update_belief multiplies a prior belief by the
+    observation likelihood P(o|s) and renormalizes (Bayes' rule on a finite
+    state space); fep-157 proves that the perception-action loop's filtered
+    belief, under positive predictive evidence for the outcome, is exactly the
+    identity-transition forward filter of the temporal-inference layer.
+    Correspondence of the finite Bayes filtering step only; no
+    numerical-agreement claim is made.
+  reference: >-
+    Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
