@@ -60,6 +60,24 @@ boundaries. The roster-v23 source-owner coordinated refresh, native capture,
 render re-acceptance, and pin-cycle #32 re-seal ride the coordinator's
 remaining phases and are pending, not part of this wiring.
 
+### Coordinated evidence refresh: SOURCE_OWNER_ROSTER v24 (2026-09-28)
+
+`OWNER_MANIFEST_VERSION` 23 → 24 covering the wave-4 fold chore's custody
+cascade: the new `law_weighted_split` canonical formal module
+(`FEP.LawWeightedSplit`, 7 public theorems) joins the native roster through
+the formal-modules plane with its byte-identical `lean/FepSketches/` mirror,
+the wave-4 wiring delta touches the reviewed owner files it reuses (the two
+family body modules, the numerical-witness extensions, the release-seal and
+third-expansion surfaces), and the H2.7 evidence-custody chain
+(acceptance → matrix → R0 prior/successor custody receipts → 05d/05b/06a →
+terminal packet → H3 spike lockstep) is re-bound over that delta with the
+strip model in `tests/_support/h2_r0_custody.py` gaining this wave's
+added-module group so the reconstruction still hashes to the sealed R0
+manifest digest. Prerequisite for `fep-lean verify` claim-readiness at any
+tip containing the wave-4 catalogue (the native capture fails the roster
+pre-gate otherwise); the native capture, render re-acceptance, and pin-cycle
+#33 re-seal follow.
+
 ### GEO-INFER notation slice growth (2026-09-28)
 
 - Grew `specs/geo-infer-notation-bridge/data/notation-map.yaml` from 10 to 13
