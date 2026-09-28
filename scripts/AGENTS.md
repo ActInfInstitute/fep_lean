@@ -4,6 +4,18 @@ Public execution belongs to `src/fep_lean/cli.py` and the `fep-lean` console ent
 point. Script files may only provide thin wrappers or deterministic maintenance
 operations; they must not import packages outside this checkout.
 
+`setup_checkout.sh` composes the portable checkout kit: locked dev dependency
+installation at `.python-version`, environment checks, two guarded setup
+passes, then catalogue and figure materialization. Its `--catalogue-only`
+tier omits Lean and rasterization. Keep pin validation, cache-miss rejection,
+and deadline enforcement in `fep-lean setup`; do not duplicate that policy in
+the shell wrapper. The kit prepares local gates but does not refresh custody,
+native, or render receipts. Publication rendering and external full-mode
+services remain separate tiers in [getting started](../docs/getting-started.md).
+See the [off-host inventory](../docs/scaffold-portability.md) for substitutions
+and isolated acceptance. Preserve the ordering and acceptance boundaries in
+the [render runbook](README.md#local-render-runbook).
+
 Canonical authoring lives outside this wrapper directory: family-owned modules
 under `src/fep_lean/catalogue/bodies/`, the validated catalogue registry,
 `config/catalogue_metadata.yaml`, `config/theorem_maturity.yaml`,

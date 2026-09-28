@@ -1,0 +1,86 @@
+# Scaffold portability
+
+The [checkout kit](getting-started.md#portable-checkout-kit) carries the
+locked Python environment, pinned Lean/Mathlib acquisition, repeated setup,
+and generated local gate inputs. It builds on the
+[lock-preserving setup contract](lean4.md#lock-preserving-setup). No Herdr,
+omp, sibling checkout, donor cache, or provider credentials are required for
+that kit. A prepared environment and a passing gate battery are separate
+results; receipt freshness depends on the exact checked-out sources.
+
+## Off-host inventory
+
+The inventory below describes the maintained execution surfaces. Line numbers
+identify the reviewed implementation; follow the linked file if later edits
+move them. A search of `scripts/*.py` and `scripts/*.sh` for `/Users/`,
+`/home/`, and `/opt/` finds no hard-coded host checkout paths. Paths passed
+through arguments or environment variables still need local substitutions.
+
+| Surface and evidence | What the kit leaves out; what to substitute |
+| --- | --- |
+| [OpenGauss installer](../scripts/00b_install_opengauss_cli.sh), lines 27–42 | Uses `$HOME/.gauss_src` and pulls the service's current main. It is outside the locked kit. Install/configure the service separately for the external full-mode tier. |
+| [Publication template resolver](../scripts/render_publication.py), lines 87–103 | Requires `--template` or `FEP_LEAN_TEMPLATE_DIR`. Supply a real local template checkout and register this checkout as its active project, following the render runbook. |
+| [Browser wrapper](../scripts/capture_browser_acceptance.py), lines 17–20 | Browser acceptance needs a local Chrome/Chromium executable; pass `--browser` when discovery is unsuitable. The kit does not capture browser evidence. |
+| [Manuscript identifier audit](../scripts/render_manuscript.py), line 258 | Reads `lean/.lake/packages/mathlib`. Let guarded setup materialize the manifest's exact revisions at that layout; an arbitrary relocated or rsynced package tree is not a substitute. |
+| [Lean setup](../src/fep_lean/cli.py), lines 69 and 128–135 | `FEP_LEAN_DIR`, `ELAN_HOME`, `XDG_CACHE_HOME`, and `MATHLIB_CACHE_DIR` can redirect state. Remove stale overrides or supply writable local locations. Keep the intended checkout's pin triple together. |
+| [Tool discovery](../src/fep_lean/verification/_toolchain.py), lines 214–240 | `FEP_LEAN_LAKE_EXE` and `FEP_LEAN_LEAN_EXE` override discovery. Remove paths to another host/worktree; setup verifies the actual compiler identity. Cold setup also accepts `FEP_LEAN_ELAN_EXE`. |
+| [Service configuration](../src/fep_lean/llm/hermes.py), lines 229–238 | Full mode needs local service configuration and credentials, optionally read from `$GAUSS_HOME/.env`. Supply them privately; copying a home directory is not part of setup. |
+| [Bridge CLI](../src/fep_lean/bridge/cli.py), lines 25–28 | Live bridge checks require an explicitly selected `--gnn-root` with matching custody pins. Normal standalone tests need no sibling checkout. Do not repin to make a local check pass. |
+| [Render runbook](../scripts/README.md#local-render-runbook) | XeLaTeX, pandoc, mermaid, fonts, template registration, and fresh publication receipts remain the publication tier. The kit only generates catalogue and rasterized figure inputs. |
+
+Herdr pane IDs, `.herdr-project` briefs/receipts, omp skills, and private PAI
+bootstrap paths belong to the coordinator environment, not the installed
+package or kit. A standalone user substitutes a terminal and their own log
+directory. Keep private coordinator state out of public artifacts. The kit
+does not reproduce a developer's PATH, `.venv`, `.lake`, service state, or
+15 GB package-tree rsync; it acquires pinned dependencies instead.
+
+## Fresh-checkout acceptance
+
+Install the prerequisites from getting started first. Clone into a new
+directory; do not copy `.venv`, `output`, or `.lake` from another checkout.
+Record the checked-out commit and run with a new home and empty caches.
+For example, from the new clone, replace the two executable locations with
+your installed uv and elan locations (the elan executable may be reused;
+its toolchains and settings must start empty):
+
+```bash
+kit_root="$PWD"
+acceptance_root="$(mktemp -d)"
+mkdir -p "$acceptance_root/home" "$acceptance_root/bin"
+ln -s /path/to/uv "$acceptance_root/bin/uv"
+ln -s /path/to/elan "$acceptance_root/bin/elan"
+# Add Git and rsvg-convert to this bin directory if absent from /usr/bin:/bin.
+env -i HOME="$acceptance_root/home" \
+  PATH="$acceptance_root/bin:/usr/bin:/bin" \
+  ELAN_HOME="$acceptance_root/elan" \
+  XDG_CACHE_HOME="$acceptance_root/cache" \
+  UV_CACHE_DIR="$acceptance_root/uv-cache" \
+  UV_PYTHON_INSTALL_DIR="$acceptance_root/python" \
+  MATHLIB_CACHE_DIR="$acceptance_root/mathlib-cache" \
+  bash "$kit_root/scripts/setup_checkout.sh"
+```
+
+Run from outside the clone too, preferably with spaces in its path. Retain
+the command, exit code, platform/architecture, commit, and full output. Hash
+`uv.lock`, `lean/lean-toolchain`, `lean/lakefile.lean`, and
+`lean/lake-manifest.json` before and after; require identical hashes and a
+clean tracked tree. Confirm the materialized dependency HEADs match every
+manifest revision. Run the kit again under the same isolated environment and
+retain that exit code as well. The two internal setup passes exercise both
+guarded entry points, while the second whole-kit run also exercises Python
+and generated-input idempotency.
+
+Use that environment for the [required gates](testing.md) and an exact-topic
+smoke (`uv run --locked fep-lean verify --topic fep-001 --fail-on-warnings`).
+An exact-topic smoke is not a full native receipt. Missing native evidence or
+stale committed render/custody evidence must remain explicit failing gates;
+the kit never manufactures acceptance. Record gates requiring live services
+or an explicitly named GNN pair separately. For Linux container acceptance,
+use native container storage, as required by the t-0058 filesystem finding.
+
+Q7 interpreter-independent scaffold serialization is a separate task. This
+kit retains Python 3.14 and never changes frozen scaffold digests, pins,
+custody receipts, or theorem claims. The similarly named historical
+`FEP-SCAFFOLD-PORTABILITY` backlog row describes that Q7 residual, not the
+checkout kit delivered here.

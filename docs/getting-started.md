@@ -10,6 +10,44 @@ Outside that checkout, put the global option before the subcommand:
 fep-lean --project-root /path/to/fep_formal catalogue
 ```
 
+## Portable checkout kit
+
+On macOS or Linux, install Bash, Git, uv, elan (the pinned installer below),
+and `rsvg-convert` (the `librsvg` package on Homebrew or `librsvg2-bin` on
+Debian/Ubuntu). Then, from a fresh clone of the intended reviewed commit:
+
+```bash
+bash scripts/setup_checkout.sh
+```
+
+The kit resolves its own checkout root, including paths containing spaces.
+It runs `uv sync --locked --extra dev` with `.python-version`, checks the
+validator interpreter and locked environment, runs guarded `fep-lean setup`
+twice through the two existing entry points, and generates the catalogue and
+manuscript figures. Python can be acquired by uv; Lean and the Mathlib cache
+are acquired by setup. Allow network access, several gigabytes for downloads,
+and tens of gigabytes of free space for the expanded toolchain and workspace.
+Use the same command again after an interrupted acquisition or to check
+idempotency. Each setup pass has its own `FEP_LEAN_SETUP_TIMEOUT_SEC` deadline.
+The kit stops at the first failed command and prints each command it runs.
+
+This prepares the local Python/native gate environment; it does not assert
+that the [gate battery](testing.md) passed. Run catalogue generation before
+projection-dependent manuscript checks, and native verification before the
+strict manuscript-render check, which requires a current native receipt.
+Committed evidence may already be stale at the chosen commit; setup must not
+repair it. Publication rendering and live services retain their separate
+tiers below. For catalogue-only use, without elan or the SVG rasterizer:
+
+```bash
+bash scripts/setup_checkout.sh --catalogue-only
+```
+
+The [off-host inventory](scaffold-portability.md) lists machine dependencies,
+substitutions, and a clean-environment acceptance recipe. The kit delegates
+all Lean pin/cache validation to the existing setup implementation; it never
+copies a donor `.lake` tree or invokes `lake update`.
+
 ## Catalogue-only tier
 
 Install uv and use Python 3.14, the validator version in `.python-version`.
