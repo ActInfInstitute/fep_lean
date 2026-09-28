@@ -166,6 +166,8 @@ def setup_checkout(tmp_path: Path, monkeypatch) -> Path:
         "    path = root / behavior.get('drift_file', 'lake-manifest.json')\n"
         "    path.write_text(path.read_text() + ' ')\n"
         "if args == behavior.get('fail_at'): sys.exit(7)\n"
+        "if args == ['--wfail', 'exe', 'cache', 'get'] and behavior.get('cache_miss'):\n"
+        "    print('Warning: some files were not found in the cache.', file=sys.stderr)\n"
         "if args == behavior.get('hang_at'):\n"
         "    child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
         "    (root / 'child.pid').write_text(str(child.pid))\n"
@@ -232,6 +234,13 @@ def test_setup_twice_preserves_locks(setup_checkout: Path) -> None:
         ]
         * 2
     )
+
+
+def test_setup_stops_on_zero_exit_cache_miss(setup_checkout: Path, capsys) -> None:
+    _setup_behavior(setup_checkout, cache_miss=True)
+    assert cli._setup(setup_checkout) == 1
+    assert "no source build was started" in capsys.readouterr().out
+    assert _setup_calls(setup_checkout)[-1] == ["--wfail", "exe", "cache", "get"]
 
 
 @pytest.mark.parametrize(

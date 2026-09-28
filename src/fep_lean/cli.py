@@ -190,7 +190,14 @@ def _setup(root: Path) -> int:
             raise ValueError(
                 "materialized Mathlib revision does not match the manifest"
             )
-        run([lake, "--wfail", "exe", "cache", "get"])
+        cache = run([lake, "--wfail", "exe", "cache", "get"])
+        # The pinned Mathlib cache CLI returns zero for HTTP 404 misses.
+        # Its explicit warning must not authorize a full source rebuild.
+        if "some files were not found in the cache" in cache.stdout + cache.stderr:
+            raise ValueError(
+                "the pinned Mathlib cache is incomplete; retain this log and retry "
+                "when the upstream cache is available; no source build was started"
+            )
         run([lake, "--wfail", "build", "FepSketches"])
         print(
             f"[fep_lean setup] OK | lean: {actual_lean.strip()} | mathlib: {revision}",
