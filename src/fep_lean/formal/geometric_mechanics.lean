@@ -620,4 +620,129 @@ theorem fep167_residual_example :
 
 end FrobeniusProjection
 
+/-! ## Quantitative control of the uncancelled divergence remainder (fep-168)
+
+**Hypothesis map** (t-0060 load-bearing refinement): on the fep-163
+carrier `weightedDivergence − dot (divQ DQ) g = dot (mulVec Q g) dlogp`
+holds identically, so the remainder identity needs exactly
+{`Q` skew (else the trace slot survives against off-diagonal `H`),
+`H` symmetric (else the trace slot survives), and
+`dot (mulVec Q g) dlogp = 0` (the coupling slot)}.  `dlogp = −g` is the
+canonical sufficient — not necessary — instance: the skew quadratic form
+dies via `skewQuadratic_eq_zero`.
+
+The budget is stated in squared form `(weightedDivergence …)² ≤
+dot r r * dot g g` with `r = divQ DQ` (no square roots, stays
+computable), with the `abs`-product corollary.  The equality witness
+introduces the NEW aligned gradient datum `fep168AlignedG = (1, 0)`:
+the pinned `remainderG = (1, 1)` is deliberately not repinned — it is
+not aligned with `divQ remainderDQ = (1, 0)` (bound `2`, value `1`,
+strict). -/
+
+section RemainderBudget
+
+variable {n : ℕ}
+
+/-- Plain-dot Cauchy–Schwarz in squared form: `(r · g)² ≤ (r · r)(g · g)`
+for plain real vectors — no square roots, no `noncomputable`. -/
+theorem dot_sq_le_sq_mul_sq (r g : Fin n → ℝ) :
+    (dot r g) ^ 2 ≤ dot r r * dot g g := by
+  have hrr : dot r r = ∑ i, r i ^ 2 := by
+    simp only [dot]
+    exact Finset.sum_congr rfl fun i _ => (pow_two (r i)).symm
+  have hgg : dot g g = ∑ i, g i ^ 2 := by
+    simp only [dot]
+    exact Finset.sum_congr rfl fun i _ => (pow_two (g i)).symm
+  rw [hrr, hgg]
+  exact Finset.sum_mul_sq_le_sq_mul_sq Finset.univ r g
+
+/-- **fep-168 (remainder identity).**  Under `Q` skew, `H` symmetric,
+and the stationary coupling `dlogp = −g`, the weighted divergence of the
+candidate current is exactly the remainder dot product
+`dot (divQ DQ) g`: the trace slot cancels (`skewTrace_eq_zero`), the
+quadratic slot cancels (`skewQuadratic_eq_zero`), and nothing else
+survives the expansion. -/
+theorem fep168_weightedDivergence_eq_remainderDot (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    weightedDivergence Q H DQ g dlogp = dot (divQ DQ) g := by
+  rw [solenoidal_expansion Q H DQ g dlogp hcoup,
+    skewTrace_eq_zero Q H hQ hH, skewQuadratic_eq_zero Q g hQ]
+  ring
+
+/-- **fep-168 (squared remainder budget).**  The uncancelled remainder
+obeys the squared Cauchy–Schwarz budget
+`(weightedDivergence …)² ≤ (∑ rᵢ²)(∑ gᵢ²)` with `r = divQ DQ`: the
+remainder magnitude is bounded by the product of the transport-
+divergence and gradient norms instead of being assumed to vanish
+(fep-165's witness shows the unconditional drop is genuinely false). -/
+theorem fep168_remainder_sq_budget (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    (weightedDivergence Q H DQ g dlogp) ^ 2
+      ≤ dot (divQ DQ) (divQ DQ) * dot g g := by
+  rw [fep168_weightedDivergence_eq_remainderDot Q H DQ g dlogp hQ hH hcoup]
+  exact dot_sq_le_sq_mul_sq (divQ DQ) g
+
+/-- **fep-168 (absolute budget).**  The squared budget restated over
+`abs` products: `|weightedDivergence …| · |weightedDivergence …| ≤
+(∑ rᵢ²)(∑ gᵢ²)` — the same bound with no square roots. -/
+theorem fep168_absolute_budget (Q H DQ : Fin n → Fin n → ℝ)
+    (g dlogp : Fin n → ℝ) (hQ : SkewSymmetric Q) (hH : SymmetricOf H)
+    (hcoup : ∀ i, dlogp i = -g i) :
+    abs (weightedDivergence Q H DQ g dlogp) * abs (weightedDivergence Q H DQ g dlogp)
+      ≤ dot (divQ DQ) (divQ DQ) * dot g g := by
+  have habs : abs (weightedDivergence Q H DQ g dlogp)
+      * abs (weightedDivergence Q H DQ g dlogp)
+      = (weightedDivergence Q H DQ g dlogp) ^ 2 := by
+    rw [← abs_mul, abs_of_nonneg (mul_self_nonneg _), pow_two]
+  rw [habs]
+  exact fep168_remainder_sq_budget Q H DQ g dlogp hQ hH hcoup
+
+/-- The aligned gradient for the equality witness: `(1, 0)` — aligned
+with `divQ remainderDQ = (1, 0)`.  New datum; the pinned
+`remainderG = (1, 1)` is not repinned (it is not aligned). -/
+def fep168AlignedG : Fin 2 → ℝ := fun i => if i = 0 then 1 else 0
+
+/-- The symmetric Hessian-slot datum `diag(1, 2)` for the equality
+witness. -/
+def fep168AlignedH : Fin 2 → Fin 2 → ℝ :=
+  fun i j => if i = 0 ∧ j = 0 then 1 else if i = 1 ∧ j = 1 then 2 else 0
+
+/-- The equality-witness Hessian-slot datum is symmetric. -/
+theorem fep168AlignedH_symmetric : SymmetricOf fep168AlignedH := by
+  intro i j
+  fin_cases i <;> fin_cases j <;> simp [fep168AlignedH]
+
+/-- **fep-168 (equality attained).**  On the aligned datum —
+`Q = witnessQ = [[0, 1], [-1, 0]]` (skew), `H = fep168AlignedH =
+diag(1, 2)` (symmetric), `DQ = remainderDQ` (so `divQ DQ = (1, 0)`), and
+the NEW aligned gradient `fep168AlignedG = (1, 0)` with the canonical
+coupling `dlogp = −g` — the squared budget is attained with equality
+and the data is nonzero: `(weightedDivergence …)² = dot r r * dot g g`
+with `dot fep168AlignedG fep168AlignedG = 1 ≠ 0`.  Via
+`fep168_weightedDivergence_eq_remainderDot` this is simultaneously the
+Cauchy–Schwarz equality at the dot level, where `r = g = (1, 0)`. -/
+theorem fep168_equality_attained :
+    (weightedDivergence witnessQ fep168AlignedH remainderDQ fep168AlignedG
+        (fun i => -fep168AlignedG i)) ^ 2
+      = dot (divQ remainderDQ) (divQ remainderDQ) * dot fep168AlignedG fep168AlignedG
+      ∧ dot fep168AlignedG fep168AlignedG ≠ 0 := by
+  have hid : weightedDivergence witnessQ fep168AlignedH remainderDQ fep168AlignedG
+      (fun i => -fep168AlignedG i) = dot (divQ remainderDQ) fep168AlignedG :=
+    fep168_weightedDivergence_eq_remainderDot witnessQ fep168AlignedH remainderDQ
+      fep168AlignedG (fun i => -fep168AlignedG i) witnessQ_skew fep168AlignedH_symmetric
+      (fun i => rfl)
+  have hr : divQ remainderDQ = fep168AlignedG := by
+    funext l
+    fin_cases l <;>
+      simp only [divQ, remainderDQ, fep168AlignedG, Fin.sum_univ_two] <;> norm_num
+  constructor
+  · rw [hid, hr]
+    ring
+  · simp only [dot, fep168AlignedG, Fin.sum_univ_two]
+    norm_num
+
+end RemainderBudget
+
 end FEP.GeometricMechanics
