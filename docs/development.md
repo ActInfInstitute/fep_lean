@@ -158,3 +158,58 @@ guard. The guard does not relax the 3.14-only rule: a version-stable
 serialization or an explicit multi-interpreter acceptance record still lands
 as a new reviewed scaffold via `FEP-SCAFFOLD-PORTABILITY` with a coordinated
 custody re-pin.
+
+## Custody refresh orchestration
+
+`uv run fep-lean custody <census|apply|refresh>` is the H2.7 custody machinery adapter.
+`census` is a read-only drift report; `apply` performs one staged 14-phase run into
+`--output-dir` (required, staged-only) with no repo-side writes; `refresh` composes
+the guarded refresh loop.
+
+`refresh` modes are mutually exclusive:
+
+| Mode | Contract |
+| --- | --- |
+| default | census → strict verify gate (`GATE_EXPECTATIONS`) → one staged 14-phase `apply` into `--output-dir` (default fresh temp dir) → read-only verify set → pre-capture owner gate → optional `--native` capture. Zero repo-side writes; the staged tree and replacement directives are coordinator inputs. |
+| `--plan` | Read-only planning pass. No test/audit subprocesses (no pytest, no formalism audit, no writers; read-only git probes only). Writes a plan journal and stops; state `planned`. |
+| `--fixpoint` | Bounded staged fixpoint over the same 14-phase order (H3 lockstep last). Requires `--output-dir`. Terminal state `awaiting-commit`. |
+| `--resume <journal-dir>` | Resumes only against a committed tip. Validates the commit is the agreed candidate, then completes evidence at that tip. Terminal state `captured` (or `awaiting-render-acceptance`). |
+
+`--plan` refuses on: missing/empty `--reason`, dirty tree, unknown owners (`report_owner_errors`
+non-empty), live-red census records, staleness outside `--authorized`, pin/toolchain mismatch,
+and an authorized change path outside the reviewed source owners (no roster auto-growth).
+
+`--fixpoint` rounds read the previous round's staged candidate (staged specs
+tree plus projected directive bytes, carried into the next round). Default
+bound 4 rounds (`--max-rounds`); a repeated non-terminal state hash stops as a
+cycle; non-convergence at the bound stops. Convergence requires zero mutations
+and zero directives in a round plus a byte-identical re-application into a
+throwaway directory. The journal records per-round inputs, outputs, and state
+hash, and classifies receipt re-issues as dependency re-binds, not new
+execution evidence, preserving sealed historical observations. A denied census
+is a stop requiring adjudication, never a rewrite.
+
+`--resume` validates: clean tree, HEAD past the journal's pre-commit HEAD, committed bytes of
+every changed path matching the journal's expected post-commit digests, clean owner snapshot,
+census/gate green at the new tip, and one verification apply round with zero mutations and
+zero directives (otherwise the commit is not the agreed candidate — stop). Journal paths
+touching manuscript/render inputs (`manuscript/`, `src/fep_lean/output/rendering.py`,
+`scripts/render_publication.py`, `scripts/render_manuscript.py`, `docs/`) stop at the
+render-acceptance barrier with state `awaiting-render-acceptance` before any capture.
+Otherwise the full verify set runs at the committed tip — the mode where the writer step
+`scripts/audit_formalisms.py --receipt output/formalism-audit.json` legitimately runs —
+then, with `--native`, exactly one sanctioned `fep-lean verify --fail-on-warnings` capture
+to `output/native-verification.json`, independently validated by
+`validate_native_lean_receipt` to `native_claim_ready`, with post-capture dirty/HEAD/owner
+rechecks.
+
+Journals live under `output/custody-journal/<operation-id>/journal.json` (`--journal-dir`
+overrides); `--reason` is mandatory for every refresh mode. Bridge pin cycles, commits,
+pushes, roster growth, and GNN-side writes are coordinator-owned, never performed here.
+Native and bridge evidence is never claimed from focused tests alone; the coordinator
+runs the full battery at the integrated tip.
+
+Phase 0 correctness: a nonzero native capture exit, a missing, stale, or non-claim-ready
+receipt, or post-capture drift refuses with exit 1 (the historical exit-0 `ok` behavior is
+fixed). Exit codes: 0 = report composed / fixpoint converged / resume completed; 1 = any
+gate or fail-closed check refused (JSON `{"status": "error", ...}`).

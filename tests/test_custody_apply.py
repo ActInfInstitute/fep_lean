@@ -36,6 +36,8 @@ from fep_lean.custody.apply import (
     TERMINAL_PACKET,
     ApplyRefused,
     ApplyReport,
+    _emit_directive,
+    _PhaseContext,
     _StagedView,
     apply_refresh,
     byte_replace,
@@ -324,8 +326,13 @@ def test_gate_all_clear_fixture_admits_the_pipeline(tmp_path: Path, state: str) 
     assert report.files_written > 0
     assert DIAGNOSTICS not in report.mutations
     assert LIFECYCLE_05D in report.mutations
-    for relative in (DIAGNOSTICS, *REVIEW_FILES):
-        assert _out_bytes(out, relative) == spec_path(root, relative).read_bytes()
+    # Diagnostics stays live-plane-bound (the settled non-goal), but the
+    # reviews re-bind to the projected validator bytes: the predecessors
+    # directives change horizon_acceptance.py, so the staged reviews must
+    # carry the post-commit digest, not the pre-commit live one.
+    assert _out_bytes(out, DIAGNOSTICS) == spec_path(root, DIAGNOSTICS).read_bytes()
+    for relative in REVIEW_FILES:
+        assert _out_bytes(out, relative) != spec_path(root, relative).read_bytes()
     assert _out_bytes(out, ACCEPTANCE) != spec_path(root, ACCEPTANCE).read_bytes()
 
 
@@ -995,3 +1002,154 @@ def test_cli_apply_gate_refusal_writes_nothing(
     assert payload["status"] == "error"
     assert payload["error"] == "custody verify gate refused: " + "; ".join(problems)
     _assert_untouched(out)
+
+
+# ---------------------------------------------------------------------------
+# Directive chain (t-0057 phase 2): same-path projections and view bytes.
+# ---------------------------------------------------------------------------
+
+
+def _chain_context(tmp_path: Path, text: bytes) -> tuple[_PhaseContext, Path]:
+    """A minimal phase context over one repo-side file in a tmp root."""
+    target = tmp_path / "mod.py"
+    target.write_bytes(text)
+    view = _StagedView(tmp_path, tmp_path)
+    return _PhaseContext(view=view, authorized=frozenset()), target
+
+
+def test_directive_projection_is_visible_same_round(tmp_path: Path) -> None:
+    ctx, target = _chain_context(tmp_path, b'A = "1"\n')
+    _emit_directive(ctx, "mod.py", 'A = "1"', 'A = "2"', "phase")
+    assert ctx.projections["mod.py"] == b'A = "2"\n'
+    assert ctx.view.read("mod.py") == b'A = "2"\n'
+    assert ctx.view.digest("mod.py") == _sha(b'A = "2"\n')
+    assert target.read_bytes() == b'A = "1"\n'  # the live file is untouched
+    assert len(ctx.directives) == 1
+
+
+def test_directive_chain_second_anchor_sees_the_first_projection(
+    tmp_path: Path,
+) -> None:
+    ctx, _target = _chain_context(tmp_path, b'K1 = "old1"\nK2 = "old2"\n')
+    _emit_directive(ctx, "mod.py", 'K1 = "old1"', 'K1 = "new1"', "one")
+    _emit_directive(ctx, "mod.py", 'K2 = "old2"', 'K2 = "new2"', "two")
+    assert ctx.projections["mod.py"] == b'K1 = "new1"\nK2 = "new2"\n'
+    assert ctx.view.read("mod.py") == ctx.projections["mod.py"]
+    assert [directive.phase for directive in ctx.directives] == ["one", "two"]
+    # The recorded anchors stay the coordinator's original inputs.
+    assert ctx.directives[0].anchor == b'K1 = "old1"'
+    assert ctx.directives[1].anchor == b'K2 = "old2"'
+
+
+def test_directive_chain_validates_against_projected_not_live_bytes(
+    tmp_path: Path,
+) -> None:
+    ctx, _target = _chain_context(tmp_path, b'K = "old"\n')
+    _emit_directive(ctx, "mod.py", 'K = "old"', 'K = "new"', "one")
+    # The anchor matched the LIVE bytes but is gone from the projection.
+    with pytest.raises(ApplyRefused, match="anchor count 0"):
+        _emit_directive(ctx, "mod.py", 'K = "old"', 'K = "again"', "two")
+
+
+def test_predecessors_patch_resolves_old_digests_from_view_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The live PREDECESSORS import is stale-by-design under the patch."""
+    from fep_lean.verification import horizon_acceptance
+
+    real = dict(horizon_acceptance.PREDECESSORS)
+    tampered = {**real, next(iter(real)): "f" * 64}
+    monkeypatch.setattr(horizon_acceptance, "PREDECESSORS", tampered)
+    root = fixture_root(tmp_path)
+    drifted = ("tests/test_horizon_acceptance.py", "tests/test_numerical_witnesses.py")
+    for name in drifted:
+        drift_file(root / name)
+    drift_file(spec_path(root, SUCCESSOR_07), JSON_WHITESPACE_DRIFT)
+    report = apply_refresh(
+        root / "specs",
+        root,
+        _out_dir(tmp_path),
+        Expectations(),
+        census=Census(records=()),
+        authorized_changes=(*drifted, SUCCESSOR_07),
+    )
+    directives = [d for d in report.directives if d.phase == "predecessors_patch"]
+    assert len(directives) == 1
+    successor_directive = directives[0]
+    # The anchor is the view-bytes pin, never the tampered live import.
+    assert successor_directive.anchor == b'"' + real[SUCCESSOR_07].encode() + b'"'
+    assert successor_directive.anchor != b'"' + (b"f" * 64) + b'"'
+    assert _sha(_out_bytes(_out_dir(tmp_path), SUCCESSOR_07)).encode() in (
+        successor_directive.replacement
+    )
+
+
+def test_directive_projection_feeds_downstream_digest_phases(
+    tmp_path: Path,
+) -> None:
+    """Reviews/packet re-binds see the projected validator bytes (same round)."""
+    root = fixture_root(tmp_path)
+    drifted = ("tests/test_horizon_acceptance.py", "tests/test_numerical_witnesses.py")
+    for name in drifted:
+        drift_file(root / name)
+    drift_file(spec_path(root, SUCCESSOR_07), JSON_WHITESPACE_DRIFT)
+    out = _out_dir(tmp_path)
+    report = apply_refresh(
+        root / "specs",
+        root,
+        out,
+        Expectations(),
+        census=Census(records=()),
+        authorized_changes=(*drifted, SUCCESSOR_07),
+    )
+    projected: dict[str, bytes] = {}
+    for directive in report.directives:
+        chain = projected.get(directive.path)
+        if chain is None:
+            chain = (root / directive.path).read_bytes()
+        projected[directive.path] = byte_replace(
+            chain, directive.anchor, directive.replacement
+        )
+    horizon_projected = projected[HORIZON_ACCEPTANCE_MODULE]
+    live = (root / HORIZON_ACCEPTANCE_MODULE).read_bytes()
+    assert live != horizon_projected
+    # Reviews and the packet bind the projected digest; diagnostics stays
+    # live-plane-bound per the settled non-goal.
+    for relative in REVIEW_FILES:
+        record = json.loads(_out_bytes(out, relative))
+        assert record["source_sha256"][HORIZON_ACCEPTANCE_MODULE] == _sha(
+            horizon_projected
+        )
+    packet = json.loads(_out_bytes(out, TERMINAL_PACKET))
+    assert packet["current_sources"][HORIZON_ACCEPTANCE_MODULE] == _sha(
+        horizon_projected
+    )
+    assert report.projections[HORIZON_ACCEPTANCE_MODULE] == horizon_projected
+
+
+def test_apply_report_projections_are_the_chained_directives(tmp_path: Path) -> None:
+    root = fixture_root(tmp_path)
+    probe = PROBE_08
+    _mutate_probe(root / "specs")
+    out = _out_dir(tmp_path)
+    report = apply_refresh(
+        root / "specs",
+        root,
+        out,
+        Expectations(),
+        census=Census(records=()),
+        authorized_changes=(probe, *AUTHORIZED_RECAPTURE),
+    )
+    chained: dict[str, bytes] = {}
+    for directive in report.directives:
+        base = chained.get(directive.path)
+        if base is None:
+            base = (root / directive.path).read_bytes()
+        chained[directive.path] = byte_replace(
+            base, directive.anchor, directive.replacement
+        )
+    assert report.projections == chained
+    # The h2_r0 projection is visible to the same walk's successor re-bind:
+    # the staged successor receipt binds the projected support-module digest.
+    successor = json.loads(_out_bytes(out, SUCCESSOR_07))
+    assert successor["source_sha256"][H2_R0_CUSTODY] == _sha(chained[H2_R0_CUSTODY])

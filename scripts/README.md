@@ -288,3 +288,25 @@ exit as a failed render, and commit the receipt only from a run that exited 0,
 together with the source change that required it; the Python job's committed-receipt gate then passes. The receipt
 is render evidence only: it says nothing about Lean compilation, native
 verification, or full Hermes/OpenGauss execution.
+
+## Custody evidence commands
+
+The custody machinery adapter is `uv run fep-lean custody
+<census|apply|refresh>`:
+
+```bash
+uv run fep-lean custody census
+uv run fep-lean custody apply --output-dir <dir>
+uv run fep-lean custody refresh [--plan | --fixpoint | --resume <journal-dir>] \
+  --reason "<why>"
+```
+
+`census` is a read-only drift report. `apply` is staged-only and requires
+`--output-dir`; it performs no repo-side writes. `refresh` composes the
+guarded loop; journals land under
+`output/custody-journal/<operation-id>/journal.json` (`--journal-dir`
+overrides). Focused suites for in-lane work:
+`tests/test_custody_refresh.py tests/test_custody_apply.py`.
+
+Focused gates run in-lane; the coordinator owns commit/push/bridge-seal and
+the full gate battery.
