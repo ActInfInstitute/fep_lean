@@ -30,6 +30,17 @@ explicit extra hypothesis.
 | `weightedCurrent_div_eq` | the three-term graph expansion of `div(p ⊙ Q ⊙ g)/p` |
 | `witness_current` | the 2-node candidate current `Q g = (0, −1)` |
 | `witness_drop_fails` | the unconditional solenoidal drop is FALSE: node divergence `1 ≠ 0` at node `0` |
+| `frobeniusInner` / `frobeniusSq` | the Frobenius quadratic form on plain real matrices |
+| `frobeniusInner_skew_symmetric` | a skew matrix is Frobenius-orthogonal to a symmetric matrix |
+| `fep167_frobenius_pythagoras` | exact Frobenius Pythagoras split across the symmetrization residual (fep-167) |
+| `fep167_symmetrize_minimizes` | minimality of `symmetrize H` among symmetric matrices, equality exactly at the symmetrizer (fep-167) |
+| `fep167_projection_unique` | uniqueness of the symmetric Frobenius least-squares minimizer (fep-167) |
+| `fep167_residual_example` | concrete nonsymmetric datum with nonzero residual `1/2` (fep-167) |
+| `dot_sq_le_sq_mul_sq` | squared Cauchy–Schwarz for the plain dot product |
+| `fep168_weightedDivergence_eq_remainderDot` | under the cancellation hypotheses the weighted divergence is exactly `dot (divQ DQ) g` (fep-168) |
+| `fep168_remainder_sq_budget` | squared Cauchy–Schwarz budget `(weightedDivergence …)² ≤ (∑ rᵢ²)(∑ gᵢ²)` (fep-168) |
+| `fep168_absolute_budget` | the same budget over `abs` products (fep-168) |
+| `fep168_equality_attained` | the budget is attained with equality on aligned nonzero data (fep-168) |
 
 ## Scope discipline
 
@@ -55,6 +66,24 @@ explicit extra hypothesis.
   `(1, −1)`).  The drop holds only under an explicit extra hypothesis.
 * Carriers stay finite and every hypothesis is explicit.  No new
   axioms, no proof placeholders, no `native_decide`.
+* Frobenius plane (fep-167): the metric/optimality layer over fep-162's
+  algebraic symmetrization.  The projection is *constructed*
+  (`symmetrize`), minimality is *proved* with the equality boundary, and
+  uniqueness among symmetric candidates is *proved*.  No differentiability,
+  no continuum Clairaut theorem, no Bregman-projection existence or
+  uniqueness claim.  fep-105 (the affine Bregman law) is a different
+  plane: vector carrier, generic Bregman divergence, *assumed*
+  `AffineBregmanProjection` predicate whose row explicitly withholds
+  projection uniqueness — nothing here aliases or generalizes it.
+* Remainder-budget plane (fep-168): quantitative norm control of the
+  uncancelled remainder on the fep-163 carrier.  The hypothesis
+  `dot (mulVec Q g) dlogp = 0` is sufficient, not necessary
+  (`weightedDivergence − dot (divQ DQ) g = dot (mulVec Q g) dlogp`
+  identically; `dlogp = −g` is the canonical sufficient instance via the
+  skew quadratic form).  The budget is stated squared (no square roots,
+  no `noncomputable`).  The aligned equality witness introduces a new
+  datum; the pinned `remainderG = (1, 1)` is deliberately not repinned
+  (it is not aligned: bound `2`, value `1` — strict).
 * This file is standalone: it is not wired into the generated
   `fep_all.lean`; the catalogue wire-up (topic rows, family, body file,
   formal-resource roster entry, aggregate hoist) is the coordinator's
@@ -445,5 +474,150 @@ theorem witness_drop_fails : nodeDiv (currentOf witnessQ witnessG) 0 = 1 := by
   norm_num
 
 end NecessityWitness
+
+/-! ## The Frobenius least-squares projection (fep-167)
+
+Metric/optimality extension of the fep-162 symmetrization: the carrier
+is the plain-matrix type `Fin n → Fin n → ℝ` with the Frobenius
+quadratic form `frobeniusSq X = ∑ i, ∑ j, X i j * X i j`.  For symmetric
+`S`, `H − S = (H − symmetrize H) + (symmetrize H − S)` splits into the
+skew residual and a symmetric residual, whose Frobenius cross term
+vanishes — the exact Pythagoras split, minimality with the equality
+boundary, and uniqueness of the minimizer follow. -/
+
+section FrobeniusProjection
+
+variable {n : ℕ}
+
+/-- Frobenius inner product of plain real matrices indexed by `Fin n`. -/
+def frobeniusInner (X Y : Fin n → Fin n → ℝ) : ℝ := ∑ i, ∑ j, X i j * Y i j
+
+/-- Squared Frobenius form of a plain real matrix. -/
+def frobeniusSq (X : Fin n → Fin n → ℝ) : ℝ := frobeniusInner X X
+
+/-- A skew matrix is Frobenius-orthogonal to a symmetric matrix: the
+finite form of the continuum fact that antisymmetric and symmetric
+parts are orthogonal. -/
+theorem frobeniusInner_skew_symmetric (A B : Fin n → Fin n → ℝ)
+    (hA : SkewSymmetric A) (hB : SymmetricOf B) : frobeniusInner A B = 0 := by
+  have key : frobeniusInner A B = ∑ i, ∑ j, A i j * B i j := rfl
+  have negated : frobeniusInner A B = -frobeniusInner A B := by
+    calc frobeniusInner A B
+        = ∑ i, ∑ j, A i j * B i j := key
+      _ = ∑ i, ∑ j, A j i * B j i := sum_swapPairs
+      _ = ∑ i, ∑ j, -(A i j * B i j) := by
+            refine Finset.sum_congr rfl fun i _ => ?_
+            exact Finset.sum_congr rfl fun j _ => by rw [hA j i, hB i j]; ring
+      _ = -∑ i, ∑ j, A i j * B i j := sum_negPairs
+      _ = -frobeniusInner A B := by rw [key]
+  linarith
+
+/-- The raw-minus-symmetrized residual `H - symmetrize H` is
+skew-symmetric: symmetrization removes exactly the symmetric part. -/
+theorem sub_symmetrize_skew (H : Fin n → Fin n → ℝ) : SkewSymmetric (H - symmetrize H) := by
+  intro i j
+  show H i j - symmetrize H i j = -(H j i - symmetrize H j i)
+  simp only [symmetrize]
+  ring
+
+/-- The difference of two symmetric matrices is symmetric. -/
+theorem sub_symmetric {A B : Fin n → Fin n → ℝ}
+    (hA : SymmetricOf A) (hB : SymmetricOf B) : SymmetricOf (A - B) := by
+  intro i j
+  show A i j - B i j = A j i - B j i
+  rw [hA i j, hB i j]
+
+/-- Expansion of the squared Frobenius form of a pointwise sum: the
+cross term is exactly `2 * frobeniusInner A B`. -/
+theorem frobeniusSq_add (A B : Fin n → Fin n → ℝ) :
+    frobeniusSq (A + B) = frobeniusSq A + frobeniusSq B + 2 * frobeniusInner A B := by
+  have point : ∀ i j : Fin n, (A i j + B i j) * (A i j + B i j)
+      = A i j * A i j + B i j * B i j + 2 * (A i j * B i j) := fun i j => by ring
+  simp only [frobeniusSq, frobeniusInner, Pi.add_apply]
+  rw [Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => point i j]
+  simp only [Finset.sum_add_distrib, Finset.mul_sum]
+
+/-- A matrix whose squared Frobenius form vanishes is the zero matrix:
+the form is a sum of squares. -/
+theorem frobeniusSq_eq_zero {X : Fin n → Fin n → ℝ} (h : frobeniusSq X = 0) : X = 0 := by
+  funext i j
+  have h0 : ∑ i, ∑ j, X i j * X i j = 0 := h
+  have hout : ∀ k : Fin n, ∑ j, X k j * X k j = 0 := fun k =>
+    (Finset.sum_eq_zero_iff_of_nonneg
+      (fun k _ => Finset.sum_nonneg fun j _ => mul_self_nonneg (X k j))).mp h0 k
+      (Finset.mem_univ k)
+  exact mul_self_eq_zero.mp
+    ((Finset.sum_eq_zero_iff_of_nonneg fun j (_ : j ∈ Finset.univ) =>
+      mul_self_nonneg (X i j)).mp (hout i) j (Finset.mem_univ j))
+
+/-- **fep-167 (exact Frobenius Pythagoras).**  For symmetric `S` the
+squared Frobenius norm splits exactly across the symmetrization residual
+and the projection residual:
+`‖H − S‖²_F = ‖H − symmetrize H‖²_F + ‖symmetrize H − S‖²_F`. -/
+theorem fep167_frobenius_pythagoras (H S : Fin n → Fin n → ℝ) (hS : SymmetricOf S) :
+    frobeniusSq (H - S)
+      = frobeniusSq (H - symmetrize H) + frobeniusSq (symmetrize H - S) := by
+  have hsplit : H - S = (H - symmetrize H) + (symmetrize H - S) := by
+    funext i j
+    simp only [Pi.add_apply, Pi.sub_apply]
+    ring
+  rw [hsplit, frobeniusSq_add,
+    frobeniusInner_skew_symmetric (H - symmetrize H) (symmetrize H - S)
+      (sub_symmetrize_skew H) (sub_symmetric (symmetrize_symmetric H) hS)]
+  ring
+
+/-- **fep-167 (minimality with the equality boundary).**  `symmetrize H`
+is the Frobenius least-squares approximation of `H` among symmetric
+matrices: `‖H − symmetrize H‖²_F ≤ ‖H − S‖²_F` for every symmetric `S`,
+with equality exactly at `S = symmetrize H`. -/
+theorem fep167_symmetrize_minimizes (H S : Fin n → Fin n → ℝ) (hS : SymmetricOf S) :
+    frobeniusSq (H - symmetrize H) ≤ frobeniusSq (H - S)
+      ∧ (frobeniusSq (H - symmetrize H) = frobeniusSq (H - S) ↔ S = symmetrize H) := by
+  have hp := fep167_frobenius_pythagoras H S hS
+  have hnn : 0 ≤ frobeniusSq (symmetrize H - S) := by
+    simp only [frobeniusSq, frobeniusInner]
+    exact Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => mul_self_nonneg _
+  refine ⟨?_, ?_⟩
+  · linarith
+  · constructor
+    · intro hEq
+      have hsum : frobeniusSq (symmetrize H - S) = 0 := by linarith
+      exact (sub_eq_zero.mp (frobeniusSq_eq_zero hsum)).symm
+    · intro hS'
+      rw [hS']
+
+/-- **fep-167 (uniqueness).**  Among symmetric matrices the Frobenius
+least-squares minimizer of `H` is unique: any symmetric `S` attaining
+the minimal squared distance coincides with `symmetrize H`. -/
+theorem fep167_projection_unique (H S : Fin n → Fin n → ℝ) (hS : SymmetricOf S)
+    (hmin : ∀ T : Fin n → Fin n → ℝ, SymmetricOf T →
+      frobeniusSq (H - S) ≤ frobeniusSq (H - T)) :
+    S = symmetrize H := by
+  have hle : frobeniusSq (H - S) ≤ frobeniusSq (H - symmetrize H) :=
+    hmin (symmetrize H) (symmetrize_symmetric H)
+  have hge : frobeniusSq (H - symmetrize H) ≤ frobeniusSq (H - S) :=
+    (fep167_symmetrize_minimizes H S hS).1
+  exact ((fep167_symmetrize_minimizes H S hS).2).mp (le_antisymm hge hle)
+
+/-- The residual-example datum: the nonsymmetric two-direction matrix
+`[[0, 1], [0, 0]]`. -/
+def fep167ResidualH : Fin 2 → Fin 2 → ℝ :=
+  fun i j => if i = 0 ∧ j = 1 then 1 else 0
+
+/-- **fep-167 (residual example).**  The nonsymmetric datum
+`fep167ResidualH = [[0, 1], [0, 0]]` has symmetrizer
+`[[0, 1/2], [1/2, 0]]`, so the squared Frobenius residual of the
+projection is `1/2 ≠ 0`: the residual genuinely does not vanish on
+nonsymmetric data. -/
+theorem fep167_residual_example :
+    frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) = 1 / 2
+      ∧ frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) ≠ 0 := by
+  have hval : frobeniusSq (fep167ResidualH - symmetrize fep167ResidualH) = 1 / 2 := by
+    simp only [frobeniusSq, frobeniusInner, Pi.sub_apply, fep167ResidualH, symmetrize,
+      Fin.sum_univ_two]
+    norm_num
+  exact ⟨hval, by rw [hval]; norm_num⟩
+
+end FrobeniusProjection
 
 end FEP.GeometricMechanics
