@@ -161,6 +161,7 @@ def setup_checkout(tmp_path: Path, monkeypatch) -> Path:
         "with (root / 'calls.jsonl').open('a') as f: f.write(json.dumps(args) + '\\n')\n"
         "config = root / 'behavior.json'\n"
         "behavior = json.loads(config.read_text()) if config.exists() else {}\n"
+        "if behavior.get('require_helper'): subprocess.run(['setup-toolchain-helper'], check=True)\n"
         "if args == behavior.get('drift_at'):\n"
         "    path = root / behavior.get('drift_file', 'lake-manifest.json')\n"
         "    path.write_text(path.read_text() + ' ')\n"
@@ -331,10 +332,14 @@ def test_setup_bootstraps_when_lake_is_unavailable(
         "target = Path(os.environ['ELAN_HOME']) / 'toolchains' / sys.argv[3].replace('/', '--').replace(':', '---') / 'bin'\n"
         "target.mkdir(parents=True)\n"
         f"shutil.copy2({str(root / 'lake')!r}, target / 'lake')\n"
+        "helper = target / 'setup-toolchain-helper'\n"
+        "helper.write_text('#!/bin/sh\\nexit 0\\n')\n"
+        "helper.chmod(0o755)\n"
     )
     elan.chmod(0o755)
     monkeypatch.setattr(cli, "find_executable", lambda *_args: None)
     monkeypatch.setenv("FEP_LEAN_ELAN_EXE", str(elan))
+    _setup_behavior(root, require_helper=True)
     assert cli._setup(root) == 0
     assert _setup_calls(root)[-1] == ["--wfail", "build", "FepSketches"]
 

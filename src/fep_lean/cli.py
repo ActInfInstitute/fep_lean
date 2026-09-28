@@ -169,6 +169,9 @@ def _setup(root: Path) -> int:
                 / "bin"
             )
             lake = str(toolchain_bin / "lake")
+        # Newly acquired toolchains must be visible to nested cache processes,
+        # including Cache.IO's `lean --print-prefix` lookup.
+        env["PATH"] = str(Path(lake).parent) + os.pathsep + env.get("PATH", "")
         lake_version = run([lake, "--version"]).stdout
         if f"(Lean version {pinned_lean_semver(toolchain)})" not in lake_version:
             raise ValueError(
