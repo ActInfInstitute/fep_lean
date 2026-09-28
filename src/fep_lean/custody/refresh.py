@@ -15,9 +15,14 @@ dependency-safe order and adds nothing new:
    byte-equality probe, the custody test suites, the formalism audit
    receipt, and the pin audit.
 5. The pre-capture owner gate: :func:`fep_lean.output.provenance.report_owner_errors`
-   must return zero errors before any native capture runs.
-6. Optionally, the native Lean capture — refused away from a committed clean
-   tip, because the receipt binds live source bytes.
+   must return zero errors and the tip must be committed-clean before any
+   native capture runs.
+6. Optionally, the native Lean capture — fail-closed on every boundary: the
+   subprocess exit code, post-capture rechecks (dirty tree, moved HEAD,
+   owner drift), receipt presence, and an independent
+   :func:`fep_lean.output.evidence.validate_native_lean_receipt` binding of
+   the receipt to the live tree. A refresh report with a captured ``native``
+   dict therefore implies a claim-ready receipt.
 
 The known post-apply bridge cascade (source_binding FAILED naming an
 authorized owner, freshness STALE) is reported as a warning with the
@@ -44,6 +49,7 @@ from fep_lean.custody.apply import (
 from fep_lean.custody.census import census as census_from_tree
 from fep_lean.custody.verify import GATE_EXPECTATIONS
 from fep_lean.custody.verify import verify as verify_gate
+from fep_lean.output.evidence import validate_native_lean_receipt
 from fep_lean.output.provenance import report_owner_errors
 
 #: Receipt path for the optional native capture (cwd-relative convention).
@@ -58,7 +64,7 @@ CUSTODY_TEST_FILES = (
 
 
 class RefreshRefused(RuntimeError):
-    """A stop-gate, verify-set, or pre-capture check refused the refresh."""
+    """A stop-gate, verify-set, or native-capture boundary refused the refresh."""
 
 
 @dataclass(frozen=True)
@@ -170,7 +176,13 @@ def refresh(
     *,
     run_native: bool = False,
 ) -> RefreshReport:
-    """Compose census → stop-gate → apply → verify set → optional native capture."""
+    """Compose census → stop-gate → apply → verify set → optional native capture.
+
+    The native tail is fail-closed: a nonzero capture exit, post-capture
+    dirty/HEAD/owner drift, a missing receipt, or a receipt that is not
+    claim-ready raises :class:`RefreshRefused`; no partial success is
+    reported.
+    """
     if not reason.strip():
         raise RefreshRefused("a non-empty --reason is required for the audit trail")
     if not specs_dir.is_dir():
@@ -261,6 +273,7 @@ def refresh(
                 "native capture requires a committed clean tip; dirty: "
                 + ", ".join(dirty)
             )
+        head_before = _git_head(root)
         native = _run(
             "uv",
             "run",
@@ -271,6 +284,48 @@ def refresh(
             NATIVE_RECEIPT,
             root=root,
         )
+        if native["exit_code"] != 0:
+            raise RefreshRefused(
+                f"native capture failed (exit {native['exit_code']}): "
+                + native["tail"][:400]
+            )
+        dirty = _git_dirty(root)
+        if dirty:
+            raise RefreshRefused(
+                "tree drifted during native capture: " + ", ".join(dirty[:5])
+            )
+        head_now = _git_head(root)
+        if head_now != head_before:
+            raise RefreshRefused(
+                f"HEAD moved during native capture: {head_before} -> {head_now}"
+            )
+        owner_errors = report_owner_errors(root)
+        if owner_errors:
+            raise RefreshRefused(
+                "owner drift during native capture: " + "; ".join(owner_errors)
+            )
+        receipt_path = root / NATIVE_RECEIPT
+        if not receipt_path.is_file():
+            raise RefreshRefused(
+                f"native receipt missing after capture: {receipt_path}"
+            )
+        validation = validate_native_lean_receipt(receipt_path, project_root=root)
+        if not validation["native_claim_ready"]:
+            raise RefreshRefused(
+                "native receipt is not claim-ready: "
+                + "; ".join(validation["errors"])[:400]
+            )
+        native = {
+            "command": native["command"],
+            "exit_code": 0,
+            "receipt": NATIVE_RECEIPT,
+            "validation": {
+                "claim_ready": True,
+                "source_bound": validation["source_bound"],
+                "live_catalogue_topics": validation["live_catalogue_topics"],
+                "errors": [],
+            },
+        }
     return RefreshReport(
         reason=reason,
         authorized=authorized,
@@ -309,3 +364,17 @@ def _git_dirty(root: Path) -> list[str]:
     if result.returncode != 0:
         return [f"git status failed: {result.stderr.strip()[:200]}"]
     return result.stdout.splitlines()
+
+
+def _git_head(root: Path) -> str:
+    """The committed HEAD sha; the capture must observe one unmoved tip."""
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=str(root),
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return f"git rev-parse failed: {result.stderr.strip()[:200]}"
+    return result.stdout.strip()

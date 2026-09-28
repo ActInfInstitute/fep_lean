@@ -6,7 +6,9 @@
 apply, the read-only verify set, the pre-capture owner gate, and the
 optional native capture in one sanctioned command. Exit codes follow the
 CLI contract: 0 when the requested report composed, the apply landed, or
-the refresh completed, 1 when a gate or a fail-closed check refused.
+the refresh completed (which now implies a claim-ready native capture
+whenever ``--native`` was requested), 1 when a gate or a fail-closed
+check refused.
 Imports stay lazy so parser assembly stays cheap.
 """
 
@@ -103,7 +105,20 @@ def _census_report(specs_dir: Path, root: Path) -> dict[str, Any]:
 
 
 def _refresh_payload(report: Any) -> dict[str, Any]:
-    """Serialize one refresh report under the CLI's JSON output convention."""
+    """Serialize one refresh report under the CLI's JSON output convention.
+
+    ``native_status`` is a derived taxonomy: ``not_requested`` when no
+    capture was asked for, ``captured_claim_ready`` when the capture ran
+    and its receipt validated against the live tree. Capture failures
+    never reach this payload — they raise :class:`RefreshRefused` and the
+    CLI reports exit 1 instead.
+    """
+    validation = report.native.get("validation") if report.native else None
+    native_status = (
+        "captured_claim_ready"
+        if validation and validation["claim_ready"]
+        else "not_requested"
+    )
     return {
         "status": "ok",
         "operation": "refresh",
@@ -125,6 +140,7 @@ def _refresh_payload(report: Any) -> dict[str, Any]:
         "verify_set": report.verify_set,
         "warnings": list(report.warnings),
         "native": report.native,
+        "native_status": native_status,
     }
 
 

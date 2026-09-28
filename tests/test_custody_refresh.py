@@ -14,10 +14,12 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
+from fep_lean.catalogue.topics import FEPTopicCatalogue
 from fep_lean.cli import build_parser, main
 from fep_lean.custody import refresh as refresh_module
 from fep_lean.custody.model import INTACT, LIVE_RED, Census, CensusRecord
@@ -27,6 +29,12 @@ from fep_lean.custody.refresh import (
     _bridge_warning,
     refresh,
 )
+from fep_lean.output.evidence import (
+    build_native_lean_receipt,
+    validate_native_lean_receipt,
+    write_native_lean_receipt,
+)
+from fep_lean.verification._toolchain import pinned_lean_semver
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 VERIFY_SET_KEYS = frozenset(
@@ -232,7 +240,9 @@ def test_refresh_native_refused_on_dirty_tip(
 
 
 def test_refresh_native_runs_the_sealed_capture_command(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    claim_ready_receipt: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     calls: list[list[str]] = []
 
@@ -244,6 +254,7 @@ def test_refresh_native_runs_the_sealed_capture_command(
     monkeypatch.setattr(refresh_module, "_run", fake_run)
     monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
     monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
     report = refresh(
         _stage_specs(tmp_path),
         REPO_ROOT,
@@ -261,6 +272,179 @@ def test_refresh_native_runs_the_sealed_capture_command(
         NATIVE_RECEIPT,
     ]
     assert report.native["exit_code"] == 0
+    assert report.native["receipt"] == NATIVE_RECEIPT
+    assert report.native["validation"]["claim_ready"] is True
+    assert report.native["validation"]["source_bound"] is True
+    assert report.native["validation"]["errors"] == []
+
+
+def test_refresh_native_command_failure_refused(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    calls: list[list[str]] = []
+
+    def fake_run(*command: str, root: Path) -> dict[str, object]:
+        calls.append(list(command))
+        if command[2:4] == ("fep-lean", "verify"):
+            return {"command": list(command), "exit_code": 1, "tail": "boom"}
+        return _ok_run(*command, root=root)
+
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", fake_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    with pytest.raises(RefreshRefused, match="native capture failed") as exc:
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
+    assert "exit 1" in str(exc.value)
+    assert "boom" in str(exc.value)
+    # The CLI surfaces the same refusal as a JSON error with exit 1.
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--specs-dir",
+            str(_stage_specs(tmp_path / "cli")),
+            "--output-dir",
+            str(tmp_path / "cli-out"),
+            "--reason",
+            "capture-fail",
+            "--native",
+        ],
+    )
+    assert exit_code == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "error"
+    assert "native capture failed" in payload["error"]
+
+
+def test_refresh_native_missing_receipt_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    receipt = REPO_ROOT / NATIVE_RECEIPT
+    backup = _receipt_state(receipt)
+    if backup is not None:
+        receipt.unlink()
+    try:
+        _all_clear_census(monkeypatch)
+        monkeypatch.setattr(refresh_module, "_run", _ok_run)
+        monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+        monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+        monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+        with pytest.raises(RefreshRefused, match="native receipt missing") as exc:
+            refresh(
+                _stage_specs(tmp_path),
+                REPO_ROOT,
+                _out_dir(tmp_path),
+                reason="r",
+                run_native=True,
+            )
+        assert str(REPO_ROOT / NATIVE_RECEIPT) in str(exc.value)
+    finally:
+        _restore_receipt(receipt, backup)
+
+
+def test_refresh_native_stale_receipt_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    receipt = REPO_ROOT / NATIVE_RECEIPT
+    backup = _receipt_state(receipt)
+    try:
+        _all_clear_census(monkeypatch)
+        monkeypatch.setattr(refresh_module, "_run", _ok_run)
+        monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+        monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+        monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+        receipt.parent.mkdir(parents=True, exist_ok=True)
+        receipt.write_text("{}", encoding="utf-8")
+        with pytest.raises(RefreshRefused, match="not claim-ready"):
+            refresh(
+                _stage_specs(tmp_path),
+                REPO_ROOT,
+                _out_dir(tmp_path),
+                reason="r",
+                run_native=True,
+            )
+    finally:
+        _restore_receipt(receipt, backup)
+
+
+def test_refresh_native_owner_drift_during_capture_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner_calls: list[int] = []
+
+    def fake_owner_errors(root: Path) -> tuple[str, ...]:
+        owner_calls.append(1)
+        return () if len(owner_calls) == 1 else ("owner x drifted",)
+
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", fake_owner_errors)
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+    with pytest.raises(RefreshRefused, match="owner drift during native capture"):
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
+
+
+def test_refresh_native_head_moved_during_capture_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    head_calls: list[int] = []
+
+    def fake_head(root: Path) -> str:
+        head_calls.append(1)
+        return "head-before" if len(head_calls) == 1 else "head-after"
+
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", fake_head)
+    with pytest.raises(RefreshRefused, match="HEAD moved during native capture"):
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
+
+
+def test_refresh_native_tree_drift_during_capture_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    dirty_calls: list[int] = []
+
+    def fake_dirty(root: Path) -> list[str]:
+        dirty_calls.append(1)
+        return [] if len(dirty_calls) == 1 else [" M src/x.py"]
+
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", fake_dirty)
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+    with pytest.raises(RefreshRefused, match="tree drifted during native capture"):
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -358,6 +542,54 @@ def test_cli_refresh_gate_refusal_names_the_surface_and_writes_nothing(
     assert _sha(live_receipt.read_bytes()) == live_before
 
 
+def test_cli_refresh_payload_native_status(
+    claim_ready_receipt: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """The payload taxonomy separates no-capture from claim-ready capture."""
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+    specs_dir = _stage_specs(tmp_path)
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--specs-dir",
+            str(specs_dir),
+            "--output-dir",
+            str(_out_dir(tmp_path)),
+            "--reason",
+            "fixture",
+            "--native",
+        ],
+    )
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "ok"
+    assert payload["native_status"] == "captured_claim_ready"
+    assert payload["native"]["validation"]["claim_ready"] is True
+
+    exit_code = main_with_root(
+        tmp_path,
+        [
+            "--specs-dir",
+            str(specs_dir),
+            "--output-dir",
+            str(tmp_path / "output-no-native"),
+            "--reason",
+            "fixture",
+        ],
+    )
+    assert exit_code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["native_status"] == "not_requested"
+    assert payload["native"] == {}
+
+
 # ---------------------------------------------------------------------------
 # Helpers.
 # ---------------------------------------------------------------------------
@@ -366,3 +598,67 @@ def test_cli_refresh_gate_refusal_names_the_surface_and_writes_nothing(
 def main_with_root(tmp_path: Path, extra: list[str]) -> int:
     """Run the CLI with the project root pinned to this checkout."""
     return main(["--project-root", str(REPO_ROOT), "custody", "refresh", *extra])
+
+
+def _receipt_state(receipt: Path) -> bytes | None:
+    """Snapshot prior receipt bytes so tests can restore them on teardown."""
+    return receipt.read_bytes() if receipt.exists() else None
+
+
+def _restore_receipt(receipt: Path, backup: bytes | None) -> None:
+    """Restore the pre-test receipt bytes, or remove the file we created."""
+    if backup is None:
+        receipt.unlink(missing_ok=True)
+    else:
+        receipt.write_bytes(backup)
+
+
+def _claim_ready_payload() -> dict[str, object]:
+    """Build a claim-ready native receipt payload from the live tree.
+
+    Rows are synthetic (every topic compiles clean) but the digests, roster,
+    and toolchain identity are recomputed from the live tree, so validation
+    through the real validator exercises the full live binding.
+    """
+    pin = pinned_lean_semver(
+        (REPO_ROOT / "lean" / "lean-toolchain").read_text().strip()
+    )
+    assert pin is not None, "lean-toolchain pin must be a canonical semver"
+    version = f"Lean (version {pin}, fixture-toolchain, commit 000000000000)"
+    catalogue = FEPTopicCatalogue.from_yaml(REPO_ROOT / "config" / "topics.yaml")
+    live_topic_ids = [topic.id for topic in catalogue.topics]
+    rows = [
+        {
+            "topic_id": topic_id,
+            "compiles": True,
+            "has_sorry": False,
+            "sorry_occurrences": 0,
+            "warnings": [],
+            "errors": [],
+            "duration_s": 0.5,
+            "lean_version": version,
+        }
+        for topic_id in live_topic_ids
+    ]
+    return build_native_lean_receipt(REPO_ROOT, live_topic_ids, rows)
+
+
+@pytest.fixture()
+def claim_ready_receipt() -> Iterator[Path]:
+    """A real claim-ready native receipt at the live path; bytes restored.
+
+    The fixture revalidates the receipt through the real validator so a
+    toolchain-pin or roster bump fails loudly with the validator's errors,
+    never as a silent test drift.
+    """
+    receipt = REPO_ROOT / NATIVE_RECEIPT
+    backup = _receipt_state(receipt)
+    write_native_lean_receipt(receipt, _claim_ready_payload())
+    validation = validate_native_lean_receipt(receipt, project_root=REPO_ROOT)
+    assert validation["native_claim_ready"], (
+        "claim-ready receipt fixture drifted: " + "; ".join(validation["errors"])
+    )
+    try:
+        yield receipt
+    finally:
+        _restore_receipt(receipt, backup)
