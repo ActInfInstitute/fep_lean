@@ -158,3 +158,25 @@ uv run python scripts/build_release_bundle.py --check --output dist/fep-lean.tar
 
 Do not invoke repository-root modules or set a monorepo-specific `PYTHONPATH`;
 each wrapper resolves this checkout's `src/` directory directly.
+
+## Custody evidence commands
+
+The custody machinery adapter is `uv run fep-lean custody
+<census|apply|refresh>`:
+
+```bash
+uv run fep-lean custody census
+uv run fep-lean custody apply --output-dir <dir>
+uv run fep-lean custody refresh [--plan | --fixpoint | --resume <journal-dir>] \
+  --reason "<why>"
+```
+
+`census` is a read-only drift report. `apply` is staged-only and requires
+`--output-dir`; it performs no repo-side writes. `refresh` composes the
+guarded loop; journals land under
+`output/custody-journal/<operation-id>/journal.json` (`--journal-dir`
+overrides). Focused suites for in-lane work:
+`tests/test_custody_refresh.py tests/test_custody_apply.py`.
+
+Focused gates run in-lane; the coordinator owns commit/push/bridge-seal and
+the full gate battery.
