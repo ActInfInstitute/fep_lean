@@ -11,6 +11,9 @@ Record, as reviewable data, the notation-level correspondence between
 fep_lean's maintained theorem proxies (the reviewed invariant rows of
 `config/theorem_maturity.yaml`) and the implemented Active Inference surface
 of GEO-INFER-ACT (`src/geo_infer_act/` in the sibling GEO-INFER checkout).
+Rows may also anchor GEO-INFER-MATH constructs — ratified 2026-09-28
+(wave-5 lane-verify): the `GEO-INFER-MATH/src/geo_infer_math/`
+information-geometry and Bayesian model-selection symbols.
 The mapping states correspondence of symbols and constructs between the two
 repositories; it does not translate proofs, run code, or compare numbers.
 
