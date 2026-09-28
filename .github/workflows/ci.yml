@@ -120,6 +120,16 @@ jobs:
       - name: Install the SVG rasterizer
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends librsvg2-bin
       - run: uv sync --locked --extra dev
+      - name: Generate the catalogue publication inputs
+        run: |
+          # The catalogue figures (status_distribution.png, topics_by_area.png
+          # and their seven siblings under output/figures/) are written by
+          # write_all_catalogue_figures during `fep-lean catalogue`, and
+          # scripts/build_manuscript_figures.py deliberately leaves them to
+          # it. Without this step the render-figures artifact ships without
+          # the roster pair and the lean job's serial renderer test fails
+          # closed on "manuscript asset roster sources are missing".
+          uv run fep-lean catalogue
       - name: Generate the publication figure assets
         run: |
           # Same roster the render lane previously generated inline: the
@@ -128,6 +138,32 @@ jobs:
           uv run python scripts/build_formalism_atlas.py
           uv run python scripts/build_formal_kernel_dashboard.py
           uv run python scripts/build_manuscript_figures.py
+      - name: Verify the manuscript asset roster before upload
+        run: |
+          # Reuses the canonical roster (MANUSCRIPT_ASSETS, exactly what
+          # render_manuscript fails closed on) instead of a hand-copied list:
+          # an artifact containing some files is not proof of full coverage.
+          uv run python - <<'PY'
+          from pathlib import Path
+
+          from fep_lean.output.rendering import MANUSCRIPT_ASSETS
+
+          root = Path.cwd()
+          missing = [
+              str(source)
+              for source, _destination in MANUSCRIPT_ASSETS.values()
+              if not (root / source).is_file()
+          ]
+          if missing:
+              print("manuscript asset roster sources are missing:")
+              print("\n".join(missing))
+              raise SystemExit(1)
+          print(
+              "render-figures inventory complete: all"
+              f" {len(MANUSCRIPT_ASSETS)} manuscript asset roster sources"
+              " present"
+          )
+          PY
       - name: Upload the publication figure assets
         uses: actions/upload-artifact@v7
         with:
