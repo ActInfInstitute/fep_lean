@@ -80,10 +80,14 @@ uv run python scripts/render_publication.py --accept-only
 ```
 
 `check_render_log.py` is that acceptance on its own. A run that finds nothing
-writes `docs/render-acceptance.json`; `--verify-receipt` re-reads it and is
-what CI runs, because CI does not render this document -- that needs a checkout
-of the shared template, XeLaTeX, pandoc, `rsvg-convert`, the mermaid CLI and
-the two faces the preamble selects:
+writes `docs/render-acceptance.json`; `--verify-receipt` re-reads it. CI runs
+that verification with two different meanings: the Python job verifies the
+committed receipt against the checkout's sources, while the separate render
+job (FEP-CI-RENDER) renders end-to-end at the pinned template ref and verifies
+the fresh receipt it wrote in the same run -- a receipt CI cannot commit back.
+A render needs a checkout of the shared template, XeLaTeX, pandoc,
+`rsvg-convert`, the mermaid CLI and the two faces the preamble selects, so
+read [the local render runbook](#local-render-runbook) before paying for one:
 
 ```bash
 uv run python scripts/check_render_log.py --receipt docs/render-acceptance.json
@@ -158,3 +162,129 @@ uv run python scripts/build_release_bundle.py --check --output dist/fep-lean.tar
 
 Do not invoke repository-root modules or set a monorepo-specific `PYTHONPATH`;
 each wrapper resolves this checkout's `src/` directory directly.
+
+## Local render runbook
+
+A local `check_render_log.py --verify-receipt` failure has two causes with very
+different costs: a generated input that this checkout has not built yet, or a
+manuscript source that changed since the committed render was accepted. The
+checker already tells them apart. Prepare the inputs, read its diagnosis, and
+render only when the diagnosis requires it. Rendering stays source-bound and
+fail-closed; nothing below writes a receipt without a real accepted render.
+
+### 1. Prepare the generated inputs
+
+```bash
+uv sync --locked --extra dev
+uv run fep-lean catalogue
+uv run fep-lean atlas --check
+uv run fep-lean dashboard --check
+uv run python scripts/build_manuscript_figures.py
+uv run python scripts/build_manuscript_figures.py --check
+uv run python scripts/build_render_fonts.py --check
+```
+
+`fep-lean catalogue` writes the generated appendix
+`manuscript/09z_unified_formalism_catalogue.md`, the typed-variable projection
+`manuscript/manuscript_vars.yaml`, and the catalogue figures under
+`output/figures/`. All three are gitignored local build products, so a new
+worktree has none of them. The atlas and dashboard projections are committed,
+so they only need `--check`; if that fails, the regeneration is a tracked
+change that belongs in its own commit. The figure pass must write before it
+checks because `output/` is gitignored, and the font check reads the generated
+appendix, so it is only decidable after the catalogue. None of these steps is
+Lean, native, or render evidence.
+
+Only then check the committed receipt:
+
+```bash
+uv run python scripts/check_render_log.py --verify-receipt
+```
+
+`tests/test_render_publication.py::test_the_committed_receipt_covers_the_committed_manuscript`
+calls the same checker directly and does not prepare inputs, so on an
+unprepared checkout it fails for the same reason. Prepare the checkout; do not
+skip or deselect the test.
+
+### 2. Read the diagnosis
+
+**Class (a): generated appendix missing or regenerated.** On a checkout where
+the catalogue has not run, the checker prints both lines (paths shortened):
+
+```text
+FAIL: docs/render-acceptance.json: covers manuscript sources '<recorded>' but this checkout is '<live>'; the shipped render predates these sources -- regenerate the build product with `uv run fep-lean catalogue`; changed since that render: 09z_unified_formalism_catalogue.md (generated appendix)
+FAIL: docs/render-acceptance.json: generated appendix 09z_unified_formalism_catalogue.md is missing under <checkout>/manuscript; the acceptance digest covers the generated appendix, so run `uv run fep-lean catalogue` first
+```
+
+Remedy: run `uv run fep-lean catalogue`, then `--verify-receipt` again. When the
+catalogue inputs have not changed since the accepted render, the regenerated
+appendix reproduces the accepted bytes and the check passes with no render.
+Generation does not always clear it: if the first line persists, still naming
+only `09z_unified_formalism_catalogue.md (generated appendix)`, the catalogue
+itself changed since the accepted render, and only a real render (step 3)
+re-accepts it.
+
+**Class (b): authored source changed.** Any name without the
+`(generated appendix)` label -- a chapter or `preamble.md` -- is maintained
+manuscript text the committed render predates:
+
+```text
+FAIL: docs/render-acceptance.json: covers manuscript sources '<recorded>' but this checkout is '<live>'; the shipped render predates these sources -- re-run scripts/render_publication.py; changed since that render: 00_front_matter.md
+```
+
+When both classes are present, an extra line names the generated appendix and
+asks for `uv run fep-lean catalogue`; run it, but the authored change still
+needs a render. Regeneration never clears class (b): the receipt stays rejected
+until `render_publication.py` completes a real, accepted render and rewrites
+it. Do not edit the receipt's digests by hand; `render_publication.py
+--accept-only` only re-accepts the artifacts already in `output/pdf/` and is
+not a substitute for rendering the changed sources.
+
+### 3. Render and accept
+
+Prerequisites, all matching CI's render job in `.github/workflows/ci.yml`:
+
+- A claim-ready native receipt for the current sources at
+  `output/native-verification.json`
+  (`uv run fep-lean verify --fail-on-warnings --receipt output/native-verification.json`).
+  Without it the hydration step exits 1 with "native verification receipt is
+  absent or not claim-ready". `render_manuscript.py
+  --allow-unavailable-evidence` is for intentionally dry runs only;
+  `render_publication.py` does not pass it.
+- The pinned Mathlib checkout (`cd lean && lake exe cache get`): the hydration
+  step's identifier audit fails closed with "the pinned Mathlib checkout is
+  absent" otherwise.
+- A checkout of `docxology/template` at the `ref:` pinned in the workflow's
+  "Check out the shared rendering template at its pinned ref" step, with this
+  checkout registered as its active project. Use an isolated template
+  checkout; do not re-point the `projects/active/fep_lean` symlink of a shared
+  template checkout that another checkout depends on.
+- XeLaTeX, pandoc, `rsvg-convert`, the mermaid CLI and the two preamble faces
+  at the versions the workflow installs; `build_render_fonts.py --probe`
+  confirms the faces cover the manuscript.
+
+The template path must name the directory that itself contains
+`scripts/pipeline/stage_03_render.py`, not a parent of it. In a docxology
+monorepo layout that is `repos/public/template`, not the docxology root.
+Passing the parent fails immediately with `ERROR: no rendering template
+holding scripts/pipeline/stage_03_render.py was found; tried <path>`, and the
+project symlink belongs under the same directory:
+
+```bash
+template="$(mktemp -d)/template"
+git clone https://github.com/docxology/template "$template"
+git -C "$template" checkout <ref pinned in .github/workflows/ci.yml>
+mkdir -p "$template/projects/active"
+ln -s "$PWD" "$template/projects/active/fep_lean"
+FEP_LEAN_TEMPLATE_DIR="$template" uv run python scripts/render_publication.py
+uv run python scripts/build_render_fonts.py --check
+uv run python scripts/check_render_log.py --verify-receipt
+```
+
+`render_publication.py` exits 0 only when the template's render stage and this
+repository's acceptance both pass; the acceptance writes
+`docs/render-acceptance.json` only when it finds nothing. Treat any nonzero
+exit as a failed render, and commit the receipt only from a run that exited 0,
+together with the source change that required it; the Python job's committed-receipt gate then passes. The receipt
+is render evidence only: it says nothing about Lean compilation, native
+verification, or full Hermes/OpenGauss execution.
