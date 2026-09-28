@@ -13730,9 +13730,9 @@ topics:
     '
   assumption_review: Positivity of the finite law is the only analytic input and licenses the divisions; no stationarity hypothesis,
     no generator contract, and no nonnegativity claim for the circulation part enter the statements.
-  non_vacuity: The t-0060 datum W = [[1, 5/2], [3/4, -1]] with p = (1/3, 2/3) satisfies every constraint clause, its split
-    is forced to be the canonical one, and the circulation entries 1/2 and -1/4 are computed exactly, so the uniqueness characterization
-    is exercised on nontrivial data.
+  non_vacuity: The t-0060 datum with weight law p = (1/3, 2/3) and rate entries 1, 5/2, 3/4, and -1 satisfies every constraint
+    clause, its split is forced to be the canonical one, and the circulation entries 1/2 and -1/4 are computed exactly, so
+    the uniqueness characterization is exercised on nontrivial data.
   acceptance_probe: warning-free native Lean compile of all seven fep-166 declarations.
   lean_sketch: "import FepSketches.law_weighted_split\n\nnamespace FEP166\n\nopen FEP.LawWeightedSplit FEP.HelmholtzAoNess\
     \ FEP\n\nvariable {State : Type*} [Fintype State] {rate S A : State → State → ℝ}\n  {law : FiniteLaw State}\n\n/-- **Competing-pair\
@@ -13855,8 +13855,8 @@ topics:
   semantic_disposition: formalized
   nl: 'For symmetric S the squared Frobenius norm splits exactly as ||H - S||^2 = ||H - symmetrize H||^2 + ||symmetrize H
     - S||^2, the symmetrizer minimizes the squared distance among symmetric matrices with equality exactly at the symmetrizer,
-    the symmetric minimizer is unique, and the concrete nonsymmetric datum [[0, 1], [0, 0]] carries residual exactly 1/2.
-    Assumption scope: Matrix projection only, no differentiability, no continuum Clairaut theorem, no Bregman-projection existence/uniqueness
+    the symmetric minimizer is unique, and the concrete nonsymmetric datum [[0,1],[0,0]] carries residual exactly 1/2. Assumption
+    scope: Matrix projection only, no differentiability, no continuum Clairaut theorem, no Bregman-projection existence/uniqueness
     claim. Semantic disposition: `formalized`.
 
     '
@@ -13945,7 +13945,7 @@ topics:
     '
   assumption_review: Quantitative budget on the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary
     (slot = dot(Qg, dlogp)); no PDE-discretization or entropy-production claim.
-  non_vacuity: The aligned datum Q = [[0, 1], [-1, 0]], H = diag(1, 2), DQ with divQ (1, 0), and g = (1, 0) attains the budget
+  non_vacuity: The aligned datum Q = [[0,1],[-1,0]], H = diag(1, 2), DQ with divQ (1, 0), and g = (1, 0) attains the budget
     with equality, while the pinned remainderG = (1, 1) datum is strict with gap 1, so both the equality and the strict boundary
     are realized.
   acceptance_probe: warning-free native Lean compile of all four fep-168 declarations.
