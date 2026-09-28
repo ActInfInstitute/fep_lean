@@ -16,428 +16,434 @@
   },
   "gate": "H2.7-R0-custody",
   "manifest_transition": {
-    "prior_sha256": "9ac7bb2e188f23681c6992db4214a5113fbf821bf731f74a2dab2df22c0f0405",
-    "current_sha256": "331525440d812dd9ffcc253649096ae85a718a1c0df278715978591e78981aa2",
     "added_modules": [
       {
-        "resource": "gnn_document.lean",
+        "declaration_namespace": "FEP.GnnDocument",
         "lean_module": "FepSketches.gnn_document",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GnnDocument"
+        "resource": "gnn_document.lean",
+        "role": "foundation"
       },
       {
-        "resource": "gnn_denotation.lean",
+        "declaration_namespace": "FEP.GnnDenotation",
         "lean_module": "FepSketches.gnn_denotation",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GnnDenotation"
+        "resource": "gnn_denotation.lean",
+        "role": "foundation"
       },
       {
-        "resource": "gnn_denotation_continuous.lean",
+        "declaration_namespace": "FEP.GnnContinuous",
         "lean_module": "FepSketches.gnn_denotation_continuous",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GnnContinuous"
+        "resource": "gnn_denotation_continuous.lean",
+        "role": "foundation"
       },
       {
-        "resource": "gnn_render_statements.lean",
+        "declaration_namespace": "FEP.GnnRenderStatements",
         "lean_module": "FepSketches.gnn_render_statements",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GnnRenderStatements"
+        "resource": "gnn_render_statements.lean",
+        "role": "foundation"
       },
       {
-        "resource": "efe_policy_selection.lean",
+        "declaration_namespace": "FEP.EFEPolicy",
         "lean_module": "FepSketches.efe_policy_selection",
-        "role": "foundation",
-        "declaration_namespace": "FEP.EFEPolicy"
+        "resource": "efe_policy_selection.lean",
+        "role": "foundation"
       },
       {
-        "resource": "perception_action_loop.lean",
+        "declaration_namespace": "FEP.PerceptionActionLoop",
         "lean_module": "FepSketches.perception_action_loop",
-        "role": "foundation",
-        "declaration_namespace": "FEP.PerceptionActionLoop"
+        "resource": "perception_action_loop.lean",
+        "role": "foundation"
       },
       {
-        "resource": "bayesian_model_reduction.lean",
+        "declaration_namespace": "FEP.BayesianModelReduction",
         "lean_module": "FepSketches.bayesian_model_reduction",
-        "role": "foundation",
-        "declaration_namespace": "FEP.BayesianModelReduction"
+        "resource": "bayesian_model_reduction.lean",
+        "role": "foundation"
       },
       {
-        "resource": "efe_time_scale_separation.lean",
+        "declaration_namespace": "FEP.TimeScaleEFE",
         "lean_module": "FepSketches.efe_time_scale_separation",
-        "role": "foundation",
-        "declaration_namespace": "FEP.TimeScaleEFE"
+        "resource": "efe_time_scale_separation.lean",
+        "role": "foundation"
       },
       {
-        "resource": "compositions/efe_policy_selection.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.efe_policy_selection",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
+        "resource": "compositions/efe_policy_selection.lean",
+        "role": "composition"
       },
       {
-        "resource": "compositions/perception_action_loop.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.perception_action_loop",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
+        "resource": "compositions/perception_action_loop.lean",
+        "role": "composition"
       },
       {
-        "resource": "compositions/bayesian_model_reduction.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.bayesian_model_reduction",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
+        "resource": "compositions/bayesian_model_reduction.lean",
+        "role": "composition"
       },
       {
-        "resource": "compositions/efe_time_scale_separation.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.efe_time_scale_separation",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
+        "resource": "compositions/efe_time_scale_separation.lean",
+        "role": "composition"
       },
       {
-        "resource": "helmholtz_ao_ness.lean",
+        "declaration_namespace": "FEP.HelmholtzAoNess",
         "lean_module": "FepSketches.helmholtz_ao_ness",
-        "role": "foundation",
-        "declaration_namespace": "FEP.HelmholtzAoNess"
+        "resource": "helmholtz_ao_ness.lean",
+        "role": "foundation"
       },
       {
-        "resource": "geometric_mechanics.lean",
+        "declaration_namespace": "FEP.GeometricMechanics",
         "lean_module": "FepSketches.geometric_mechanics",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GeometricMechanics"
+        "resource": "geometric_mechanics.lean",
+        "role": "foundation"
       },
       {
-        "resource": "compositions/helmholtz_ao_ness.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.helmholtz_ao_ness",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
+        "resource": "compositions/helmholtz_ao_ness.lean",
+        "role": "composition"
       },
       {
-        "resource": "compositions/geometric_mechanics.lean",
+        "declaration_namespace": "FEPComposed",
         "lean_module": "FepSketches.compositions.geometric_mechanics",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      }
-    ],
-    "unchanged_owners": [
-      {
-        "resource": "finite_probability.lean",
-        "lean_module": "FepSketches.finite_probability",
-        "role": "foundation",
-        "declaration_namespace": "FEP"
+        "resource": "compositions/geometric_mechanics.lean",
+        "role": "composition"
       },
       {
-        "resource": "finite_information.lean",
-        "lean_module": "FepSketches.finite_information",
-        "role": "foundation",
-        "declaration_namespace": "FEP.FiniteInformation"
-      },
-      {
-        "resource": "active_inference.lean",
-        "lean_module": "FepSketches.active_inference",
-        "role": "foundation",
-        "declaration_namespace": "FEP.ActiveInference"
-      },
-      {
-        "resource": "markov_blanket.lean",
-        "lean_module": "FepSketches.markov_blanket",
-        "role": "foundation",
-        "declaration_namespace": "FEP.MarkovBlanket"
-      },
-      {
-        "resource": "information_geometry.lean",
-        "lean_module": "FepSketches.information_geometry",
-        "role": "foundation",
-        "declaration_namespace": "FEP.InformationGeometry"
-      },
-      {
-        "resource": "statistical_convergence.lean",
-        "lean_module": "FepSketches.statistical_convergence",
-        "role": "foundation",
-        "declaration_namespace": "FEP.StatisticalConvergence"
-      },
-      {
-        "resource": "measure_bayes.lean",
-        "lean_module": "FepSketches.measure_bayes",
-        "role": "foundation",
-        "declaration_namespace": "FEP.MeasureBayes"
-      },
-      {
-        "resource": "variational_duality.lean",
-        "lean_module": "FepSketches.variational_duality",
-        "role": "foundation",
-        "declaration_namespace": "FEP.VariationalDuality"
-      },
-      {
-        "resource": "controlled_markov.lean",
-        "lean_module": "FepSketches.controlled_markov",
-        "role": "foundation",
-        "declaration_namespace": "FEP.ControlledMarkov"
-      },
-      {
-        "resource": "temporal_inference.lean",
-        "lean_module": "FepSketches.temporal_inference",
-        "role": "foundation",
-        "declaration_namespace": "FEP.TemporalInference"
-      },
-      {
-        "resource": "finite_markov_dynamics.lean",
-        "lean_module": "FepSketches.finite_markov_dynamics",
-        "role": "foundation",
-        "declaration_namespace": "FEP.FiniteMarkovDynamics"
-      },
-      {
-        "resource": "causal_dynamics.lean",
-        "lean_module": "FepSketches.causal_dynamics",
-        "role": "foundation",
-        "declaration_namespace": "FEP.CausalDynamics"
-      },
-      {
-        "resource": "predictive_coding.lean",
-        "lean_module": "FepSketches.predictive_coding",
-        "role": "foundation",
-        "declaration_namespace": "FEP.PredictiveCoding"
-      },
-      {
-        "resource": "ness_flow.lean",
-        "lean_module": "FepSketches.ness_flow",
-        "role": "foundation",
-        "declaration_namespace": "FEP.NessFlow"
-      },
-      {
-        "resource": "path_thermodynamics.lean",
-        "lean_module": "FepSketches.path_thermodynamics",
-        "role": "foundation",
-        "declaration_namespace": "FEP.PathThermodynamics"
-      },
-      {
-        "resource": "geometric_optimization.lean",
-        "lean_module": "FepSketches.geometric_optimization",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GeometricOptimization"
-      },
-      {
-        "resource": "collective_inference.lean",
-        "lean_module": "FepSketches.collective_inference",
-        "role": "foundation",
-        "declaration_namespace": "FEP.CollectiveInference"
-      },
-      {
-        "resource": "learning_theory.lean",
-        "lean_module": "FepSketches.learning_theory",
-        "role": "foundation",
-        "declaration_namespace": "FEP.LearningTheory"
-      },
-      {
-        "resource": "empirical_risk.lean",
-        "lean_module": "FepSketches.empirical_risk",
-        "role": "foundation",
-        "declaration_namespace": "FEP.EmpiricalRisk"
-      },
-      {
-        "resource": "policy_tree.lean",
-        "lean_module": "FepSketches.policy_tree",
-        "role": "foundation",
-        "declaration_namespace": "FEP.PolicyTrees"
-      },
-      {
-        "resource": "native_blanket.lean",
-        "lean_module": "FepSketches.native_blanket",
-        "role": "foundation",
-        "declaration_namespace": "FEP.NativeBlanket"
-      },
-      {
-        "resource": "exponential_family.lean",
-        "lean_module": "FepSketches.exponential_family",
-        "role": "foundation",
-        "declaration_namespace": "FEP.ExponentialFamily"
-      },
-      {
-        "resource": "gaussian_information_geometry.lean",
-        "lean_module": "FepSketches.gaussian_information_geometry",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GaussianInformationGeometry"
-      },
-      {
-        "resource": "smooth_information_geometry.lean",
-        "lean_module": "FepSketches.smooth_information_geometry",
-        "role": "foundation",
-        "declaration_namespace": "FEP.SmoothInformationGeometry"
-      },
-      {
-        "resource": "continuous_time_markov.lean",
-        "lean_module": "FepSketches.continuous_time_markov",
-        "role": "foundation",
-        "declaration_namespace": "FEP.ContinuousTimeMarkov"
-      },
-      {
-        "resource": "markov_semigroup.lean",
-        "lean_module": "FepSketches.markov_semigroup",
-        "role": "foundation",
-        "declaration_namespace": "FEP.MarkovSemigroup"
-      },
-      {
-        "resource": "scalar_gaussian_semigroup.lean",
-        "lean_module": "FepSketches.scalar_gaussian_semigroup",
-        "role": "foundation",
-        "declaration_namespace": "FEP.ScalarGaussianSemigroup"
-      },
-      {
-        "resource": "linear_gaussian_semigroup.lean",
-        "lean_module": "FepSketches.linear_gaussian_semigroup",
-        "role": "foundation",
-        "declaration_namespace": "FEP.LinearGaussianSemigroup"
-      },
-      {
-        "resource": "fin4_gaussian_semigroup.lean",
-        "lean_module": "FepSketches.fin4_gaussian_semigroup",
-        "role": "foundation",
-        "declaration_namespace": "FEP.Fin4GaussianSemigroup"
-      },
-      {
-        "resource": "gaussian_precision_conditioning.lean",
-        "lean_module": "FepSketches.gaussian_precision_conditioning",
-        "role": "foundation",
-        "declaration_namespace": "FEP.GaussianPrecisionConditioning"
-      },
-      {
-        "resource": "decision_risk.lean",
-        "lean_module": "FepSketches.decision_risk",
-        "role": "foundation",
-        "declaration_namespace": "FEP.DecisionRisk"
-      },
-      {
-        "resource": "finite_posterior_learning.lean",
-        "lean_module": "FepSketches.finite_posterior_learning",
-        "role": "foundation",
-        "declaration_namespace": "FEP.FinitePosteriorLearning"
-      },
-      {
-        "resource": "posterior_convergence.lean",
-        "lean_module": "FepSketches.posterior_convergence",
-        "role": "foundation",
-        "declaration_namespace": "FEP.PosteriorConvergence"
-      },
-      {
-        "resource": "compositions/core.lean",
-        "lean_module": "FepSketches.compositions.core",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/measure_variational.lean",
-        "lean_module": "FepSketches.compositions.measure_variational",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/control_temporal.lean",
-        "lean_module": "FepSketches.compositions.control_temporal",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/causal_predictive.lean",
-        "lean_module": "FepSketches.compositions.causal_predictive",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/thermo_geometry.lean",
-        "lean_module": "FepSketches.compositions.thermo_geometry",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/collective_learning.lean",
-        "lean_module": "FepSketches.compositions.collective_learning",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/risk_calibration.lean",
-        "lean_module": "FepSketches.compositions.risk_calibration",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/policy_trees.lean",
-        "lean_module": "FepSketches.compositions.policy_trees",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/native_blanket_transfer.lean",
-        "lean_module": "FepSketches.compositions.native_blanket_transfer",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/exponential_family.lean",
-        "lean_module": "FepSketches.compositions.exponential_family",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/continuous_time.lean",
-        "lean_module": "FepSketches.compositions.continuous_time",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed"
-      },
-      {
-        "resource": "compositions/finite_scientific_implications.lean",
-        "lean_module": "FepSketches.compositions.finite_scientific_implications",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.FiniteScientificImplications"
-      },
-      {
-        "resource": "compositions/finite_policy_action.lean",
-        "lean_module": "FepSketches.compositions.finite_policy_action",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.FinitePolicyAction"
-      },
-      {
-        "resource": "compositions/finite_reference_agent.lean",
-        "lean_module": "FepSketches.compositions.finite_reference_agent",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.FiniteReferenceAgent"
-      },
-      {
-        "resource": "compositions/gaussian_filter.lean",
-        "lean_module": "FepSketches.compositions.gaussian_filter",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.GaussianFilter"
-      },
-      {
-        "resource": "compositions/gaussian_control.lean",
-        "lean_module": "FepSketches.compositions.gaussian_control",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.GaussianControl"
-      },
-      {
-        "resource": "compositions/gaussian_grid_path.lean",
-        "lean_module": "FepSketches.compositions.gaussian_grid_path",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.GaussianGridPath"
-      },
-      {
-        "resource": "compositions/smooth_reference_kernel.lean",
-        "lean_module": "FepSketches.compositions.smooth_reference_kernel",
-        "role": "composition",
-        "declaration_namespace": "FEPComposed.SmoothReferenceKernel"
-      },
-      {
-        "resource": "composed.lean",
-        "lean_module": "FepSketches.composed",
-        "role": "aggregate",
-        "declaration_namespace": null
+        "declaration_namespace": "FEP.LawWeightedSplit",
+        "lean_module": "FepSketches.law_weighted_split",
+        "resource": "law_weighted_split.lean",
+        "role": "foundation"
       }
     ],
     "code_consolidation": {
-      "commit": "849691ba41033d6f64d5ed16032438405f4036f0",
       "approved": "2026-09-24",
+      "commit": "849691ba41033d6f64d5ed16032438405f4036f0",
+      "derived_resources_block_sha256": "f874c1cf429a02e90d09cb7d76e83120696d68de5095ad7d2c1615072ab49505",
       "description": "code consolidation replaced the R0-era literal released-shared-declaration-namespace frozenset with a derived comprehension below the FORMAL_MODULES roster; semantics preserved",
       "restored_declaration": "_RELEASED_SHARED_DECLARATION_NAMESPACE_RESOURCES",
-      "restored_literal_block_sha256": "59c8cd0f46614cf7cd2aeae1eb02839132b3e38b070b60371eeb63dc2ce4e55c",
-      "derived_resources_block_sha256": "f874c1cf429a02e90d09cb7d76e83120696d68de5095ad7d2c1615072ab49505"
-    }
+      "restored_literal_block_sha256": "59c8cd0f46614cf7cd2aeae1eb02839132b3e38b070b60371eeb63dc2ce4e55c"
+    },
+    "current_sha256": "467f801ba54386ddfb7a58348263d03dec4cc5dd9ad3d759b5db1b635710a751",
+    "prior_sha256": "9ac7bb2e188f23681c6992db4214a5113fbf821bf731f74a2dab2df22c0f0405",
+    "unchanged_owners": [
+      {
+        "declaration_namespace": "FEP",
+        "lean_module": "FepSketches.finite_probability",
+        "resource": "finite_probability.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.FiniteInformation",
+        "lean_module": "FepSketches.finite_information",
+        "resource": "finite_information.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.ActiveInference",
+        "lean_module": "FepSketches.active_inference",
+        "resource": "active_inference.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.MarkovBlanket",
+        "lean_module": "FepSketches.markov_blanket",
+        "resource": "markov_blanket.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.InformationGeometry",
+        "lean_module": "FepSketches.information_geometry",
+        "resource": "information_geometry.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.StatisticalConvergence",
+        "lean_module": "FepSketches.statistical_convergence",
+        "resource": "statistical_convergence.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.MeasureBayes",
+        "lean_module": "FepSketches.measure_bayes",
+        "resource": "measure_bayes.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.VariationalDuality",
+        "lean_module": "FepSketches.variational_duality",
+        "resource": "variational_duality.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.ControlledMarkov",
+        "lean_module": "FepSketches.controlled_markov",
+        "resource": "controlled_markov.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.TemporalInference",
+        "lean_module": "FepSketches.temporal_inference",
+        "resource": "temporal_inference.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.FiniteMarkovDynamics",
+        "lean_module": "FepSketches.finite_markov_dynamics",
+        "resource": "finite_markov_dynamics.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.CausalDynamics",
+        "lean_module": "FepSketches.causal_dynamics",
+        "resource": "causal_dynamics.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.PredictiveCoding",
+        "lean_module": "FepSketches.predictive_coding",
+        "resource": "predictive_coding.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.NessFlow",
+        "lean_module": "FepSketches.ness_flow",
+        "resource": "ness_flow.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.PathThermodynamics",
+        "lean_module": "FepSketches.path_thermodynamics",
+        "resource": "path_thermodynamics.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.GeometricOptimization",
+        "lean_module": "FepSketches.geometric_optimization",
+        "resource": "geometric_optimization.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.CollectiveInference",
+        "lean_module": "FepSketches.collective_inference",
+        "resource": "collective_inference.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.LearningTheory",
+        "lean_module": "FepSketches.learning_theory",
+        "resource": "learning_theory.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.EmpiricalRisk",
+        "lean_module": "FepSketches.empirical_risk",
+        "resource": "empirical_risk.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.PolicyTrees",
+        "lean_module": "FepSketches.policy_tree",
+        "resource": "policy_tree.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.NativeBlanket",
+        "lean_module": "FepSketches.native_blanket",
+        "resource": "native_blanket.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.ExponentialFamily",
+        "lean_module": "FepSketches.exponential_family",
+        "resource": "exponential_family.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.GaussianInformationGeometry",
+        "lean_module": "FepSketches.gaussian_information_geometry",
+        "resource": "gaussian_information_geometry.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.SmoothInformationGeometry",
+        "lean_module": "FepSketches.smooth_information_geometry",
+        "resource": "smooth_information_geometry.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.ContinuousTimeMarkov",
+        "lean_module": "FepSketches.continuous_time_markov",
+        "resource": "continuous_time_markov.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.MarkovSemigroup",
+        "lean_module": "FepSketches.markov_semigroup",
+        "resource": "markov_semigroup.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.ScalarGaussianSemigroup",
+        "lean_module": "FepSketches.scalar_gaussian_semigroup",
+        "resource": "scalar_gaussian_semigroup.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.LinearGaussianSemigroup",
+        "lean_module": "FepSketches.linear_gaussian_semigroup",
+        "resource": "linear_gaussian_semigroup.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.Fin4GaussianSemigroup",
+        "lean_module": "FepSketches.fin4_gaussian_semigroup",
+        "resource": "fin4_gaussian_semigroup.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.GaussianPrecisionConditioning",
+        "lean_module": "FepSketches.gaussian_precision_conditioning",
+        "resource": "gaussian_precision_conditioning.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.DecisionRisk",
+        "lean_module": "FepSketches.decision_risk",
+        "resource": "decision_risk.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.FinitePosteriorLearning",
+        "lean_module": "FepSketches.finite_posterior_learning",
+        "resource": "finite_posterior_learning.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEP.PosteriorConvergence",
+        "lean_module": "FepSketches.posterior_convergence",
+        "resource": "posterior_convergence.lean",
+        "role": "foundation"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.core",
+        "resource": "compositions/core.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.measure_variational",
+        "resource": "compositions/measure_variational.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.control_temporal",
+        "resource": "compositions/control_temporal.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.causal_predictive",
+        "resource": "compositions/causal_predictive.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.thermo_geometry",
+        "resource": "compositions/thermo_geometry.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.collective_learning",
+        "resource": "compositions/collective_learning.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.risk_calibration",
+        "resource": "compositions/risk_calibration.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.policy_trees",
+        "resource": "compositions/policy_trees.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.native_blanket_transfer",
+        "resource": "compositions/native_blanket_transfer.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.exponential_family",
+        "resource": "compositions/exponential_family.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed",
+        "lean_module": "FepSketches.compositions.continuous_time",
+        "resource": "compositions/continuous_time.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.FiniteScientificImplications",
+        "lean_module": "FepSketches.compositions.finite_scientific_implications",
+        "resource": "compositions/finite_scientific_implications.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.FinitePolicyAction",
+        "lean_module": "FepSketches.compositions.finite_policy_action",
+        "resource": "compositions/finite_policy_action.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.FiniteReferenceAgent",
+        "lean_module": "FepSketches.compositions.finite_reference_agent",
+        "resource": "compositions/finite_reference_agent.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.GaussianFilter",
+        "lean_module": "FepSketches.compositions.gaussian_filter",
+        "resource": "compositions/gaussian_filter.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.GaussianControl",
+        "lean_module": "FepSketches.compositions.gaussian_control",
+        "resource": "compositions/gaussian_control.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.GaussianGridPath",
+        "lean_module": "FepSketches.compositions.gaussian_grid_path",
+        "resource": "compositions/gaussian_grid_path.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": "FEPComposed.SmoothReferenceKernel",
+        "lean_module": "FepSketches.compositions.smooth_reference_kernel",
+        "resource": "compositions/smooth_reference_kernel.lean",
+        "role": "composition"
+      },
+      {
+        "declaration_namespace": null,
+        "lean_module": "FepSketches.composed",
+        "resource": "composed.lean",
+        "role": "aggregate"
+      }
+    ]
   },
   "native_evidence": {
     "historical_evidence_reused": false,
@@ -459,9 +465,9 @@
           "specs/done/horizon-2-smooth-stochastic/spikes/07_gaussian_vfe_natural_gradient.lean": "40a7bfd1e00f593c1bdab0f2872e8abbc140e68de61253508f1e32b1eed464c5",
           "src/fep_lean/formal/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
           "src/fep_lean/formal/gaussian_information_geometry.lean": "cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c",
-          "src/fep_lean/formal/manifest.py": "331525440d812dd9ffcc253649096ae85a718a1c0df278715978591e78981aa2",
+          "src/fep_lean/formal/manifest.py": "467f801ba54386ddfb7a58348263d03dec4cc5dd9ad3d759b5db1b635710a751",
           "src/fep_lean/formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
-          "tests/_support/h2_r0_custody.py": "9c3776144bb457e76639a36642c8a1a557a78358a9c5572701b2d512bf93aa7a",
+          "tests/_support/h2_r0_custody.py": "5c9452c8f9120ba0ae53adf19e35f1929701281a3891d2ef0cd1b1bd9523aabb",
           "tests/test_horizon2_gaussian_vfe_readiness.py": "aa16b3d8ec518152476540f47bb4b93a30e2f6ada07723fe6841269d0e2abb2e",
           "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
         }
@@ -483,9 +489,9 @@
           "specs/done/horizon-2-smooth-stochastic/spikes/07_gaussian_vfe_natural_gradient.lean": "40a7bfd1e00f593c1bdab0f2872e8abbc140e68de61253508f1e32b1eed464c5",
           "src/fep_lean/formal/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
           "src/fep_lean/formal/gaussian_information_geometry.lean": "cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c",
-          "src/fep_lean/formal/manifest.py": "331525440d812dd9ffcc253649096ae85a718a1c0df278715978591e78981aa2",
+          "src/fep_lean/formal/manifest.py": "467f801ba54386ddfb7a58348263d03dec4cc5dd9ad3d759b5db1b635710a751",
           "src/fep_lean/formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
-          "tests/_support/h2_r0_custody.py": "9c3776144bb457e76639a36642c8a1a557a78358a9c5572701b2d512bf93aa7a",
+          "tests/_support/h2_r0_custody.py": "5c9452c8f9120ba0ae53adf19e35f1929701281a3891d2ef0cd1b1bd9523aabb",
           "tests/test_horizon2_gaussian_vfe_readiness.py": "aa16b3d8ec518152476540f47bb4b93a30e2f6ada07723fe6841269d0e2abb2e",
           "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
         }
@@ -507,9 +513,9 @@
           "specs/done/horizon-2-smooth-stochastic/spikes/07_gaussian_vfe_natural_gradient.lean": "40a7bfd1e00f593c1bdab0f2872e8abbc140e68de61253508f1e32b1eed464c5",
           "src/fep_lean/formal/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
           "src/fep_lean/formal/gaussian_information_geometry.lean": "cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c",
-          "src/fep_lean/formal/manifest.py": "331525440d812dd9ffcc253649096ae85a718a1c0df278715978591e78981aa2",
+          "src/fep_lean/formal/manifest.py": "467f801ba54386ddfb7a58348263d03dec4cc5dd9ad3d759b5db1b635710a751",
           "src/fep_lean/formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
-          "tests/_support/h2_r0_custody.py": "9c3776144bb457e76639a36642c8a1a557a78358a9c5572701b2d512bf93aa7a",
+          "tests/_support/h2_r0_custody.py": "5c9452c8f9120ba0ae53adf19e35f1929701281a3891d2ef0cd1b1bd9523aabb",
           "tests/test_horizon2_gaussian_vfe_readiness.py": "aa16b3d8ec518152476540f47bb4b93a30e2f6ada07723fe6841269d0e2abb2e",
           "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
         }
@@ -536,9 +542,9 @@
     "specs/done/horizon-2-smooth-stochastic/spikes/07_gaussian_vfe_natural_gradient.lean": "40a7bfd1e00f593c1bdab0f2872e8abbc140e68de61253508f1e32b1eed464c5",
     "src/fep_lean/formal/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
     "src/fep_lean/formal/gaussian_information_geometry.lean": "cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c",
-    "src/fep_lean/formal/manifest.py": "331525440d812dd9ffcc253649096ae85a718a1c0df278715978591e78981aa2",
+    "src/fep_lean/formal/manifest.py": "467f801ba54386ddfb7a58348263d03dec4cc5dd9ad3d759b5db1b635710a751",
     "src/fep_lean/formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
-    "tests/_support/h2_r0_custody.py": "9c3776144bb457e76639a36642c8a1a557a78358a9c5572701b2d512bf93aa7a",
+    "tests/_support/h2_r0_custody.py": "5c9452c8f9120ba0ae53adf19e35f1929701281a3891d2ef0cd1b1bd9523aabb",
     "tests/test_horizon2_gaussian_vfe_readiness.py": "aa16b3d8ec518152476540f47bb4b93a30e2f6ada07723fe6841269d0e2abb2e",
     "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
   }

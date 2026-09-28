@@ -130,6 +130,18 @@ WAVE4_COMPOSITION_ADDED_MODULES = (
         "FEPComposed",
     ),
 )
+# Wave-4b expansion (commit 4b8427e wiring: catalogue topics fep-166..168): the standalone-efe foundation module
+# law_weighted_split joined the FORMAL_MODULES roster AFTER the R0 seal. The insertion is a pure
+# contiguous 1-block addition (verified byte-exact); the reconstruction removes it before the gnn
+# strip and the W4 swap, so the sealed R0 digest still binds the historical owners while the
+# approved roster growth is explicit.
+WAVE4B_FOUNDATION_ADDED_MODULES = (
+    (
+        "law_weighted_split.lean",
+        "FepSketches.law_weighted_split",
+        "FEP.LawWeightedSplit",
+    ),
+)
 # W4 code consolidation (commit 849691ba41033d6f64d5ed16032438405f4036f0)
 # replaced the R0-era literal released-shared-namespace frozenset with a
 # derived comprehension moved below the FORMAL_MODULES roster; semantics are
@@ -331,6 +343,12 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
     stripped_wave4 = stripped_wave3.replace(wave4_compositions, "", 1).replace(
         wave4_foundations, "", 1
     )
+    wave4b_foundations = _module_blocks(WAVE4B_FOUNDATION_ADDED_MODULES, "FOUNDATION")
+    _require(
+        manifest.count(wave4b_foundations) == 1,
+        "approved wave-4b roster additions missing, duplicated, or changed",
+    )
+    stripped_wave4b = stripped_wave4.replace(wave4b_foundations, "", 1)
     added = [
         {
             "resource": resource,
@@ -359,6 +377,10 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
                 (resource, module, namespace, "composition")
                 for resource, module, namespace in WAVE4_COMPOSITION_ADDED_MODULES
             ),
+            *(
+                (resource, module, namespace, "foundation")
+                for resource, module, namespace in WAVE4B_FOUNDATION_ADDED_MODULES
+            ),
         )
     ]
     blocks = [
@@ -371,15 +393,15 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
         for resource, module, namespace in ADDED_MODULES
     ]
     _require(
-        all(stripped_wave4.count(block) == 1 for block in blocks),
+        all(stripped_wave4b.count(block) == 1 for block in blocks),
         "approved added owners missing, duplicated, or changed",
     )
     additions = "".join(blocks)
     _require(
-        stripped_wave4.count(additions) == 1,
+        stripped_wave4b.count(additions) == 1,
         "approved additions must retain order",
     )
-    stripped_manifest = stripped_wave4.replace(additions, "", 1)
+    stripped_manifest = stripped_wave4b.replace(additions, "", 1)
     _require(
         stripped_manifest.count(_W4_DERIVED_RESOURCES_BLOCK) == 1,
         "approved W4 code consolidation record missing, duplicated, or changed",
