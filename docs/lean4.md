@@ -29,6 +29,86 @@ lake build
 lake build FepSketches
 ```
 
+## Lock-preserving setup
+
+From a checkout synchronized with `uv sync --locked --extra dev`, use
+`uv run --locked fep-lean setup` or
+`bash scripts/_maint_bootstrap_lean_toolchain.sh`. Both use the same bounded
+implementation. It validates the toolchain, Mathlib tag, and committed
+manifest before acquisition, and checks that the pin triple and `uv.lock`
+remain byte-identical after each subprocess. An explicit Lake executable
+must report the pinned compiler version. Without Lake, setup uses elan to
+install exactly the checkout's toolchain; set `FEP_LEAN_ELAN_EXE` if elan is
+not on PATH. `ELAN_HOME` may point to a new empty directory. Set
+`XDG_CACHE_HOME` or `MATHLIB_CACHE_DIR` to isolate downloaded cache artifacts
+as well; setup forwards these locations to its acquisition subprocesses.
+
+The underlying acquisition sequence is:
+
+```bash
+elan toolchain install "$(cat lean/lean-toolchain)"
+cd lean
+lake exe cache get
+lake build FepSketches
+```
+
+Pinned Lake reads existing manifest revisions for these commands. It has no
+uv-style `--locked` option. The guarded setup entry points are preferred over
+running the commands by hand: Lake can generate a missing manifest, so setup
+rejects missing/corrupt pins before Lake runs. It never invokes `lake update`
+or ignores a failed cache acquisition. The setup deadline covers installation,
+cache acquisition, and build together; timeout kills the subprocess group.
+A cache failure is a failure, not authorization for an unbudgeted source build.
+
+On a pin error, inspect `git diff -- lean/lean-toolchain lean/lakefile.lean
+lean/lake-manifest.json uv.lock`. Preserve intentional edits, then restore
+these files together from the intended reviewed commit and rerun setup. Do
+not repair ordinary setup with `lake update`. If a consistent reviewed pin
+set still fails, retain the command log and diagnose the acquisition/toolchain
+failure before changing dependencies. Setup reports unexpected pin drift
+and stops; it does not overwrite user changes to hide drift.
+
+### Repeatability check
+
+In a clean disposable checkout after `uv sync --locked --extra dev`, isolate
+the toolchain and artifact cache, then compare SHA-256 hashes across both
+entry points. Elan must already be installed as described above.
+
+```bash
+export ELAN_HOME="$(mktemp -d)"
+export XDG_CACHE_HOME="$(mktemp -d)"
+uv run --locked python - <<'PYTHON'
+import hashlib
+from pathlib import Path
+import subprocess
+
+pins = ["lean/lean-toolchain", "lean/lakefile.lean", "lean/lake-manifest.json", "uv.lock"]
+def hashes():
+    return {name: hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in pins}
+
+before = hashes()
+print("before:", before, flush=True)
+for command in (["uv", "run", "--locked", "fep-lean", "setup"],
+                ["bash", "scripts/_maint_bootstrap_lean_toolchain.sh"]):
+    subprocess.run(command, check=True)
+    after = hashes()
+    print("after:", after, flush=True)
+    assert after == before, "setup changed a checked-in pin"
+subprocess.run(["git", "diff", "--exit-code", "--", *pins], check=True)
+PYTHON
+uv run --locked fep-lean verify --topic fep-001 --fail-on-warnings
+(cd lean && lake env lean --version && git -C .lake/packages/mathlib rev-parse HEAD)
+```
+
+Retain the command output and elapsed times as separate Linux and macOS
+receipts. A platform result covers the tested architecture and filesystem;
+for container acceptance, use a native container filesystem for the checkout,
+ELAN_HOME, and cache to avoid shared-filesystem file-handle limits during
+parallel Lean compilation. One platform's result does not establish the
+other's. This smoke does not replace full native receipt validation.
+
+## Deliberate toolchain upgrades
+
 When a newer compatible stable pair appears, update both canonical pins, run
 `lake update` and the Mathlib cache acquisition, migrate every warning or
 compiler error in canonical sources, and regenerate the native and formalism
