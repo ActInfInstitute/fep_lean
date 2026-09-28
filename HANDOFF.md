@@ -245,14 +245,19 @@ One residue case is expected local behavior, not a defect. The committed
 receipt `docs/render-acceptance.json` binds the generated
 `manuscript/09z_unified_formalism_catalogue.md` (`.gitignore:58`). CI's
 render lane validates a fresh receipt in-run but cannot commit it back, so
-the committed receipt ages against local state: any local catalogue
-regeneration re-stales it, and a status run that reports
+the committed receipt ages against local state. A status run that reports
 `render_receipt_freshness: stale` naming ONLY
-`09z_unified_formalism_catalogue.md` is confirming that the shipped render
-predates the current generated catalogue -- the gitignored build product, not
-the maintained manuscript. Expected remediation is a full render acceptance
-run before publication, per the reproduction commands; while the residue is
-local-only it blocks nothing else.
+`09z_unified_formalism_catalogue.md` means the local generated appendix -- the
+gitignored build product, not the maintained manuscript -- is absent or
+differs from the bytes the shipped render accepted. A new worktree always
+starts in the absent state. Run `uv run fep-lean catalogue` first: when the
+catalogue inputs are unchanged since the accepted render, regeneration
+reproduces the accepted bytes and clears the residue without a render. Only
+when it persists after regeneration has the catalogue itself moved, and a full
+render acceptance run is required before publication; while the residue is
+local-only it blocks nothing else. The
+[local render runbook](scripts/README.md#local-render-runbook) gives the
+preparation, both checker diagnoses, and the render prerequisites.
 
 A REAL defect looks different: stale findings naming committed manuscript
 sources (chapters, the preamble, or other tracked `manuscript/*.md` files)

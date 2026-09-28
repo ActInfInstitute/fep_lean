@@ -52,3 +52,10 @@ Lean dependencies. A failed full run returns a non-zero exit status and does
 not create a successful report. Full success requires every selected result to
 compile with no `sorry` and no warnings; `review` additionally requires its
 prose-review stage to finish.
+
+To publish the manuscript, or to diagnose a local
+`check_render_log.py --verify-receipt` failure without paying for an
+unnecessary render, follow the
+[local render runbook](../scripts/README.md#local-render-runbook): it
+separates missing generated inputs from real manuscript-source drift and lists
+the render prerequisites.
