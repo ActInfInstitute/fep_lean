@@ -31,12 +31,10 @@ predicates live in `fep_lean.output.render_log`, the requirement in
 `fep_lean.output.render_fonts`.
 
 A clean acceptance writes `docs/render-acceptance.json`, and CI runs
-`check_render_log.py --verify-receipt` against it. That indirection is not
-decoration: CI does not render this manuscript -- that needs a checkout of the
-shared template, XeLaTeX, pandoc, `rsvg-convert`, the mermaid CLI and the two
-faces `manuscript/preamble.md` selects -- so it cannot re-run the acceptance
-and would otherwise run nothing at all, which is exactly the audited state: a
-tested acceptance no workflow invoked.
+`check_render_log.py --verify-receipt` against it -- both after a real
+end-to-end render in the `render` job, and between renders on the committed
+receipt alone. The committed receipt is the gate that keeps a source change
+edited without a fresh render from merging.
 
 The receipt is bound to a digest over every typeset manuscript source plus
 `manuscript/preamble.md`, so a chapter or a font selection changed without a

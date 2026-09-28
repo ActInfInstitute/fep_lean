@@ -72,16 +72,10 @@ jobs:
       # -- 162 dropped glyphs, one false printed theorem, a diagram shipped as
       # its own source, chapters the render predated -- are all invisible to
       # the shared template's success test. `scripts/check_render_log.py` is
-      # the acceptance that catches them, but it reads a real render, and this
-      # workflow does not produce one: rendering needs a checkout of the shared
-      # template -- a separate repository this project does not pin -- plus
-      # XeLaTeX, pandoc, `rsvg-convert`, the mermaid CLI and the two faces
-      # `manuscript/preamble.md` selects. The audited alternative was to run
-      # nothing at all. So this step requires instead that the acceptance
-      # has run over exactly these sources: the receipt is written only by an
-      # acceptance that found nothing, and it names the digest of the
-      # manuscript it covered, so a chapter edited without a fresh render
-      # fails here.
+      # the acceptance that catches them. The `render` job in this workflow
+      # produces the real render and re-runs the acceptance; this step
+      # verifies the committed receipt over exactly these sources, so a
+      # chapter edited without a fresh render fails here too.
       - name: Require the shipped render to have passed the acceptance
         run: uv run python scripts/check_render_log.py --verify-receipt
       - run: uv run pytest tests/ -q -n auto --dist loadgroup --cov=src --cov-report=xml --cov-fail-under=89 -m "not serial_lean"
@@ -176,13 +170,12 @@ jobs:
             docs/formal-kernel-dashboard.html
             output/figures/
 
-  # FEP-CI-RENDER: CI verifies only the committed docs/render-acceptance.json
-  # receipt, so every defect the acceptance exists to catch reaches main
-  # unopposed whenever a local render was skipped. This lane renders
-  # end-to-end behind the lean job (the manuscript fails closed without a
-  # claim-ready native receipt, and the lean job uploads exactly that one) and
-  # validates both fail-closed receipts against the same sources in the same
-  # run, so manuscript drift cannot survive between local renders.
+  # FEP-CI-RENDER: this lane renders end-to-end behind the lean job (the
+  # manuscript fails closed without a claim-ready native receipt, and the lean
+  # job uploads exactly that one) and validates both fail-closed receipts
+  # against the same sources in the same run, so a defect the acceptance
+  # exists to catch cannot reach main and manuscript drift cannot survive
+  # between local renders.
   render:
     needs: [lean, render-deps]
     runs-on: ubuntu-latest

@@ -7,13 +7,14 @@ render (see ``fep_lean.output.render_log``).  This wrapper is the project-side
 fail-closed acceptance for a combined PDF build and must be run after
 ``stage_03_render.py``.
 
-Continuous integration does not render this manuscript -- that needs a
-checkout of the shared template, XeLaTeX, pandoc, ``rsvg-convert``, the mermaid
-CLI and the two faces ``manuscript/preamble.md`` selects -- so it cannot re-run
-this acceptance.  ``--receipt`` writes what it found into a committed file and
-``--verify-receipt`` re-reads it, which is how the gate reaches CI: a chapter
-edited without a fresh render leaves the receipt naming a digest the checkout
-no longer has.
+Continuous integration renders this manuscript end-to-end: the ``render`` job
+in ``.github/workflows/ci.yml`` checks out the shared template at its pinned
+ref, installs XeLaTeX, pandoc, ``rsvg-convert``, the mermaid CLI and the two
+faces ``manuscript/preamble.md`` selects, renders, and then re-runs this
+acceptance's verification against the fresh result.  ``--receipt`` writes what
+it found into a committed file and ``--verify-receipt`` re-reads it, so a
+chapter edited without a fresh render leaves the receipt naming a digest the
+checkout no longer has -- locally and in that job.
 
 Usage:
     uv run python scripts/check_render_log.py

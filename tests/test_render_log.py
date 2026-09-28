@@ -486,9 +486,9 @@ def test_a_drifted_caption_is_still_drift(tmp_path: Path) -> None:
 
 
 # ── acceptance receipt ────────────────────────────────────────────────────
-# A hosted runner cannot re-run the acceptance above, so the gate that reaches
-# CI is this receipt: written only by a clean acceptance, committed, and bound
-# to the manuscript sources it covered.
+# CI re-runs the acceptance end-to-end in the `render` job; between renders,
+# the gate that reaches CI is this receipt: written only by a clean
+# acceptance, committed, and bound to the manuscript sources it covered.
 CLEAN_COUNTS = {
     "tex_errors": 0,
     "missing_characters": 0,

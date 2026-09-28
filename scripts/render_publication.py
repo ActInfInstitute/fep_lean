@@ -60,11 +60,11 @@ from fep_lean.output.render_fonts import (
 
 PROJECT_NAME = "fep_lean"
 RENDER_STAGE = Path("scripts/pipeline/stage_03_render.py")
-# The committed record of what the acceptance found. CI does not render this
-# manuscript -- that needs a checkout of the shared template, XeLaTeX, pandoc,
-# ``rsvg-convert``, the mermaid CLI and the two faces the preamble selects --
-# so it verifies this instead, and a chapter edited without a fresh render
-# leaves it naming a digest the checkout no longer has.
+# The committed record of what the acceptance found. CI renders this
+# manuscript end-to-end (the ``render`` job checks out the shared template,
+# XeLaTeX, pandoc, ``rsvg-convert``, the mermaid CLI and the faces the
+# preamble selects, then re-verifies this record), and a chapter edited
+# without a fresh render leaves it naming a digest the checkout no longer has.
 RECEIPT_PATH = Path("docs") / "render-acceptance.json"
 TEMPLATE_ENVIRONMENT_VARIABLE = "FEP_LEAN_TEMPLATE_DIR"
 # One template checkout serves several projects, and two concurrent renders
