@@ -157,6 +157,7 @@ def setup_checkout(tmp_path: Path, monkeypatch) -> Path:
         "from pathlib import Path\n"
         "root = Path.cwd()\n"
         "args = sys.argv[1:]\n"
+        "(root / 'cache-env.json').write_text(json.dumps({k: os.environ.get(k) for k in ('XDG_CACHE_HOME', 'MATHLIB_CACHE_DIR')}))\n"
         "with (root / 'calls.jsonl').open('a') as f: f.write(json.dumps(args) + '\\n')\n"
         "config = root / 'behavior.json'\n"
         "behavior = json.loads(config.read_text()) if config.exists() else {}\n"
@@ -195,6 +196,19 @@ def _setup_calls(root: Path) -> list[list[str]]:
         if path.exists()
         else []
     )
+
+
+def test_setup_preserves_explicit_cache_isolation(
+    setup_checkout: Path, monkeypatch
+) -> None:
+    locations = {
+        name: str(setup_checkout / name.lower())
+        for name in ("XDG_CACHE_HOME", "MATHLIB_CACHE_DIR")
+    }
+    for name, value in locations.items():
+        monkeypatch.setenv(name, value)
+    assert cli._setup(setup_checkout) == 0
+    assert json.loads((setup_checkout / "lean/cache-env.json").read_text()) == locations
 
 
 def test_setup_twice_preserves_locks(setup_checkout: Path) -> None:

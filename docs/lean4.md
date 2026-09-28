@@ -39,7 +39,9 @@ manifest before acquisition, and checks that the pin triple and `uv.lock`
 remain byte-identical after each subprocess. An explicit Lake executable
 must report the pinned compiler version. Without Lake, setup uses elan to
 install exactly the checkout's toolchain; set `FEP_LEAN_ELAN_EXE` if elan is
-not on PATH. `ELAN_HOME` may point to a new empty directory.
+not on PATH. `ELAN_HOME` may point to a new empty directory. Set
+`XDG_CACHE_HOME` or `MATHLIB_CACHE_DIR` to isolate downloaded cache artifacts
+as well; setup forwards these locations to its acquisition subprocesses.
 
 The underlying acquisition sequence is:
 

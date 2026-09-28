@@ -127,6 +127,9 @@ def _setup(root: Path) -> int:
     # unlike read-only verification's temporary writable-home fallback.
     elan_home = Path(os.environ.get("ELAN_HOME", str(Path.home() / ".elan")))
     env["ELAN_HOME"] = str(elan_home)
+    for name in ("XDG_CACHE_HOME", "MATHLIB_CACHE_DIR"):
+        if name in os.environ:
+            env[name] = os.environ[name]
 
     def run(command: Sequence[str]) -> subprocess.CompletedProcess[str]:
         check_pins()
@@ -192,7 +195,7 @@ def _setup(root: Path) -> int:
         )
         return 0
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
-        print(f"setup failed: {exc}", flush=True)
+        print(f"setup failed: {exc}. For pin/manifest errors: {repair}", flush=True)
         return exc.returncode if isinstance(exc, subprocess.CalledProcessError) else 1
 
 
