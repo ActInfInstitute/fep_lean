@@ -31,6 +31,16 @@ boundaries. The roster-v23 source-owner coordinated refresh, native capture,
 render re-acceptance, and pin-cycle #32 re-seal ride the coordinator's
 remaining phases and are pending, not part of this wiring.
 
+### GEO-INFER notation slice growth (2026-09-28)
+
+- Grew `specs/geo-infer-notation-bridge/data/notation-map.yaml` from 10 to 13
+  notation-level rows: fep-025 (row-normalized transition kernel,
+  `MarkovDecisionProcess`), fep-156 (Boltzmann control posterior,
+  `PolicySelector`), and fep-157 (perception update as forward filter,
+  `MarkovDecisionProcess`), each anchored on an already-verified GEO-INFER-ACT
+  anchor and validated by `check_geo_notation_bridge.py --check`; no proof or
+  verification claim is added.
+
 ### Coordinated evidence refresh: SOURCE_OWNER_ROSTER v23 (2026-09-27)
 
 `OWNER_MANIFEST_VERSION` 22 → 23 covering the wave-3 fold chore's custody
