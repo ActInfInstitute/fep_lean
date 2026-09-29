@@ -64,6 +64,16 @@ VERIFY_SET_KEYS = frozenset(
 )
 
 
+def test_native_receipt_path_is_the_sealed_relative_contract() -> None:
+    """The capture argv contract is the checkout-relative receipt path.
+
+    ``sandboxed_receipt`` patches ``refresh_module.NATIVE_RECEIPT`` to an
+    absolute sandbox path per test; this pin keeps the sealed literal honest
+    independently of any fixture.
+    """
+    assert NATIVE_RECEIPT == "output/native-verification.json"
+
+
 def _stage_specs(tmp_path: Path) -> Path:
     target = tmp_path / "specs"
     shutil.copytree(REPO_ROOT / "specs", target, symlinks=False)
@@ -283,10 +293,10 @@ def test_refresh_native_runs_the_sealed_capture_command(
         "verify",
         "--fail-on-warnings",
         "--receipt",
-        NATIVE_RECEIPT,
+        str(claim_ready_receipt),
     ]
     assert report.native["exit_code"] == 0
-    assert report.native["receipt"] == NATIVE_RECEIPT
+    assert report.native["receipt"] == str(claim_ready_receipt)
     assert report.native["validation"]["claim_ready"] is True
     assert report.native["validation"]["source_bound"] is True
     assert report.native["validation"]["errors"] == []
@@ -339,54 +349,43 @@ def test_refresh_native_command_failure_refused(
 
 
 def test_refresh_native_missing_receipt_refused(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    sandboxed_receipt: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    receipt = REPO_ROOT / NATIVE_RECEIPT
-    backup = _receipt_state(receipt)
-    if backup is not None:
-        receipt.unlink()
-    try:
-        _all_clear_census(monkeypatch)
-        monkeypatch.setattr(refresh_module, "_run", _ok_run)
-        monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
-        monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
-        monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
-        with pytest.raises(RefreshRefused, match="native receipt missing") as exc:
-            refresh(
-                _stage_specs(tmp_path),
-                REPO_ROOT,
-                _out_dir(tmp_path),
-                reason="r",
-                run_native=True,
-            )
-        assert str(REPO_ROOT / NATIVE_RECEIPT) in str(exc.value)
-    finally:
-        _restore_receipt(receipt, backup)
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+    assert not sandboxed_receipt.exists()
+    with pytest.raises(RefreshRefused, match="native receipt missing") as exc:
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
+    assert str(sandboxed_receipt) in str(exc.value)
 
 
 def test_refresh_native_stale_receipt_refused(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    sandboxed_receipt: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    receipt = REPO_ROOT / NATIVE_RECEIPT
-    backup = _receipt_state(receipt)
-    try:
-        _all_clear_census(monkeypatch)
-        monkeypatch.setattr(refresh_module, "_run", _ok_run)
-        monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
-        monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
-        monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
-        receipt.parent.mkdir(parents=True, exist_ok=True)
-        receipt.write_text("{}", encoding="utf-8")
-        with pytest.raises(RefreshRefused, match="not claim-ready"):
-            refresh(
-                _stage_specs(tmp_path),
-                REPO_ROOT,
-                _out_dir(tmp_path),
-                reason="r",
-                run_native=True,
-            )
-    finally:
-        _restore_receipt(receipt, backup)
+    _all_clear_census(monkeypatch)
+    monkeypatch.setattr(refresh_module, "_run", _ok_run)
+    monkeypatch.setattr(refresh_module, "report_owner_errors", lambda root: ())
+    monkeypatch.setattr(refresh_module, "_git_dirty", lambda root: [])
+    monkeypatch.setattr(refresh_module, "_git_head", lambda root: "fix-head")
+    sandboxed_receipt.parent.mkdir(parents=True, exist_ok=True)
+    sandboxed_receipt.write_text("{}", encoding="utf-8")
+    with pytest.raises(RefreshRefused, match="not claim-ready"):
+        refresh(
+            _stage_specs(tmp_path),
+            REPO_ROOT,
+            _out_dir(tmp_path),
+            reason="r",
+            run_native=True,
+        )
 
 
 def test_refresh_native_owner_drift_during_capture_refused(
@@ -614,17 +613,20 @@ def main_with_root(tmp_path: Path, extra: list[str]) -> int:
     return main(["--project-root", str(REPO_ROOT), "custody", "refresh", *extra])
 
 
-def _receipt_state(receipt: Path) -> bytes | None:
-    """Snapshot prior receipt bytes so tests can restore them on teardown."""
-    return receipt.read_bytes() if receipt.exists() else None
+@pytest.fixture()
+def sandboxed_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Redirect the native receipt to a per-test sandbox path.
 
-
-def _restore_receipt(receipt: Path, backup: bytes | None) -> None:
-    """Restore the pre-test receipt bytes, or remove the file we created."""
-    if backup is None:
-        receipt.unlink(missing_ok=True)
-    else:
-        receipt.write_bytes(backup)
+    The machinery resolves the receipt as ``root / NATIVE_RECEIPT`` from the
+    module global; patching it to an absolute sandbox path redirects every
+    resolution site (capture argv, post-capture checks, report payload) into
+    ``tmp_path``. Parallel xdist workers therefore never share checkout
+    state, and a run killed between a fixture write and its restore can
+    never leak a receipt into the real checkout.
+    """
+    receipt = tmp_path / "receipts" / "native-verification.json"
+    monkeypatch.setattr(refresh_module, "NATIVE_RECEIPT", str(receipt))
+    return receipt
 
 
 def _claim_ready_payload() -> dict[str, object]:
@@ -658,24 +660,21 @@ def _claim_ready_payload() -> dict[str, object]:
 
 
 @pytest.fixture()
-def claim_ready_receipt() -> Iterator[Path]:
-    """A real claim-ready native receipt at the live path; bytes restored.
+def claim_ready_receipt(sandboxed_receipt: Path) -> Iterator[Path]:
+    """A real claim-ready native receipt at the sandboxed path.
 
-    The fixture revalidates the receipt through the real validator so a
-    toolchain-pin or roster bump fails loudly with the validator's errors,
-    never as a silent test drift.
+    The receipt bytes bind the live tree (digests, roster, toolchain pin)
+    and are revalidated through the real validator, so a toolchain-pin or
+    roster bump fails loudly with the validator's errors, never as a silent
+    test drift. The path lives in the test sandbox: parallel xdist workers
+    never share checkout state, and nothing to restore can leak.
     """
-    receipt = REPO_ROOT / NATIVE_RECEIPT
-    backup = _receipt_state(receipt)
-    write_native_lean_receipt(receipt, _claim_ready_payload())
-    validation = validate_native_lean_receipt(receipt, project_root=REPO_ROOT)
+    write_native_lean_receipt(sandboxed_receipt, _claim_ready_payload())
+    validation = validate_native_lean_receipt(sandboxed_receipt, project_root=REPO_ROOT)
     assert validation["native_claim_ready"], (
         "claim-ready receipt fixture drifted: " + "; ".join(validation["errors"])
     )
-    try:
-        yield receipt
-    finally:
-        _restore_receipt(receipt, backup)
+    yield sandboxed_receipt
 
 
 # ---------------------------------------------------------------------------
