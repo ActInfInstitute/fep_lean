@@ -86,3 +86,9 @@ full-mode receipt. It never reruns the pipeline.
 canonical Chrome/CDP acceptance receipt plus six bound screenshots under
 `output/`. It needs a local browser and is not part of CI; the receipt it
 writes is what `fep_lean.output.release_bundle` validation consumes.
+
+The local verify cache-reuse path lives slice-locally under
+`specs/ci-velocity-local-cache/` (not a `scripts/` wrapper, deliberately
+roster-excluded). It stores only derived Lake build outputs, validates the
+pin triple before Lake, and rejects a Mathlib cache 404-warning-with-zero-exit
+per the W4-PORTABLE-CHECKOUT findings.

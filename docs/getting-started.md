@@ -67,6 +67,32 @@ is evidence for that topic only. Full native receipt validation belongs to a
 settled source snapshot. None of these requires Hermes or OpenGauss. See
 [formal-kernel methods](formal-kernel-methods.md).
 
+### Fast repeated local verification
+
+Repeat `verify` runs in the same worktree (and after branch switches back to a
+pin you have already built) can reuse the compiled Lake state instead of
+rebuilding Mathlib from source:
+
+```bash
+uv run python specs/ci-velocity-local-cache/lean_cache.py -- uv run --locked fep-lean verify --fail-on-warnings
+```
+
+The wrapper validates the toolchain/Mathlib/manifest pins before invoking
+Lake, restores a content-keyed snapshot of `lean/.lake` from
+`~/.cache/fep-lean/lean-build` (override with `--store DIR` or
+`FEP_LEAN_CACHE_DIR`) when one exists for the current pins, and refreshes
+that snapshot after a successful run. Unless `--skip-build` is passed it also
+runs `lake --wfail build FepSketches` first — the same cache-get, aggregate
+build, verify sequence CI's lean lane runs, and the prerequisite that makes
+verify-class commands resolvable at all (`lake env lean` resolves
+`FepSketches.*` imports only through the built library). Add `--no-cache` to
+skip both restore and refresh, and `--key-print` to inspect the cache key.
+The store holds only derived Lake build outputs: custody
+receipts are never cached, and every run still recompiles changed sources
+through Lake's own traces, so reuse cannot mask drift. CI mirrors this with
+an `actions/cache` restore/save pair that restores `lean/.lake/build` under
+a key derived from the same pin files.
+
 ## Publication-render tier
 
 Add the shared rendering-template checkout, its matching project registration,
