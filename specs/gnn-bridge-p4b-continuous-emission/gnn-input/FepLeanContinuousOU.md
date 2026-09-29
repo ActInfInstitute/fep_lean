@@ -137,9 +137,9 @@ v0.2 rounding. One-step horizon, passive (no control input).
 
 ## Signature
 source_repository: fep_lean
-source_commit: 58e3e0089f129e83006eff665bf9520b6105b4c8
+source_commit: 2a8fd09f05cd159f5ee0416a1cb5967bcbd266a3
 pipeline_repository: GeneralizedNotationNotation
-pipeline_commit: 0dd8a42807325bad17c0b812e2f42673d7c3e913
+pipeline_commit: bff3f2c246e323abd6080056f1896237b887c473
 lean_module: lean/FepSketches/compositions/smooth_reference_kernel.lean
 lean_structure: FEP.SmoothReferenceKernel composition instance
 lean_instance: selectedDynamics/selectedPrior/selectedFilter
@@ -147,5 +147,5 @@ exact_formulas: F = exp(-1); Q = 1 - exp(-2)  # recorded verbatim per contract v
 projection_tool: specs/gnn-bridge-p4b-continuous-emission/projection_continuous.py (bridge P4b, contract v0.2)
 target_syntax: GNN v1 (doc/gnn/gnn_syntax.md v1.1 surface)
 rounding_policy: contract v0.2: terminating decimals emit exactly; non-terminating exact Lean reals emit as float64 (shortest round-trip repr) with the exact formula recorded verbatim in provenance; consumers treat the float as an approximation, never as the Lean value
-source_owners_sha256: 427495a317db8da9ffc08dec99a7f4526def457d2a64d86c093bb7ba03ca3586
-pipeline_owners_sha256: 4431bf60a74f92c2c16ba3a54aa628d606e2cd5195931f62d3b5a15ca7654e6f
+source_owners_sha256: aace5a6ca7ceecde1a5f256543f33c336170d6e3abaa7fc6f9fda781374700de
+pipeline_owners_sha256: fa6ae0137a8294b3939716b08dbc72d2d91c8626a2bde12dd7b8e2e10fb66399
