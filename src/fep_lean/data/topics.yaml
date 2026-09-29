@@ -13938,8 +13938,8 @@ topics:
   semantic_disposition: formalized
   nl: 'On the fep-163 carrier the weighted divergence equals dot (divQ DQ) g under the cancellation hypotheses, the squared
     Cauchy-Schwarz budget (weightedDivergence)^2 <= (sum r_i^2)(sum g_i^2) bounds the uncancelled remainder with its abs-product
-    corollary, and equality is attained on aligned nonzero data with ||g||^2 = 1. Assumption scope: Quantitative budget on
-    the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp));
+    corollary, and equality is attained on aligned nonzero data with norm(g)^2 = 1. Assumption scope: Quantitative budget
+    on the fep-163 finite derivative-data carrier; the coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp));
     no PDE-discretization or entropy-production claim. Semantic disposition: `formalized`.
 
     '

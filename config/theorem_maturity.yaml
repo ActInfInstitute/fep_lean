@@ -3567,7 +3567,7 @@ topics:
     under the cancellation hypotheses, the squared Cauchy-Schwarz budget
     (weightedDivergence)^2 <= (sum r_i^2)(sum g_i^2) bounds the uncancelled
     remainder with its abs-product corollary, and equality is attained on
-    aligned nonzero data with ||g||^2 = 1.
+    aligned nonzero data with norm(g)^2 = 1.
   assumption_review: >-
     Quantitative budget on the fep-163 finite derivative-data carrier; the
     coupling hypothesis is sufficient-not-necessary (slot = dot(Qg, dlogp));
