@@ -347,7 +347,7 @@ def _probe_lean_version(
     lake: str,
     lean_dir: Path,
     *,
-    timeout: int = 20,
+    timeout: int = 120,
 ) -> tuple[str, str]:
     """Record the exact compiler identity used by ``lake env lean``."""
     try:
