@@ -78,6 +78,18 @@ tip containing the wave-4 catalogue (the native capture fails the roster
 pre-gate otherwise); the native capture, render re-acceptance, and pin-cycle
 #33 re-seal follow.
 
+### GEO-INFER notation slice growth to 17 rows (2026-09-28)
+
+- Grew `specs/geo-infer-notation-bridge/data/notation-map.yaml` from 13 to 17
+  notation-level rows: fep-004 (Fisher metric quadratic form,
+  `information_metric`), fep-018 (Fisher-Rao distance between parameter
+  points, `geodesic_distance`), fep-038 (Fisher information as log-likelihood
+  curvature, `fisher_information_matrix`), and fep-158 (Bayes-odds evidence
+  weight between models, `ModelSelection`), each anchored on a lane-verified
+  GEO-INFER-MATH anchor — the first cross-module anchors, ratified this
+  session — and validated by `check_geo_notation_bridge.py --check`; no proof
+  or verification claim is added.
+
 ### GEO-INFER notation slice growth (2026-09-28)
 
 - Grew `specs/geo-infer-notation-bridge/data/notation-map.yaml` from 10 to 13
