@@ -27,6 +27,23 @@ entries:
     the inequality; the Python class computes a numerical instance of it.
   reference: >-
     Friston (2010), "The free-energy principle: a unified brain theory?", Nature Reviews Neuroscience 11(7)
+- concept: Fisher metric quadratic form on parameter tangents
+  fep_lean:
+    topic_id: fep-004
+    symbol: fep004_fisherMetric_eq_zero_iff
+  geo_anchor: GEO-INFER-MATH/src/geo_infer_math/core/information_theory/information_geometry.py::information_metric
+  correspondence: >-
+    information_metric evaluates the Fisher-metric line element
+    ds^2 = sum_ij I_ij dtheta_i dtheta_j as sqrt(dtheta^T I dtheta), clamped
+    nonnegative for a supplied Fisher matrix; fep-004 proves the finite
+    diagonal Fisher metric is symmetric and positive semidefinite under
+    nonnegative information weights, positive definite under strictly
+    positive weights, and characterizes exactly when its tangent norm
+    vanishes. Correspondence of the Fisher-metric quadratic form; the Python
+    function evaluates a supplied matrix and derives no metric from a
+    statistical family.
+  reference: >-
+    Amari (2016), "Information Geometry and Its Applications", Springer
 - concept: entropy-regularized policy cost
   fep_lean:
     topic_id: fep-012
@@ -53,6 +70,24 @@ entries:
     construct; no numerical-agreement claim is made.
   reference: >-
     Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
+- concept: Fisher-Rao distance between parameter points
+  fep_lean:
+    topic_id: fep-018
+    symbol: fep018_fisherRaoDistance_eq_zero_iff
+  geo_anchor: GEO-INFER-MATH/src/geo_infer_math/core/information_theory/information_geometry.py::geodesic_distance
+  correspondence: >-
+    geodesic_distance measures the Fisher-metric path length between two
+    parameter points theta1 and theta2 by integrating the information_metric
+    line element ds = sqrt(dtheta^T I dtheta) along the straight segment;
+    fep-018 proves the closed-form Bernoulli Fisher-Rao coordinate distance
+    is nonnegative, symmetric, separating on [0,1], and satisfies the
+    triangle inequality. Correspondence of the Fisher-metric distance
+    construct between parameter points; the Python function is a straight-
+    line integration approximation (n_steps steps) and claims none of the
+    metric axioms; the exact closed-form Bernoulli distance has no upstream
+    implementation.
+  reference: >-
+    Amari & Nagaoka (2000), "Methods of Information Geometry", AMS/Oxford
 - concept: expected free energy as pragmatic cost minus epistemic value
   fep_lean:
     topic_id: fep-021
@@ -94,6 +129,22 @@ entries:
     softmax construct.
   reference: >-
     Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
+- concept: Fisher information as log-likelihood curvature
+  fep_lean:
+    topic_id: fep-038
+    symbol: fep038_fisherInformation_eq
+  geo_anchor: GEO-INFER-MATH/src/geo_infer_math/core/information_theory/information_geometry.py::fisher_information_matrix
+  correspondence: >-
+    fisher_information_matrix computes the Fisher information matrix as the
+    negated second derivative of the log-likelihood by finite differences;
+    fep-038 proves the differentiated Bernoulli family has zero expected
+    score and Fisher information 1/(p(1-p)), with inverse-metric duality
+    defining the natural gradient. Correspondence of the Fisher-information
+    construct at the curvature-definition level; the Python routine computes
+    the observed pointwise matrix numerically and implements neither the
+    expected-score law nor the natural-gradient duality.
+  reference: >-
+    Amari (2016), "Information Geometry and Its Applications", Springer
 - concept: Markov blanket factorization
   fep_lean:
     topic_id: fep-079
@@ -191,3 +242,20 @@ entries:
     numerical-agreement claim is made.
   reference: >-
     Parr, Pezzulo & Friston (2022), Active Inference, MIT Press
+- concept: Bayes-odds evidence weight between models
+  fep_lean:
+    topic_id: fep-158
+    symbol: fep158_reduction_posterior_odds
+  geo_anchor: GEO-INFER-MATH/src/geo_infer_math/integration/bayes/model_selection.py::ModelSelection
+  correspondence: >-
+    ModelSelection.bayes_factor computes the log Bayes odds
+    log B_12 = log p(D|M_1) - log p(D|M_2) and its exponential weight;
+    fep-158's reduction Bayes-odds law expresses the reduced-model posterior
+    as the full posterior multiplied by exactly such an evidence weight
+    between the full and evidence-masked models. Correspondence is limited
+    to the Bayes-odds evidence-weight term: the Python class performs
+    generic model comparison from supplied log evidences; it implements no
+    evidence masking, no free-energy monotonicity, and no posterior
+    reconstruction.
+  reference: >-
+    Friston & Penny (2011), "Post hoc Bayesian model selection", NeuroImage 56(4)
