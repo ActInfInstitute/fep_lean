@@ -8,8 +8,8 @@
     "tex_errors": 0,
     "uncaptioned_tables": 0
   },
-  "manuscript_source_digest": "a168362cfba91c313c5d7f0850d42d3f990dd7bd01d6391c0d8506b42db2607b",
-  "pages": 345,
+  "manuscript_source_digest": "45fafc1e5adf09e123de13b3351ae86319553eea2141819772075f3eab79aa1e",
+  "pages": 350,
   "receipt_version": 1,
   "source_digests": {
     "00_front_matter.md": "fd071cb817071f18032483c41b0ab1bb0a384f7ec3536dda2698a5ecd2e0683a",
@@ -41,7 +41,7 @@
     "06_conclusion.md": "3339d659607fb8e133af7fa5fd099ac5cd19a6293628556ece9f562f8256a6d8",
     "07_references.md": "b6132569eea5c54b542fff8754cee5c5d288873d8e920ce27c66a4a0318a7d94",
     "08_appendix_a_overview.md": "75bbd397cea0d9f532820c769da05b9913cd152043735b07a383748fe14a3292",
-    "09z_unified_formalism_catalogue.md": "bd054162346b9899180cde58924d6d494b2499d7972174a617a3638e2109030a",
+    "09z_unified_formalism_catalogue.md": "229cedbab9f31ac28b6694b8c38e248145a5d168ab9dff5a6a93632d907abab7",
     "preamble.md": "0ca6e7d06bf56f64e2e2850c96e7a802695f0225128d9a955ab9d1318651a6d9"
   }
 }
