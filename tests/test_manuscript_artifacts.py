@@ -1205,8 +1205,11 @@ def test_count_test_cases_rejects_missing_positive_count(
         _count_test_cases(tmp_path)
 
 
+@pytest.mark.parametrize(
+    "duration", ("0.01s", "71.88s (0:01:11)", "3601.00s (1:00:01)")
+)
 def test_count_test_cases_uses_final_pytest_summary_count(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, duration: str
 ) -> None:
     tests = tmp_path / "tests"
     tests.mkdir()
@@ -1221,7 +1224,7 @@ def test_count_test_cases_uses_final_pytest_summary_count(
                 "tests/test_sample.py::test_label[0 tests collected\\n]\n"
                 "tests/test_sample.py::test_second\n"
                 "tests/test_sample.py::test_third\n"
-                "===== 3 tests collected in 0.01s =====\n"
+                f"===== 3 tests collected in {duration} =====\n"
             ),
             stderr="",
         ),
@@ -1233,6 +1236,11 @@ def test_count_test_cases_uses_final_pytest_summary_count(
 @pytest.mark.parametrize(
     ("stdout", "stderr", "message"),
     (
+        (
+            "===== 2 tests collected in 71.88s (0:01:99) =====\n",
+            "",
+            "exactly one anchored positive summary; found 0",
+        ),
         (
             "===== 2 tests collected in 0.01s =====\n"
             + "===== 3 tests collected in 0.02s =====\n",

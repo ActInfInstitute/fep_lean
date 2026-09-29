@@ -712,7 +712,8 @@ def parse_pytest_collection_stdout(stdout: str) -> tuple[str, ...]:
     summary_pattern = re.compile(
         r"(?:=+\s+)?([1-9]\d*)(?:/([1-9]\d*))? tests? collected"
         r"(?: \((\d+) deselected\))? in "
-        r"[0-9]+(?:\.[0-9]+)?s(?:\s+=+)?"
+        # Pytest appends H:MM:SS once collection takes at least a minute.
+        r"[0-9]+(?:\.[0-9]+)?s(?: \([0-9]+:[0-5][0-9]:[0-5][0-9]\))?(?:\s+=+)?"
     )
     stdout_lines = [line for line in stdout.splitlines() if line.strip()]
     matches = [
