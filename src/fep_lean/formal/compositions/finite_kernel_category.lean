@@ -68,7 +68,7 @@ The three axioms are witnessed by the already-proved theorems
 instance : Category FinKernCat where
   id_comp f := FiniteKernel.comp_identity_right f
   comp_id f := FiniteKernel.comp_identity_left f
-  assoc f g h := (FiniteKernel.comp_assoc h g f).symm
+  assoc f g h := FiniteKernel.comp_assoc h g f
 
 /-! ## Functoriality structure (Liskov amendment)
 
@@ -122,6 +122,6 @@ theorem finKernCat_comp_id (X Y : FinKernCat) (f : X ⟶ Y) :
 theorem finKernCat_assoc (W X Y Z : FinKernCat)
     (f : W ⟶ X) (g : X ⟶ Y) (h : Y ⟶ Z) :
     (f ≫ g) ≫ h = f ≫ (g ≫ h) :=
-  (FiniteKernel.comp_assoc h g f).symm
+  FiniteKernel.comp_assoc h g f
 
 end FEPComposed.FiniteKernelCategory
