@@ -47,8 +47,9 @@ without ever running the verify-set subprocesses:
   state ``awaiting-commit``; the staged candidate is the final round's
   flushed tree.
 
-``--resume <journal-dir>`` is phase 3 and refuses with a clear stop in this
-lane. Journals are schema-1 JSON files landed atomically under
+``--resume <journal-dir>`` validates a committed candidate, enforces current
+render acceptance, and completes the verify set and optional native capture.
+Journals are schema-1 JSON files landed atomically under
 ``output/custody-journal/<operation-id>/`` (``--journal-dir`` overrides the
 parent); ``--reason`` stays mandatory in every mode. Receipt re-issues the
 fixpoint performs are dependency re-binds, not new execution evidence —
@@ -72,10 +73,11 @@ from typing import Any
 import yaml
 
 from fep_lean.custody.apply import (
-    DIAGNOSTICS,
     MATRIX,
     ApplyReport,
     PatchDirective,
+    _packet_diagnostics_path,
+    _StagedView,
     apply_refresh,
     dump_json_bytes,
 )
@@ -186,11 +188,13 @@ def _diagnostics_byte_equality(root: Path, specs_dir: Path) -> dict[str, Any]:
     """Recompute the diagnostics record; compare bytes against the live tree."""
     from fep_lean.verification.horizon_acceptance import diagnostic_record
 
-    serialized = dump_json_bytes(diagnostic_record(root), relative=DIAGNOSTICS)
-    live = (specs_dir / DIAGNOSTICS[len("specs/") :]).read_bytes()
+    view = _StagedView(specs_dir, root)
+    relative = _packet_diagnostics_path(view)
+    serialized = dump_json_bytes(diagnostic_record(root), relative=relative)
+    live = view.read(relative)
     equal = serialized == live
     return {
-        "path": DIAGNOSTICS,
+        "path": relative,
         "byte_equal": equal,
         "detail": (
             "diagnostics.json byte-equals the recomputed diagnostic record"
@@ -1009,6 +1013,53 @@ def _rewrite_journal(journal: dict[str, Any], journal_path: Path) -> None:
     os.replace(tmp, journal_path)
 
 
+def _validate_render_acceptance(root: Path) -> dict[str, str]:
+    """Require source-bound acceptance and independently reproduce publication.
+
+    A repeated resume is not evidence that rendering ran. The committed
+    acceptance receipt must cover the live manuscript, and the strict
+    publication validator must reproduce its installed outputs. This stage
+    uses the renderer's existing deadlines and never writes publication files.
+    """
+    from fep_lean.output import release_bundle
+    from fep_lean.output.render_log import manuscript_source_digest, receipt_defects
+
+    receipt = root / "docs/render-acceptance.json"
+    try:
+        receipt_bytes = release_bundle._relative_file_bytes(
+            root, "docs/render-acceptance.json"
+        )
+    except (OSError, ValueError) as exc:
+        raise RefreshRefused(f"render-acceptance barrier: {exc}") from exc
+    source_digest = manuscript_source_digest(root / "manuscript")
+    problems = list(receipt_defects(receipt, root / "manuscript"))
+    if not problems:
+        problems.extend(release_bundle._rendered_manuscript_errors(root))
+    if not problems:
+        problems.extend(release_bundle.publication_manuscript_errors(root))
+    if problems:
+        raise RefreshRefused(
+            "render-acceptance barrier: current render acceptance refused: "
+            + "; ".join(problems)
+        )
+    if (
+        release_bundle._relative_file_bytes(root, "docs/render-acceptance.json")
+        != receipt_bytes
+        or manuscript_source_digest(root / "manuscript") != source_digest
+    ):
+        raise RefreshRefused(
+            "render-acceptance barrier: inputs changed during acceptance validation"
+        )
+    provenance_bytes = release_bundle._relative_file_bytes(
+        root, release_bundle.RENDERER_PROVENANCE.as_posix()
+    )
+    return {
+        "receipt_sha256": hashlib.sha256(receipt_bytes).hexdigest(),
+        "renderer_provenance_sha256": hashlib.sha256(provenance_bytes).hexdigest(),
+        "manuscript_source_digest": source_digest,
+    }
+
+
 def resume_refresh(
     specs_dir: Path,
     root: Path,
@@ -1085,9 +1136,8 @@ def resume_refresh(
     hits = _render_barrier_paths(changed)
     recorded = journal.get("render_barrier_paths")
     if hits and recorded != hits:
-        # A fresh render input (or the first hit) re-arms the barrier: the
-        # coordinator's render re-acceptance is the acknowledgment, and the
-        # re-invocation with the recorded paths unchanged proceeds.
+        # A fresh render input (or the first hit) re-arms the barrier. A later
+        # invocation must validate the resulting acceptance before proceeding.
         _record_barriers(journal, hits)
         journal["state"] = "awaiting-render-acceptance"
         journal["next_action"] = (
@@ -1101,9 +1151,8 @@ def resume_refresh(
             "awaiting-render-acceptance — perform render re-acceptance, then "
             "re-invoke --resume"
         )
-    if check["state"] == "awaiting-render-acceptance":
-        # The re-invocation after the coordinator's render re-acceptance is
-        # the acknowledgment; the gates above re-validated the candidate.
+    if hits or check["state"] == "awaiting-render-acceptance":
+        journal["render_acceptance"] = _validate_render_acceptance(root)
         journal["state"] = "awaiting-commit"
         journal["render_barrier_paths"] = []
         _rewrite_journal(journal, journal_path)

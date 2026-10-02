@@ -16,6 +16,7 @@ from typing import Any
 from fep_lean._paths import project_root as default_project_root
 from fep_lean.gauss.cli import check_gauss_cli
 from fep_lean.gauss.client import resolve_gauss_home
+from fep_lean.verification._subprocess import run_process_group
 from fep_lean.verification._toolchain import (
     find_executable,
     find_toolchain_bin,
@@ -50,6 +51,7 @@ FULL_VALIDATION_CHECK_NAMES: tuple[str, ...] = (
     "mathlib_built",
     "hermes_credentials",
 )
+_VERSION_TIMEOUT_S = 5.0
 
 
 def _get_elan_home() -> str:
@@ -68,13 +70,11 @@ def _find_toolchain_lean(lean_dir: Path | None = None) -> str | None:
 
 def _version_line(exe: str, cwd: Path | None = None) -> tuple[bool, str]:
     try:
-        proc = subprocess.run(
+        proc = run_process_group(
             [exe, "--version"],
-            cwd=cwd,
+            cwd=cwd if cwd is not None else Path.cwd(),
             env=_lean_subprocess_env(),
-            capture_output=True,
-            text=True,
-            timeout=5,
+            timeout=_VERSION_TIMEOUT_S,
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:

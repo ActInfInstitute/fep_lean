@@ -1,0 +1,4 @@
+'RelativeSupportConsumer.informative_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.informative_native_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.independent_native_joint_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.independent_native_channel_zero' depends on axioms: [propext, Classical.choice, Quot.sound]

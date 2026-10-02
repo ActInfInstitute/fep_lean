@@ -1,8 +1,10 @@
 # Q6 — concrete Julia embedded-input proof
 
-Status: verified for the current source-bound [native receipt](native_receipt.json).
-Both positive probes and the normalized wrong-axis rejection passed; see
-[the delivery report](REPORT.md).
+Status: historical native and delivery observations, dated 2026-09-04.
+Both positive probes and the normalized wrong-axis rejection passed at their
+recorded epoch. The [retained native receipt](native_receipt.json) remains
+unchanged and historical after the W2 re-pin; new Q7 evidence does not refresh
+Q6. See [the delivery report](REPORT.md) for dated and actual retained hashes.
 
 The accepted artifact family is the canonical single-agent Boolean Julia
 runner emitted by the GNN `activeinference_jl` render route. The runner embeds
@@ -80,3 +82,19 @@ source-custody receipt. No Julia runner or Lean/Lake process was executed.
 The three native regression tests compile each positive probe with its complete
 axiom roster, then require the normalized previous/action-axis mutation to
 fail against the unchanged asymmetric oracle. Run them serially against the shared native workspace.
+
+For a separately coordinated current recapture, refresh the exact selected
+render/probe owners first, then use a fresh candidate path and explicitly name
+the same GNN root for capture and validation:
+
+```bash
+GNN_ROOT=/absolute/path/to/GeneralizedNotationNotation
+uv run python specs/gnn-bridge-q6-activeinference-artifact/verify_native.py \
+  --compile --gnn-root "$GNN_ROOT" --receipt output/bridge/q6-native-candidate.json
+uv run python specs/gnn-bridge-q6-activeinference-artifact/verify_native.py \
+  --check --gnn-root "$GNN_ROOT" --receipt output/bridge/q6-native-candidate.json
+```
+
+Never overwrite the historical `native_receipt.json`. Its retained success
+flags do not establish current source custody. Current H2/H3 gates belong to
+the maintained [root handoff](../../HANDOFF.md).

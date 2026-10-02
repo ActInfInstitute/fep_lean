@@ -1,0 +1,17 @@
+/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:566:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.instDivInvMonoid', which is 'noncomputable'
+/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:571:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.instDivInvMonoid', which is 'noncomputable'
+/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:577:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'informativePrior', which is 'noncomputable'
+/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:631:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'informativePrior', which is 'noncomputable'
+/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:641:26: error: unsolved goals
+⊢ { mass := fun xy => if xy.2 = false then if xy.1 = true then 1 / 6 else 5 / 6 else 0, nonneg := ⋯,
+              sum_one := ⋯ }.fstMarginal.mass
+        true =
+      0 ∨
+    { mass := fun xy => if xy.2 = false then if xy.1 = true then 1 / 6 else 5 / 6 else 0, nonneg := ⋯,
+              sum_one := ⋯ }.sndMarginal.mass
+        true =
+      0
+'RelativeSupportConsumer.informative_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.informative_native_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.independent_native_joint_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'RelativeSupportConsumer.independent_native_channel_zero' depends on axioms: [propext, Classical.choice, Quot.sound]

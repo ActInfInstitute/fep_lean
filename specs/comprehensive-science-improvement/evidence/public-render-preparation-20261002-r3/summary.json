@@ -1,0 +1,59 @@
+{
+  "accepted": true,
+  "actual_nonserial_collection_count": 2318,
+  "boundary": "Actual offline catalogue and pinned production render, then read-only projection/font/log and strict normalized PDF/HTML reproduction. Compilation, provider, complete Python, hosted artifacts and complete package evidence remain separate.",
+  "claim_ready": false,
+  "commands": [
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 17.562333333000424,
+      "name": "catalogue",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 411.30792058299994,
+      "name": "render-produce",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 46.19342745799804,
+      "name": "projection-check",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 3.861271250003483,
+      "name": "font-check",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 6.101363917005074,
+      "name": "render-log-check",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 105.7566899999947,
+      "name": "render-check",
+      "returncode": 0
+    }
+  ],
+  "elapsed_s": 591.6910243750026,
+  "kind": "public-current-render-preparation-observation-summary",
+  "observational_summary_only": true,
+  "receipt_sha256": "1f537f5c7bf8fcb908f23bc354159e57f956a974429be02d5ef37d029ecb5818",
+  "render_acceptance_sha256": "44252641d37f441c046192c12d74813a937ccf36c4e9533de741b74debb86f14",
+  "retained_private_artifact_count": 145,
+  "source_owner_count": 291,
+  "source_stable": true,
+  "test_collection_cache_sha256": "598ec76a496a87830ab714113aedf77a4397e553c6bd8c8d08081bbb78533619"
+}

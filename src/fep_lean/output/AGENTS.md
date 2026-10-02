@@ -18,8 +18,8 @@ non-mutating drift check.
 - Catalogue, native, declaration-audit, and full-run evidence stay separate.
 - Manuscript rendering fails on unknown variables and never edits source
   chapters.
-- `release_bundle.py` is the sole archive, renderer-provenance, numerical-
-  receipt, and bundle-manifest owner. Release archives contain only normalized
+- `release_bundle/` owns archive assembly, renderer provenance, numerical
+  receipts, and bundle manifests through its existing owner modules. Release archives contain only normalized
   regular files, exclude provider-plane reports, and are accepted only when
   native, declaration, projection, browser, numerical, and manuscript inputs
   independently bind to the live checkout.
@@ -27,12 +27,12 @@ non-mutating drift check.
 ## Focused checks
 
 ```bash
-uv run pytest tests/test_formalism_atlas.py \
+uv run python -m pytest tests/test_formalism_atlas.py \
   tests/test_formal_kernel_dashboard.py tests/test_manuscript_artifacts.py \
   tests/test_reporter.py -q --no-cov
 uv run fep-lean atlas --check
 uv run fep-lean dashboard --check
 uv run python scripts/render_manuscript.py --check
 SOURCE_DATE_EPOCH=0 uv run python scripts/build_release_bundle.py \
-  --check --output /tmp/fep_lean-155-evidence-bundle.tar.gz
+  --check --output /tmp/fep_lean-candidate-evidence-bundle.tar.gz
 ```

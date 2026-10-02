@@ -1,0 +1,45 @@
+{
+  "accepted": true,
+  "artifacts": {
+    "0.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "0.stdout.txt": "ade1b02de7d11fbc3caccd0d7eef8e933d35ab46b20c02557c9598bab8678cd3",
+    "1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "1.stdout.txt": "10810994bc4a6e6a01f2361ab1f18c23eda87c242ea99338e7671289115ceec3",
+    "formalism-audit.json": "10810994bc4a6e6a01f2361ab1f18c23eda87c242ea99338e7671289115ceec3",
+    "source-after.json": "ef8afea76ef7bdb08b1926d052abf9a06c93c2cf0f4a141565cb818b8bfc5118",
+    "source-before.json": "ef8afea76ef7bdb08b1926d052abf9a06c93c2cf0f4a141565cb818b8bfc5118"
+  },
+  "commands": [
+    {
+      "argv": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "FepSketches.fep_all",
+        "FepSketches.composed"
+      ],
+      "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/lean",
+      "elapsed_seconds": 3.997914125000534,
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/.venv/bin/python",
+        "scripts/audit_formalisms.py",
+        "--timeout",
+        "600",
+        "--receipt",
+        "output/formalism-audit.json"
+      ],
+      "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal",
+      "elapsed_seconds": 45.20238270799746,
+      "exit_code": 0
+    }
+  ],
+  "kind": "current-form-1-3-aggregate-and-axiom-audit",
+  "schema_version": 1,
+  "source_count": 291,
+  "sources_unchanged": true,
+  "validation_errors": []
+}

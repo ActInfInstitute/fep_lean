@@ -1,25 +1,28 @@
 # fep_lean
 
-`fep_lean` is a standalone catalogue of 159 Free Energy Principle, Active
+`fep_lean` is a standalone catalogue of 168 Free Energy Principle, Active
 Inference, Bayesian Mechanics, Information Geometry, and Thermodynamics topics.
 Each row contains a reviewed invariant, explicit assumptions, a Lean 4 theorem
 body, and typeset signatures. The pinned Lean workspace is the compilation
 authority; the semantic review separately records how far each theorem reaches
-toward its topic label. The schema-2 roster spans 20 reviewed families in five
+toward its topic label. The schema-2 roster spans 22 reviewed families in five
 areas and is a versioned interface, not an exhaustive census of the FEP
-literature. The twenty families include five second-expansion families for
+literature. The families include five second-expansion families for
 finite-sample risk, closed-loop policy trees, native blanket transfer, finite
-exponential-family dual geometry, and exact two-state continuous time.
+exponential-family dual geometry, and exact two-state continuous time, plus
+standalone EFE and geometric-mechanics families.
 
 ## Release
 
-Version `1.3.0` is the 159-topic publication cut. The canonical software
-release is [GitHub `v1.3.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.3.0),
-and the evolving scholarly record is identified by the
+Source metadata is `1.3.0`, and the [existing `v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
+records the earlier 159-topic cut. As checked on 2026-09-30, the latest
+published GitHub release is [v1.2.0](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.2.0);
+the current 168-topic `main` tree has not been published as a GitHub release.
+The evolving scholarly record is identified by the
 [Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233). The GitHub
-release notes cross-reference the immutable Zenodo version DOI and publish the
-release-bundle checksum; the bundle manifest remains the owner of per-file
-hashes. Neither publication surface changes the evidence boundaries below.
+release process must cross-reference the immutable Zenodo version DOI and
+publish the release-bundle checksum; the bundle manifest owns per-file hashes.
+Neither publication surface changes the evidence boundaries below.
 
 ## Contract
 
@@ -46,13 +49,14 @@ laws side by side without asserting implication. Both name qualified Lean
 witnesses; conceptual and blocker edges remain visibly non-proof evidence.
 
 `dashboard` execution is also deterministic and offline. It renders static
-and interactive numerical witnesses for all fifteen expansion families. The
+and interactive numerical witnesses for the expansion families. The
 first ten cover Bayesian inversion, variational duality, control, temporal
 inference, causal intervention, predictive coding, path thermodynamics,
-categorical Fisher geometry, consensus, and finite concentration; the latest
+categorical Fisher geometry, consensus, and finite concentration; the next
 five cover Laplace/Brier risk transfer, policy-tree feedback, native blanket
 conditional independence, exponential-family duality, and a two-state master
-equation. These witnesses expose computational behavior and boundary cases but
+equation. Later witnesses cover standalone EFE and geometric mechanics.
+These witnesses expose computational behavior and boundary cases but
 never replace native Lean or axiom-audit evidence.
 
 ## Formal depth
@@ -82,7 +86,7 @@ their import aggregate. The maturity audit, rather than compilation alone,
 records which rows are direct formalizations and which remain conditional or
 structural proxies.
 
-**Current evidence boundary.** The maintained catalogue spans 155 topics.
+**Current evidence boundary.** The maintained catalogue spans 168 topics.
 H1.0--H1.8 have exited through their accepted gates, with optional H1.5
 accepted separately; the archived
 [Horizon 1 record](specs/done/horizon-1-finite-synthesis/README.md) owns the
@@ -95,7 +99,7 @@ carrier-merge no-go. It does not establish transition-aware planning,
 EFE-optimal control, physical or causal adequacy, empirical validation, or a
 universal FEP claim.
 
-The active [Horizon 2 spec](specs/done/horizon-2-smooth-stochastic/README.md) has
+The archived [Horizon 2 spec](specs/done/horizon-2-smooth-stochastic/README.md) has
 accepted H2.0--H2.3b, H2.4a/b, H2.5a/b/c/d, H2.5b-R0, H2.5d-R0,
 H2.6a/b/c, and H2.6a-R0. The current smooth surface includes fixed-variance scalar Gaussian
 KL/information geometry, local coordinate duality, a same-joint native
@@ -116,27 +120,52 @@ plus endpoint `CondIndepFun`, and derives a fixed bivariate precision
 perturbation with actual covariance `-1 / 15` and native non-independence.
 H2.7-R0 has accepted the continuous density-relative exact-posterior VFE and
 derived local natural-gradient seam. The [H2.7 terminal record](specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json)
-now validates 328 mandatory cases, the enabled Fin4 supplement, 180 bound
-source hashes, independent diagnostics, and three source-bound reviews. This
-opens only read-only H3.G0
-eligibility; no study metadata has been selected and H3.0--H3.7 remain closed.
+validates the mandatory cases, enabled Fin4 supplement, source hashes,
+independent diagnostics, and source-bound reviews. Fresh H2 custody and
+continuous H3.G0 acceptance preceded the immutable
+[H3.0 protocol freeze](specs/h3-reference-study/freeze.json). The selected
+[reference study](specs/h3-reference-study/README.md) now has compiled native
+model and cross-domain proofs, a retained native export and three independent
+proof-role reviews. Package repairs require a fresh final-source export and
+review before opening the frozen synthetic seeds. Final claim review and
+bundle reproduction remain open; empirical execution is governed no-go without
+a licensed named dataset.
 
-That formal exit is not current publication evidence. The retained exact-roster
-native, declaration/axiom, Python, and Chrome receipts validate the frozen
-v1.1.0 release snapshot only; their former counts and hashes remain
-historical. The coordinated refresh that re-binds every live-source
-validator to the live roster completed deterministically on 2026-09-12
-(recorded in
-[CHANGELOG.md](CHANGELOG.md)). The local
+The 2026-09-30 [status review](SCOPE-2026-09-30.md) independently validated
+the baseline CI native receipt at `cd4a84c` (168/168 topics, zero warnings or
+`sorry`) and its 1,411-declaration axiom receipt against that source epoch.
+The expanded local native r3 checkpoint separately verifies 168 topics against
+291 unchanged owners; its audit covers 1,596 declarations with 1,465 evidence
+records. These are distinct from hosted acceptance for the changed source and
+from publication evidence. The local
 full-report
 path `output/reports/run_20260820_183143_709998/` was historical evidence
-for the earlier 50-topic source snapshot and does not bind the 155-topic
+for the earlier 50-topic source snapshot and does not bind the current
 source; that retained copy is no longer present under `output/reports/`, and
 ignored provider reports are deliberately not shipped in a release.
 The earlier Kimi and Gemini one-topic runs are historical smoke evidence as
 well. No provider secret is stored in the
 repository, and no execution receipt authorizes publication or proves the FEP
 as a physical theory.
+
+The isolated Q7 recapture now has accepted native coefficient evidence and
+five-runtime scaffold parity; the [Q7 report](specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md)
+identifies the new retained receipt and actual positive/wrong-F/wrong-Q native
+controls. It proves static coefficient statements with
+`runtime_execution_verified: false`. Q5/Q6 native and delivery observations
+remain historical after the W2 source re-pin; Q7 does not refresh them. Daniel's
+active GNN checkout and output remain outside this isolated capture.
+
+Local wheel r7 is historical after two guarded Q7 inputs changed and before
+this guidance refresh. It contains five cells, each with one actual installed
+target-runtime case and 32 CPython 3.14 harness cases (165 passes total).
+Wheel r8 and the 15 hosted platform/interpreter cells remain unrun. The
+2,303-pass, 90.66% canonical Python observation remains rejected by its wider
+source guard; the repaired orchestrator has 11 focused passes. A fresh guarded
+canonical Python run, render preparation, production capture, two identical
+accepted archives and the frozen H3 primary remain open. The maintained
+[handoff](HANDOFF.md) and [next acceptance list](specs/comprehensive-science-improvement/NEXT.md)
+own the pending source-currency gates.
 
 ## Quick start
 

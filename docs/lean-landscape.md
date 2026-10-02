@@ -134,11 +134,12 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `fin4_gaussian_semigroup` | foundation | `FEP.Fin4GaussianSemigroup` | linear_gaussian_semigroup |
 | `gnn_denotation_continuous` | foundation | `FEP.GnnContinuous` | gnn_document, linear_gaussian_semigroup |
 
-## Layer 10 (1 modules)
+## Layer 10 (2 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
 | `gaussian_precision_conditioning` | foundation | `FEP.GaussianPrecisionConditioning` | fin4_gaussian_semigroup |
+| `h3_reference_model` | foundation | `FEP.H3ReferenceModel` | fin4_gaussian_semigroup, markov_semigroup |
 
 ## Layer 11 (1 modules)
 
@@ -150,9 +151,15 @@ roster and roles live in the manifest; this page projects them for navigation.
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
-| `composed` | aggregate | `—` | compositions.core, compositions.measure_variational, compositions.control_temporal, compositions.causal_predictive, compositions.thermo_geometry, compositions.collective_learning, compositions.risk_calibration, compositions.policy_trees, compositions.native_blanket_transfer, compositions.exponential_family, compositions.continuous_time, compositions.finite_scientific_implications, compositions.finite_policy_action, compositions.finite_reference_agent, compositions.gaussian_filter, compositions.gaussian_control, compositions.gaussian_grid_path, compositions.smooth_reference_kernel, compositions.efe_policy_selection, compositions.perception_action_loop, compositions.bayesian_model_reduction, compositions.efe_time_scale_separation, compositions.helmholtz_ao_ness, compositions.geometric_mechanics |
+| `compositions.h3_case_study` | composition | `FEPComposed.H3CaseStudy` | h3_reference_model, markov_blanket, native_blanket, causal_dynamics, compositions.finite_scientific_implications, compositions.smooth_reference_kernel, compositions.gaussian_filter, compositions.gaussian_control, compositions.gaussian_grid_path, compositions.finite_policy_action, path_thermodynamics |
 
-Total maintained formal modules: **69** across **13** dependency layers.
+## Layer 13 (1 modules)
+
+| Module | Role | Namespace | Depends on |
+| --- | --- | --- | --- |
+| `composed` | aggregate | `—` | compositions.core, compositions.measure_variational, compositions.control_temporal, compositions.causal_predictive, compositions.thermo_geometry, compositions.collective_learning, compositions.risk_calibration, compositions.policy_trees, compositions.native_blanket_transfer, compositions.exponential_family, compositions.continuous_time, compositions.finite_scientific_implications, compositions.finite_policy_action, compositions.finite_reference_agent, compositions.gaussian_filter, compositions.gaussian_control, compositions.gaussian_grid_path, compositions.smooth_reference_kernel, compositions.efe_policy_selection, compositions.perception_action_loop, compositions.bayesian_model_reduction, compositions.efe_time_scale_separation, compositions.helmholtz_ao_ness, compositions.geometric_mechanics, compositions.h3_case_study |
+
+Total maintained formal modules: **71** across **14** dependency layers.
 
 
 ## Reading order

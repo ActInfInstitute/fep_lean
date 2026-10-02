@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "lake",
+    "env",
+    "lean",
+    "-R",
+    "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/src/fep_lean/formal",
+    "/private/var/folders/r8/m8m857h1659dmg4lz07tlj500000gn/T/pytest-of-hum/pytest-1823/test_native_ou_bounds_have_com0/q7_positive.lean"
+  ],
+  "completed": true,
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/lean",
+  "elapsed_s": 461.6010143750027,
+  "failure": null,
+  "nodeid": "tests/test_gnn_continuous_native_proof.py::test_native_ou_bounds_have_complete_standard_axiom_census",
+  "returncode": 0,
+  "runner": "actual reviewed production run_process_group",
+  "stderr": {
+    "bytes": 0,
+    "contract": "actual production helper decoded text, encoded for retention; not raw OS bytes",
+    "path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/q7-postcapture-closure-20261001-r2/06-three-native-controls/leaf-outcomes/leaf-01/stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stdout": {
+    "bytes": 1327,
+    "contract": "actual production helper decoded text, encoded for retention; not raw OS bytes",
+    "path": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/q7-postcapture-closure-20261001-r2/06-three-native-controls/leaf-outcomes/leaf-01/stdout.txt",
+    "sha256": "f7c8fa55b3c041ed2c9bdfbceac9bdce6a6e65b338be2ccc964cbdf1c58277dc"
+  },
+  "timeout_s": 1800
+}

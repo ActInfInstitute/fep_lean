@@ -76,11 +76,84 @@ THEOREMS = (
 )
 NAMESPACE = "FEPProbe.Q7ContinuousOU"
 
-# The frozen scaffold digest pins ``ast.dump`` formatting, which is CPython
-# minor-version-sensitive: only accepted interpreters may digest or re-validate
-# the scaffold, and the guard runs before any parse.
+# Canonical candidate bytes are portable across the reviewed CPython versions;
+# actual extraction/receipt validation still accepts only the pinned validator.
 ACCEPTED_SCAFFOLD_INTERPRETERS: tuple[tuple[str, tuple[int, int]], ...] = (
     ("cpython", (3, 14)),
+)
+CANONICAL_SCAFFOLD_INTERPRETERS: tuple[tuple[str, tuple[int, int]], ...] = tuple(
+    ("cpython", (3, minor)) for minor in range(10, 15)
+)
+SCAFFOLD_AST_SCHEMA_VERSION = 1
+
+# Frozen from the actual runner, never inferred from a new runtime's AST.
+# Every field is serialized, including empty/None fields. The sole normalized
+# schema difference is FunctionDef's absent/empty type_params in 3.10--3.14.
+_SCAFFOLD_AST_FIELDS: dict[str, tuple[str, ...]] = {
+    "Add": (),
+    "Assign": ("targets", "value", "type_comment"),
+    "Attribute": ("value", "attr", "ctx"),
+    "BinOp": ("left", "op", "right"),
+    "Call": ("func", "args", "keywords"),
+    "Compare": ("left", "ops", "comparators"),
+    "Constant": ("value", "kind"),
+    "Dict": ("keys", "values"),
+    "Div": (),
+    "Eq": (),
+    "ExceptHandler": ("type", "name", "body"),
+    "Expr": ("value",),
+    "For": ("target", "iter", "body", "orelse", "type_comment"),
+    "FormattedValue": ("value", "conversion", "format_spec"),
+    "FunctionDef": (
+        "name",
+        "args",
+        "body",
+        "decorator_list",
+        "returns",
+        "type_comment",
+        "type_params",
+    ),
+    "GeneratorExp": ("elt", "generators"),
+    "Gt": (),
+    "If": ("test", "body", "orelse"),
+    "IfExp": ("test", "body", "orelse"),
+    "Import": ("names",),
+    "ImportFrom": ("module", "names", "level"),
+    "IsNot": (),
+    "JoinedStr": ("values",),
+    "List": ("elts", "ctx"),
+    "Load": (),
+    "MatMult": (),
+    "Module": ("body", "type_ignores"),
+    "Mult": (),
+    "Name": ("id", "ctx"),
+    "Pow": (),
+    "Return": ("value",),
+    "Store": (),
+    "Sub": (),
+    "Subscript": ("value", "slice", "ctx"),
+    "Try": ("body", "handlers", "orelse", "finalbody"),
+    "Tuple": ("elts", "ctx"),
+    "USub": (),
+    "UnaryOp": ("op", "operand"),
+    "With": ("items", "body", "type_comment"),
+    "alias": ("name", "asname"),
+    "arg": ("arg", "annotation", "type_comment"),
+    "arguments": (
+        "posonlyargs",
+        "args",
+        "vararg",
+        "kwonlyargs",
+        "kw_defaults",
+        "kwarg",
+        "defaults",
+    ),
+    "comprehension": ("target", "iter", "ifs", "is_async"),
+    "keyword": ("arg", "value"),
+    "withitem": ("context_expr", "optional_vars"),
+}
+_SCAFFOLD_LOCATION_ATTRIBUTES = frozenset(
+    {"lineno", "col_offset", "end_lineno", "end_col_offset"}
 )
 
 
@@ -159,13 +232,17 @@ def expected_contract(scaffold_sha256: str) -> dict[str, object]:
     if not _is_digest(scaffold_sha256):
         _fail("expected_contract", "invalid reviewed runner scaffold digest")
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "model": "selected scalar OU, passive, unit step",
         "gauge": dict(GAUGE),
         "formulas": dict(FORMULAS),
         "epsilon_ratio": [EPSILON.numerator, EPSILON.denominator],
         "artifact_shapes": {key: list(value) for key, value in TABLE_SHAPES.items()},
         "runner_ast_sha256": scaffold_sha256,
+        "runner_ast_serialization": {
+            "format": "fep-q7-scaffold-ast",
+            "schema_version": SCAFFOLD_AST_SCHEMA_VERSION,
+        },
     }
 
 
@@ -180,9 +257,9 @@ def validate_expected(expected: Mapping[str, Any]) -> str:
     return str(scaffold)
 
 
-def _parse(source: str) -> ast.Module:
+def _parse(source: str, *, type_comments: bool = False) -> ast.Module:
     try:
-        return ast.parse(source)
+        return ast.parse(source, type_comments=type_comments)
     except (SyntaxError, ValueError) as error:
         raise ContinuousArtifactError("syntax", str(error)) from error
 
@@ -241,18 +318,90 @@ def _require_accepted_scaffold_interpreter() -> None:
     )
 
 
-def scaffold_digest(source: str) -> str:
-    """Candidate digest for explicit review/freezing; never approves a scaffold.
+def _canonical_scaffold_value(value: object) -> list[Any]:
+    """Serialize only the frozen AST schema, preserving types and field order."""
+    if isinstance(value, ast.AST):
+        name = type(value).__name__
+        fields = _SCAFFOLD_AST_FIELDS.get(name)
+        if fields is None or type(value) is not getattr(ast, name, None):
+            _fail("scaffold_schema", f"unreviewed AST node: {name}")
+        observed = tuple(value._fields)
+        if observed != fields and not (
+            name == "FunctionDef" and observed == fields[:-1]
+        ):
+            _fail("scaffold_schema", f"unreviewed AST fields/order: {name}.{observed}")
+        unknown = set(vars(value)) - set(fields) - _SCAFFOLD_LOCATION_ATTRIBUTES
+        if unknown:
+            _fail(
+                "scaffold_schema",
+                f"unreviewed AST attributes: {name}.{sorted(unknown)}",
+            )
+        serialized = []
+        for field in fields:
+            if name == "FunctionDef" and field == "type_params":
+                current = (
+                    getattr(value, field, [])
+                    if field not in observed
+                    else getattr(value, field, None)
+                )
+                if type(current) is not list or current:
+                    _fail(
+                        "scaffold_schema",
+                        "FunctionDef.type_params must be absent or empty",
+                    )
+            else:
+                if not hasattr(value, field):
+                    _fail("scaffold_schema", f"missing AST field: {name}.{field}")
+                current = getattr(value, field)
+            serialized.append([field, _canonical_scaffold_value(current)])
+        return ["node", name, serialized]
+    if type(value) is list:
+        return ["list", [_canonical_scaffold_value(item) for item in value]]
+    if value is None:
+        return ["none"]
+    if type(value) is bool:
+        return ["bool", value]
+    if type(value) is int:
+        return ["int", str(value)]
+    if type(value) is float and isfinite(value):
+        return ["float", value.hex()]
+    if type(value) is str:
+        return ["str", value]
+    _fail("scaffold_schema", f"unreviewed AST scalar: {type(value).__name__}")
 
-    Refuses any interpreter outside the accepted set before parsing: the
-    frozen value is interpreter-contract-pinned to that set's ``ast.dump``.
+
+def canonical_scaffold_bytes(source: str) -> bytes:
+    """Portable candidate syntax bytes, never approval or runner execution.
+
+    Schema 1 retains all reviewed AST fields; only absent/empty FunctionDef
+    type_params is normalized. Extraction keeps its separate 3.14 validator
+    guard. See the slice's scaffold-serialization.md for the frozen protocol.
     """
-    _require_accepted_scaffold_interpreter()
-    tree = _parse(source)
+    running = (sys.implementation.name.lower(), sys.version_info[:2])
+    if running not in CANONICAL_SCAFFOLD_INTERPRETERS:
+        _fail(
+            "interpreter",
+            "canonical scaffold serialization accepts only CPython 3.10--3.14",
+        )
+    tree = _parse(source, type_comments=True)
     assignments = _assignments(tree)
     for name in TABLE_SHAPES:
         assignments[name].value = ast.Constant(value=f"Q7_LITERAL:{name}")
-    return digest(ast.dump(tree, include_attributes=False).encode())
+    payload = [
+        "fep-q7-scaffold-ast",
+        SCAFFOLD_AST_SCHEMA_VERSION,
+        _canonical_scaffold_value(tree),
+    ]
+    return (
+        json.dumps(payload, ensure_ascii=True, separators=(",", ":"), allow_nan=False)
+        + "\n"
+    ).encode("ascii")
+
+
+def scaffold_digest(source: str) -> str:
+    """Candidate digest for explicit review/freezing under the pinned validator."""
+    _require_accepted_scaffold_interpreter()
+    return digest(canonical_scaffold_bytes(source))
 
 
 def _literal(node: ast.expr, source: str) -> ScalarLiteral:

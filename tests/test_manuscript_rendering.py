@@ -355,6 +355,64 @@ def test_render_manuscript_copies_and_rewrites_visual_assets(
     ) == '<html id="dashboard"/>\n'
 
 
+def test_render_preserves_raw_metadata_and_removes_obsolete_copies(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "manuscript"
+    destination = tmp_path / "build"
+    source.mkdir()
+    _stage_asset_roster(tmp_path)
+    (source / "01_chapter.md").write_text("Chapter {{value}}\n", encoding="utf-8")
+    metadata = {
+        "config.yaml": b"title: '{{value}}'\r\n",
+        "preamble.md": b"```latex\r\n% {{value}}\r\n```\r\n",
+        "references.bib": b"@article{literal, title = {{{value}}}}\r\n",
+    }
+    for name, data in metadata.items():
+        (source / name).write_bytes(data)
+    (source / "extra.bib").write_bytes(b"outside the exact metadata roster\n")
+
+    assert render_manuscript(source, destination, {"value": "resolved"}) == (
+        destination / "01_chapter.md",
+    )
+    assert (destination / "01_chapter.md").read_text() == "Chapter resolved\n"
+    for name, data in metadata.items():
+        assert (destination / name).read_bytes() == data
+    assert not (destination / "extra.bib").exists()
+
+    (source / "references.bib").unlink()
+    render_manuscript(source, destination, {"value": "resolved"})
+    assert not (destination / "references.bib").exists()
+    assert (destination / "preamble.md").read_bytes() == metadata["preamble.md"]
+
+
+@pytest.mark.parametrize("kind", ["symlink", "broken_symlink", "directory"])
+def test_render_rejects_nonregular_metadata_before_replacing_outputs(
+    tmp_path: Path, kind: str
+) -> None:
+    source = tmp_path / "manuscript"
+    destination = tmp_path / "build"
+    source.mkdir()
+    destination.mkdir()
+    _stage_asset_roster(tmp_path)
+    (source / "01_chapter.md").write_text("Current chapter\n", encoding="utf-8")
+    previous = destination / "previous.md"
+    previous.write_bytes(b"previous accepted output\n")
+    metadata = source / "config.yaml"
+    if kind == "directory":
+        metadata.mkdir()
+    else:
+        target = tmp_path / "target.yaml"
+        if kind == "symlink":
+            target.write_bytes(b"title: external\n")
+        metadata.symlink_to(target)
+
+    with pytest.raises(ManuscriptRenderError, match="metadata is not a regular file"):
+        render_manuscript(source, destination, {})
+    assert tuple(destination.iterdir()) == (previous,)
+    assert previous.read_bytes() == b"previous accepted output\n"
+
+
 def test_rerender_replaces_the_owned_chapter_and_asset_roster(
     tmp_path: Path,
 ) -> None:

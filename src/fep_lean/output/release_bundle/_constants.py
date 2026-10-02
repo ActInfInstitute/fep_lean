@@ -5,6 +5,7 @@ from collections.abc import Mapping
 from pathlib import Path
 
 from fep_lean.output.browser_capture import BROWSER_RECEIPT
+from fep_lean.output.rendering import _RENDER_METADATA_FILES
 
 RELEASE_BUNDLE_SCHEMA_VERSION = 1
 
@@ -163,6 +164,10 @@ _REQUIRED_STATIC_MEMBERS: tuple[tuple[str, str], ...] = (
     (PYTHON_COVERAGE_RECEIPT.as_posix(), "python_coverage_receipt"),
     (BROWSER_RECEIPT.as_posix(), "browser_receipt"),
     (PUBLICATION_HTML.as_posix(), "rendered_manuscript"),
+    *(
+        (f"output/manuscript/{name}", "rendered_manuscript_metadata")
+        for name in _RENDER_METADATA_FILES
+    ),
     (
         "output/manuscript/assets/graphical-abstract.png",
         "rendered_manuscript_asset",

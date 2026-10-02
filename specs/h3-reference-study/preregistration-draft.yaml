@@ -1,0 +1,426 @@
+schema_version: 1
+study_id: h3-fin4-synthetic-2026-09-30
+status: draft_pending_current_g0_and_independent_review
+draft_recorded_utc: '2026-09-30T18:04:54Z'
+methodology_revised_utc: '2026-09-30T20:35:48Z'
+supersedes_draft_sha256: 884fb3824cf99a658907ffd9a479c60001d405928d5e2b27e35d14b518f01f73
+execution_authorized: false
+branch: continuous
+finite_branch_selected: false
+g0_acceptance_sha256: 6e3727aa85e64f81c89857a682915947ad3f901944914b3b53214746415bc5b1
+g0_acceptance_path: specs/h3-reference-study/output/g0-20260930.json
+h2_terminal_acceptance_sha256_at_freeze: 2d72e6b7205b92a625106e2830c2a01200682ffb3af036dd48118eb88f9067be
+prior_outcomes:
+  known_feasibility_record: specs/h3-case-study/spike-receipt.json
+  known_seed: 20260911
+  disclosure: >-
+    The earlier feasibility spike informed sample sizes and tolerances. It is
+    neither an unseen validation sample nor H3 acceptance. No draws from the
+    new seeds below have been generated or inspected for this draft.
+freeze_requirements:
+  - Live H2 terminal acceptance and continuous G0 validation pass.
+  - Independent domain and statistical reviewers approve this exact draft hash.
+  - Freeze a new preregistration.yaml exclusively before H3 model implementation.
+  - Record accepted G0 bytes, reviewed carrier hashes and protocol SHA-256.
+  - Preserve every superseded draft, failure and deviation in the execution ledger.
+carrier:
+  namespace: FEP.Fin4GaussianSemigroup
+  axes: [external, sensory, active, internal]
+  axis_fin_order: [0, 1, 2, 3]
+  precision: [[4, -1, -1, 0], [-1, 4, 0, -1], [-1, 0, 4, -1], [0, -1, -1, 4]]
+  covariance: derived_inverse_of_precision
+  state_units: dimensionless
+  raw_unit_bridge:
+    rule: standardized_axis_equals_raw_minus_offset_divided_by_positive_scale
+    scales: [1, 2, 3, 4]
+    offsets: [0, 1, -1, 2]
+    units: [synthetic_external_unit, synthetic_sensory_unit, synthetic_active_unit, synthetic_internal_unit]
+    interpretation: synthetic calibration conventions only; no physical energy units
+  stationary_recognition:
+    latent: external
+    blanket: [sensory, active]
+    conditional_mean: 'center_external + ((sensory - center_sensory) + (active - center_active)) / 4'
+    conditional_variance: '1/4'
+    internal_conditional_mean: 'center_internal + ((sensory - center_sensory) + (active - center_active)) / 4'
+    setting_intercepts: {A: 0, B: '3/16'}
+    rank_condition: same nonzero blanket regression map; recognition acts on conditional means
+    boundary: individual internal samples are not exact external state estimates
+  dynamic_observable:
+    name: normalized_all_ones
+    formula: '(external + sensory + active + internal) / 2'
+    rate: 2
+    diffusion_variance_rate: 2
+    stationary_variance: '1/2'
+    observation: scalar_observable_plus_independent_centered_gaussian_noise
+    required_bridge: >-
+      Prove the scalar kernel image for every four-axis initial state, not
+      only the embedded all-ones initial subspace. Preserve the same
+      full-state transition across both time steps; never reset unobserved modes.
+    boundary: this scalar observable is not the external axis or a finite Boolean blanket
+    pre_outcome_observation_adjudication: >-
+      The older unfrozen design template observed sensory/active coordinates
+      with the external coordinate latent. This study instead observes the
+      normalized all-ones projection, which includes every axis. Scalar
+      posterior, calibration and consistency claims concern that observable
+      only; they do not establish external-state or interface-only inference.
+      Fully observed four-axis recovery remains a separate synthetic sample.
+interventions:
+  native_control:
+    action_type: Bool
+    centers: {'false': -1, 'true': 1}
+    state_center: scalar_center_times_normalized_all_ones
+    duration: '1/4'
+    target: 0
+    penalty: {'false': 0, 'true': 0}
+    rule: the chosen center selects the existing exact Fin4 transition family
+    initial_full_state_law: exact_Fin4_stationary_Gaussian_at_zero_center
+    initial_projected_belief: 'Gaussian(mean=0, variance=1/2)'
+    observation_timing: one noisy scalar observation after the first transition and before the second action
+    observation_noise_variance: same positive variance as the named synthetic setting
+    objective: 'expected squared projected terminal state Z_2^2 after the second transition'
+    running_cost: 0
+    first_action_penalty: 0
+    second_action_penalty: 0
+    policy_class: first_action_Bool_and_measurable_second_action_of_real_observation
+    policy_attainment: enumerate both first actions and derive the measurable pointwise second-action risk minimizer
+    tie_rule: false before true for both the pointwise second-action selector and first-action enumeration
+    open_loop_class: same initial law, observation-noise law, two durations and terminal objective; both actions fixed
+    posterior_boundary: reuse exact Gaussian posterior only evidence-almost-everywhere, sufficient for expected objective equality
+  coordinate_intervention:
+    operation: measurable_active_coordinate_clamp_pushforward
+    clamp_value: 0
+    map: '(external, sensory, active, internal) -> (external, sensory, 0, internal)'
+    requirement: derive normalized native probability law and state changed assumptions
+    non_descendant_invariance: joint marginal of external, sensory and internal is exactly unchanged by the pushforward
+    countermodel: stationary conditional blanket is not preserved; the active coordinate becomes singular and conditioning on constant active adds no information
+    exact_conditional_external_internal_covariance_given_sensory: '1/56'
+    exact_conditional_external_and_internal_variances_given_sensory: '15/56'
+    scope_separation: stationary recognition/blanket proofs do not transfer to clamped laws or feedback mixtures without a separately derived law
+    boundary: an imposed synthetic operation; no observational causal identification
+  efe_alignment:
+    scoring_observation: 'prospective Y_2 = Z_2 + independent Gaussian(0,R); no additional policy input'
+    preference_law: 'Gaussian(mean=0, variance=1/2)'
+    definition: 'expected negative log preference density of Z_2 minus native mutualInformation(Z_2,Y_2)'
+    risk: same expected squared terminal state as the declared second-action objective
+    conditional_prior: exact native posterior Gaussian with mean m and variance P after the single policy observation
+    r: 'exp(-1/2)'
+    q: '(1-r^2)/2'
+    action_common_terminal_variance: 'V = r^2*P+q'
+    conditional_information: 'I = (1/2)*log(1+V/R), independent of the chosen Bool center'
+    equality: 'EFE = squared_terminal_risk + (1/2)*log(pi) - I'
+    required_derivation: native normalization, support, integrability and actual mutual-information action independence; no assumed information field or bare relabeling of a KL
+    conclusion: exact same second-action ordering and false-before-true ties under these assumptions
+    preference_counterexample:
+      unchanged: exact transition, positive noise, terminal risk target0, and common variance
+      changed: preference center1 and posterior belief mean1
+      terminal_means: {'false': '2*r-1', 'true': 1}
+      result: squared-terminal-risk strictly chooses false while the preference-shifted EFE strictly chooses true
+      boundary: an assumption countermodel, not a second fitted primary model
+  controlled_boundedness:
+    scope: the declared two-step same-full-state law under every permitted measurable Bool selector
+    projected_step: 'E[Z_next^2] <= r*E[Z^2]+(1-r)+q'
+    pointwise_basis: '(r*z+(1-r)*c)^2 <= r*z^2+(1-r)*c^2, c^2=1, 0<r<1'
+    bound: 'B = 1+q/(1-r) = 3/2+r/2'
+    projected_initial_second_moment: '1/2'
+    hidden_modes: unchanged stationary rate4,rate4,rate6 marginal second moments, sum2/3
+    full_state_bound: 'E[sum_axes X_axis^2] <= B+2/3 at each of the two steps'
+    required_derivation: native moments, measurable selector, law normalization and induction derive the certificate; do not supply boundedness as an assumed result
+    boundary: finite-horizon second-moment bound only; no infinite-horizon closed-loop process or asymptotic stability claim
+  restricted_controller_counterexample:
+    policy_class: singleton first=true and second identically=true
+    singleton_terminal_mean: '1-r^2'
+    singleton_risk: '1/2+(1-r^2)^2'
+    unrestricted_open_loop_terminal_mean_magnitude: '(1-r)^2'
+    unrestricted_open_loop_risk: '1/2+(1-r)^4'
+    result: singleton risk is strictly larger; the class fails containment of the best opposite-center open-loop plan
+hypotheses:
+  - id: H3-H1
+    prediction: native precision-zero blanket and derived recognition agree with the exact stationary law
+    refutation: a covariance-zero substitute or the declared nonsymmetric axis/rate substitution passes its sealed-metadata and exact-law controls
+  - id: H3-H2
+    prediction: identifiable synthetic settings recover fixed precision, transition, diffusion and recognition within locked tolerances
+    refutation: either new setting fails a primary recovery threshold
+  - id: H3-H3
+    prediction: the explicit scalar projection reproduces native Gaussian update and density-relative VFE optimum
+    refutation: exact carrier, support, variance or posterior-a.e. binding fails
+  - id: H3-H4
+    prediction: the attained two-step observation-contingent class weakly improves over its contained open-loop class on the same law and objective
+    refutation: class containment, objective equality, attained optimum or numerical comparison fails
+  - id: H3-H5
+    prediction: finite-grid path information and Lyapunov change are reproducible but do not identify physical heat
+    refutation: the proposed heat-nonidentification witnesses secretly change their path laws or omit their constitutive assumptions
+  - id: H3-H6
+    prediction: EFE/risk action alignment and finite-horizon controlled moments follow from their explicit native-law assumptions
+    refutation: native information/integrability binding or the derived bound fails, or the preference/class countermodels fail to reverse the declared conclusion
+  - id: H3-H7
+    prediction: separate-seed latent posterior simulation-based calibration passes in both exact settings and rejects the fixed misspecifications
+    refutation: a conjunctive calibration metric fails or a locked wrong-noise/prior control fails to reject nominal calibration
+synthetic_acceptance:
+  generator: exact_stationary_Fin4_pairs_and_two_step_controlled_native_transition
+  pairs_per_setting: 200000
+  settings:
+    - {id: A, seed: 20261001, delta: '1/4', center: 0, observation_noise_variance: '1/8'}
+    - {id: B, seed: 20261002, delta: '1/2', center: '3/4', observation_noise_variance: '1/4'}
+  controls_seed: 20261003
+  execution_environment: {python: '3.14.4', numpy: '2.5.1', rng: PCG64, dtype: float64}
+  execution_order:
+    - source-bound exact fixture export and implementation-invariant checks
+    - separate-seed simulation-based calibration
+    - both primary full-state parameter-recovery settings
+    - fixed negative and misspecified controls plus retained sensitivities
+    - atomic H3.6S accepted or rejected record; the empirical branch remains governed no-go
+  random_stream_contract:
+    generator: numpy.random.Generator_with_PCG64
+    gaussian_draws: float64 standard_normal with explicit N-by-4 independent mode arrays and N scalar noise array; fixed declared mode order and pinned NumPy version
+    recovery: each setting seed initializes its own generator; draw initial full states, independent transition innovations, then scalar observation noise in that order
+    controls: controls_seed initializes a separate generator; draw initial full states, first-transition innovations, observation noise, then second-transition innovations
+    control_reuse: the same full-state draws and innovations are reused across both first actions, every fixed second action and the contingent selector; no generator reset between policy evaluations
+    control_setting_reuse: draw the four controls arrays once; the same scalar standard noise is rescaled by sqrt(R_A) or sqrt(R_B), and every policy in both settings reuses the same arrays
+    seed_reuse_boundary: none of these streams is the retained feasibility seed or an empirical validation sample
+  recovery_observations:
+    full_state_center: scalar setting center times normalized_all_ones; each axis has mean center/2
+    recorded_columns: all four raw axes at time 0 and time delta, their fixed affine calibrations, and one independent noisy scalar datum at time delta
+    source_mapping: external/sensory/active/internal map exactly to Fin indices 0/1/2/3 at both endpoints
+    pair_law: independent initial stationary Fin4 draws and conditionally independent exact transitions; different pairs are independent
+    initial_draw_formula: center_times_normalized_all_ones_plus_U_times_diag_one_over_sqrt_lambda_times_standard_normal_modes
+    transition_draw_formula: center_times_normalized_all_ones_plus_U_times_diag_exp_minus_lambda_delta_times_U_transpose_times_initial_displacement_plus_U_times_diag_sqrt_one_minus_exp_minus_2_lambda_delta_over_lambda_times_independent_standard_normal_modes
+    recognition_sample: time-0 standardized external outcome and both standardized sensory/active predictors from the same pairs
+    scalar_filter_sample: normalized projection of the time-delta state plus independent noise of the setting variance
+    separation: noisy scalar-only observations are never used to estimate the four-axis precision or hidden eigenmodes
+  recovery_estimators:
+    precision:
+      formula: inverse_of_C00_where_C00_equals_sum_centered_X0_outer_products_divided_by_N
+      centering: sample mean of each time-0 standardized axis
+      target: exact K in the sealed axis order
+      metric: maximum absolute error over all sixteen entries
+      boundary: stationary covariance inversion estimates precision only under the selected exact stationary Gaussian assumption
+    transition_baseline:
+      formula: A_hat_equals_C10_times_inverse_C00; C10_equals_sum_centered_Xdelta_outer_centered_X0_divided_by_N
+      centering: separate sample axis means at time 0 and time delta
+      target: exp_minus_delta_times_K
+      capacity: unconstrained sixteen-entry linear transition, same four-axis samples, ordinary least squares with intercept
+      reporting: report the complete matrix and maximum-entry error as a diagnostic; do not silently replace it with its symmetric part
+    named_modes:
+      matrix_orientation: U has the listed orthonormal vectors as columns in the sealed axis order
+      orthonormal_vectors:
+        - ['1/2', '1/2', '1/2', '1/2']
+        - ['1/sqrt(2)', 0, 0, '-1/sqrt(2)']
+        - [0, '1/sqrt(2)', '-1/sqrt(2)', 0]
+        - ['1/2', '-1/2', '-1/2', '1/2']
+      rates: [2, 4, 4, 6]
+      centering: each projected endpoint is centered by its separate sample mean
+      slope: rho_hat_equals_sum_centered_Y0_times_centered_Ydelta_divided_by_sum_centered_Y0_squared
+      rate: lambda_hat_equals_minus_log_rho_hat_divided_by_delta
+      innovation_variance: q_hat_equals_sum_squared_centered_Ydelta_minus_rho_hat_times_centered_Y0_divided_by_N
+      diffusion_variance_rate: D_hat_equals_2_times_lambda_hat_times_q_hat_divided_by_1_minus_rho_hat_squared
+      metrics: maximum relative error of four named rates and maximum absolute error of four diffusion rates against 2
+      boundary: basis is supplied by the exact carrier; no learned eigenvector identity or generic matrix identifiability is claimed, including inside the repeated-rate-4 subspace
+    recognition:
+      estimator: ordinary least squares external_equals_intercept_plus_beta_sensory_times_sensory_plus_beta_active_times_active
+      predictors: uncentered standardized sensory and active, with an explicit intercept column
+      target_coefficients: ['1/4', '1/4']
+      target_intercepts: {A: 0, B: '3/16'}
+      residual_variance: sum of squared fitted residuals divided by N
+      target_residual_variance: '1/4'
+      zero_coefficient_baseline: predict the declared external mean center/2; both slopes zero and no fitting
+    failure_domain:
+      - Missing or nonfinite columns, nonpositive affine scales or nonpositive delta are rejecting inputs.
+      - Singular or nonpositive empirical covariance, zero mode variance, or a mode slope outside the open interval (0,1) rejects that setting.
+      - Do not clip eigenvalues/slopes, add diagonal jitter, drop modes, refit after rejection or replace failed estimates with sentinels.
+    uncertainty_reporting:
+      method: fixed 64-group delete-group jackknife of each estimator, with consecutive groups of 3125 pairs and all estimator formulas unchanged
+      standard_error: square_root_of_63_divided_by_64_times_sum_squared_leave_group_estimate_minus_mean_leave_group_estimate
+      interval: full_sample_estimate_plus_or_minus_1.96_times_jackknife_standard_error
+      boundary: descriptive asymptotic intervals only; no finite-sample coverage guarantee, empirical calibration, parameter-consistency theorem or interval-based acceptance gate
+      failed_jackknife_replicate: retain the rejecting replicate and mark that interval unavailable; never omit failed groups or substitute an interval
+  fixed_latent_posterior_consistency:
+    scope: consistency in probability under the declared known generating prior/joint; no parameter consistency or changing-state filtering concentration
+    latent: the same projected Z_delta under stationary Gaussian(mean=c,variance=1/2)
+    observations: for each finite n, Y_j=Z_delta+independent Gaussian(0,R), all sharing that single latent state
+    timing: repeated measurements have no intervening state transition and supply no extra inputs to the two-step control policy
+    native_joint: derive the finite n conditionally independent likelihood and probability normalization using actual Gaussian laws
+    posterior_variance: 'P_n=R/(2*R+n)'
+    posterior_mean: 'm_n=(2*R*c+sum_j Y_j)/(2*R+n)'
+    identifiability: distinct scalar means give distinct positive-noise observation laws; hidden full-state modes remain unidentifiable from this map
+    mean_square_error: 'integral (m_n-Z_delta)^2 over the actual native joint equals P_n'
+    concentration: 'for every epsilon>0, Pr(abs(m_n-Z_delta)>=epsilon)<=P_n/epsilon^2, which tends to 0'
+    proof_boundary: derive finite conjugacy, MSE, Markov tail bound and the limit; no assumed consistency field, almost-sure infinite-process theorem or pointwise-for-every-truth claim
+    deterministic_fixtures:
+      counts: [0, 1, 2, 4, 8, 16]
+      observation_list: [1, -1, 0, 2, -2, 1, 0, -1, 2, 0, -2, 1, -1, 0, 1, -1]
+      settings: both declared positive R and centers A/B
+      epsilon: '1/2'
+      gate: exact P_n, prefix posterior means, MSE and theorem-derived tail bounds match within the existing exact fixture tolerance; positive variance decreases and its limit is proved
+      reporting: retain uncapped Markov upper bound even when greater than1; this is not an additional Monte Carlo outcome or universal confidence guarantee
+    random_stream: none; no new seed, simulated draw or post-outcome fitting
+  primary_metrics:
+    precision_max_entry_absolute_error: 0.2
+    transition_eigen_rate_relative_error: 0.05
+    diffusion_variance_rate_absolute_error: 0.25
+    recognition_coefficient_absolute_error: 0.02
+    recognition_intercept_absolute_error: 0.02
+    recognition_residual_variance_absolute_error: 0.03
+    contingent_minus_best_open_loop_objective_upper_tolerance: 0.02
+  exact_fixture_tolerance: 1.0e-12
+  required_negative_controls:
+    - sealed_axis_metadata_mismatch_and_declared_nonsymmetric_axis_or_rate_pairing_rejected
+    - missing_or_nonpositive_unit_scale_rejected
+    - stale_protocol_or_export_or_source_digest_rejected
+    - nonidentifiable_observation_map_identified
+    - wrong_observation_noise_exceeds_locked_calibration_threshold
+    - native_singular_support_and_zero_density_not_silently_accepted
+    - restricted_policy_class_cannot_claim_containment_advantage
+    - same_path_KL_distinct_constitutive_heat_witnesses
+    - repeated_time_grid_has_native_singular_support_and_infinite_KL
+    - preference_shift_breaks_EFE_risk_alignment
+    - fixed_wrong_prior_and_stationary_mean_substitution_fail_calibration
+  simulation_based_calibration:
+    scope: native latent posterior implementation under a known generating law; no parameter-posterior or observed-data coverage claim
+    settings: [{id: A, seed: 20261004}, {id: B, seed: 20261005}]
+    replications_per_setting: 20000
+    posterior_draws_per_replication: 31
+    generator: exact independent stationary full-Fin4 initial states, exact transitions, then the named noisy scalar observation
+    draw_order: N-by-4 initial standard normal modes, N-by-4 independent transition innovations, N scalar observation noises, N-by-31 posterior standard normals, N independent tie uniforms
+    prior: 'Z_delta ~ Gaussian(mean=c, variance=1/2)'
+    observation: 'Y = Z_delta + sqrt(R)*noise'
+    gain: 'g=(1/2)/(1/2+R)'
+    posterior_mean: 'm=c+g*(Y-c)'
+    posterior_variance: 'P=(1/2)*R/(1/2+R)'
+    posterior_draws: 'm+sqrt(P)*eta'
+    rank: 'sum(draw<Z_delta)+floor(U*(1+sum(draw==Z_delta))) in {0,...,31}'
+    normalized_rank_mean: 'sum(rank_i)/(31*N)'
+    histogram_frequency: 'for each bin k in {0,...,31}, count(rank_i==k)/N'
+    standardized_residual: 'W=(Z_delta-m)/sqrt(P)'
+    variance_convention: population variance with divisor N
+    central_95_percent_interval: 'abs(W)<=1.959963984540054'
+    conjunctive_thresholds_each_setting:
+      maximum_32_bin_rank_frequency_absolute_error_from_one_over_32: 0.006
+      normalized_rank_mean_absolute_error_from_one_half: 0.01
+      standardized_residual_mean_absolute_value: 0.03
+      standardized_residual_variance_absolute_error_from_one: 0.04
+      central_95_percent_coverage_absolute_error_from_0_95: 0.01
+    wrong_noise_control:
+      reuse: identical generating and posterior standard-normal draws with the already locked assumed R_prime=2R; no additional random stream
+      standardized_residual_variance_targets: {A: '2/3', B: '3/4'}
+      target_variance_absolute_error_tolerance: 0.04
+      required_distance_from_nominal_variance_one: '>0.10'
+      required_distance_from_nominal_coverage_0_95: '>0.015'
+      reporting: retain the complete rank histograms, mean, variance, coverage and failed nominal gates
+    failure_domain: missing/nonfinite draws or replications reject; no row exclusions, seed reruns, clipping, variance repairs or threshold retuning
+    boundary: these are frozen synthetic implementation thresholds; no finite-sample confidence or universal coverage theorem is inferred
+  misspecified_noise_min_absolute_variance_error: 0.005
+  observation_calibration:
+    predictive_variance: '1/2'
+    true_noise_variances: {A: '1/8', B: '1/4'}
+    posterior_variance_formula: predictive_variance_times_noise_variance_divided_by_predictive_variance_plus_noise_variance
+    exact_posterior_variances: {A: '1/10', B: '1/6'}
+    misspecified_assumed_noise_variances: {A: '1/4', B: '1/2'}
+    misspecified_posterior_variances: {A: '1/6', B: '1/4'}
+    exact_misspecification_absolute_errors: {A: '1/15', B: '1/12'}
+    negative_control_metric: absolute difference between the true native conditional variance and the variance produced with the locked misspecified noise
+    gate: exact posterior fixtures match within exact_fixture_tolerance and both locked misspecification errors exceed misspecified_noise_min_absolute_variance_error
+    boundary: this is a specified model-misspecification witness, not observed-data calibration or an uncertainty-coverage claim
+    density_failure_controls:
+      - zero observation variance rejects the nondegenerate Gaussian API before analysis
+      - all-zero likelihood with zero evidence normalizer rejects before posterior or VFE evaluation
+      - do not reject a density representative merely for being zero on a null point; native support and positivity remain almost-everywhere statements
+  retained_sensitivities:
+    subset_diagnostic:
+      split: fixed even and odd row indices, 100000 pairs each in both primary settings
+      report: full unconstrained transition and precision matrices, named mode rates/diffusions, recognition coefficients/intercept/residual variance, and every half-sample difference
+      boundary: descriptive comparison only; no unthresholded stability claim or retuning
+    wrong_predictive_prior:
+      assumed_prior: 'Gaussian(mean=c+1, variance=1/2)'
+      unchanged_truth: original stationary Gaussian(mean=c,variance=1/2) latent and original observation draws
+      exact_standardized_residual_mean: {A: '-sqrt(2/5)', B: '-sqrt(2/3)'}
+      required_observed_absolute_mean: '>0.4'
+      gate: exact posterior-bias fixture agrees within exact_fixture_tolerance and both settings reject the nominal zero-mean calibration
+    nonstationary_initial_mean:
+      transform: 'X_0_prime=X_0+u; X_delta_prime=X_delta+exp(-2*delta)*u; Y_prime=Y+exp(-2*delta), u=normalized_all_ones'
+      initial_law: 'Gaussian(mean=(c+1)*u,covariance=Sigma)'
+      correct_predictive_mean: 'c+exp(-2*delta)'
+      predictive_variance: '1/2'
+      gate: correct mean/variance exact fixtures pass; substituting stationary mean c must yield observed absolute standardized residual mean >0.2 in both settings
+      wrong_stationary_mean_exact_residual_mean: '(1-g)*exp(-2*delta)/sqrt(P)'
+      reporting: retain all posterior means, calibration failures and unchanged-transition source binding
+    preprocessing:
+      positive: exact declared positive affine raw/standardized round-trip on all recorded axes
+      wrong_active_scale: double the sealed active scale in the supplied calibration metadata while leaving protocol hash fixed; reject before fitting
+      negative: missing or nonpositive scale rejects before fitting; no bad-row removal
+  axis_and_rate_controls:
+    metadata: swapping any sealed axis label or Fin index without changing the reviewed protocol hash rejects the input
+    law_change_axis_permutation: swap external and sensory while leaving the declared axis metadata fixed; require the permuted K differ from K
+    law_change_rate_pairing: exchange the named rate-2 and rate-6 modes while leaving their declared vectors fixed; require the reconstructed K differ from K
+    symmetry_boundary: external/internal exchange, sensory/active exchange and basis rotations inside the rate-4 subspace can preserve the law; no statistical rejection or unique label/basis identification is required or claimed for these symmetries
+  nonidentifiable_observation_control:
+    map: the single normalized_all_ones scalar observation has matrix rank 1 on the four-dimensional state
+    pair: same zero-centered Fin4 transition and covariance Sigma, with initial full-state means zero and the declared normalized rate-4 external/internal mode
+    witness: distinct full-state initial laws yield identical projected scalar path and noisy observation laws because the hidden mean is orthogonal to normalized_all_ones
+    gate: derive equality of the projected observation laws and inequality of the full-state initial laws; scalar-only recovery must report the hidden initial mean as unidentifiable
+    boundary: this does not add a second precision carrier or excuse rejection of the fully observed primary recovery settings
+  finite_grid_information:
+    experiment: separate uncontrolled information leg using the same Fin4 K and transition at zero center
+    times: [0, '1/4', '1/2']
+    initial_full_state_law: native Fin4 Gaussian with mean normalized_all_ones and covariance Sigma
+    initial_projected_law: 'Gaussian(mean=1, variance=1/2)'
+    forward: actual native law of all three projected coordinates generated by the unchanged full-state transition
+    reverse_aligned: pushforward of that same finite path law by coordinate reversal; no inferred physical reversed dynamics
+    projected_mean: ['1', 'exp(-1/2)', 'exp(-1)']
+    projected_covariance: C_ij_equals_one_half_times_exp_minus_2_times_absolute_t_i_minus_t_j
+    path_KL: native_KL_of_forward_to_reverse_aligned
+    exact_target: one_half_times_mean_minus_reversed_mean_transpose_times_inverse_C_times_mean_minus_reversed_mean
+    specialized_exact_target: '2 * (1 - exp(-1))'
+    strict_witness: C_positive_definite_and_mean_not_equal_reversed_mean_imply_path_KL_positive
+    lyapunov: native marginal KL to Gaussian(mean=0,variance=1/2) equals exp(-4*t), with grid values 1, exp(-1), exp(-2)
+    support: derive mutual absolute continuity and log-ratio integrability from strictly positive grid increments and native Gaussian covariance; preserve infinity on singular inputs
+    bridge_requirement: the existing stationary scalar grid wrapper does not supply this nonstationary full-state path; derive its law and coordinate-reversal pushforward explicitly in the H3 composition
+    control_boundary: this leg has one fixed center and no feedback actions; no monotone KL to one stationary law is asserted while action centers switch
+    singular_grid_control:
+      times: [0, 0, '1/4']
+      forward_support: first two coordinates equal almost surely
+      reversed_support: last two coordinates equal almost surely
+      native_obligation: positive-duration OU noise makes last-coordinate equality null under forward law; derive failure of absolute continuity and native KL equal infinity
+      boundary: no finite log-ratio formula or matrix inverse is accepted for this singular grid
+    constitutive_nonidentification:
+      assignments: energy_per_nat equal to 1 or 2 in the same explicitly hypothetical energy unit
+      rule: assigned_expected_heat equals energy_per_nat times the same strictly positive path_KL
+      witness: identical probability laws and path information, unequal assigned expected heat under the two stated unmeasured constitutive hypotheses
+      boundary: assignments are a counterexample to identification from probability data alone; neither assignment is measured heat or a proved physical constitutive law
+  baselines:
+    - exact_native_closed_form_parameters
+    - unconstrained_linear_regression_with_same_observed_columns_and_samples
+    - zero_recognition_coefficients
+    - all_four_two_step_open_loop_action_pairs
+    - observation_contingent_policy_with_same_first_action_and_transition_budget
+  optimization_budget: exact finite first-action enumeration and derived pointwise second-action minimizer; no fitting to acceptance data
+  control_evaluation: 200000 fresh controlled trajectories per first-action choice, using controls_seed and common random numbers across matched second-action baselines
+  multiplicity: conjunctive_primary_gate_all_metrics_in_both_settings_must_pass
+  minimum_supportive_effect: no posthoc empirical p-value or universal FEP effect is inferred
+  failures: >-
+    Preserve failed metrics and receipts; stop empirical unlock on any primary
+    failure. Do not change seeds, sample counts, exclusions or tolerances after
+    outcomes. Protocol changes require a new study ID, disclosure and new unseen
+    samples; the failed study remains a recorded result.
+empirical_gate:
+  status: no_go_no_licensed_named_dataset
+  dataset: null
+  license: null
+  raw_split_sha256: null
+  protected_outcomes_accessed: false
+  reason: No named licensed dataset with reviewed four-axis/unit/sampling/intervention metadata is supplied.
+  permitted_result: mathematical_and_synthetic_only
+  reopening: new data-owner/statistical review and immutable raw split before outcome inspection
+claim_matrix:
+  proved: exact named native theorem statements and explicit assumptions only
+  numerical: preregistered synthetic recovery and negative-control measurements only
+  empirical: unavailable
+  causal: imposed synthetic interventions only
+  physical_thermodynamics: unidentifiable_without_constitutive_measurements
+  excluded: biological agency, universal FEP validity, continuous-path heat, arbitrary nonlinear dynamics, general strong duality
+terminal_requirements:
+  - Manifested H3 foundation and composition direct import/namespace contracts pass.
+  - Exact native compilation and axiom audit pass with zero warnings and sorry.
+  - Synthetic executable consumes source-bound typed exports and writes atomically.
+  - Independent Lean, domain and statistical reviewers approve the final claim matrix.
+  - A fresh reviewer reproduces one fixture and both new settings from the release bundle.
+  - Two release bundles are byte-identical and independently valid against final source.

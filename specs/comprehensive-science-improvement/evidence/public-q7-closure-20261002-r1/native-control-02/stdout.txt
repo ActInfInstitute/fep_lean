@@ -1,0 +1,2 @@
+/private/var/folders/r8/m8m857h1659dmg4lz07tlj500000gn/T/pytest-of-hum/pytest-1823/test_native_wrong_coefficient_0/q7_wrong_artifactF.lean:89:45: error: unsolved goals
+⊢ False

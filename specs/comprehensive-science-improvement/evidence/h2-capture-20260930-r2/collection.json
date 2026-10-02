@@ -1,0 +1,1177 @@
+{
+  "markers": {
+    "tests/test_formal_composition.py::test_checkout_formal_projection_is_current": [],
+    "tests/test_formal_composition.py::test_checkout_resource_origin_is_explicit_and_not_site_package_derived": [],
+    "tests/test_formal_composition.py::test_core_composition_leaf_names_cross_topic_witnesses": [],
+    "tests/test_formal_composition.py::test_formal_manifest_rejects_duplicate_leaf_specific_namespace_owners": [],
+    "tests/test_formal_composition.py::test_formal_manifest_rejects_new_owner_of_released_shared_namespace": [],
+    "tests/test_formal_composition.py::test_formal_module_accepts_safe_nested_resources_with_exact_module_path": [],
+    "tests/test_formal_composition.py::test_formal_module_manifest_is_the_single_explicit_resource_roster": [],
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[aggregate-FEPComposed]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[composition-not a Lean namespace]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[foundation-None]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[../escape.lean-FepSketches.escape]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[/tmp/escape.lean-FepSketches.escape]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[compositions/family.lean-FepSketches.wrong.family]": [
+      "parametrize"
+    ],
+    "tests/test_formal_composition.py::test_formal_projection_writer_and_drift_are_byte_exact": [],
+    "tests/test_formal_composition.py::test_formal_resource_manifest_rejects_missing_and_unlisted_lean_files": [],
+    "tests/test_formal_composition.py::test_formal_resource_manifest_validates_comment_stripped_namespace_owner": [],
+    "tests/test_formal_composition.py::test_public_composition_aggregate_is_manifest_generated": [],
+    "tests/test_formal_foundations.py::test_formal_kernel_has_exact_manifested_declaration_closure": [],
+    "tests/test_formal_foundations.py::test_formal_module_dependency_projection_is_acyclic_and_separate": [],
+    "tests/test_formal_foundations.py::test_formal_resources_contain_no_proof_placeholders": [],
+    "tests/test_formal_foundations.py::test_foundation_modules_do_not_import_the_generated_topic_aggregate": [],
+    "tests/test_formal_foundations.py::test_foundations_pin_the_claims_that_make_the_kernel_substantive": [],
+    "tests/test_formal_foundations.py::test_new_capabilities_are_closed_by_exact_declarations": [],
+    "tests/test_formalism_audit.py::test_audit_receipt_rejects_unapproved_axiom_even_when_surfaces_agree": [],
+    "tests/test_formalism_audit.py::test_audit_receipt_validation_rejects_live_projection_drift": [],
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_recomputes_digest_and_declaration_closure": [],
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_rejects_fail_open_evidence_fields": [],
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_returns_structured_error_for_incomplete_root": [],
+    "tests/test_formalism_audit.py::test_audit_rejects_stale_whole_catalogue_projection": [],
+    "tests/test_formalism_audit.py::test_axiom_parser_accepts_lean_hard_wrapped_output": [],
+    "tests/test_formalism_audit.py::test_axiom_parser_preserves_primed_declaration_names": [],
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext, ???]\\n-malformed axiom name for FEP.a: ???]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext\\n-unterminated axiom list for FEP.a]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext]\\n'FEP.a' depends on axioms: [Classical.choice]\\n-duplicate axiom evidence for FEP.a]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext]\\n'FEP.unknown' does not depend on any axioms\\n-unexpected axiom evidence for FEP.unknown]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_declaration_evidence_records_preserve_semantic_source_roles": [],
+    "tests/test_formalism_audit.py::test_lean_version_probe_failure_is_an_explicit_audit_failure": [],
+    "tests/test_formalism_audit.py::test_mismatched_lean_version_is_an_explicit_audit_failure": [],
+    "tests/test_formalism_audit.py::test_missing_lake_is_an_explicit_audit_failure": [],
+    "tests/test_formalism_audit.py::test_missing_mathlib_revision_is_an_explicit_audit_failure": [],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[clean-0-True-False-0-True]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[error-1-False-False-0-False]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[missing_axioms-0-False-False-0-False]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[sorry-0-False-True-0-True]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[unapproved_axiom-0-False-False-0-True]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[warning-0-False-False-1-True]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_audit.py::test_native_audit_rejects_duplicate_and_unknown_axiom_records": [],
+    "tests/test_formalism_audit.py::test_probe_resolves_primaries_and_prints_evidence_axioms": [],
+    "tests/test_formalism_coverage.py::test_coverage_allows_proxy_rows_to_retain_stronger_capability_blockers": [],
+    "tests/test_formalism_coverage.py::test_coverage_does_not_count_comment_only_endpoint_mentions": [],
+    "tests/test_formalism_coverage.py::test_coverage_rejects_formalized_rows_with_capability_blockers": [],
+    "tests/test_formalism_coverage.py::test_coverage_rejects_gap_without_explicit_blocker": [],
+    "tests/test_formalism_coverage.py::test_coverage_rejects_resolved_witness_that_omits_an_endpoint": [],
+    "tests/test_formalism_coverage.py::test_coverage_rejects_unresolved_formal_witness": [],
+    "tests/test_formalism_coverage.py::test_coverage_requires_formal_pairings_to_state_a_conjunction": [],
+    "tests/test_formalism_coverage.py::test_coverage_writer_and_drift_check_are_deterministic": [],
+    "tests/test_formalism_coverage.py::test_formal_inventory_and_counts_ignore_comment_only_lean_commands": [],
+    "tests/test_formalism_coverage.py::test_formalism_coverage_counts_canonical_breadth_and_depth": [],
+    "tests/test_formalism_novelty.py::test_catalogue_generation_rejects_novelty_ledger_drift": [],
+    "tests/test_formalism_novelty.py::test_expansion_row_requires_a_resolved_composed_bridge": [],
+    "tests/test_formalism_novelty.py::test_live_expansion_ledger_is_complete_and_uses_declared_bridges": [],
+    "tests/test_formalism_novelty.py::test_novelty_bridge_does_not_count_comment_only_endpoint_mentions": [],
+    "tests/test_formalism_novelty.py::test_novelty_bridge_must_use_the_new_topic_and_a_declared_nearest_topic": [],
+    "tests/test_formalism_novelty.py::test_novelty_roster_is_exact_ordered_expansion_tail": [],
+    "tests/test_formalism_novelty.py::test_novelty_rows_cannot_reuse_one_bridge_declaration": [],
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-carrier_delta]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-must precede]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-nearest_topics]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-new_invariant]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-required_bridge]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_blocked_edges_must_target_declared_capabilities": [],
+    "tests/test_formalism_relations.py::test_capability_evidence_resolves_in_the_canonical_formal_closure": [],
+    "tests/test_formalism_relations.py::test_conceptual_edges_cannot_target_capabilities": [],
+    "tests/test_formalism_relations.py::test_formal_cycles_are_rejected": [],
+    "tests/test_formalism_relations.py::test_formal_edges_require_a_qualified_witness": [],
+    "tests/test_formalism_relations.py::test_formal_pairings_are_witnessed_but_not_directional_dependencies": [],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data0-schema_version]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data1-unknown fields]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data10-duplicate conceptual edge]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data11-unreferenced unresolved capability]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data2-must be lists]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data3-capability row 1 must be an object]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data4-invalid capability ID]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data5-must be ID-sorted]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data6-edge row 1 must be an object]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data7-unknown source]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data8-self-edge]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data9-unsupported edge kind]": [
+      "parametrize"
+    ],
+    "tests/test_formalism_relations.py::test_nonformal_edges_reject_witness_fields": [],
+    "tests/test_formalism_relations.py::test_relation_order_is_canonical": [],
+    "tests/test_formalism_relations.py::test_shipped_graph_conserves_relation_and_capability_state": [],
+    "tests/test_formalism_relations.py::test_theorem_witnessed_edges_are_composition_leaves_using_both_endpoints": [],
+    "tests/test_formalism_relations.py::test_unreadable_and_malformed_graphs_fail_closed": [],
+    "tests/test_horizon1_decision_risk.py::test_bool_experiment_has_distinct_native_bayes_risks_and_genuine_estimator": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_decision_risk_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_decision_risk_foundation_owns_exact_import_and_namespace_contract": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_native_mutual_information_garbling_uses_product_pushforward_dpi": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_proper_log_score_keeps_truth_report_order_and_exhibits_asymmetry": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_relative_support_bridge_and_sparse_information_consumer_compile": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_decision_risk.py::test_weighted_dirac_bridge_preserves_support_and_extended_real_boundaries": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_finite_reference_agent_compiles_warning_free_with_explicit_output": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_finite_reference_agent_owns_exact_import_and_namespace_contract": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_one_coherence_record_is_explicitly_uninhabited_by_current_carriers": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_public_theorems_have_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_retained_predecessors_are_concrete_and_keep_failed_identities_separate": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_finite_reference_agent.py::test_terminal_theorem_connects_one_shared_learned_blanket_model": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_boolean_feedback_emits_nonconstant_action_through_model_transition": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_finite_policy_action_leaf_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_leaf_keeps_epistemic_and_total_efe_garbling_out_of_scope": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_policy_action_leaf_owns_exact_import_and_namespace_contract": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_same_depth_tree_gibbs_law_reuses_normalized_control_posterior": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_selected_belief_index_is_the_exact_h13_posterior_and_updates_once": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_selected_feedback_action_attains_the_recursive_selector": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_selected_feedback_uses_asymmetric_bayes_risk_and_strictly_wins": [
+      "serial_lean"
+    ],
+    "tests/test_horizon1_policy_action.py::test_vfe_gap_preserves_recognition_posterior_order_and_native_support": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_axiom_parser_accepts_lean_4_33_unquoted_names": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_derives_the_exact_precision_and_covariance": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_environment_census_rejects_every_public_declaration_form": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_is_manifested_and_projected_as_one_foundation": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_owns_the_named_axis_in_the_preregistered_order": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_projects_the_normalized_all_ones_mode_to_h2_5a": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_proves_four_nonvacuous_independent_eigenmodes": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_public_surface_axioms_and_terminal_export": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_public_surface_is_exact_nonvacuous_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_specializes_the_accepted_linear_gaussian_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_combined_boundary_is_typed_and_nonvacuous": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_coordinates_and_gaussian_rows_are_exact": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_is_spike_only_and_not_projected": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_native_factorization_and_conditional_surface_are_exact": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_public_axioms_census_and_typed_consumers": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_repair_is_source_bound_append_only_go": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_reuses_only_the_fixed_h2_5c_carrier": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_spike_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_boolean_witness_is_transition_derived_and_has_a_tie_boundary": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_has_one_exact_composition_source_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_is_manifested_projected_and_aggregated_once": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_native_posterior_and_selector_claims_are_evidence_ae": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_objective_is_the_actual_composed_gaussian_integral": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_reuses_native_filter_transition_and_minimizer_owners": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_stores_only_raw_control_inputs": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_coordinate_labels_and_scientific_boundaries_are_visible": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_coordinate_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_exact_formula_diagnostics_are_nonproof_regressions": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_extends_the_single_owner_with_exact_imports": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_closed_form_is_connected_to_the_native_posterior": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_finite_recursion_reuses_the_proved_one_step_update": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_has_one_exact_maintained_source_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_is_manifested_projected_and_aggregated_once": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_prediction_observation_and_closed_parameters_are_exact": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_reuses_exact_scalar_owners_and_stores_only_raw_inputs": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_grid_order_reversal_and_normalization_are_explicit": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_has_one_exact_composition_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_kl_is_oriented_supported_and_nonvacuous": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_projection_is_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_reuses_native_ou_and_partial_trajectory_carriers": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_kl_orientation_support_and_boundary_are_theorem_visible": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_owner_is_manifested_once_with_exact_imports_and_namespace": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_projection_and_manifest_are_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_canonical_source_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_environment_census_rejects_hidden_declaration_forms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_is_one_manifested_projected_foundation_not_an_aggregate_leaf": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_owner_imports_namespace_and_h2_5c_reuse_are_exact": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_preserves_h2_5c_r0_hashes_and_readiness_validation": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_projected_module_imports_with_native_instances_and_boundary": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_public_axioms_census_and_typed_consumers": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_public_source_roster_and_fixed_formulas_are_exact": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[changed_owner_role]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[duplicate_owner]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[expanded_allowance]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[expanded_downstream]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[missing_owner]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[native_claim_without_probes]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[prior]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[stale_source]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[unlisted_owner]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_exact_types_environment_and_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_is_source_bound_and_reuses_exact_owners": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_repair_is_source_bound_append_only_go": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_surface_and_orientation_are_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_typed_consumer_rejects_reversed_kl": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_uses_the_pinned_lean_mathlib_environment": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_axiom_parser_accepts_lean_4_33_unquoted_names": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_derives_inverse_and_dynamic_covariance": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_fin_one_specialization_names_exact_h2_5a_parameters": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_has_exact_owner_imports_and_generic_axis": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_invariance_moments_and_full_time_weak_limit_are_explicit": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_is_manifested_and_projected_as_one_foundation": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_owns_a_measurable_markov_kernel_and_chronological_semigroup": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_stores_only_raw_precision_and_center": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_embedding_theorems_use_standard_axioms_and_fix_orientation": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_extends_the_single_existing_embedding_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_native_owner_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_preserves_identity_and_chronological_composition_exactly": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_projection_is_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_reuses_the_embedding_and_existing_predictive_bridge": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_bridge_and_dissipation_use_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_has_one_exact_foundation_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_interface_stores_only_semigroup_laws": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_lift_preserves_exact_action_time_and_carrier": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_projection_is_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_derives_the_exact_update_surface_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_excludes_out_of_scope_and_atomic_evidence_claims": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_is_a_spike_without_a_maintained_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_public_theorems_encode_the_native_proof_ladder": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_repair_is_source_bound_append_only_go": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_reuses_exact_scalar_owners_and_stores_only_raw_inputs": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_spike_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_posterior_convergence.py::test_axiom_audit_rejects_an_unquoted_forbidden_axiom": [],
+    "tests/test_horizon2_posterior_convergence.py::test_axiom_parser_accepts_lean_4_33_quoted_and_unquoted_names": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_environment_census_rejects_every_public_declaration_form": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_carrier_and_definition_surface_preserves_h2_3a_prefix": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_import_and_namespace_boundary": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_instance_surface_preserves_h2_3a_prefix": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_public_theorem_roster_preserves_h2_3a_prefix": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_has_no_assumed_identification_or_convergence_fields": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_public_environment_axioms_and_h2_3b_exact_types": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_source_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_source_owner_exists": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_exact_limit_contract_rejects_hidden_identification_premises": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_is_static_parameter_learning_not_latent_state_filtering": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_martingale_and_limit_transport_native_results": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_native_posterior_bridge_is_joint_law_ae_only": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_preserves_horizon1_contraction_as_regression_only": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_claim_boundary_excludes_unproved_stronger_modes": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_consistency_includes_each_fixed_truth_law": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_decision_consequence_is_genuinely_bounded_zero_one_risk": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_distinct_laws_identify_the_limiting_observation": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_exact_type_consumer_payload_covers_every_required_theorem": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_required_inference_steps_are_separately_named": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_same_law_countermodel_stays_prior_only_evidence_ae": [],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_typed_consumers_reject_an_extra_theorem_premise": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_weak_and_bounded_continuous_transfers_are_native": [],
+    "tests/test_horizon2_readiness.py::test_api_surface_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_brownian_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_brownian_probe_is_finite_dimensional_only": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_calculus_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_calculus_probe_exercises_each_atomic_obligation": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_canonical_acceptance_fails_closed_without_lake": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_completed_readiness_evidence_survives_the_first_h2_resource": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_conditioning_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_conditioning_probe_fails_closed_at_the_probabilistic_seams": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_fin4_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_fin4_probe_uses_the_fixed_carrier_and_a_genuine_state_kernel": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_finite_grid_probe_builds_a_normalized_compositional_path_law": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_finite_grid_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_local_geometry_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_local_geometry_probe_separates_required_coordinates_from_optional_bundle": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_native_semigroup_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_native_semigroup_probe_preserves_one_kernel_and_exact_h1_embedding": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_posterior_martingale_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_posterior_martingale_probe_separates_limit_from_identification": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_matrix_has_an_exact_atomic_row_and_probe_roster": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_pin_and_api_surface_probe_are_explicit": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_accepts_only_the_source_bound_sealed_matrix": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_a_premature_h2_formal_resource": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_rehashed_semantic_tampering[<lambda>0]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_rehashed_semantic_tampering[<lambda>1]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-acceptance receipt digest mismatch]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-canonical row digest mismatch]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-readiness probe is missing]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-row pin_identity status is not sealed: pending]": [
+      "parametrize",
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_scalar_gaussian_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_scalar_gaussian_probe_exercises_every_native_boundary": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_unsupported_api_search_is_bounded_replayable_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_weak_convergence_probe_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_readiness.py::test_weak_convergence_probe_keeps_bounded_and_characteristic_routes_distinct": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_chapman_kolmogorov_is_chronological_and_consumes_h2_4": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_has_one_exact_foundation_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_invariance_moments_weak_limit_and_kl_are_explicit": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_projection_is_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_public_surface_is_exact_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_stores_only_raw_positive_parameters": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_zero_positive_and_h2_1_branches_are_explicit": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_has_one_exact_foundation_owner": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_metric_duality_and_rank_boundary_are_theorem_visible": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_projection_and_manifest_are_current": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_public_surface_is_exact_and_has_no_parallel_geometry_hierarchy": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_consumes_only_an_accepted_source_bound_r0_decision": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_environment_and_all_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_is_manifested_projected_and_aggregated_exactly_once": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_owns_one_terminal_composition_leaf": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_public_surface_is_exact_and_has_no_stored_certificate": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_scalar_carrier_bridges_are_source_visible_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_typed_terminal_rejects_a_different_transition_carrier": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_axiom_parser_accepts_lean_4_33_unquoted_names": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_generic_contract_has_exact_fin4_consumer": [
+      "serial_lean",
+      "skipif"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_public_surface_is_exact_generic_and_fail_closed": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_public_theorems_use_only_standard_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_repair_is_source_bound_append_only_go": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_spike_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_spike_exists": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_correlated_blanket_example_is_nonvacuous_declaration_evidence": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_fep139_body_exposes_native_predicate_and_coordinates": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_fep140_body_uses_mathlib_measurable_composition_law": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_axiom_probe_uses_only_trusted_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_composition_pins_exact_endpoint_pairings": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_family_closure_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_family_owns_seven_ordered_standalone_bodies": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_foundation_compiles_warning_free": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_foundation_pins_the_measure_transfer_surface": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_probe_pins_condindep_and_composition_axioms": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_native_stop_go_declaration_is_mathlib_cond_independence": [
+      "serial_lean"
+    ],
+    "tests/test_native_blanket_formalisms.py::test_rectangle_factorization_is_declaration_evidence_not_comment_only": [
+      "serial_lean"
+    ]
+  },
+  "nodeids": [
+    "tests/test_horizon2_readiness.py::test_canonical_acceptance_fails_closed_without_lake",
+    "tests/test_horizon2_readiness.py::test_readiness_pin_and_api_surface_probe_are_explicit",
+    "tests/test_horizon2_readiness.py::test_api_surface_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_readiness_matrix_has_an_exact_atomic_row_and_probe_roster",
+    "tests/test_horizon2_readiness.py::test_calculus_probe_exercises_each_atomic_obligation",
+    "tests/test_horizon2_readiness.py::test_calculus_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_local_geometry_probe_separates_required_coordinates_from_optional_bundle",
+    "tests/test_horizon2_readiness.py::test_local_geometry_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_weak_convergence_probe_keeps_bounded_and_characteristic_routes_distinct",
+    "tests/test_horizon2_readiness.py::test_weak_convergence_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_posterior_martingale_probe_separates_limit_from_identification",
+    "tests/test_horizon2_readiness.py::test_posterior_martingale_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_scalar_gaussian_probe_exercises_every_native_boundary",
+    "tests/test_horizon2_readiness.py::test_scalar_gaussian_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_native_semigroup_probe_preserves_one_kernel_and_exact_h1_embedding",
+    "tests/test_horizon2_readiness.py::test_native_semigroup_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_fin4_probe_uses_the_fixed_carrier_and_a_genuine_state_kernel",
+    "tests/test_horizon2_readiness.py::test_fin4_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_conditioning_probe_fails_closed_at_the_probabilistic_seams",
+    "tests/test_horizon2_readiness.py::test_conditioning_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_finite_grid_probe_builds_a_normalized_compositional_path_law",
+    "tests/test_horizon2_readiness.py::test_finite_grid_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_brownian_probe_is_finite_dimensional_only",
+    "tests/test_horizon2_readiness.py::test_brownian_probe_compiles_warning_free",
+    "tests/test_horizon2_readiness.py::test_unsupported_api_search_is_bounded_replayable_and_fail_closed",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_accepts_only_the_source_bound_sealed_matrix",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-row pin_identity status is not sealed: pending]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-readiness probe is missing]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-acceptance receipt digest mismatch]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_tampering[<lambda>-canonical row digest mismatch]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_rehashed_semantic_tampering[<lambda>0]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_rehashed_semantic_tampering[<lambda>1]",
+    "tests/test_horizon2_readiness.py::test_readiness_validator_rejects_a_premature_h2_formal_resource",
+    "tests/test_horizon2_readiness.py::test_completed_readiness_evidence_survives_the_first_h2_resource",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_owner_is_manifested_once_with_exact_imports_and_namespace",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_kl_orientation_support_and_boundary_are_theorem_visible",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_projection_and_manifest_are_current",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_foundation_compiles_warning_free",
+    "tests/test_horizon2_gaussian_information_geometry.py::test_h2_1a_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_extends_the_single_owner_with_exact_imports",
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_coordinate_labels_and_scientific_boundaries_are_visible",
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_exact_formula_diagnostics_are_nonproof_regressions",
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_foundation_compiles_warning_free",
+    "tests/test_horizon2_gaussian_coordinates.py::test_h2_1b_coordinate_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_has_one_exact_foundation_owner",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_public_surface_is_exact_and_has_no_parallel_geometry_hierarchy",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_metric_duality_and_rank_boundary_are_theorem_visible",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_projection_and_manifest_are_current",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_foundation_compiles_warning_free",
+    "tests/test_horizon2_smooth_information_geometry.py::test_h2_2a_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_posterior_convergence.py::test_axiom_parser_accepts_lean_4_33_quoted_and_unquoted_names",
+    "tests/test_horizon2_posterior_convergence.py::test_axiom_audit_rejects_an_unquoted_forbidden_axiom",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_exact_type_consumer_payload_covers_every_required_theorem",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_environment_census_rejects_every_public_declaration_form",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_typed_consumers_reject_an_extra_theorem_premise",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_source_owner_exists",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_import_and_namespace_boundary",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_carrier_and_definition_surface_preserves_h2_3a_prefix",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_instance_surface_preserves_h2_3a_prefix",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_exact_public_theorem_roster_preserves_h2_3a_prefix",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_required_inference_steps_are_separately_named",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_distinct_laws_identify_the_limiting_observation",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_consistency_includes_each_fixed_truth_law",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_weak_and_bounded_continuous_transfers_are_native",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_decision_consequence_is_genuinely_bounded_zero_one_risk",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_same_law_countermodel_stays_prior_only_evidence_ae",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3b_claim_boundary_excludes_unproved_stronger_modes",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_is_static_parameter_learning_not_latent_state_filtering",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_native_posterior_bridge_is_joint_law_ae_only",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_martingale_and_limit_transport_native_results",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_exact_limit_contract_rejects_hidden_identification_premises",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3a_preserves_horizon1_contraction_as_regression_only",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_has_no_assumed_identification_or_convergence_fields",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_source_compiles_warning_free",
+    "tests/test_horizon2_posterior_convergence.py::test_h2_3_public_environment_axioms_and_h2_3b_exact_types",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_extends_the_single_existing_embedding_owner",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_preserves_identity_and_chronological_composition_exactly",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_reuses_the_embedding_and_existing_predictive_bridge",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_projection_is_current",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_native_owner_compiles_warning_free",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4a_embedding_theorems_use_standard_axioms_and_fix_orientation",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_has_one_exact_foundation_owner",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_interface_stores_only_semigroup_laws",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_lift_preserves_exact_action_time_and_carrier",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_projection_is_current",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_foundation_compiles_warning_free",
+    "tests/test_horizon2_markov_semigroup.py::test_h2_4b_bridge_and_dissipation_use_standard_axioms",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_has_one_exact_foundation_owner",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_stores_only_raw_positive_parameters",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_zero_positive_and_h2_1_branches_are_explicit",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_chapman_kolmogorov_is_chronological_and_consumes_h2_4",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_invariance_moments_weak_limit_and_kl_are_explicit",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_projection_is_current",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_compiles_warning_free",
+    "tests/test_horizon2_scalar_gaussian_semigroup.py::test_h2_5a_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_axiom_parser_accepts_lean_4_33_unquoted_names",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_spike_exists",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_public_surface_is_exact_generic_and_fail_closed",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_spike_compiles_warning_free",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_generic_contract_has_exact_fin4_consumer",
+    "tests/test_horizon2_transition_covariance_readiness.py::test_h2_5b_r0_repair_is_source_bound_append_only_go",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_axiom_parser_accepts_lean_4_33_unquoted_names",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_has_exact_owner_imports_and_generic_axis",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_is_manifested_and_projected_as_one_foundation",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_stores_only_raw_precision_and_center",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_derives_inverse_and_dynamic_covariance",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_owns_a_measurable_markov_kernel_and_chronological_semigroup",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_invariance_moments_and_full_time_weak_limit_are_explicit",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_fin_one_specialization_names_exact_h2_5a_parameters",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_compiles_warning_free",
+    "tests/test_horizon2_linear_gaussian_semigroup.py::test_h2_5b_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_axiom_parser_accepts_lean_4_33_unquoted_names",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_environment_census_rejects_every_public_declaration_form",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_owns_the_named_axis_in_the_preregistered_order",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_is_manifested_and_projected_as_one_foundation",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_derives_the_exact_precision_and_covariance",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_proves_four_nonvacuous_independent_eigenmodes",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_specializes_the_accepted_linear_gaussian_owner",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_projects_the_normalized_all_ones_mode_to_h2_5a",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_public_surface_is_exact_nonvacuous_and_fail_closed",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_compiles_warning_free",
+    "tests/test_horizon2_fin4_gaussian_semigroup.py::test_h2_5c_public_surface_axioms_and_terminal_export",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_is_spike_only_and_not_projected",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_reuses_only_the_fixed_h2_5c_carrier",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_coordinates_and_gaussian_rows_are_exact",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_native_factorization_and_conditional_surface_are_exact",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_combined_boundary_is_typed_and_nonvacuous",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_spike_compiles_warning_free",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_public_axioms_census_and_typed_consumers",
+    "tests/test_horizon2_gaussian_conditioning_readiness.py::test_h2_5d_r0_repair_is_source_bound_append_only_go",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_owner_imports_namespace_and_h2_5c_reuse_are_exact",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_is_one_manifested_projected_foundation_not_an_aggregate_leaf",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_projected_module_imports_with_native_instances_and_boundary",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_public_source_roster_and_fixed_formulas_are_exact",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_environment_census_rejects_hidden_declaration_forms",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_canonical_source_compiles_warning_free",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_public_axioms_census_and_typed_consumers",
+    "tests/test_horizon2_gaussian_precision_conditioning.py::test_h2_5d_preserves_h2_5c_r0_hashes_and_readiness_validation",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_is_a_spike_without_a_maintained_owner",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_reuses_exact_scalar_owners_and_stores_only_raw_inputs",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_derives_the_exact_update_surface_fail_closed",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_public_theorems_encode_the_native_proof_ladder",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_excludes_out_of_scope_and_atomic_evidence_claims",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_spike_compiles_warning_free",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_native_filter_posterior_readiness.py::test_h2_6a_r0_repair_is_source_bound_append_only_go",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_has_one_exact_maintained_source_owner",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_is_manifested_projected_and_aggregated_once",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_reuses_exact_scalar_owners_and_stores_only_raw_inputs",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_prediction_observation_and_closed_parameters_are_exact",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_closed_form_is_connected_to_the_native_posterior",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_finite_recursion_reuses_the_proved_one_step_update",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_compiles_warning_free",
+    "tests/test_horizon2_gaussian_filter.py::test_h2_6a_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_has_one_exact_composition_source_owner",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_is_manifested_projected_and_aggregated_once",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_stores_only_raw_control_inputs",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_reuses_native_filter_transition_and_minimizer_owners",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_objective_is_the_actual_composed_gaussian_integral",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_native_posterior_and_selector_claims_are_evidence_ae",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_boolean_witness_is_transition_derived_and_has_a_tie_boundary",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_compiles_warning_free",
+    "tests/test_horizon2_gaussian_control.py::test_h2_6b_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_has_one_exact_composition_owner",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_reuses_native_ou_and_partial_trajectory_carriers",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_public_surface_is_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_grid_order_reversal_and_normalization_are_explicit",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_kl_is_oriented_supported_and_nonvacuous",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_projection_is_current",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_compiles_warning_free",
+    "tests/test_horizon2_gaussian_grid_path.py::test_h2_6c_public_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_is_source_bound_and_reuses_exact_owners",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_uses_the_pinned_lean_mathlib_environment",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_surface_and_orientation_are_exact_and_fail_closed",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_compiles_warning_free",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_exact_types_environment_and_axioms",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_typed_consumer_rejects_reversed_kl",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_repair_is_source_bound_append_only_go",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[prior]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[unlisted_owner]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[duplicate_owner]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[missing_owner]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[changed_owner_role]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[stale_source]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[expanded_downstream]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[expanded_allowance]",
+    "tests/test_horizon2_gaussian_vfe_readiness.py::test_h2_7_r0_custody_rejects_tampering[native_claim_without_probes]",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_owns_one_terminal_composition_leaf",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_public_surface_is_exact_and_has_no_stored_certificate",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_scalar_carrier_bridges_are_source_visible_and_fail_closed",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_compiles_warning_free",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_environment_and_all_theorems_use_only_standard_axioms",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_typed_terminal_rejects_a_different_transition_carrier",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_is_manifested_projected_and_aggregated_exactly_once",
+    "tests/test_horizon2_smooth_reference_kernel.py::test_h2_7_consumes_only_an_accepted_source_bound_r0_decision",
+    "tests/test_horizon1_decision_risk.py::test_decision_risk_foundation_owns_exact_import_and_namespace_contract",
+    "tests/test_horizon1_decision_risk.py::test_weighted_dirac_bridge_preserves_support_and_extended_real_boundaries",
+    "tests/test_horizon1_decision_risk.py::test_relative_support_bridge_and_sparse_information_consumer_compile",
+    "tests/test_horizon1_decision_risk.py::test_bool_experiment_has_distinct_native_bayes_risks_and_genuine_estimator",
+    "tests/test_horizon1_decision_risk.py::test_proper_log_score_keeps_truth_report_order_and_exhibits_asymmetry",
+    "tests/test_horizon1_decision_risk.py::test_native_mutual_information_garbling_uses_product_pushforward_dpi",
+    "tests/test_horizon1_decision_risk.py::test_decision_risk_foundation_compiles_warning_free",
+    "tests/test_horizon1_policy_action.py::test_policy_action_leaf_owns_exact_import_and_namespace_contract",
+    "tests/test_horizon1_policy_action.py::test_vfe_gap_preserves_recognition_posterior_order_and_native_support",
+    "tests/test_horizon1_policy_action.py::test_selected_belief_index_is_the_exact_h13_posterior_and_updates_once",
+    "tests/test_horizon1_policy_action.py::test_selected_feedback_uses_asymmetric_bayes_risk_and_strictly_wins",
+    "tests/test_horizon1_policy_action.py::test_selected_feedback_action_attains_the_recursive_selector",
+    "tests/test_horizon1_policy_action.py::test_boolean_feedback_emits_nonconstant_action_through_model_transition",
+    "tests/test_horizon1_policy_action.py::test_same_depth_tree_gibbs_law_reuses_normalized_control_posterior",
+    "tests/test_horizon1_policy_action.py::test_leaf_keeps_epistemic_and_total_efe_garbling_out_of_scope",
+    "tests/test_horizon1_policy_action.py::test_finite_policy_action_leaf_compiles_warning_free",
+    "tests/test_horizon1_finite_reference_agent.py::test_finite_reference_agent_owns_exact_import_and_namespace_contract",
+    "tests/test_horizon1_finite_reference_agent.py::test_one_coherence_record_is_explicitly_uninhabited_by_current_carriers",
+    "tests/test_horizon1_finite_reference_agent.py::test_retained_predecessors_are_concrete_and_keep_failed_identities_separate",
+    "tests/test_horizon1_finite_reference_agent.py::test_terminal_theorem_connects_one_shared_learned_blanket_model",
+    "tests/test_horizon1_finite_reference_agent.py::test_finite_reference_agent_compiles_warning_free_with_explicit_output",
+    "tests/test_horizon1_finite_reference_agent.py::test_public_theorems_have_only_standard_axioms",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_foundation_pins_the_measure_transfer_surface",
+    "tests/test_native_blanket_formalisms.py::test_native_stop_go_declaration_is_mathlib_cond_independence",
+    "tests/test_native_blanket_formalisms.py::test_rectangle_factorization_is_declaration_evidence_not_comment_only",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_family_owns_seven_ordered_standalone_bodies",
+    "tests/test_native_blanket_formalisms.py::test_fep139_body_exposes_native_predicate_and_coordinates",
+    "tests/test_native_blanket_formalisms.py::test_fep140_body_uses_mathlib_measurable_composition_law",
+    "tests/test_native_blanket_formalisms.py::test_correlated_blanket_example_is_nonvacuous_declaration_evidence",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_composition_pins_exact_endpoint_pairings",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_probe_pins_condindep_and_composition_axioms",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_foundation_compiles_warning_free",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_family_closure_compiles_warning_free",
+    "tests/test_native_blanket_formalisms.py::test_native_blanket_axiom_probe_uses_only_trusted_axioms",
+    "tests/test_formal_foundations.py::test_formal_kernel_has_exact_manifested_declaration_closure",
+    "tests/test_formal_foundations.py::test_foundations_pin_the_claims_that_make_the_kernel_substantive",
+    "tests/test_formal_foundations.py::test_formal_resources_contain_no_proof_placeholders",
+    "tests/test_formal_foundations.py::test_foundation_modules_do_not_import_the_generated_topic_aggregate",
+    "tests/test_formal_foundations.py::test_new_capabilities_are_closed_by_exact_declarations",
+    "tests/test_formal_foundations.py::test_formal_module_dependency_projection_is_acyclic_and_separate",
+    "tests/test_formal_composition.py::test_formal_module_accepts_safe_nested_resources_with_exact_module_path",
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[../escape.lean-FepSketches.escape]",
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[/tmp/escape.lean-FepSketches.escape]",
+    "tests/test_formal_composition.py::test_formal_module_rejects_unsafe_or_mismatched_resource_paths[compositions/family.lean-FepSketches.wrong.family]",
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[foundation-None]",
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[composition-not a Lean namespace]",
+    "tests/test_formal_composition.py::test_formal_module_rejects_namespace_values_that_disagree_with_role[aggregate-FEPComposed]",
+    "tests/test_formal_composition.py::test_formal_module_manifest_is_the_single_explicit_resource_roster",
+    "tests/test_formal_composition.py::test_checkout_resource_origin_is_explicit_and_not_site_package_derived",
+    "tests/test_formal_composition.py::test_formal_resource_manifest_rejects_missing_and_unlisted_lean_files",
+    "tests/test_formal_composition.py::test_formal_resource_manifest_validates_comment_stripped_namespace_owner",
+    "tests/test_formal_composition.py::test_formal_manifest_rejects_duplicate_leaf_specific_namespace_owners",
+    "tests/test_formal_composition.py::test_formal_manifest_rejects_new_owner_of_released_shared_namespace",
+    "tests/test_formal_composition.py::test_core_composition_leaf_names_cross_topic_witnesses",
+    "tests/test_formal_composition.py::test_formal_projection_writer_and_drift_are_byte_exact",
+    "tests/test_formal_composition.py::test_public_composition_aggregate_is_manifest_generated",
+    "tests/test_formal_composition.py::test_checkout_formal_projection_is_current",
+    "tests/test_formalism_coverage.py::test_formalism_coverage_counts_canonical_breadth_and_depth",
+    "tests/test_formalism_coverage.py::test_coverage_writer_and_drift_check_are_deterministic",
+    "tests/test_formalism_coverage.py::test_formal_inventory_and_counts_ignore_comment_only_lean_commands",
+    "tests/test_formalism_coverage.py::test_coverage_rejects_gap_without_explicit_blocker",
+    "tests/test_formalism_coverage.py::test_coverage_allows_proxy_rows_to_retain_stronger_capability_blockers",
+    "tests/test_formalism_coverage.py::test_coverage_rejects_formalized_rows_with_capability_blockers",
+    "tests/test_formalism_coverage.py::test_coverage_rejects_unresolved_formal_witness",
+    "tests/test_formalism_coverage.py::test_coverage_rejects_resolved_witness_that_omits_an_endpoint",
+    "tests/test_formalism_coverage.py::test_coverage_does_not_count_comment_only_endpoint_mentions",
+    "tests/test_formalism_coverage.py::test_coverage_requires_formal_pairings_to_state_a_conjunction",
+    "tests/test_formalism_relations.py::test_shipped_graph_conserves_relation_and_capability_state",
+    "tests/test_formalism_relations.py::test_theorem_witnessed_edges_are_composition_leaves_using_both_endpoints",
+    "tests/test_formalism_relations.py::test_capability_evidence_resolves_in_the_canonical_formal_closure",
+    "tests/test_formalism_relations.py::test_formal_cycles_are_rejected",
+    "tests/test_formalism_relations.py::test_formal_pairings_are_witnessed_but_not_directional_dependencies",
+    "tests/test_formalism_relations.py::test_blocked_edges_must_target_declared_capabilities",
+    "tests/test_formalism_relations.py::test_conceptual_edges_cannot_target_capabilities",
+    "tests/test_formalism_relations.py::test_relation_order_is_canonical",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data0-schema_version]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data1-unknown fields]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data2-must be lists]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data3-capability row 1 must be an object]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data4-invalid capability ID]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data5-must be ID-sorted]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data6-edge row 1 must be an object]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data7-unknown source]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data8-self-edge]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data9-unsupported edge kind]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data10-duplicate conceptual edge]",
+    "tests/test_formalism_relations.py::test_invalid_relation_graphs_fail_closed[data11-unreferenced unresolved capability]",
+    "tests/test_formalism_relations.py::test_unreadable_and_malformed_graphs_fail_closed",
+    "tests/test_formalism_relations.py::test_formal_edges_require_a_qualified_witness",
+    "tests/test_formalism_relations.py::test_nonformal_edges_reject_witness_fields",
+    "tests/test_formalism_novelty.py::test_live_expansion_ledger_is_complete_and_uses_declared_bridges",
+    "tests/test_formalism_novelty.py::test_expansion_row_requires_a_resolved_composed_bridge",
+    "tests/test_formalism_novelty.py::test_novelty_bridge_must_use_the_new_topic_and_a_declared_nearest_topic",
+    "tests/test_formalism_novelty.py::test_novelty_bridge_does_not_count_comment_only_endpoint_mentions",
+    "tests/test_formalism_novelty.py::test_novelty_rows_cannot_reuse_one_bridge_declaration",
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-nearest_topics]",
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-must precede]",
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-new_invariant]",
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-carrier_delta]",
+    "tests/test_formalism_novelty.py::test_novelty_rows_reject_empty_or_self_certifying_claims[<lambda>-required_bridge]",
+    "tests/test_formalism_novelty.py::test_novelty_roster_is_exact_ordered_expansion_tail",
+    "tests/test_formalism_novelty.py::test_catalogue_generation_rejects_novelty_ledger_drift",
+    "tests/test_formalism_audit.py::test_axiom_parser_accepts_lean_hard_wrapped_output",
+    "tests/test_formalism_audit.py::test_axiom_parser_preserves_primed_declaration_names",
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext]\\n'FEP.a' depends on axioms: [Classical.choice]\\n-duplicate axiom evidence for FEP.a]",
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext]\\n'FEP.unknown' does not depend on any axioms\\n-unexpected axiom evidence for FEP.unknown]",
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext\\n-unterminated axiom list for FEP.a]",
+    "tests/test_formalism_audit.py::test_axiom_parser_rejects_ambiguous_or_malformed_evidence['FEP.a' depends on axioms: [propext, ???]\\n-malformed axiom name for FEP.a: ???]",
+    "tests/test_formalism_audit.py::test_native_audit_rejects_duplicate_and_unknown_axiom_records",
+    "tests/test_formalism_audit.py::test_probe_resolves_primaries_and_prints_evidence_axioms",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[clean-0-True-False-0-True]",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[sorry-0-False-True-0-True]",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[warning-0-False-False-1-True]",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[missing_axioms-0-False-False-0-False]",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[unapproved_axiom-0-False-False-0-True]",
+    "tests/test_formalism_audit.py::test_native_audit_evaluation_is_fail_closed[error-1-False-False-0-False]",
+    "tests/test_formalism_audit.py::test_missing_lake_is_an_explicit_audit_failure",
+    "tests/test_formalism_audit.py::test_missing_mathlib_revision_is_an_explicit_audit_failure",
+    "tests/test_formalism_audit.py::test_lean_version_probe_failure_is_an_explicit_audit_failure",
+    "tests/test_formalism_audit.py::test_mismatched_lean_version_is_an_explicit_audit_failure",
+    "tests/test_formalism_audit.py::test_audit_rejects_stale_whole_catalogue_projection",
+    "tests/test_formalism_audit.py::test_declaration_evidence_records_preserve_semantic_source_roles",
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_recomputes_digest_and_declaration_closure",
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_returns_structured_error_for_incomplete_root",
+    "tests/test_formalism_audit.py::test_audit_receipt_validator_rejects_fail_open_evidence_fields",
+    "tests/test_formalism_audit.py::test_audit_receipt_rejects_unapproved_axiom_even_when_surfaces_agree",
+    "tests/test_formalism_audit.py::test_audit_receipt_validation_rejects_live_projection_drift"
+  ],
+  "schema_version": 1
+}

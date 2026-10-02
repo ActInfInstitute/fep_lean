@@ -1,7 +1,8 @@
 # `fep_lean.gauss` contract
 
-- `cli.py` owns the bounded `gauss doctor` probe and explicit required/advisory
-  behavior.
+- `cli.py` owns the bounded, isolated local `gauss --version` probe and explicit
+  required/advisory behavior. Do not automatically run upstream `doctor` or
+  infer provider/session health from CLI availability.
 - `client.py` exclusively owns SQLite schema, transactions, sessions, turns,
   artifacts, logs, and cache rows.
 - `runner.py` composes Hermes and `LeanVerifier` into per-topic results; it must

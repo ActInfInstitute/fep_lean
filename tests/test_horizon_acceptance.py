@@ -6,7 +6,6 @@ import ast
 import hashlib
 import json
 import os
-import shutil
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
@@ -16,6 +15,7 @@ import pytest
 
 from fep_lean.verification import horizon_acceptance as acceptance
 from fep_lean.verification.numerical_witnesses import NumericalCheck
+from tests._support.custody_fixture_knobs import fixture_root
 
 REFERENCE_ROOT = Path(
     os.environ.get("FEP_ACCEPTANCE_REFERENCE_ROOT", Path(__file__).resolve().parents[1])
@@ -74,31 +74,8 @@ def _xml(nodes: list[str], skipped: set[str] | None = None) -> bytes:
 def evidence(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Path, dict[str, Any]]:
-    """Copy accepted source inputs but fabricate only clearly synthetic test evidence."""
-    root = tmp_path / "project"
-    root.mkdir()
-    paths = set(acceptance.native_source_paths(REFERENCE_ROOT)) | set(
-        acceptance.PREDECESSORS
-    )
-    for name in acceptance.PREDECESSORS:
-        paths.update(
-            json.loads((REFERENCE_ROOT / name).read_text()).get("source_sha256", {})
-        )
-    for name in paths:
-        destination = root / name
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(REFERENCE_ROOT / name, destination)
-    draft = Path(__file__).resolve().parents[1]
-    for name in acceptance.CURRENT_FILES:
-        source = draft / name
-        if not source.is_file():
-            source = REFERENCE_ROOT / name
-        if not source.is_file():
-            # Temporary sibling drafts exist only before parent integration.
-            source = draft.parent / "diagnostics" / name
-        destination = root / name
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, destination)
+    """Fabricate a consistent source epoch and clearly synthetic test evidence."""
+    root = fixture_root(tmp_path, monkeypatch)
     witnesses = tuple(
         _SyntheticWitness(name, (NumericalCheck("unit-check", "eq", 1, 1, 0.0),))
         for name in acceptance.DIAGNOSTIC_IDS
@@ -199,6 +176,18 @@ def test_terminal_validation_is_read_only_and_does_not_promote_h3(
     assert len(result.reviewed_by) == 3
     assert result.mandatory_nodeids
     assert {p: (p.stat().st_mtime_ns, p.read_bytes()) for p in before} == before
+
+
+def test_terminal_rejects_actual_roster_growth_after_capture(
+    evidence: tuple[Path, dict[str, Any]],
+) -> None:
+    root, _ = evidence
+    for owner in ("src/fep_lean/formal", "lean/FepSketches"):
+        (root / owner / "unit_after_capture.lean").write_text(
+            "-- synthetic added formal resource, no execution\n"
+        )
+    with pytest.raises(ValueError, match="native source capture stale or changed"):
+        acceptance.validate_terminal_acceptance(root)
 
 
 @pytest.mark.parametrize(

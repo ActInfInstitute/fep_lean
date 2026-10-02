@@ -1,0 +1,113 @@
+{
+  "artifact_sha256": {
+    "attempt-01/command.json": "86895ff1f950d31856707fa33903389d918b8e3dae44de1f3870a2406da686d8",
+    "attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.command.json": "bde68385bf17dcce57c2e6fc28d4b2ca29685d096249cb2f19bd1d97972c7fa7",
+    "attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean": "3eb511e7d99f32c824debf023dad706a182c7488c6540390bc74652e14518951",
+    "attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.stdout.txt": "9c201b56fbf8f13c6f38952fefd90a8844282641a7a6eea2c496e130868c2468",
+    "attempt-01/pytest.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt-01/pytest.stdout.txt": "e78f21ed8e94c8eff10acbca4ac89b434c0cd4b85af34dd3bd59cef5c7893e2d",
+    "attempt-01/source-after.json": "5d7bfc8ec8f4eb7b3b577650df05129f8de8d448c1b8758e83889b648eeb5d38",
+    "attempt-01/source-before.json": "5d7bfc8ec8f4eb7b3b577650df05129f8de8d448c1b8758e83889b648eeb5d38",
+    "attempt-01/summary.json": "edce13e9fe8587be0a6ec3a6a9e9b857edaa1958bc887ea9f07c89c80ba5426a",
+    "attempt-01/test_horizon1_decision_risk.py": "03f18462685068610588161a3b55c7047b67ece58adabfe4d8cf20a5b64a5b1e",
+    "attempt-02/command.json": "690776dc388e1f8ca3ad287d2bfb5d429596900af9ed8a0ce8147e9b174c2a84",
+    "attempt-02/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.command.json": "d48840bd5a6903c977350407fa2bf711fdedd41440e060e44e2a5c86c5d2eee6",
+    "attempt-02/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean": "0e4ab40d3137decf55494240546a70f458392b4b19aafaf4a7f8c96c538b5af3",
+    "attempt-02/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt-02/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.stdout.txt": "66193a0b85996ed4b24e8e75607d63f562156502107ec2a710c7da39e4d6f8c0",
+    "attempt-02/pytest.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt-02/pytest.stdout.txt": "d1e15cafa7a939204332a68cb1cad749e3dcaa2625c0be4132b1ffe750b946c1",
+    "attempt-02/source-after.json": "4d1eff5afb545c482a9f6b87bedfce5d05e62c204aecce9c5b2ec1da8c43998b",
+    "attempt-02/source-before.json": "4d1eff5afb545c482a9f6b87bedfce5d05e62c204aecce9c5b2ec1da8c43998b",
+    "attempt-02/summary.json": "ff6295a8fac51501f5dd501e0ec352054ced95b76eb328e1f0c3809b5a68582d",
+    "attempt-02/test_horizon1_decision_risk.py": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522",
+    "lean-version.command.json": "f61b6070d95db9f22ef9a56cfe60a78bf3b07b833fc4d3ce7a0f5ab1aa2f7c86",
+    "lean-version.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lean-version.stdout.txt": "20f42f897511ec814f7616bd9a193ae7504aa2f52fb05299eb752936eb77ca6e"
+  },
+  "attempts": [
+    {
+      "attempt": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01",
+      "elapsed_sec": 46.07238304099883,
+      "mathlib_head_after": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "mathlib_head_before": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "probe_source_sha256": "3a6e34411d27a47679186a72ff04cdec2c78bfb216a95f9801ce63f80827d4dc",
+      "python_version": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+      "returncode": 1,
+      "source_count": 150,
+      "source_drift": [],
+      "test_sha256": "03f18462685068610588161a3b55c7047b67ece58adabfe4d8cf20a5b64a5b1e"
+    },
+    {
+      "attempt": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-02",
+      "elapsed_sec": 7.79450899999938,
+      "mathlib_head_after": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "mathlib_head_before": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "probe_source_sha256": "3a6e34411d27a47679186a72ff04cdec2c78bfb216a95f9801ce63f80827d4dc",
+      "python_version": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+      "returncode": 0,
+      "source_count": 150,
+      "source_drift": [],
+      "test_sha256": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522"
+    }
+  ],
+  "author_id": "/root/science_review",
+  "authored_test": "tests/test_horizon1_decision_risk.py",
+  "consumer_axioms": {
+    "RelativeSupportConsumer.independent_native_channel_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RelativeSupportConsumer.independent_native_joint_zero": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RelativeSupportConsumer.informative_information_pos": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "RelativeSupportConsumer.informative_native_information_pos": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "created_utc": "2026-10-01T01:14:30.214221+00:00",
+  "independent_product_semantics": "Same asymmetric prior times delta_false; actual joint equals product, including shared-zero joint/reference atoms; native joint and native channel information exactly zero.",
+  "independent_review": "Pending separate non-authoring semantic review; this receipt is author execution evidence, not approval.",
+  "informative_joint_rows_false_true": [
+    [
+      "1/2",
+      "1/3"
+    ],
+    [
+      "1/6",
+      "0"
+    ]
+  ],
+  "informative_joint_semantics": "Generated by normalized prior and experiment; explicit ordered atoms, marginals, native singleton masses and compProd binding; finite/native information strictly positive.",
+  "kind": "form2-native-consumer-controls",
+  "lean_version": "Lean (version 4.34.1, arm64-apple-darwin24.6.0, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "outcome": "pass",
+  "pins": {
+    "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+    "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+    "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
+  },
+  "pytest_result": "7 passed in 7.54s",
+  "schema_version": 1,
+  "scope_limits": [
+    "Only tests/test_horizon1_decision_risk.py and this evidence folder authored.",
+    "No Lean mathematical source, metadata, H3 protocol/proofs/executor, providers, GNN or scientific draws changed.",
+    "Current whole-repository owner currency and synthetic acceptance are separate gates."
+  ],
+  "selected_source_count": 150,
+  "source_maps_unchanged": true,
+  "test_sha256": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522"
+}

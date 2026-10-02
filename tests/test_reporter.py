@@ -35,6 +35,7 @@ from fep_lean.verification.environment import (
 from scripts import verify_report_receipt as receipt_cli
 
 PROJ = Path(__file__).resolve().parent.parent
+pytest_plugins = ["tests._support.catalogue_project"]
 LEAN_VERSION = (
     "Lean (version "
     + (PROJ / "lean" / "lean-toolchain")
@@ -197,11 +198,14 @@ def test_report_paths_as_dict(report_paths: ReportPaths) -> None:
     assert "validation_md" in d
 
 
-def test_reporter_with_real_pipeline_result(tmp_path: Path) -> None:
+def test_reporter_with_real_pipeline_result(
+    tmp_path: Path, catalogue_project: Path
+) -> None:
     """Run the full catalogue-only pipeline and generate reports."""
-    pl = FEPPipeline(PROJ)
-    result = pl.run()
-    reporter = Reporter(tmp_path)
+    pl = FEPPipeline(catalogue_project, output_root=tmp_path / "pipeline-output")
+    result = pl.run(mode="catalogue")
+    assert result.complete is True
+    reporter = Reporter(catalogue_project, output_root=tmp_path / "report-output")
     reporter.reports_dir = tmp_path / "full_run"
     paths = reporter.generate(TOPICS, result)
     assert paths.index_md.is_file()
@@ -209,6 +213,16 @@ def test_reporter_with_real_pipeline_result(tmp_path: Path) -> None:
     assert "Total Topics" in text
     # Should show the number of stages
     assert "Total Topics" in text
+    receipt = validate_report_receipt(paths.root, project_root=catalogue_project)
+    assert receipt["valid"] is True
+    assert receipt["source_bound"] is True
+    assert receipt["claim_ready"] is False
+
+    owner = catalogue_project / "src/fep_lean/cli.py"
+    owner.write_bytes(owner.read_bytes() + b"\n# isolated source drift\n")
+    rejected = validate_report_receipt(paths.root, project_root=catalogue_project)
+    assert rejected["valid"] is False
+    assert any("source_digest" in error for error in rejected["errors"])
 
 
 def test_reporter_rich_gauss_and_lean_logs(tmp_path: Path) -> None:
@@ -1658,12 +1672,17 @@ def test_validate_report_receipt_keeps_full_mode_claim_boundary_explicit(
     assert "complete full-mode receipt is required" in receipt["errors"]
 
 
-def test_summary_json_includes_topics_payload(tmp_path: Path) -> None:
+def test_summary_json_includes_topics_payload(
+    tmp_path: Path, catalogue_project: Path
+) -> None:
     """``Reporter._gen_summary_json`` must include the per-topic rows so
     ``fep_lean.output.manuscript.build_manuscript_vars`` can derive Hermes aggregates."""
-    pl = FEPPipeline(PROJ)
-    result = pl.run()
-    rep = Reporter(tmp_path, run_id="test_topics")
+    pl = FEPPipeline(catalogue_project, output_root=tmp_path / "pipeline-output")
+    result = pl.run(mode="catalogue")
+    assert result.complete is True
+    rep = Reporter(
+        catalogue_project, run_id="test_topics", output_root=tmp_path / "report-output"
+    )
     rep.reports_dir = tmp_path / "run_topics"
     paths = rep.generate(TOPICS, result)
     data = json.loads(paths.summary_json.read_text(encoding="utf-8"))

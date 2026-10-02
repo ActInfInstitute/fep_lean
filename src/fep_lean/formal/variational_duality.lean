@@ -1,5 +1,6 @@
 import FepSketches.finite_information
 import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+import Mathlib.Topology.Order.Compact
 
 /-!
 # Finite variational duality and information bounds
@@ -360,6 +361,50 @@ theorem finiteChannel_dataProcessing
     finiteKL_swap,
     finiteKL_joint_sameKernel actual reference channel hreference hchannel] at hle
   exact hle
+
+/-! ### Deterministic channel boundaries -/
+
+/-- The deterministic identity channel preserves finite KL exactly.  Its
+off-diagonal zero entries show why the positive-channel theorem above does
+not cover every normalized finite channel. -/
+theorem finiteChannel_identity_preservesKL [DecidableEq α]
+    (actual reference : FiniteLaw α) :
+    finiteKL (FiniteKernel.identity.predictive actual)
+        (FiniteKernel.identity.predictive reference) =
+      finiteKL actual reference := by
+  rw [FiniteKernel.predictive_identity, FiniteKernel.predictive_identity]
+
+/-- Forgetting every input state sends every law to the same unit point mass.
+This is a deterministic coarsening, rather than a positive-noise channel. -/
+theorem constantChannel_predictive (law : FiniteLaw α) :
+    (FiniteKernel.deterministic (fun _ : α => ())).predictive law =
+      FiniteLaw.pointMass () := by
+  apply FiniteLaw.ext_mass
+  funext x
+  cases x
+  simp [FiniteKernel.predictive_mass, FiniteKernel.deterministic,
+    FiniteLaw.pointMass, law.sum_one]
+
+/-- Complete deterministic coarsening removes all divergence between its
+output laws, even when the input laws differ. -/
+theorem constantChannel_KL_zero (actual reference : FiniteLaw α) :
+    finiteKL
+        ((FiniteKernel.deterministic (fun _ : α => ())).predictive actual)
+        ((FiniteKernel.deterministic (fun _ : α => ())).predictive reference) = 0 := by
+  rw [constantChannel_predictive, constantChannel_predictive, finiteKL_self]
+
+/-- Unequal normalized input laws give a strict deterministic-coarsening
+comparison.  No extended-divergence claim is made at singular reference
+atoms; this theorem states the repository's totalized finite convention. -/
+theorem constantChannel_KL_strict (actual reference : FiniteLaw α)
+    (hne : actual ≠ reference) :
+    finiteKL
+        ((FiniteKernel.deterministic (fun _ : α => ())).predictive actual)
+        ((FiniteKernel.deterministic (fun _ : α => ())).predictive reference) <
+      finiteKL actual reference := by
+  rw [constantChannel_KL_zero]
+  exact lt_of_le_of_ne (finiteKL_nonneg actual reference)
+    (Ne.symm ((finiteKL_eq_zero_iff actual reference).not.mpr hne))
 
 /-! ## Finite constrained maximum entropy -/
 
@@ -731,5 +776,435 @@ theorem rateDistortion_weak_duality
       rateDistortionLagrangian joint distortion multiplier := by
   unfold rateDistortionLagrangian
   exact add_le_add hrate (mul_le_mul_of_nonneg_left hdistortion hmultiplier)
+
+/-! ### Actual finite rate--distortion optimization -/
+
+/-- Relative support, including shared zero atoms, suffices for the finite
+logarithmic KL identity. -/
+theorem finiteKL_eq_crossEntropy_sub_entropy_of_relativeSupport
+    (p q : FiniteLaw α) (hsupport : ∀ x, p x ≠ 0 → 0 < q x) :
+    finiteKL p q = crossEntropy p q - entropy p := by
+  have hpoint : ∀ x,
+      q x * klFun (p x / q x) =
+        (-p x * Real.log (q x) - Real.negMulLog (p x)) + (q x - p x) := by
+    intro x
+    by_cases hp : p x = 0
+    · simp [hp, klFun_zero]
+    · exact weighted_klFun_eq_log_score (hsupport x hp)
+  simp_rw [finiteKL, hpoint]
+  rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  have hnorm : (∑ x : α, (q x - p x)) = 0 := by
+    rw [Finset.sum_sub_distrib, q.sum_one, p.sum_one, sub_self]
+  rw [hnorm, add_zero]
+  rfl
+
+/-- Joint support is contained in the support of the product marginals. -/
+theorem joint_supported_by_productMarginals (joint : FiniteLaw (α × β)) :
+    ∀ xy, joint xy ≠ 0 →
+      0 < (joint.fstMarginal.product joint.sndMarginal) xy := by
+  classical
+  rintro ⟨x, y⟩ hmass
+  have hpos : 0 < joint (x, y) :=
+    lt_of_le_of_ne (joint.nonneg (x, y)) (Ne.symm hmass)
+  have hfst : 0 < joint.fstMarginal x := by
+    change 0 < ∑ z : β, joint (x, z)
+    exact lt_of_lt_of_le hpos
+      (Finset.single_le_sum (fun z _ => joint.nonneg (x, z)) (Finset.mem_univ y))
+  have hsnd : 0 < joint.sndMarginal y := by
+    change 0 < ∑ z : α, joint (z, y)
+    exact lt_of_lt_of_le hpos
+      (Finset.single_le_sum (fun z _ => joint.nonneg (z, y)) (Finset.mem_univ x))
+  exact mul_pos hfst hsnd
+
+/-- The entropy expression for finite mutual information is valid even at
+unused marginal states.  Zero joint atoms remove the corresponding log
+terms before any logarithmic product identity is invoked. -/
+theorem mutualInformation_eq_entropy_marginals_without_support
+    (joint : FiniteLaw (α × β)) :
+    mutualInformation joint =
+      entropy joint.fstMarginal + entropy joint.sndMarginal - entropy joint := by
+  have hlog : ∀ xy : α × β,
+      -joint xy * Real.log ((joint.fstMarginal.product joint.sndMarginal) xy) =
+        -joint xy * Real.log (joint.fstMarginal xy.1) +
+          -joint xy * Real.log (joint.sndMarginal xy.2) := by
+    intro xy
+    by_cases hmass : joint xy = 0
+    · simp [hmass]
+    · have hproduct := joint_supported_by_productMarginals joint xy hmass
+      have hfst : joint.fstMarginal xy.1 ≠ 0 := by
+        intro hzero
+        change 0 < joint.fstMarginal xy.1 * joint.sndMarginal xy.2 at hproduct
+        simp [hzero] at hproduct
+      have hsnd : joint.sndMarginal xy.2 ≠ 0 := by
+        intro hzero
+        change 0 < joint.fstMarginal xy.1 * joint.sndMarginal xy.2 at hproduct
+        simp [hzero] at hproduct
+      change -joint xy * Real.log
+        (joint.fstMarginal xy.1 * joint.sndMarginal xy.2) = _
+      rw [Real.log_mul hfst hsnd, mul_add]
+  have hcross :
+      crossEntropy joint (joint.fstMarginal.product joint.sndMarginal) =
+        entropy joint.fstMarginal + entropy joint.sndMarginal := by
+    simp only [crossEntropy, hlog, Finset.sum_add_distrib,
+      entropy, Fintype.sum_prod_type]
+    congr 1
+    · simp [Real.negMulLog_eq_neg, FiniteLaw.fstMarginal,
+        neg_mul, ← Finset.sum_mul, Finset.sum_neg_distrib]
+    · rw [Finset.sum_comm]
+      simp [Real.negMulLog_eq_neg, FiniteLaw.sndMarginal,
+        neg_mul, ← Finset.sum_mul, Finset.sum_neg_distrib]
+  rw [mutualInformation,
+    finiteKL_eq_crossEntropy_sub_entropy_of_relativeSupport _ _
+      (joint_supported_by_productMarginals joint), hcross]
+
+/-- A fixed-source joint is feasible exactly when its distortion respects the
+budget.  This predicate imposes constraints, not an optimizer certificate. -/
+def RateDistortionFeasible (source : FiniteLaw α) (distortion : α → β → ℝ)
+    (budget : ℝ) (joint : FiniteLaw (α × β)) : Prop :=
+  joint.fstMarginal = source ∧ expectedDistortion joint distortion ≤ budget
+
+/-- Coordinate realization of the same feasible set on the existing finite
+law's mass function.  No second probability carrier is introduced. -/
+def rateDistortionFeasibleMasses (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) : Set (α × β → ℝ) :=
+  {weights | (∀ xy, 0 ≤ weights xy) ∧
+    (∀ x, ∑ y : β, weights (x, y) = source x) ∧
+    (∑ xy : α × β, weights xy * distortion xy.1 xy.2) ≤ budget}
+
+/-- The entropy-form information objective is continuous on all mass
+coordinates, including boundary atoms. -/
+noncomputable def mutualInformationOfMasses (weights : α × β → ℝ) : ℝ :=
+  (∑ x : α, Real.negMulLog (∑ y : β, weights (x, y))) +
+    (∑ y : β, Real.negMulLog (∑ x : α, weights (x, y))) -
+      ∑ xy : α × β, Real.negMulLog (weights xy)
+
+theorem continuous_mutualInformationOfMasses :
+    Continuous (mutualInformationOfMasses : (α × β → ℝ) → ℝ) := by
+  unfold mutualInformationOfMasses
+  fun_prop
+
+theorem mutualInformationOfMasses_eq (joint : FiniteLaw (α × β)) :
+    mutualInformationOfMasses joint.mass = mutualInformation joint := by
+  rw [mutualInformation_eq_entropy_marginals_without_support]
+  rfl
+
+/-- The coordinate constraints form a closed set. -/
+theorem isClosed_rateDistortionFeasibleMasses (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) :
+    IsClosed (rateDistortionFeasibleMasses source distortion budget) := by
+  unfold rateDistortionFeasibleMasses
+  simp only [Set.ofPred_and, Set.ofPred_forall]
+  refine (isClosed_iInter fun xy => ?_).inter
+    ((isClosed_iInter fun x => ?_).inter ?_)
+  · exact isClosed_le continuous_const (continuous_apply xy)
+  · exact isClosed_eq (by fun_prop) continuous_const
+  · exact isClosed_le (by fun_prop) continuous_const
+
+/-- Every feasible coordinate is a normalized finite law. -/
+def rateDistortionLawOfMasses (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) (weights : α × β → ℝ)
+    (hweights : weights ∈ rateDistortionFeasibleMasses source distortion budget) :
+    FiniteLaw (α × β) where
+  mass := weights
+  nonneg := hweights.1
+  sum_one := by
+    rw [Fintype.sum_prod_type]
+    simp_rw [hweights.2.1]
+    exact source.sum_one
+
+theorem rateDistortionLawOfMasses_feasible (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) (weights : α × β → ℝ)
+    (hweights : weights ∈ rateDistortionFeasibleMasses source distortion budget) :
+    RateDistortionFeasible source distortion budget
+      (rateDistortionLawOfMasses source distortion budget weights hweights) := by
+  refine ⟨?_, hweights.2.2⟩
+  apply FiniteLaw.ext_mass
+  funext x
+  exact hweights.2.1 x
+
+theorem rateDistortionFeasible_mass_mem (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) (joint : FiniteLaw (α × β))
+    (hjoint : RateDistortionFeasible source distortion budget joint) :
+    joint.mass ∈ rateDistortionFeasibleMasses source distortion budget := by
+  refine ⟨joint.nonneg, ?_, hjoint.2⟩
+  intro x
+  exact congrArg (fun law : FiniteLaw α => law x) hjoint.1
+
+/-- Fixed source mass and nonnegativity bound each coordinate by one, so the
+closed feasible set is compact even on faces with zero atoms. -/
+theorem isCompact_rateDistortionFeasibleMasses (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) :
+    IsCompact (rateDistortionFeasibleMasses source distortion budget) := by
+  classical
+  apply (isCompact_Icc : IsCompact
+    (Set.Icc (fun _ : α × β => (0 : ℝ)) (fun _ => (1 : ℝ)))).of_isClosed_subset
+    (isClosed_rateDistortionFeasibleMasses source distortion budget)
+  intro weights hweights
+  refine ⟨hweights.1, ?_⟩
+  rintro ⟨x, y⟩
+  calc
+    weights (x, y) ≤ ∑ z : β, weights (x, z) :=
+      Finset.single_le_sum (fun z _ => hweights.1 (x, z)) (Finset.mem_univ y)
+    _ = source x := hweights.2.1 x
+    _ ≤ 1 := source.mass_le_one x
+
+/-- Every nonempty finite fixed-source distortion problem has an attained
+information minimum.  Existence follows from compactness and continuity,
+without a supplied optimizer, multiplier, or full-support certificate. -/
+theorem rateDistortion_exists_minimizer (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ)
+    (hfeasible : ∃ joint, RateDistortionFeasible source distortion budget joint) :
+    ∃ optimizer : FiniteLaw (α × β),
+      RateDistortionFeasible source distortion budget optimizer ∧
+        ∀ candidate : FiniteLaw (α × β),
+          RateDistortionFeasible source distortion budget candidate →
+            mutualInformation optimizer ≤ mutualInformation candidate := by
+  rcases hfeasible with ⟨witness, hwitness⟩
+  have hnonempty : (rateDistortionFeasibleMasses source distortion budget).Nonempty :=
+    ⟨witness.mass, rateDistortionFeasible_mass_mem source distortion budget witness hwitness⟩
+  obtain ⟨weights, hweights, hminimum⟩ :=
+    (isCompact_rateDistortionFeasibleMasses source distortion budget).exists_isMinOn
+      hnonempty continuous_mutualInformationOfMasses.continuousOn
+  let optimizer := rateDistortionLawOfMasses source distortion budget weights hweights
+  refine ⟨optimizer,
+    rateDistortionLawOfMasses_feasible source distortion budget weights hweights, ?_⟩
+  intro candidate hcandidate
+  have h := hminimum (rateDistortionFeasible_mass_mem source distortion budget
+    candidate hcandidate)
+  change mutualInformationOfMasses optimizer.mass ≤
+    mutualInformationOfMasses candidate.mass at h
+  simpa only [mutualInformationOfMasses_eq] using h
+
+/-- The Lagrangian dual value is an infimum over every joint with the fixed
+source marginal.  The distortion constraint enters through its multiplier;
+no component lower bound or minimizing law is assumed. -/
+noncomputable def rateDistortionDualValue (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget multiplier : ℝ) : ℝ :=
+  sInf {value | ∃ joint : FiniteLaw (α × β), joint.fstMarginal = source ∧
+    value = rateDistortionLagrangian joint distortion multiplier - multiplier * budget}
+
+theorem expectedDistortion_nonneg (joint : FiniteLaw (α × β))
+    (distortion : α → β → ℝ) (hdistortion : ∀ x y, 0 ≤ distortion x y) :
+    0 ≤ expectedDistortion joint distortion :=
+  Finset.sum_nonneg fun xy _ => mul_nonneg (joint.nonneg xy)
+    (hdistortion xy.1 xy.2)
+
+theorem rateDistortionDual_bddBelow (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget multiplier : ℝ)
+    (hdistortion : ∀ x y, 0 ≤ distortion x y) (hmultiplier : 0 ≤ multiplier) :
+    BddBelow {value | ∃ joint : FiniteLaw (α × β), joint.fstMarginal = source ∧
+      value = rateDistortionLagrangian joint distortion multiplier - multiplier * budget} := by
+  refine ⟨-multiplier * budget, ?_⟩
+  rintro value ⟨joint, _, rfl⟩
+  unfold rateDistortionLagrangian
+  have hMI := mutualInformation_nonneg joint
+  have hdist := mul_nonneg hmultiplier (expectedDistortion_nonneg joint distortion hdistortion)
+  linarith
+
+/-- Genuine weak duality: the infimum-derived dual value is a lower bound on
+the information of every distortion-feasible fixed-source joint. -/
+theorem rateDistortionDual_le_feasible_information (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget multiplier : ℝ)
+    (hdistortion : ∀ x y, 0 ≤ distortion x y) (hmultiplier : 0 ≤ multiplier)
+    (joint : FiniteLaw (α × β))
+    (hjoint : RateDistortionFeasible source distortion budget joint) :
+    rateDistortionDualValue source distortion budget multiplier ≤ mutualInformation joint := by
+  have hbound := rateDistortionDual_bddBelow source distortion budget multiplier
+    hdistortion hmultiplier
+  calc
+    rateDistortionDualValue source distortion budget multiplier ≤
+        rateDistortionLagrangian joint distortion multiplier - multiplier * budget :=
+      csInf_le hbound ⟨joint, hjoint.1, rfl⟩
+    _ ≤ mutualInformation joint := by
+      unfold rateDistortionLagrangian
+      have h := mul_le_mul_of_nonneg_left hjoint.2 hmultiplier
+      linarith
+
+/-- Zero multiplier gives dual value zero, witnessed by any independent
+source--code law.  This remains a dual statement even at infeasible budgets. -/
+theorem rateDistortionDual_zeroMultiplier [Nonempty β] (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ) :
+    rateDistortionDualValue source distortion budget 0 = 0 := by
+  classical
+  let witness := source.product (FiniteLaw.pointMass (Classical.arbitrary β))
+  have hsource : witness.fstMarginal = source := FiniteLaw.product_fstMarginal _ _
+  have hwitness : rateDistortionLagrangian witness distortion 0 - 0 * budget = 0 := by
+    simp [witness, rateDistortionLagrangian, mutualInformation_product_eq_zero]
+  have hbounded : BddBelow {value | ∃ joint : FiniteLaw (α × β),
+      joint.fstMarginal = source ∧
+        value = rateDistortionLagrangian joint distortion 0 - 0 * budget} := by
+    refine ⟨0, ?_⟩
+    rintro value ⟨joint, _, rfl⟩
+    simpa [rateDistortionLagrangian] using mutualInformation_nonneg joint
+  apply le_antisymm
+  · change sInf _ ≤ 0
+    apply csInf_le hbounded
+    exact ⟨witness, hsource, hwitness.symm⟩
+  · change 0 ≤ sInf _
+    refine le_csInf ?_ ?_
+    · exact ⟨0, witness, hsource, hwitness.symm⟩
+    · rintro value ⟨joint, _, rfl⟩
+      simpa [rateDistortionLagrangian] using mutualInformation_nonneg joint
+
+/-- A negative budget cannot be met by a nonnegative distortion. -/
+theorem rateDistortion_infeasible_of_negativeBudget (source : FiniteLaw α)
+    (distortion : α → β → ℝ) (budget : ℝ)
+    (hdistortion : ∀ x y, 0 ≤ distortion x y) (hbudget : budget < 0) :
+    ¬ ∃ joint, RateDistortionFeasible source distortion budget joint := by
+  rintro ⟨joint, hjoint⟩
+  have hnonneg := expectedDistortion_nonneg joint distortion hdistortion
+  linarith [hjoint.2]
+
+/-! ### Boolean Hamming-distortion witnesses -/
+
+/-- Unit Hamming distortion on a Boolean source and reproduction alphabet. -/
+def boolHammingDistortion (source code : Bool) : ℝ := if source = code then 0 else 1
+
+theorem boolHammingDistortion_nonneg (source code : Bool) :
+    0 ≤ boolHammingDistortion source code := by
+  unfold boolHammingDistortion
+  split <;> norm_num
+
+/-- Every independent reproduction of a fair Boolean source has distortion
+one half, regardless of the reproduction law. -/
+theorem boolIndependent_distortion (code : FiniteLaw Bool) :
+    expectedDistortion ((FiniteLaw.uniform : FiniteLaw Bool).product code)
+      boolHammingDistortion = 1 / 2 := by
+  have hsum : code false + code true = 1 := by
+    have h := code.sum_one
+    rw [Fintype.sum_bool] at h
+    linarith
+  simp [expectedDistortion, FiniteLaw.product, boolHammingDistortion,
+    FiniteLaw.uniform, Fintype.sum_prod_type]
+  linarith
+
+/-- Above the independent-reproduction threshold, every independent code law
+is a genuine information minimizer. -/
+theorem boolIndependent_minimizer (budget : ℝ) (hbudget : (1 : ℝ) / 2 ≤ budget)
+    (code : FiniteLaw Bool) :
+    RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion budget
+        (FiniteLaw.uniform.product code) ∧
+      ∀ candidate : FiniteLaw (Bool × Bool),
+        RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion budget candidate →
+          mutualInformation ((FiniteLaw.uniform : FiniteLaw Bool).product code) ≤
+            mutualInformation candidate := by
+  refine ⟨⟨FiniteLaw.product_fstMarginal _ _, ?_⟩, ?_⟩
+  · rw [boolIndependent_distortion]
+    exact hbudget
+  · intro candidate _
+    rw [mutualInformation_product_eq_zero]
+    exact mutualInformation_nonneg candidate
+
+/-- At budget one half the information minimizer is not unique: constant
+false and constant true reproductions have distinct joint laws. -/
+theorem boolHalfBudget_distinct_minimizers :
+    ∃ left right : FiniteLaw (Bool × Bool), left ≠ right ∧
+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) left ∧
+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+          (1 / 2) candidate → mutualInformation left ≤ mutualInformation candidate) ∧
+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) right ∧
+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+          (1 / 2) candidate → mutualInformation right ≤ mutualInformation candidate) := by
+  refine ⟨FiniteLaw.uniform.product (FiniteLaw.pointMass false),
+    FiniteLaw.uniform.product (FiniteLaw.pointMass true), ?_,
+    boolIndependent_minimizer _ le_rfl _, boolIndependent_minimizer _ le_rfl _⟩
+  intro heq
+  have hatom := congrArg (fun joint : FiniteLaw (Bool × Bool) => joint (false, false)) heq
+  norm_num [FiniteLaw.product, FiniteLaw.uniform, FiniteLaw.pointMass] at hatom
+
+/-- A nondegenerate binary-symmetric joint: fair source and code marginals,
+with crossover probability one quarter. -/
+noncomputable def boolQuarterDistortionJoint : FiniteLaw (Bool × Bool) where
+  mass xy := if xy.1 = xy.2 then 3 / 8 else 1 / 8
+  nonneg xy := by split <;> norm_num
+  sum_one := by
+    simp [Fintype.sum_prod_type]
+    norm_num
+
+theorem boolQuarterDistortionJoint_fstMarginal :
+    boolQuarterDistortionJoint.fstMarginal = FiniteLaw.uniform := by
+  apply FiniteLaw.ext_mass
+  funext x
+  cases x <;> norm_num [FiniteLaw.fstMarginal, boolQuarterDistortionJoint,
+    FiniteLaw.uniform, Fintype.sum_bool]
+
+theorem boolQuarterDistortionJoint_feasible :
+    RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4)
+      boolQuarterDistortionJoint := by
+  refine ⟨boolQuarterDistortionJoint_fstMarginal, ?_⟩
+  norm_num [expectedDistortion, boolQuarterDistortionJoint, boolHammingDistortion,
+    Fintype.sum_prod_type, Fintype.sum_bool]
+
+/-- Below one-half distortion, every feasible fair-source joint has strictly
+positive information.  A zero-information joint would be independent and
+therefore have distortion one half. -/
+theorem boolFeasible_information_pos (budget : ℝ) (hbudget : budget < (1 : ℝ) / 2)
+    (joint : FiniteLaw (Bool × Bool))
+    (hjoint : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion budget joint) :
+    0 < mutualInformation joint := by
+  by_contra hpositive
+  have hzero : mutualInformation joint = 0 :=
+    le_antisymm (le_of_not_gt hpositive) (mutualInformation_nonneg joint)
+  have hindependent := (mutualInformation_eq_zero_iff joint).mp hzero
+  have hdistortion : expectedDistortion joint boolHammingDistortion = 1 / 2 := by
+    rw [hindependent, hjoint.1]
+    exact boolIndependent_distortion joint.sndMarginal
+  linarith [hjoint.2]
+
+/-- An informative interior-budget problem has an attained, strictly
+positive information optimum.  Its existence is the compactness theorem,
+not a declaration that the explicit crossover witness is optimal. -/
+theorem boolQuarterBudget_exists_positive_minimizer :
+    ∃ optimizer : FiniteLaw (Bool × Bool),
+      RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4) optimizer ∧
+        0 < mutualInformation optimizer ∧
+          ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+            (1 / 4) candidate → mutualInformation optimizer ≤ mutualInformation candidate := by
+  obtain ⟨optimizer, hfeasible, hminimum⟩ := rateDistortion_exists_minimizer
+    (FiniteLaw.uniform : FiniteLaw Bool) boolHammingDistortion (1 / 4)
+      ⟨boolQuarterDistortionJoint, boolQuarterDistortionJoint_feasible⟩
+  exact ⟨optimizer, hfeasible,
+    boolFeasible_information_pos _ (by norm_num) optimizer hfeasible, hminimum⟩
+
+/-- Perfect reproduction of a fair Boolean source. -/
+noncomputable def boolZeroDistortionJoint : FiniteLaw (Bool × Bool) where
+  mass xy := if xy.1 = xy.2 then 1 / 2 else 0
+  nonneg xy := by split <;> norm_num
+  sum_one := by simp [Fintype.sum_prod_type]
+
+theorem boolZeroDistortionJoint_feasible :
+    RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0
+      boolZeroDistortionJoint := by
+  refine ⟨?_, ?_⟩
+  · apply FiniteLaw.ext_mass
+    funext x
+    cases x <;> norm_num [FiniteLaw.fstMarginal, boolZeroDistortionJoint,
+      FiniteLaw.uniform, Fintype.sum_bool]
+  · norm_num [expectedDistortion, boolZeroDistortionJoint, boolHammingDistortion,
+      Fintype.sum_prod_type, Fintype.sum_bool]
+
+/-- Zero budget forces zero mass on both mismatched atoms, so the fair-source
+perfect-reproduction law is the unique feasible law and hence the unique
+minimizer.  Uniqueness is derived from constraints rather than asserted. -/
+theorem boolZeroBudget_unique_feasible (joint : FiniteLaw (Bool × Bool))
+    (hjoint : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0 joint) :
+    joint = boolZeroDistortionJoint := by
+  have hoffdiag : joint (true, false) + joint (false, true) ≤ 0 := by
+    simpa [expectedDistortion, boolHammingDistortion, Fintype.sum_prod_type]
+      using hjoint.2
+  have htf : joint (true, false) = 0 := by
+    linarith [joint.nonneg (true, false), joint.nonneg (false, true)]
+  have hft : joint (false, true) = 0 := by
+    linarith [joint.nonneg (true, false), joint.nonneg (false, true)]
+  have htrue := congrArg (fun law : FiniteLaw Bool => law true) hjoint.1
+  have hfalse := congrArg (fun law : FiniteLaw Bool => law false) hjoint.1
+  have htt : joint (true, true) = 1 / 2 := by
+    simpa [FiniteLaw.fstMarginal, FiniteLaw.uniform, htf] using htrue
+  have hff : joint (false, false) = 1 / 2 := by
+    simpa [FiniteLaw.fstMarginal, FiniteLaw.uniform, hft] using hfalse
+  apply FiniteLaw.ext_mass
+  funext xy
+  rcases xy with ⟨x, y⟩
+  cases x <;> cases y <;> simp [boolZeroDistortionJoint, htf, hft, htt, hff]
 
 end FEP.VariationalDuality

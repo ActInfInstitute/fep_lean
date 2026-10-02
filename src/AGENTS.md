@@ -1,12 +1,12 @@
 # fep_lean/src/
 
-**Version**: v1.2.0 | **Status**: Active | **Last Updated**: September 2026
+**Version**: v1.3.0 | **Status**: Active | **Last Updated**: September 2026
 
 The installable package is rooted at `src/fep_lean/`; `src/` is only the
 standard packaging layout and is not itself importable.
 
 ## Directory Structure
-The package is divided into seven principal domain-aligned subpackages. The public root
+The package is divided into ten domain subpackages. The public root
 `fep_lean/__init__.py` re-exports the stable high-level entrypoints. There are
 no compatibility modules named `catalogue`, `pipeline`, or `output`.
 
@@ -19,6 +19,9 @@ no compatibility modules named `catalogue`, `pipeline`, or `output`.
 | `fep_lean/llm/` | LLM API interface (Hermes) | `HermesExplainer`, `HermesConfig` |
 | `fep_lean/output/` | Evidence and artifact generation | `validate_native_lean_receipt`, `build_formalism_atlas`, `Reporter` |
 | `fep_lean/pipeline/` | Orchestration (4-stage DAG) | `FEPPipeline`, `run_pipeline`, `run_single_topic` |
+| `fep_lean/bridge/` | Explicit GNN custody and interchange | `pin_sources`, `emit`, `verify_document` |
+| `fep_lean/custody/` | Evidence census, staged refresh and resume | `census`, `verify`, `Census` |
+| `fep_lean/prove2me/` | Explicit authenticated remote formalization | `Prove2meConfig`, `Prove2meClient` |
 
 ## Imports
 

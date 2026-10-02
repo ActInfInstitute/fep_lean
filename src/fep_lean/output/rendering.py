@@ -70,6 +70,14 @@ SOURCE_EXCLUDES = frozenset(
 # only excluded, so an injected-tree render dropped the entire 155-topic
 # formalism catalogue -- roughly two thirds of the paper -- with no diagnostic.
 VERBATIM_SOURCES: tuple[str, ...] = ("09z_unified_formalism_catalogue.md",)
+# The template copies these metadata inputs beside the rendered chapters.
+# Preserve their raw bytes; preamble.md is not an authored chapter, and none
+# of these files participates in manuscript variable substitution.
+_RENDER_METADATA_FILES: tuple[str, ...] = (
+    "config.yaml",
+    "preamble.md",
+    "references.bib",
+)
 MANUSCRIPT_ASSETS: dict[str, tuple[Path, Path]] = {
     "../docs/formalism-atlas.svg": (
         Path("docs/formalism-atlas.svg"),
@@ -341,6 +349,20 @@ def render_manuscript(
         destination_relative: (source.parent / source_relative).read_bytes()
         for source_relative, destination_relative in MANUSCRIPT_ASSETS.values()
     }
+    # Minimal rendering callers may omit publication metadata. The strict
+    # publication validator separately requires the canonical inputs and all
+    # three exact output copies. Stage present metadata before replacing any
+    # output, rather than admitting unvalidated extra files in the render tree.
+    for metadata_name in _RENDER_METADATA_FILES:
+        metadata_path = source / metadata_name
+        if metadata_path.is_symlink() or (
+            metadata_path.exists() and not metadata_path.is_file()
+        ):
+            raise ManuscriptRenderError(
+                f"manuscript metadata is not a regular file: {metadata_name}"
+            )
+        if metadata_path.is_file():
+            asset_contents[Path(metadata_name)] = metadata_path.read_bytes()
     graphical_abstract_requested = any(
         "publication.graphical_abstract." in content
         for content in source_contents.values()

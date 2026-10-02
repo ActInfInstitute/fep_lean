@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/.venv/bin/pytest",
+    "-q",
+    "-x",
+    "tests/test_horizon1_decision_risk.py",
+    "--basetemp=/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp"
+  ],
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal",
+  "outer_timeout_sec": 750,
+  "native_timeout_sec_per_probe": 300,
+  "started_utc": "2026-10-01T01:10:24.870521+00:00"
+}

@@ -7,25 +7,31 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+import yaml
 
 from fep_lean.catalogue.topics import CatalogueValidationError, FEPTopicCatalogue
 from fep_lean.output.manuscript import _verify_block_from_manifest
+from fep_lean.output.provenance import report_owner_errors, report_source_digest
 from fep_lean.pipeline.core import (
     FEPPipeline,
     PipelineResult,
     StepResult,
     _max_topics_from_env,
 )
+from tests._support.catalogue_project import manuscript_owner_state
 
 PROJ = Path(__file__).resolve().parent.parent
+pytest_plugins = ["tests._support.catalogue_project"]
 
 
 def test_pipeline_instantiates() -> None:
     assert FEPPipeline(PROJ) is not None
 
 
-def test_catalogue_mode_is_complete_but_unverified(tmp_path: Path) -> None:
-    result = FEPPipeline(PROJ, output_root=tmp_path / "output").run(
+def test_catalogue_mode_is_complete_but_unverified(
+    tmp_path: Path, catalogue_project: Path
+) -> None:
+    result = FEPPipeline(catalogue_project, output_root=tmp_path / "output").run(
         mode="catalogue", topic_filter=["fep-001", "fep-002"]
     )
     assert isinstance(result, PipelineResult)
@@ -40,12 +46,64 @@ def test_catalogue_mode_is_complete_but_unverified(tmp_path: Path) -> None:
     )
 
 
+def test_real_catalogue_writes_only_the_private_project(
+    tmp_path: Path, catalogue_project: Path
+) -> None:
+    live_before = manuscript_owner_state(PROJ)
+    assert report_owner_errors(catalogue_project) == ()
+    assert report_source_digest(catalogue_project) == report_source_digest(PROJ)
+    assert not (catalogue_project / ".git").exists()
+    assert not (catalogue_project / "lean/.lake").exists()
+    assert {
+        path.relative_to(catalogue_project).as_posix()
+        for path in (catalogue_project / "specs").rglob("*")
+        if path.is_file()
+    } == {
+        "specs/geo-infer-notation-bridge/check_geo_notation_bridge.py",
+        "specs/gnn-bridge-q6-activeinference-artifact/skeleton/canonical_bool_runner.jl.in",
+    }
+    variables = catalogue_project / "manuscript/manuscript_vars.yaml"
+    appendix = catalogue_project / "manuscript/09z_unified_formalism_catalogue.md"
+    assert not variables.exists()
+    assert not appendix.exists()
+    pipeline = FEPPipeline(catalogue_project, output_root=tmp_path / "products")
+
+    result = pipeline.run(mode="catalogue")
+
+    assert result.status == "ok"
+    assert result.complete is True
+    assert result.catalogue_topics == 168
+    assert result.verified_topics == 0
+    projected = yaml.safe_load(variables.read_bytes())
+    assert projected["total_topics"] == 168
+    assert projected["verify"]["manifest_present"] is False
+    assert projected["verify"]["claim_ready"] is False
+    assert "fep-168" in appendix.read_text()
+    assert len(list((tmp_path / "products/figures").glob("*.png"))) == 9
+    assert manuscript_owner_state(PROJ) == live_before
+
+    # A genuine source error stays a failed catalogue attempt in that private
+    # project and cannot rewrite either the prior projection or live inputs.
+    private_before = manuscript_owner_state(catalogue_project)
+    (catalogue_project / "config/topics.yaml").write_text("topics: []\n")
+    failed = pipeline.run(mode="catalogue")
+    assert failed.status == "error"
+    assert failed.complete is False
+    assert manuscript_owner_state(catalogue_project) == private_before
+    assert manuscript_owner_state(PROJ) == live_before
+
+
 def test_full_mode_fails_without_capabilities(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, catalogue_project: Path
 ) -> None:
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    result = FEPPipeline(PROJ, output_root=tmp_path / "output").run(
+    # Actual absent capabilities, with no access to host tools or elan state.
+    monkeypatch.setenv("PATH", "")
+    monkeypatch.setenv("ELAN_HOME", str(tmp_path / "empty-elan"))
+    monkeypatch.delenv("FEP_LEAN_LEAN_EXE", raising=False)
+    monkeypatch.delenv("FEP_LEAN_LAKE_EXE", raising=False)
+    result = FEPPipeline(catalogue_project, output_root=tmp_path / "output").run(
         mode="full", topic_filter=["fep-001"]
     )
     assert result.complete is False
@@ -55,8 +113,10 @@ def test_full_mode_fails_without_capabilities(
     assert not (tmp_path / "output" / "reports").exists()
 
 
-def test_result_fields_are_explicit(tmp_path: Path) -> None:
-    result = FEPPipeline(PROJ, output_root=tmp_path / "output").run(mode="catalogue")
+def test_result_fields_are_explicit(tmp_path: Path, catalogue_project: Path) -> None:
+    result = FEPPipeline(catalogue_project, output_root=tmp_path / "output").run(
+        mode="catalogue"
+    )
     assert result.duration_s > 0
     assert isinstance(result.topic_results, list)
     assert isinstance(result.capabilities, dict)
@@ -81,17 +141,19 @@ def test_step_result_records_error() -> None:
     assert step.status == "error"
 
 
-def test_filters_and_topic_cap(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_filters_and_topic_cap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, catalogue_project: Path
+) -> None:
     monkeypatch.setenv("FEP_LEAN_MAX_TOPICS", "2")
-    result = FEPPipeline(PROJ, output_root=tmp_path / "output").run(
+    result = FEPPipeline(catalogue_project, output_root=tmp_path / "output").run(
         mode="catalogue", area_filter="FEP"
     )
     load = next(stage for stage in result.stages if stage.name == "Load Catalogue")
     assert len(load.payload["topics"]) == 2
 
 
-def test_unknown_topic_is_an_error(tmp_path: Path) -> None:
-    result = FEPPipeline(PROJ, output_root=tmp_path / "output").run(
+def test_unknown_topic_is_an_error(tmp_path: Path, catalogue_project: Path) -> None:
+    result = FEPPipeline(catalogue_project, output_root=tmp_path / "output").run(
         mode="catalogue", topic_filter=["fep-999"]
     )
     assert result.status == "error"
@@ -130,9 +192,9 @@ def test_topic_metrics_use_clean_compilation() -> None:
 
 
 def test_full_pipeline_rejects_compiling_topic_with_warnings(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, catalogue_project: Path
 ) -> None:
-    pipeline = FEPPipeline(PROJ, output_root=tmp_path / "output")
+    pipeline = FEPPipeline(catalogue_project, output_root=tmp_path / "output")
     warning = SimpleNamespace(
         topic_id="fep-001",
         success=False,

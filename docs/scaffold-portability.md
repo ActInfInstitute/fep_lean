@@ -80,8 +80,9 @@ the kit never manufactures acceptance. Record gates requiring live services
 or an explicitly named GNN pair separately. For Linux container acceptance,
 use native container storage, as required by the t-0058 filesystem finding.
 
-Q7 interpreter-independent scaffold serialization is a separate task. This
-kit retains Python 3.14 and never changes frozen scaffold digests, pins,
-custody receipts, or theorem claims. The similarly named historical
-`FEP-SCAFFOLD-PORTABILITY` backlog row describes that Q7 residual, not the
-checkout kit delivered here.
+Q7 candidate scaffold portability has a separate
+[reviewed serialization protocol](../specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md)
+and five-runtime byte-parity record. Its strict validator remains CPython 3.14;
+the serializer change requires fresh source-bound native/custody evidence.
+This checkout kit continues to use Python 3.14. Prepared dependencies,
+candidate serialization parity, and publication receipts are separate results.

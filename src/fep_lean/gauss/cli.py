@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import os
+import re
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 
-_DOCTOR_TIMEOUT_S = 120.0
+_CLI_TIMEOUT_S = 120.0
 
 
 def _require_gauss_from_env() -> bool:
@@ -18,11 +20,15 @@ def _require_gauss_from_env() -> bool:
 def check_gauss_cli(
     project_root: Path | None, *, require: bool | None = None
 ) -> tuple[bool, str]:
-    """Run ``gauss doctor`` when the CLI exists.
+    """Check local CLI availability without probing account credentials.
 
     If ``gauss`` is missing: fails only when ``require`` is True or the
     explicit ``FEP_LEAN_REQUIRE_GAUSS`` setting is truthy.
     """
+    # verification's public API imports this probe; resolve its shared runner
+    # at invocation time to avoid a package-initialization cycle.
+    from fep_lean.verification._subprocess import run_process_group
+
     if require is None:
         require = _require_gauss_from_env()
 
@@ -35,24 +41,37 @@ def check_gauss_cli(
         )
 
     try:
-        proc = subprocess.run(
-            [exe, "doctor"],
-            capture_output=True,
-            text=True,
-            timeout=_DOCTOR_TIMEOUT_S,
-            check=False,
-            env=os.environ.copy(),
-        )
+        with tempfile.TemporaryDirectory(prefix="fep-lean-gauss-probe-") as home:
+            probe_home = Path(home).resolve()
+            env = os.environ.copy()
+            env["GAUSS_HOME"] = str(probe_home)
+            env["GAUSS_SKIP_UPDATE_CHECK"] = "1"
+            env["PYTHON_DOTENV_DISABLED"] = "1"
+            proc = run_process_group(
+                [exe, "--version"],
+                cwd=probe_home,
+                timeout=_CLI_TIMEOUT_S,
+                check=False,
+                env=env,
+            )
     except (OSError, subprocess.TimeoutExpired) as e:
-        msg = f"gauss doctor: failed ({e})"
+        msg = f"gauss version: failed ({e})"
         return (False, msg) if require else (True, msg)
 
     out = (proc.stdout or "").strip()
     err = (proc.stderr or "").strip()
     if proc.returncode != 0:
         snippet = (err or out)[:400]
-        msg = f"gauss doctor: exit {proc.returncode} — {snippet}"
+        msg = f"gauss version: exit {proc.returncode} — {snippet}"
         return (False, msg) if require else (True, msg)
 
-    line = out.splitlines()[0] if out else "gauss doctor: ok"
-    return True, f"gauss doctor: ok ({line[:120]})"
+    line = out.splitlines()[0] if out else ""
+    if not re.fullmatch(
+        r"Gauss v\d+\.\d+\.\d+(?:[-+][\w.-]+)?(?: \([^\r\n]+\))?", line
+    ):
+        msg = "gauss version: unrecognized or empty version output"
+        return (False, msg) if require else (True, msg)
+    return (
+        True,
+        f"gauss CLI: available ({line[:120]}); provider/session checks are separate",
+    )

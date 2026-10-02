@@ -11,28 +11,28 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Metric | Count |
 | --- | ---: |
 | Stable topics | 168 |
-| Maintained formal modules | 69 |
-| Foundation modules | 44 |
-| Topic theorem declarations | 575 |
-| Formal-resource theorem declarations | 1177 |
-| Foundation theorem declarations | 938 |
-| Total theorem declarations | 1752 |
+| Maintained formal modules | 71 |
+| Foundation modules | 45 |
+| Topic theorem declarations | 584 |
+| Formal-resource theorem declarations | 1362 |
+| Foundation theorem declarations | 1030 |
+| Total theorem declarations | 1946 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 684 |
-| Total definitions | 779 |
+| Formal-resource definitions | 799 |
+| Total definitions | 894 |
 | Topic abbreviations | 7 |
-| Formal-resource abbreviations | 21 |
-| Total abbreviations | 28 |
-| Formal-resource structures | 50 |
+| Formal-resource abbreviations | 31 |
+| Total abbreviations | 38 |
+| Formal-resource structures | 53 |
 | Distinct Mathlib imports | 70 |
 | Topic-to-import edges | 225 |
-| Formal-resource import edges | 254 |
-| Internal formal-module dependencies | 148 |
+| Formal-resource import edges | 272 |
+| Internal formal-module dependencies | 162 |
 | Authored formalism relations | 146 |
 | Derivational formal relations | 20 |
 | Checked formal pairings | 118 |
 | All theorem-witnessed relations | 138 |
-| Composed theorem declarations | 239 |
+| Composed theorem declarations | 332 |
 | Capability nodes (retained history) | 50 |
 | Unresolved capability nodes | 0 |
 | Satisfied capability nodes | 50 |
@@ -116,8 +116,8 @@ Compilation and semantic adequacy are deliberately different axes. `formalized` 
 | fep-060 | FEP | `fep060_coordinateELBO_decomposition` | `formalized` | 2 | 0 | 1 |
 | fep-061 | FEP | `fep061_meanFieldCoordinate_optimum_iff` | `formalized` | 2 | 0 | 1 |
 | fep-062 | FEP | `fep062_iidProduct_importanceJensen` | `formalized` | 3 | 0 | 1 |
-| fep-063 | FEP | `fep063_finiteChannel_klDataProcessing` | `conditional_proxy` | 2 | 0 | 1 |
-| fep-064 | FEP | `fep064_rateDistortion_weakDuality` | `structural_proxy` | 2 | 0 | 1 |
+| fep-063 | FEP | `fep063_finiteChannel_klDataProcessing` | `conditional_proxy` | 4 | 0 | 1 |
+| fep-064 | FEP | `fep064_rateDistortion_weakDuality` | `structural_proxy` | 9 | 0 | 1 |
 | fep-065 | ActiveInference | `fep065_controlledKernel_normalization` | `formalized` | 1 | 0 | 1 |
 | fep-066 | ActiveInference | `fep066_actionConditioned_bayes_reconstruction` | `formalized` | 3 | 0 | 1 |
 | fep-067 | ActiveInference | `fep067_reachableBelief_policyValue_equivalence` | `structural_proxy` | 2 | 0 | 1 |
@@ -240,7 +240,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.information_geometry` | `foundation` | 33 | 14 | 1 | `FepSketches.finite_probability` |
 | `FepSketches.statistical_convergence` | `foundation` | 7 | 8 | 0 | — |
 | `FepSketches.measure_bayes` | `foundation` | 12 | 0 | 0 | `FepSketches.finite_probability` |
-| `FepSketches.variational_duality` | `foundation` | 27 | 24 | 3 | `FepSketches.finite_information` |
+| `FepSketches.variational_duality` | `foundation` | 56 | 32 | 3 | `FepSketches.finite_information` |
 | `FepSketches.controlled_markov` | `foundation` | 30 | 28 | 2 | `FepSketches.active_inference` |
 | `FepSketches.temporal_inference` | `foundation` | 34 | 18 | 1 | `FepSketches.controlled_markov` |
 | `FepSketches.finite_markov_dynamics` | `foundation` | 17 | 6 | 0 | `FepSketches.finite_probability` |
@@ -263,7 +263,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.linear_gaussian_semigroup` | `foundation` | 25 | 13 | 1 | `FepSketches.markov_semigroup`, `FepSketches.scalar_gaussian_semigroup` |
 | `FepSketches.fin4_gaussian_semigroup` | `foundation` | 42 | 18 | 0 | `FepSketches.linear_gaussian_semigroup` |
 | `FepSketches.gaussian_precision_conditioning` | `foundation` | 25 | 15 | 0 | `FepSketches.fin4_gaussian_semigroup` |
-| `FepSketches.decision_risk` | `foundation` | 15 | 10 | 0 | `FepSketches.finite_information`, `FepSketches.native_blanket` |
+| `FepSketches.decision_risk` | `foundation` | 25 | 10 | 0 | `FepSketches.finite_information`, `FepSketches.native_blanket` |
 | `FepSketches.finite_posterior_learning` | `foundation` | 13 | 18 | 0 | `FepSketches.decision_risk`, `FepSketches.learning_theory`, `FepSketches.native_blanket`, `FepSketches.statistical_convergence` |
 | `FepSketches.posterior_convergence` | `foundation` | 26 | 22 | 0 | `FepSketches.finite_posterior_learning`, `FepSketches.gaussian_information_geometry`, `FepSketches.measure_bayes` |
 | `FepSketches.gnn_document` | `foundation` | 0 | 42 | 7 | — |
@@ -277,6 +277,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.helmholtz_ao_ness` | `foundation` | 26 | 11 | 0 | `FepSketches.continuous_time_markov` |
 | `FepSketches.geometric_mechanics` | `foundation` | 37 | 23 | 0 | — |
 | `FepSketches.law_weighted_split` | `foundation` | 7 | 5 | 0 | `FepSketches.helmholtz_ao_ness` |
+| `FepSketches.h3_reference_model` | `foundation` | 53 | 48 | 2 | `FepSketches.fin4_gaussian_semigroup`, `FepSketches.markov_semigroup` |
 | `FepSketches.compositions.core` | `composition` | 22 | 1 | 0 | `FepSketches.active_inference`, `FepSketches.information_geometry`, `FepSketches.markov_blanket`, `FepSketches.statistical_convergence` |
 | `FepSketches.compositions.measure_variational` | `composition` | 14 | 0 | 0 | `FepSketches.measure_bayes`, `FepSketches.variational_duality` |
 | `FepSketches.compositions.control_temporal` | `composition` | 14 | 0 | 0 | `FepSketches.controlled_markov`, `FepSketches.temporal_inference` |
@@ -301,7 +302,8 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.compositions.efe_time_scale_separation` | `composition` | 1 | 0 | 0 | `FepSketches.efe_time_scale_separation` |
 | `FepSketches.compositions.helmholtz_ao_ness` | `composition` | 2 | 0 | 0 | `FepSketches.helmholtz_ao_ness` |
 | `FepSketches.compositions.geometric_mechanics` | `composition` | 7 | 0 | 0 | `FepSketches.geometric_mechanics` |
-| `FepSketches.composed` | `aggregate` | 0 | 0 | 0 | `FepSketches.compositions.bayesian_model_reduction`, `FepSketches.compositions.causal_predictive`, `FepSketches.compositions.collective_learning`, `FepSketches.compositions.continuous_time`, `FepSketches.compositions.control_temporal`, `FepSketches.compositions.core`, `FepSketches.compositions.efe_policy_selection`, `FepSketches.compositions.efe_time_scale_separation`, `FepSketches.compositions.exponential_family`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_reference_agent`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.geometric_mechanics`, `FepSketches.compositions.helmholtz_ao_ness`, `FepSketches.compositions.measure_variational`, `FepSketches.compositions.native_blanket_transfer`, `FepSketches.compositions.perception_action_loop`, `FepSketches.compositions.policy_trees`, `FepSketches.compositions.risk_calibration`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.compositions.thermo_geometry` |
+| `FepSketches.compositions.h3_case_study` | `composition` | 93 | 59 | 1 | `FepSketches.causal_dynamics`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.h3_reference_model`, `FepSketches.markov_blanket`, `FepSketches.native_blanket`, `FepSketches.path_thermodynamics` |
+| `FepSketches.composed` | `aggregate` | 0 | 0 | 0 | `FepSketches.compositions.bayesian_model_reduction`, `FepSketches.compositions.causal_predictive`, `FepSketches.compositions.collective_learning`, `FepSketches.compositions.continuous_time`, `FepSketches.compositions.control_temporal`, `FepSketches.compositions.core`, `FepSketches.compositions.efe_policy_selection`, `FepSketches.compositions.efe_time_scale_separation`, `FepSketches.compositions.exponential_family`, `FepSketches.compositions.finite_policy_action`, `FepSketches.compositions.finite_reference_agent`, `FepSketches.compositions.finite_scientific_implications`, `FepSketches.compositions.gaussian_control`, `FepSketches.compositions.gaussian_filter`, `FepSketches.compositions.gaussian_grid_path`, `FepSketches.compositions.geometric_mechanics`, `FepSketches.compositions.h3_case_study`, `FepSketches.compositions.helmholtz_ao_ness`, `FepSketches.compositions.measure_variational`, `FepSketches.compositions.native_blanket_transfer`, `FepSketches.compositions.perception_action_loop`, `FepSketches.compositions.policy_trees`, `FepSketches.compositions.risk_calibration`, `FepSketches.compositions.smooth_reference_kernel`, `FepSketches.compositions.thermo_geometry` |
 
 ## Authored formalism relations
 

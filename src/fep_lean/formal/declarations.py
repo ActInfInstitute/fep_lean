@@ -7,6 +7,7 @@ from pathlib import Path
 
 from fep_lean.catalogue.registry import BODIES
 from fep_lean.lean_source import (
+    LEAN_ATTRIBUTE_PREFIX,
     LEAN_THEOREM_RE,
     iter_lean_namespace_scopes,
     lean_code_without_comments,
@@ -16,7 +17,7 @@ from .manifest import FORMAL_MODULES, FormalModuleRole, formal_resource_paths
 
 _THEOREM_RE = LEAN_THEOREM_RE
 _TOP_LEVEL_DECLARATION_RE = re.compile(
-    r"^(?:noncomputable\s+)?(?:theorem|lemma|def|abbrev|structure)\s+"
+    rf"^\s*{LEAN_ATTRIBUTE_PREFIX}(?:noncomputable\s+)?(?:theorem|lemma|def|abbrev|structure)\s+"
     r"[A-Za-z][A-Za-z0-9_]*",
     re.MULTILINE,
 )
@@ -72,9 +73,7 @@ def composed_theorem_sources(
         namespace = namespace_match.group(1)
         starts = tuple(_TOP_LEVEL_DECLARATION_RE.finditer(code))
         for index, match in enumerate(starts):
-            theorem_match = re.match(
-                r"(?:theorem|lemma)\s+([A-Za-z][A-Za-z0-9_]*)", match.group(0)
-            )
+            theorem_match = _THEOREM_RE.match(match.group(0))
             if theorem_match is None:
                 continue
             end = starts[index + 1].start() if index + 1 < len(starts) else len(content)

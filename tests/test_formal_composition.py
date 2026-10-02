@@ -122,6 +122,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "helmholtz_ao_ness.lean",
         "geometric_mechanics.lean",
         "law_weighted_split.lean",
+        "h3_reference_model.lean",
     )
     released_composition_resources = (
         "compositions/core.lean",
@@ -151,6 +152,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "compositions/efe_time_scale_separation.lean",
         "compositions/helmholtz_ao_ness.lean",
         "compositions/geometric_mechanics.lean",
+        "compositions/h3_case_study.lean",
     )
     aggregate_resources = ("composed.lean",)
     resources = (
@@ -209,6 +211,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "FEP.HelmholtzAoNess",
         "FEP.GeometricMechanics",
         "FEP.LawWeightedSplit",
+        "FEP.H3ReferenceModel",
         *("FEPComposed",) * len(released_composition_resources),
         "FEPComposed.FiniteScientificImplications",
         "FEPComposed.FinitePolicyAction",
@@ -223,6 +226,7 @@ def test_formal_module_manifest_is_the_single_explicit_resource_roster() -> None
         "FEPComposed",
         "FEPComposed",
         "FEPComposed",
+        "FEPComposed.H3CaseStudy",
         None,
     )
     expected_resources_by_role = {

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 from pathlib import Path
 
+import pytest
 import yaml
 
 from fep_lean.catalogue import BODIES, BODY_MODULE_MANIFEST, load_catalogue_metadata
@@ -21,6 +23,25 @@ BASELINE_PATH = (
     / "assets"
     / "baseline-120-sha256.json"
 )
+REVIEWED_DELTAS_PATH = (
+    PROJECT_ROOT / "tests" / "fixtures" / "formalism_catalogue_155_reviewed_deltas.json"
+)
+REVIEWED_MATURITY_FIELDS = {
+    "fep-063": {
+        "supporting_theorems",
+        "boundary_theorems",
+        "non_vacuity",
+        "acceptance_probe",
+    },
+    "fep-064": {
+        "supporting_theorems",
+        "boundary_theorems",
+        "invariant",
+        "assumption_review",
+        "non_vacuity",
+        "acceptance_probe",
+    },
+}
 
 NEW_FAMILY_RANGES = {
     "finite-sample-risk-and-calibration": range(121, 128),
@@ -87,6 +108,58 @@ def _yaml(name: str) -> dict[str, object]:
     value = yaml.safe_load((PROJECT_ROOT / "config" / name).read_text(encoding="utf-8"))
     assert isinstance(value, dict)
     return value
+
+
+def _assert_released_body_and_maturity(
+    bodies: Mapping[str, str], maturity_rows: list[dict[str, object]]
+) -> None:
+    """Reverse only reviewed deltas, retaining both historical digest gates."""
+    baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+    deltas = json.loads(REVIEWED_DELTAS_PATH.read_text(encoding="utf-8"))
+    assert deltas["schema_version"] == 1
+    assert set(deltas["body_changes"]) == set(REVIEWED_MATURITY_FIELDS)
+    assert set(deltas["maturity_changes"]) == set(REVIEWED_MATURITY_FIELDS)
+    assert baseline["topic_count"] == 120
+
+    released_bodies = dict(bodies)
+    for topic_id, change in deltas["body_changes"].items():
+        released = change["released_body"]
+        namespace_end = f"end FEP{topic_id[-3:]}\n"
+        assert released.endswith(namespace_end)
+        expected = (
+            released[: -len(namespace_end)]
+            + change["added_before_namespace_end"]
+            + namespace_end
+        )
+        # Exact additive reconstruction protects the released primary statements
+        # and the approved new theorems; an arbitrary replacement is rejected.
+        assert bodies[topic_id] == expected, topic_id
+        released_bodies[topic_id] = released
+    assert (
+        _length_prefixed_sha256(
+            [
+                f"{topic_id}\0{released_bodies[topic_id]}"
+                for topic_id in tuple(bodies)[:120]
+            ]
+        )
+        == baseline["body_digest"]
+    )
+
+    released_maturity = [dict(row) for row in maturity_rows[:120]]
+    for topic_id, fields in deltas["maturity_changes"].items():
+        assert set(fields) == REVIEWED_MATURITY_FIELDS[topic_id]
+        row = released_maturity[int(topic_id[-3:]) - 1]
+        assert row["id"] == topic_id
+        for field, change in fields.items():
+            assert row[field] == change["reviewed"], (topic_id, field)
+            row[field] = change["released"]
+    assert released_maturity[13]["id"] == "fep-014"
+    assert released_maturity[13]["assumption_review"] == H1_0_FEP014_ASSUMPTION
+    released_maturity[13]["assumption_review"] = RELEASED_FEP014_ASSUMPTION
+    assert (
+        _length_prefixed_sha256([_canonical(row) for row in released_maturity])
+        == baseline["maturity_rows_digest"]
+    )
 
 
 def test_expansion_vii_has_exact_roster_family_and_area_ownership() -> None:
@@ -163,30 +236,19 @@ def test_expansion_vii_semantic_roster_is_complete_and_formalized() -> None:
     )
 
 
-def test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction() -> None:
+def test_expansion_vii_preserves_released_rows_except_reviewed_deltas() -> None:
     baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
     metadata = _yaml("catalogue_metadata.yaml")
     maturity = _yaml("theorem_maturity.yaml")
     novelty = _yaml("formalism_novelty.yaml")
     relations = _yaml("formalism_relations.yaml")
 
-    assert (
-        _length_prefixed_sha256(
-            [f"{topic_id}\0{BODIES[topic_id]}" for topic_id in tuple(BODIES)[:120]]
-        )
-        == baseline["body_digest"]
+    _assert_released_body_and_maturity(
+        BODIES, [dict(row) for row in maturity["topics"][:120]]
     )
     assert (
         _length_prefixed_sha256([_canonical(row) for row in metadata["topics"][:120]])
         == baseline["metadata_rows_digest"]
-    )
-    maturity_rows = [dict(row) for row in maturity["topics"][:120]]
-    assert maturity_rows[13]["id"] == "fep-014"
-    assert maturity_rows[13]["assumption_review"] == H1_0_FEP014_ASSUMPTION
-    maturity_rows[13]["assumption_review"] = RELEASED_FEP014_ASSUMPTION
-    assert (
-        _length_prefixed_sha256([_canonical(row) for row in maturity_rows])
-        == baseline["maturity_rows_digest"]
     )
     assert (
         _length_prefixed_sha256([_canonical(row) for row in novelty["topics"][:70]])
@@ -206,3 +268,46 @@ def test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction() -> N
         _length_prefixed_sha256([_canonical(row) for row in relations["edges"][:98]])
         == baseline["edges_digest"]
     )
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "released_primary_body",
+        "reviewed_identity_body",
+        "reviewed_attainment_body",
+        "unreviewed_body",
+        "released_primary_metadata",
+        "reviewed_metadata",
+        "unreviewed_metadata",
+    ],
+)
+def test_reviewed_deltas_reject_unapproved_changes(mutation: str) -> None:
+    bodies = dict(BODIES)
+    maturity = [dict(row) for row in _yaml("theorem_maturity.yaml")["topics"][:120]]
+    if mutation == "released_primary_body":
+        bodies["fep-063"] = bodies["fep-063"].replace(
+            "theorem fep063_finiteChannel_klDataProcessing",
+            "theorem changed_primary",
+            1,
+        )
+    elif mutation == "reviewed_identity_body":
+        bodies["fep-063"] = bodies["fep-063"].replace(
+            "theorem fep063_identityChannel_preservesKL", "theorem changed_identity", 1
+        )
+    elif mutation == "reviewed_attainment_body":
+        bodies["fep-064"] = bodies["fep-064"].replace(
+            "theorem fep064_rateDistortion_exists_minimizer",
+            "theorem changed_attainment",
+            1,
+        )
+    elif mutation == "unreviewed_body":
+        bodies["fep-062"] += "\n-- unreviewed change\n"
+    elif mutation == "released_primary_metadata":
+        maturity[63]["primary_theorem"] = "changed_primary"
+    elif mutation == "reviewed_metadata":
+        maturity[62]["acceptance_probe"] = "changed acceptance"
+    else:
+        maturity[61]["invariant"] = "changed invariant"
+    with pytest.raises(AssertionError):
+        _assert_released_body_and_maturity(bodies, maturity)

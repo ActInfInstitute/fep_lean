@@ -1,0 +1,2079 @@
+{
+  "audit_receipt": {
+    "current_stored_receipt_validation_errors": [],
+    "declaration_count": 1596,
+    "declarations_resolved": 1596,
+    "path": "output/formalism-audit.json",
+    "review_scoped_declaration_count": 109,
+    "scoped_declaration_evidence": [
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "fep_fep063.FEP063.fep063_finiteChannel_klDataProcessing",
+        "formal_module": "FepSketches.fep_all",
+        "resolved": true,
+        "source_ids": [
+          "fep-063"
+        ],
+        "source_roles": [
+          "topic_primary"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "fep_fep064.FEP064.fep064_rateDistortion_weakDuality",
+        "formal_module": "FepSketches.fep_all",
+        "resolved": true,
+        "source_ids": [
+          "fep-064"
+        ],
+        "source_roles": [
+          "topic_primary"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.bayesRisk_mono_under_observationGarbling",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.boolPointMass_klDiv_eq_top",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.boolPrior_zeroOneRisk",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.boolZeroOneLoss_measurable",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.channelJoint_fstMarginal",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.embeddedJoint_klDiv_eq_mutualInformation",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.embeddedLaw_product",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.embeddedLaw_withDensity_ratio",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.embeddedLaw_withDensity_ratio_of_relativeSupport",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.finiteKL_asymmetric_bool",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.finiteKL_mono_under_channel_of_relativeSupport",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.finiteMutualInformation_mono_under_observationGarbling",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.garbledBool_bayesRisk_eq_half",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.joint_relativeSupport_productMarginals",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.mutualInformation_mono_under_observationGarbling",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.nativeChannelMutualInformation_eq_finite",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.predictive_relativeSupport",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.properLogScore_excessRisk_eq_finiteKL_truth_report",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.revealingBoolArgminEstimator",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.revealingBool_bayesRisk_eq_zero",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.revealingBool_bayesRisk_lt_garbled",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.revealingBool_isBayesEstimator",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.weightedDirac_klDiv_eq_finiteKL_of_fullSupport",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.weightedDirac_klDiv_eq_finiteKL_of_relativeSupport",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.DecisionRisk.weightedDirac_klDiv_eq_top_of_not_absolutelyContinuous",
+        "formal_module": "FepSketches.decision_risk",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.decision_risk"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.conditionalEntropy_nonneg",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.conditionalKL_eq_crossEntropy_sub_entropy",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.conditionalKL_eq_zero_iff",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-kl-chain-rules",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.conditionalKL_nonneg",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-kl-chain-rules",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.crossEntropy_disjoint_pointMass_totalized",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.crossEntropy_joint",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.crossEntropy_product_marginals",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.entropy_joint_eq_add_conditional",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.entropy_nonneg",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.entropy_product",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_disjoint_pointMass_totalized",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_eq_zero_iff",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_joint_chain_rule",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-kl-chain-rules",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_nonneg",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_prior_le_joint",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-kl-chain-rules",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_product",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-kl-chain-rules",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.finiteKL_self",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_eq_entropy_marginals",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_eq_predictive_entropy_sub_conditional",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_eq_zero_iff",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_le_predictive_entropy",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_nonneg",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.mutualInformation_product_eq_zero",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-information-theory",
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.FiniteInformation.weighted_klFun_eq_log_score",
+        "formal_module": "FepSketches.finite_information",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.finite_information"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolFeasible_information_pos",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolHalfBudget_distinct_minimizers",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolHammingDistortion_nonneg",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolIndependent_distortion",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolIndependent_minimizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolQuarterBudget_exists_positive_minimizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolQuarterDistortionJoint_feasible",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolQuarterDistortionJoint_fstMarginal",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolZeroBudget_unique_feasible",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.boolZeroDistortionJoint_feasible",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.conditionalKL_self",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.constantChannel_KL_strict",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.constantChannel_KL_zero",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.constantChannel_predictive",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.constrainedEntropy_existsUnique_of_certificate",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.continuous_mutualInformationOfMasses",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.dvObjective_eq_logPartition_iff",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.dvObjective_eq_logPartition_sub_kl",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.dvObjective_le_logPartition",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.dvObjective_optimizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.expectedDistortion_nonneg",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.expected_log_weight_le_log_expected_weight",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fin3Boundary_feasible_iff_pointMassZero",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fin3Boundary_uniqueEntropyMaximizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fin3Infeasible_no_feasibleLaw",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fin3InteriorMoment_uniqueEntropyMaximizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fin3Redundant_feasible_iff",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.finiteChannel_dataProcessing",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.finiteChannel_identity_preservesKL",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.finiteKL_eq_crossEntropy_sub_entropy_of_relativeSupport",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.finiteKL_joint_sameKernel",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.finiteKL_swap",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.fixedSampleImportanceJensen",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.gibbsFreeEnergy_optimizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.iidProductLaw_mass",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.isClosed_rateDistortionFeasibleMasses",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.isCompact_rateDistortionFeasibleMasses",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.jointELBO_coordinate_decomposition",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.joint_supported_by_productMarginals",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.meanFieldCoordinateFreeEnergy_eq",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.meanFieldCoordinate_optimum_iff",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.mutualInformationOfMasses_eq",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.mutualInformation_eq_entropy_marginals_without_support",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.neg_logPartition_le_gibbsFreeEnergy",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortionDual_bddBelow",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortionDual_le_feasible_information",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortionDual_zeroMultiplier",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortionFeasible_mass_mem",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortionLawOfMasses_feasible",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortion_exists_minimizer",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortion_infeasible_of_negativeBudget",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.rateDistortion_weak_duality",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.reverseKernel_joint",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.sampleMeanWeight_pos",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality",
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "capability_evidence",
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.uniformZeroPotentialGibbs_objective",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "FEP.VariationalDuality.zeroTemperature_not_certified",
+        "formal_module": "FepSketches.variational_duality",
+        "resolved": true,
+        "source_ids": [
+          "FepSketches.variational_duality"
+        ],
+        "source_roles": [
+          "formal_module"
+        ],
+        "uses_sorry_ax": false
+      },
+      {
+        "axioms": [
+          "propext",
+          "Classical.choice",
+          "Quot.sound"
+        ],
+        "declaration": "fep_fep064.FEP064.fep064_zeroMultiplier_boundary",
+        "formal_module": "FepSketches.fep_all",
+        "resolved": true,
+        "source_ids": [
+          "cap-finite-variational-duality"
+        ],
+        "source_roles": [
+          "capability_evidence"
+        ],
+        "uses_sorry_ax": false
+      }
+    ],
+    "sha256": "78053301e5699aa58c7bb516b7dbe872cf466bf59c3a23fec14de515046b925e"
+  },
+  "author_mathematical_or_metadata_files_modified_by_reviewer": false,
+  "decision": "approve",
+  "decision_scope": "Independent semantic approval of the exact FORM-1/2/3 statements, retained proof boundaries and now-complete required FORM-2 native consumer controls; no universal FEP promotion or fresh compiler execution by this reviewer.",
+  "findings": [],
+  "form2_control_review": {
+    "actual_author_execution": "7 passed in 7.54s; attempt-01 failed and is retained; attempt-02 passed with four axiom printouts containing only propext, Classical.choice and Quot.sound. No Lean execution by this reviewer.",
+    "author_receipt": {
+      "path": "specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/receipt.json",
+      "sha256": "76bb96549d853ad233a545ab486ef98b64617593461d6f44f84a61a226109352"
+    },
+    "decision": "approve",
+    "retained_artifact_hashes_rechecked": 25,
+    "semantic_findings": [
+      "The normalized prior (false,true)=(5/6,1/6) and normalized kernel rows (3/5,2/5)/(1,0) generate the declared nonexchangeable joint [[1/2,1/3],[1/6,0]]. Explicit unequal off-diagonal atoms, ordered native singleton masses, marginals and embeddedLaw_joint_eq_compProd bind both axes.",
+      "Strict finite information positivity follows from the proven mutualInformation_eq_zero_iff factorization criterion: the zero true,true joint atom contradicts positive product marginals. The reviewed general bridge transports this positivity to native channel mutual information without assuming it.",
+      "Erasure produces the same asymmetric prior times delta_false. Product factorization and native finite/joint identities prove exact zero, including joint/reference shared-zero atoms. Combined with informative positivity, this establishes strict information loss; native and finite garbling inequalities are instantiated.",
+      "Existing relative-support sparse, reversed-KL and singular controls remain. These consumers close the required-control gap without changing mathematical carriers or pins."
+    ],
+    "source_maps_rechecked_live": 150
+  },
+  "independent_of_reviewed_mathematical_file_authorship": true,
+  "kind": "independent-form-1-3-semantic-review",
+  "lane_reviews": {
+    "FORM-1": {
+      "acceptance_disposition": "Eligible for closure only after retained review/changelog recording and the coordinator confirms all original focused acceptance evidence.",
+      "evidence_locations": [
+        "src/fep_lean/formal/variational_duality.lean:367-407",
+        "src/fep_lean/formal/finite_information.lean:53-130",
+        "src/fep_lean/catalogue/bodies/variational_duality.py:173-229",
+        "config/theorem_maturity.yaml:1266-1292"
+      ],
+      "findings": [
+        "Identity predictive propagation is proved equal to the input laws, so finite KL equality is an actual channel statement. No positive-entry channel assumption is smuggled into the identity witness.",
+        "Complete coarsening uses the deterministic map to Unit and proves every predictive law is the same point mass. Strict contraction follows for unequal normalized inputs from finiteKL zero separation; it does not assume a contraction result.",
+        "The strict coarsening result is about the repository totalized real finiteKL. Normalization supports separation even at zero reference atoms, but a singular input pair has finite value1 here, while native measure KL is infinite. The reviewed metadata explicitly preserves this distinction.",
+        "Keep the primary fep063 positive-law/positive-channel DPI statement and conditional_proxy disposition. The two new deterministic witnesses do not by themselves promote it to arbitrary sparse native DPI. FORM-2 separately supplies that stronger relative-support result."
+      ],
+      "semantic_decision": "approve"
+    },
+    "FORM-2": {
+      "acceptance_control_status": "Required asymmetric informative/independent native consumers now retained and independently approved; see form2_control_review.",
+      "acceptance_disposition": "Required asymmetric informative/independent native controls and semantic review complete within the existing finite/native boundary.",
+      "decision": "approve",
+      "evidence_locations": [
+        "src/fep_lean/formal/decision_risk.lean:30-85",
+        "src/fep_lean/formal/decision_risk.lean:137-155",
+        "src/fep_lean/formal/decision_risk.lean:247-267",
+        "src/fep_lean/formal/decision_risk.lean:278-404",
+        "src/fep_lean/formal/native_blanket.lean:31-120",
+        "tests/test_horizon1_decision_risk.py:128-258",
+        "SCOPE-2026-09-30.md:146"
+      ],
+      "findings": [
+        "Relative support is actual-support containment in the reference support: p(x) nonzero requires q(x)>0. The withDensity construction derives absolute continuity, retains shared-zero atoms, identifies the actual RN ratio, and equates native extended KL with ENNReal.ofReal finiteKL only within this boundary.",
+        "The law/product/joint/predictive embeddings are proven on the same finite carriers. Joint support in its product marginals removes any full-marginal support assumption from finite/native MI identity. The KL order remains joint then product reference.",
+        "Native observation garbling applies the same Kernel.id parallel garbling to joint and reference product. The finite lifting proves the identical composed experiment and uses nonnegative ofReal order reflection; no hidden strictly positive channel premise is present.",
+        "The disjoint Boolean point-mass native KL infinity theorem and finite totalized value1 theorem preserve the singular failure boundary. Shared-zero sparse and deterministic consumers are actually represented in the reviewed native test source.",
+        "The new concrete nonexchangeable informative joint and independent asymmetric product instantiate the universal identities and positivity/zero consequences. The author evidence is source-bound and actually passed; this independent read closes the original control gap as detailed in form2_control_review."
+      ],
+      "semantic_decision": "approve"
+    },
+    "FORM-3": {
+      "acceptance_disposition": "Eligible for closure only after recording this review and the existing original native/axiom acceptance; preserve structural_proxy and primary theorem.",
+      "evidence_locations": [
+        "src/fep_lean/formal/variational_duality.lean:784-858",
+        "src/fep_lean/formal/variational_duality.lean:860-976",
+        "src/fep_lean/formal/variational_duality.lean:978-1056",
+        "src/fep_lean/formal/variational_duality.lean:1060-1208",
+        "src/fep_lean/catalogue/bodies/variational_duality.py:231-330",
+        "config/theorem_maturity.yaml:1293-1338",
+        "tests/test_measure_variational_formalisms.py:270-320"
+      ],
+      "findings": [
+        "Feasibility fixes the source marginal and distortion budget on the existing normalized finite joint carrier. It supplies no optimizer or minimality certificate. The coordinate set has nonnegative masses, exact row sums, and a continuous linear distortion constraint.",
+        "The feasible coordinate set is closed and lies in the finite-dimensional [0,1] box, hence compact. The zero-safe entropy expression equals the original finite mutual information on laws and is continuous on boundary faces. A feasible witness supplies nonemptiness, and compactness supplies an actual minimizing coordinate law.",
+        "The dual is an sInf over all fixed-source joints of the Lagrangian minus multiplier times budget. Nonnegative distortion and multiplier establish a genuine lower bound; csInf_le at a feasible joint plus its actual distortion inequality derives weak duality. Separately assumed component lower bounds are not inputs to this supporting theorem.",
+        "The zero-multiplier dual value0 requires a nonempty reproduction alphabet and uses an independent product witness; it does not imply primal feasibility at a negative budget. Negative budgets are separately proved infeasible for nonnegative distortion.",
+        "Fair Boolean Hamming quarter-budget feasibility comes from the explicit crossover law; compactness produces a minimizer, and every feasible law below one-half has strictly positive information by the zero-MI factorization theorem. The explicit crossover witness is not falsely identified as the optimizer.",
+        "At half budget two distinct constant-code independent joints attain information0, disproving general uniqueness. At zero budget the source constraints and vanishing off-diagonal mass force the diagonal joint. No general strong duality, dual attainment, closed-form interior R(D), or general uniqueness is claimed.",
+        "The original primary fep064_rateDistortion_weakDuality still assumes component lower bounds. Preserve structural_proxy for that primary and register genuine expanded supporting statements rather than silently changing its meaning."
+      ],
+      "semantic_decision": "approve"
+    }
+  },
+  "proposed_metadata_wording": {
+    "field": "assumption_review",
+    "file": "config/theorem_maturity.yaml",
+    "preserve_disposition": "structural_proxy",
+    "preserve_exclusions": [
+      "general strong duality",
+      "dual attainment",
+      "closed-form interior rate function",
+      "general optimizer uniqueness"
+    ],
+    "preserve_primary_theorem": "fep064_rateDistortion_weakDuality",
+    "replace_only_final_pending_review_sentence_with": "The structural-proxy disposition and primary theorem remain unchanged: the primary theorem still assumes separately certified component lower bounds, while the independently reviewed supporting theorems establish finite optimizer attainment and infimum-derived weak duality.",
+    "reviewer_applied_metadata_edit": false,
+    "row": "fep-064"
+  },
+  "retained_native_evidence_sha256": {
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/audit.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/audit.stdout.txt": "78053301e5699aa58c7bb516b7dbe872cf466bf59c3a23fec14de515046b925e",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build-summary.json": "db5b1636273afb6e6da45af7bc29ab7baa44e1475a977a08feca5af2b3c10925",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build.stdout.txt": "6b35e3bc778388bc7d139cfc2d3380ae516107c09c2bb9eb94d597fdd34a9f7c",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/retention.json": "312f1f5477ab2b3a91bf5ca23e37f141ff1bdc296e60887bdb1b2897b2e6d4b9",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-after-audit.json": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-after-build.json": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-before.json": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c",
+    "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/summary.json": "0b148fcfcfa5e1679bc76ef7562a3fbd68a344ba0fe19efb77616b7c3bfdaf6b"
+  },
+  "retained_native_observation": {
+    "scope": "Retained actual author/coordinator compilation and axiom output, independently read and source-bound during this review. The reviewer did not launch Lean/Lake or repeat native execution; build jobs and the 1596 selected axiom targets are distinct from the full 1946-declaration source census.",
+    "warning_failing_aggregate": {
+      "argv": [
+        "lake",
+        "--wfail",
+        "--no-cache",
+        "build",
+        "FepSketches.fep_all",
+        "FepSketches.composed"
+      ],
+      "current_direct_source_hashes_matched": 294,
+      "jobs": 3970,
+      "returncode": 0,
+      "reviewer_read_actual_retained_stdout": true,
+      "source_snapshots_identical": true
+    }
+  },
+  "reviewed_at_utc": "2026-10-01T01:17:52.522301+00:00",
+  "reviewer_id": "/root/backlog_review",
+  "reviewer_role": "independent semantic reviewer of finite information and rate-distortion statements",
+  "schema_version": 1,
+  "scope_boundaries": [
+    "No reviewer Lean/Lake process or native rerun. Retained current native/audit evidence was read and validated statically against current bytes.",
+    "No scientific RNG/seed draws, H3 outcomes, providers, dependency installation, package publication or hosted CI acceptance.",
+    "This review does not authorize rewriting immutable H2/native/scientific receipts or revising frozen H3 protocol.",
+    "FORM-1/2/3 semantic approval within the stated carriers and support assumptions is not whole-program, H3 scientific, package or release acceptance.",
+    "Later changes to reviewed source/metadata bytes reopen the affected semantic/custody review."
+  ],
+  "source_sha256": {
+    "SCOPE-2026-09-30.md": "ecd408f5b5b3de332a258d3975e1673c662272cfdf02120464fef11a098ed20e",
+    "config/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
+    "config/formalism_novelty.yaml": "234eded65ad5702db55ee7d11aed33d9b82d75c68ab03956e06903309d051815",
+    "config/formalism_relations.yaml": "a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e",
+    "config/theorem_maturity.yaml": "4a69570e072c7e8177727f6954a48bc4c180b76b1b8b3fa610e292ea7bb8bb8b",
+    "lean/FepSketches/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
+    "lean/FepSketches/fep_all.lean": "0345b38ffb4ada21069a9d18a01a88b3b23570b9894a011637b8a9d7d1e10fd9",
+    "lean/FepSketches/finite_information.lean": "3d52e359f9cb6a44a4b228f1353f63bfe1eb69170b653e20c1c2a8b72720bd45",
+    "lean/FepSketches/finite_probability.lean": "eb019691997b8c9a2e3dfbe127bf3336610c5dd12bb035e559dc1d77842c9a66",
+    "lean/FepSketches/native_blanket.lean": "b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b",
+    "lean/FepSketches/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
+    "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+    "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+    "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "specs/comprehensive-science-improvement/PROTOCOL.md": "cac6474312da3c06be0e45b14d789a116f329f0e3d020c1c9ace0033a273386c",
+    "src/fep_lean/catalogue/bodies/variational_duality.py": "41bca6f54ae5f1e8353d267b5388e1b6b2460c913049b965e836c1c0f43042eb",
+    "src/fep_lean/formal/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
+    "src/fep_lean/formal/finite_information.lean": "3d52e359f9cb6a44a4b228f1353f63bfe1eb69170b653e20c1c2a8b72720bd45",
+    "src/fep_lean/formal/finite_probability.lean": "eb019691997b8c9a2e3dfbe127bf3336610c5dd12bb035e559dc1d77842c9a66",
+    "src/fep_lean/formal/manifest.py": "c1dff5c5753162d1cf91fb27c5cb08777d385db4c606bd65a136d2c93acf07ce",
+    "src/fep_lean/formal/native_blanket.lean": "b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b",
+    "src/fep_lean/formal/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
+    "src/fep_lean/verification/formalism_audit.py": "3861f4310abd428334aee84feee4c8577ec050468f09c93e6de061d3e1e78dfe",
+    "tests/test_formal_composition.py": "369081170e217ae3348c3014ec80704f799f5512b8cb3876b13c979d0dc04ee6",
+    "tests/test_horizon1_decision_risk.py": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522",
+    "tests/test_horizon1_finite_reference.py": "cf68b3b0addf9900e6ca8f993362980d14fb941b1d6592fa45fa6e40f874ed74",
+    "tests/test_measure_variational_formalisms.py": "8e5507aa182138d0b582fc955a9a1ceb552975a6c312f8908c22efe5d7b16b32"
+  },
+  "supersedes_review": {
+    "path": "specs/comprehensive-science-improvement/evidence/form-1-3-semantic-review-20261001-r1.json",
+    "reason": "FORM-2 required native consumers added and independently reviewed after the retained revise decision.",
+    "sha256": "dd924b6d5180a563703668ac9f8270aa908b61a21741daebb0b92d21343ee89c"
+  }
+}

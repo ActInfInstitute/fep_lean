@@ -1,0 +1,47 @@
+{
+  "accepted": true,
+  "argv": [
+    "uv",
+    "run",
+    "--locked",
+    "fep-lean",
+    "verify",
+    "--receipt",
+    "output/native-verification.json",
+    "--fail-on-warnings"
+  ],
+  "artifacts": {
+    "driver.py": "b591abb7fbd5ab2409689348cfd13ee5c29a1adac0d23b21464ed442da1f0263",
+    "native-verification.json": "f519f25bd0dc5f543b36f87c120c7cfef3ab5b2b184d7aa73108b9a0844d743d",
+    "native.stderr.txt": "b951279c840ebd4d30b6b7519bbb2ffa53adb485248e8ce1a18481482fd4a468",
+    "native.stdout.txt": "3eb34be38930501f2d34c2e9af0034817ccd36fba12597acc80c77e673e067ad",
+    "prior-native-verification.json": "41368d7522d934f241ad5154bd5045435b180eeada37eae3f10ba5d2f1627fd9",
+    "source-after.json": "ec795f0ad68ea71dfda5b91bd88e8f9cab60bba20717fb7edecd2974995a558c",
+    "source-before.json": "ec795f0ad68ea71dfda5b91bd88e8f9cab60bba20717fb7edecd2974995a558c"
+  },
+  "elapsed_seconds": 1966.8516727500028,
+  "exit_code": 0,
+  "kind": "actual-final-source-native-capture",
+  "schema_version": 1,
+  "source_count": 291,
+  "sources_unchanged": true,
+  "validation": {
+    "duration_s": 1956.631,
+    "errors": [],
+    "lean_toolchain": "leanprover/lean4:v4.34.1",
+    "lean_version": "Lean (version 4.34.1, arm64-apple-darwin24.6.0, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "live_catalogue_topics": 168,
+    "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "mathlib_tag": "v4.34.1",
+    "native_claim_ready": true,
+    "receipt": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/output/native-verification.json",
+    "selected_topics": 168,
+    "sorry_count": 0,
+    "sorry_occurrences": 0,
+    "source_bound": true,
+    "status": "ok",
+    "valid": true,
+    "verified_topics": 168,
+    "warning_count": 0
+  }
+}

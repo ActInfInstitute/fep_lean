@@ -23,12 +23,13 @@ def _declaration(source: str, name: str) -> str:
     return match.group(0)
 
 
-def test_constrained_entropy_extends_the_existing_owner_without_new_imports() -> None:
+def test_constrained_entropy_preserves_its_existing_owner_imports() -> None:
     source = FOUNDATION.read_text(encoding="utf-8")
 
     assert tuple(re.findall(r"(?m)^import (\S+)$", source)) == (
         "FepSketches.finite_information",
         "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+        "Mathlib.Topology.Order.Compact",
     )
     assert "namespace FEP.VariationalDuality\n" in source
     assert source.rstrip().endswith("end FEP.VariationalDuality")

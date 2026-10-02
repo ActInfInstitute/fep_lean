@@ -5680,7 +5680,9 @@ topics:
   primary_theorem: fep063_finiteChannel_klDataProcessing
   supporting_theorems:
   - fep063_referencePredictive_fullSupport
-  boundary_theorems: []
+  - fep063_identityChannel_preservesKL
+  boundary_theorems:
+  - fep063_constantChannel_strict
   semantic_disposition: conditional_proxy
   nl: 'Passing two finite full-support laws through the same strictly positive finite channel cannot increase their finite
     KL divergence. Assumption scope: Input is nonempty, both input laws have strict support, and every channel atom is strictly
@@ -5691,10 +5693,12 @@ topics:
   assumption_review: Input is nonempty, both input laws have strict support, and every channel atom is strictly positive;
     these conditions force reference-predictive support and avoid the project's totalized-log boundary. This is stronger support
     than the most general measure-theoretic data-processing theorem.
-  non_vacuity: Any noisy positive channel acting on unequal full-support input laws exercises a genuine contraction comparison,
-    while deterministic or zero-probability channel rows are deliberately outside this statement.
+  non_vacuity: 'Any noisy positive channel acting on unequal full-support input laws exercises a genuine contraction comparison.
+    Separate identity and complete-coarsening witnesses cover deterministic zero-entry channels: identity preserves finite
+    KL and complete coarsening strictly reduces it for unequal laws. These do not weaken the support premises of the primary
+    theorem or identify singular native infinity with the project''s totalized finite convention.'
   acceptance_probe: native Lean compile of fep063_finiteChannel_klDataProcessing and fep063_referencePredictive_fullSupport
-    with all three support certificates.
+    with all three support certificates, plus fep063_identityChannel_preservesKL and fep063_constantChannel_strict.
   lean_sketch: "import FepSketches.variational_duality\n\nnamespace FEP063\n\nopen FEP FEP.FiniteInformation FEP.VariationalDuality\n\
     \nvariable {Input Output : Type*}\n  [Fintype Input] [Fintype Output] [Nonempty Input]\n\n/-- Passing two full-support\
     \ laws through the same strictly positive finite\nchannel cannot increase KL divergence. -/\ntheorem fep063_finiteChannel_klDataProcessing\n\
@@ -5706,7 +5710,15 @@ topics:
     \    (reference : FiniteLaw Input)\n    (channel : FiniteKernel Input Output)\n    (hreference : ∀ input, 0 < reference\
     \ input)\n    (hchannel : ∀ input output, 0 < channel input output)\n    (output : Output) :\n    0 < channel.predictive\
     \ reference output := by\n  simp only [FiniteKernel.predictive_mass]\n  exact Finset.sum_pos (fun input _ =>\n    mul_pos\
-    \ (hreference input) (hchannel input output))\n    Finset.univ_nonempty\n\nend FEP063\n"
+    \ (hreference input) (hchannel input output))\n    Finset.univ_nonempty\n\nomit [Nonempty Input] in\n/-- A deterministic\
+    \ identity channel preserves finite KL exactly, despite\nits zero off-diagonal channel entries. -/\ntheorem fep063_identityChannel_preservesKL\
+    \ [DecidableEq Input]\n    (actual reference : FiniteLaw Input) :\n    finiteKL (FiniteKernel.identity.predictive actual)\n\
+    \        (FiniteKernel.identity.predictive reference) = finiteKL actual reference :=\n  finiteChannel_identity_preservesKL\
+    \ actual reference\n\nomit [Nonempty Input] in\n/-- Complete deterministic coarsening strictly reduces the repository's\n\
+    finite divergence for unequal normalized input laws. -/\ntheorem fep063_constantChannel_strict\n    (actual reference\
+    \ : FiniteLaw Input) (hne : actual ≠ reference) :\n    finiteKL\n        ((FiniteKernel.deterministic (fun _ : Input =>\
+    \ ())).predictive actual)\n        ((FiniteKernel.deterministic (fun _ : Input => ())).predictive reference) <\n     \
+    \ finiteKL actual reference :=\n  constantChannel_KL_strict actual reference hne\n\nend FEP063\n"
   latex_equations:
   - '\begin{aligned}
 
@@ -5743,6 +5755,33 @@ topics:
     &0 < \mathsf{channel.predictive}\,\mathsf{reference}\,\mathsf{output}
 
     \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Input}\,\mathsf{Output} : \mathsf{Type}^{*}\} \\
+
+    &[\mathsf{DecidableEq}\,\mathsf{Input}]\,(\mathsf{actual}\,\mathsf{reference} : \mathsf{FiniteLaw}\,\mathsf{Input}) \\
+
+    &\mathsf{finiteKL}\,(\mathsf{FiniteKernel.identity.predictive}\,\mathsf{actual}) \\
+
+    &(\mathsf{FiniteKernel.identity.predictive}\,\mathsf{reference}) = \mathsf{finiteKL}\,\mathsf{actual}\,\mathsf{reference}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Input}\,\mathsf{Output} : \mathsf{Type}^{*}\} \\
+
+    &(\mathsf{actual}\,\mathsf{reference} : \mathsf{FiniteLaw}\,\mathsf{Input})\,(\mathsf{hne} : \mathsf{actual} \ne \mathsf{reference})
+    \\
+
+    &\mathsf{finiteKL}\,((\mathsf{FiniteKernel.deterministic}\,(\lambda\,\mathord{\_} : \mathsf{Input} \mapsto ())).\mathsf{predictive}\,\mathsf{actual})
+    \\
+
+    &((\mathsf{FiniteKernel.deterministic}\,(\lambda\,\mathord{\_} : \mathsf{Input} \mapsto ())).\mathsf{predictive}\,\mathsf{reference})
+    \\
+
+    &< \mathsf{finiteKL}\,\mathsf{actual}\,\mathsf{reference}
+
+    \end{aligned}'
 - id: fep-064
   title: Rate–Distortion Lagrangian Weak Duality
   area: FEP
@@ -5752,23 +5791,47 @@ topics:
   - Algebra.Order.BigOperators.Group.Finset
   mathlib_status: real
   primary_theorem: fep064_rateDistortion_weakDuality
-  supporting_theorems: []
+  supporting_theorems:
+  - fep064_rateDistortion_exists_minimizer
+  - fep064_rateDistortion_dual_lower_bound
+  - fep064_quarterBudget_informative_optimum
   boundary_theorems:
   - fep064_zeroMultiplier_boundary
+  - fep064_dual_zeroMultiplier
+  - fep064_negativeBudget_infeasible
+  - fep064_halfBudget_nonunique
+  - fep064_zeroBudget_unique
   semantic_disposition: structural_proxy
   nl: 'Separately certified lower bounds on finite mutual information and expected distortion combine into a lower bound on
-    their rate–distortion Lagrangian for every nonnegative multiplier. Assumption scope: The theorem assumes both component
-    lower bounds rather than deriving a dual function or proving primal or dual optimizer existence. The multiplier is nonnegative,
-    and the zero-multiplier theorem identifies the exact rate-only boundary. Semantic disposition: `structural_proxy`.
+    their rate–distortion Lagrangian for every nonnegative multiplier. Supporting theorems now additionally establish an attained
+    information minimum for every nonempty finite fixed-source distortion-feasible set, an actual Lagrangian-infimum weak-duality
+    bound, and an attained strictly positive optimum at fair Boolean Hamming budget one quarter. Assumption scope: The theorem
+    assumes both component lower bounds rather than deriving a dual function. The supporting attainment theorem instead derives
+    primal optimizer existence from compactness and the continuous zero-safe entropy expression for mutual information, requiring
+    only a feasible finite joint with fixed source marginal. Infimum-derived weak duality requires nonnegative distortion
+    and multiplier; zero-multiplier dual value requires a nonempty code alphabet. Neither general strong duality, dual attainment,
+    a closed-form interior rate function, nor general optimizer uniqueness is claimed. The structural-proxy disposition and
+    primary theorem remain unchanged: the primary theorem still assumes separately certified component lower bounds, while
+    the independently reviewed supporting theorems establish finite optimizer attainment and infimum-derived weak duality.
+    Semantic disposition: `structural_proxy`.
 
     '
-  assumption_review: The theorem assumes both component lower bounds rather than deriving a dual function or proving primal
-    or dual optimizer existence. The multiplier is nonnegative, and the zero-multiplier theorem identifies the exact rate-only
-    boundary.
+  assumption_review: 'The theorem assumes both component lower bounds rather than deriving a dual function. The supporting
+    attainment theorem instead derives primal optimizer existence from compactness and the continuous zero-safe entropy expression
+    for mutual information, requiring only a feasible finite joint with fixed source marginal. Infimum-derived weak duality
+    requires nonnegative distortion and multiplier; zero-multiplier dual value requires a nonempty code alphabet. Neither
+    general strong duality, dual attainment, a closed-form interior rate function, nor general optimizer uniqueness is claimed.
+    The structural-proxy disposition and primary theorem remain unchanged: the primary theorem still assumes separately certified
+    component lower bounds, while the independently reviewed supporting theorems establish finite optimizer attainment and
+    infimum-derived weak duality.'
   non_vacuity: Positive multipliers make both certified components contribute, while setting the multiplier to zero reduces
-    the Lagrangian exactly to mutual information.
-  acceptance_probe: native Lean compile of fep064_rateDistortion_weakDuality and fep064_zeroMultiplier_boundary without an
-    optimizer-existence assumption.
+    the Lagrangian exactly to mutual information and gives dual value zero. A concrete quarter-crossover Boolean joint makes
+    the interior budget feasible, while every independent fair-source joint has distortion one half, forcing the attained
+    quarter-budget optimum positive. Negative budgets are infeasible, zero budget forces a unique diagonal joint, and half
+    budget has two distinct independent information minimizers.
+  acceptance_probe: native Lean compile of fep064_rateDistortion_weakDuality and fep064_zeroMultiplier_boundary, all three
+    supporting attainment/duality/ informative-interior declarations, and the zero-dual, negative-budget, nonunique-half-budget,
+    and unique-zero-budget boundaries. The actual optimizer is derived, never supplied as a certificate field.
   lean_sketch: "import FepSketches.variational_duality\n\nnamespace FEP064\n\nopen FEP FEP.FiniteInformation FEP.VariationalDuality\n\
     \nvariable {Source Code : Type*} [Fintype Source] [Fintype Code]\n\n/-- Separately certified rate and distortion lower\
     \ bounds yield a lower bound\non the finite rate--distortion Lagrangian for every nonnegative multiplier. -/\ntheorem\
@@ -5780,7 +5843,39 @@ topics:
     \ Lagrangian reduces exactly to mutual\ninformation; no optimizer-existence claim is smuggled into weak duality. -/\n\
     theorem fep064_zeroMultiplier_boundary\n    (joint : FiniteLaw (Source × Code))\n    (distortion : Source → Code → ℝ)\
     \ :\n    rateDistortionLagrangian joint distortion 0 =\n      mutualInformation joint := by\n  simp [rateDistortionLagrangian]\n\
-    \nend FEP064\n"
+    \n/-- Every nonempty finite fixed-source distortion problem has an attained\ninformation minimum, including feasible faces\
+    \ with zero-mass atoms. -/\ntheorem fep064_rateDistortion_exists_minimizer\n    (source : FiniteLaw Source) (distortion\
+    \ : Source → Code → ℝ) (budget : ℝ)\n    (hfeasible : ∃ joint, RateDistortionFeasible source distortion budget joint)\
+    \ :\n    ∃ optimizer : FiniteLaw (Source × Code),\n      RateDistortionFeasible source distortion budget optimizer ∧\n\
+    \        ∀ candidate : FiniteLaw (Source × Code),\n          RateDistortionFeasible source distortion budget candidate\
+    \ →\n            mutualInformation optimizer ≤ mutualInformation candidate :=\n  rateDistortion_exists_minimizer source\
+    \ distortion budget hfeasible\n\n/-- The actual Lagrangian infimum supplies weak duality for every feasible\njoint; no\
+    \ separately certified rate or distortion lower bounds are inputs. -/\ntheorem fep064_rateDistortion_dual_lower_bound\n\
+    \    (source : FiniteLaw Source) (distortion : Source → Code → ℝ)\n    (budget multiplier : ℝ) (hdistortion : ∀ x y, 0\
+    \ ≤ distortion x y)\n    (hmultiplier : 0 ≤ multiplier) (joint : FiniteLaw (Source × Code))\n    (hjoint : RateDistortionFeasible\
+    \ source distortion budget joint) :\n    rateDistortionDualValue source distortion budget multiplier ≤ mutualInformation\
+    \ joint :=\n  rateDistortionDual_le_feasible_information source distortion budget multiplier\n    hdistortion hmultiplier\
+    \ joint hjoint\n\n/-- Zero multiplier gives dual value zero on a nonempty finite reproduction\nalphabet, even when the\
+    \ distortion budget is infeasible. -/\ntheorem fep064_dual_zeroMultiplier [Nonempty Code]\n    (source : FiniteLaw Source)\
+    \ (distortion : Source → Code → ℝ) (budget : ℝ) :\n    rateDistortionDualValue source distortion budget 0 = 0 :=\n  rateDistortionDual_zeroMultiplier\
+    \ source distortion budget\n\n/-- A negative budget is infeasible for nonnegative distortion. -/\ntheorem fep064_negativeBudget_infeasible\n\
+    \    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ)\n    (hdistortion : ∀ x y, 0 ≤ distortion\
+    \ x y) (hbudget : budget < 0) :\n    ¬ ∃ joint, RateDistortionFeasible source distortion budget joint :=\n  rateDistortion_infeasible_of_negativeBudget\
+    \ source distortion budget hdistortion hbudget\n\n/-- Fair Boolean Hamming distortion at the interior budget one quarter\
+    \ has\nan attained and strictly informative optimum. -/\ntheorem fep064_quarterBudget_informative_optimum :\n    ∃ optimizer\
+    \ : FiniteLaw (Bool × Bool),\n      RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4) optimizer ∧\n\
+    \        0 < mutualInformation optimizer ∧\n          ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion\n\
+    \            (1 / 4) candidate → mutualInformation optimizer ≤ mutualInformation candidate :=\n  boolQuarterBudget_exists_positive_minimizer\n\
+    \n/-- At Boolean Hamming budget one half there are distinct attained\ninformation minima, so general uniqueness is false.\
+    \ -/\ntheorem fep064_halfBudget_nonunique :\n    ∃ left right : FiniteLaw (Bool × Bool), left ≠ right ∧\n      (RateDistortionFeasible\
+    \ FiniteLaw.uniform boolHammingDistortion (1 / 2) left ∧\n        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform\
+    \ boolHammingDistortion\n          (1 / 2) candidate → mutualInformation left ≤ mutualInformation candidate) ∧\n     \
+    \ (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) right ∧\n        ∀ candidate, RateDistortionFeasible\
+    \ FiniteLaw.uniform boolHammingDistortion\n          (1 / 2) candidate → mutualInformation right ≤ mutualInformation candidate)\
+    \ :=\n  boolHalfBudget_distinct_minimizers\n\n/-- At zero Boolean Hamming budget the fixed fair source forces a unique\n\
+    perfect-reproduction joint. -/\ntheorem fep064_zeroBudget_unique\n    (joint : FiniteLaw (Bool × Bool))\n    (hjoint :\
+    \ RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0 joint) :\n    joint = boolZeroDistortionJoint :=\n\
+    \  boolZeroBudget_unique_feasible joint hjoint\n\nend FEP064\n"
   latex_equations:
   - '\begin{aligned}
 
@@ -5813,6 +5908,131 @@ topics:
     \Rightarrow \mathsf{Code} \Rightarrow \mathbb{R}) \\
 
     &\mathsf{rateDistortionLagrangian}\,\mathsf{joint}\,\mathsf{distortion}\,0 = \mathsf{mutualInformation}\,\mathsf{joint}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &(\mathsf{source} : \mathsf{FiniteLaw}\,\mathsf{Source})\,(\mathsf{distortion} : \mathsf{Source} \Rightarrow \mathsf{Code}
+    \Rightarrow \mathbb{R})\,(\mathsf{budget} : \mathbb{R}) \\
+
+    &(\mathsf{hfeasible} : \exists \mathsf{joint}, \mathsf{RateDistortionFeasible}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,\mathsf{joint})
+    \\
+
+    &\exists \mathsf{optimizer} : \mathsf{FiniteLaw}\,(\mathsf{Source} \times \mathsf{Code}), \mathsf{RateDistortionFeasible}\,\mathsf{source}
+    \\
+
+    &\mathsf{distortion}\,\mathsf{budget}\,\mathsf{optimizer} \wedge \forall \mathsf{candidate} : \mathsf{FiniteLaw}\,(\mathsf{Source}
+    \times \mathsf{Code}), \\
+
+    &\mathsf{RateDistortionFeasible}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,\mathsf{candidate} \Rightarrow
+    \mathsf{mutualInformation} \\
+
+    &\mathsf{optimizer} \le \mathsf{mutualInformation}\,\mathsf{candidate}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &(\mathsf{source} : \mathsf{FiniteLaw}\,\mathsf{Source})\,(\mathsf{distortion} : \mathsf{Source} \Rightarrow \mathsf{Code}
+    \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{budget}\,\mathsf{multiplier} : \mathbb{R})\,(\mathsf{hdistortion} : \forall x\,y, 0 \le \mathsf{distortion}\,x\,y)
+    \\
+
+    &(\mathsf{hmultiplier} : 0 \le \mathsf{multiplier})\,(\mathsf{joint} : \mathsf{FiniteLaw}\,(\mathsf{Source} \times \mathsf{Code}))\,(\mathsf{hjoint}
+    : \\
+
+    &\mathsf{RateDistortionFeasible}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,\mathsf{joint}) \\
+
+    &\mathsf{rateDistortionDualValue}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,\mathsf{multiplier} \le \mathsf{mutualInformation}
+    \\
+
+    &\mathsf{joint}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &[\mathsf{Nonempty}\,\mathsf{Code}]\,(\mathsf{source} : \mathsf{FiniteLaw}\,\mathsf{Source})\,(\mathsf{distortion} : \mathsf{Source}
+    \Rightarrow \mathsf{Code} \Rightarrow \mathbb{R}) \\
+
+    &(\mathsf{budget} : \mathbb{R}) \\
+
+    &\mathsf{rateDistortionDualValue}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,0 = 0
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &(\mathsf{source} : \mathsf{FiniteLaw}\,\mathsf{Source})\,(\mathsf{distortion} : \mathsf{Source} \Rightarrow \mathsf{Code}
+    \Rightarrow \mathbb{R})\,(\mathsf{budget} : \mathbb{R}) \\
+
+    &(\mathsf{hdistortion} : \forall x\,y, 0 \le \mathsf{distortion}\,x\,y)\,(\mathsf{hbudget} : \mathsf{budget} < 0) \\
+
+    &\neg{} \exists \mathsf{joint}, \mathsf{RateDistortionFeasible}\,\mathsf{source}\,\mathsf{distortion}\,\mathsf{budget}\,\mathsf{joint}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &\exists \mathsf{optimizer} : \mathsf{FiniteLaw}\,(\mathsf{Bool} \times \mathsf{Bool}), \mathsf{RateDistortionFeasible}\,\mathsf{FiniteLaw.uniform}
+    \\
+
+    &\mathsf{boolHammingDistortion}\,(1 / 4)\,\mathsf{optimizer} \wedge 0 < \mathsf{mutualInformation}\,\mathsf{optimizer}
+    \wedge \forall \\
+
+    &\mathsf{candidate}, \mathsf{RateDistortionFeasible}\,\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion} \\
+
+    &(1 / 4)\,\mathsf{candidate} \Rightarrow \mathsf{mutualInformation}\,\mathsf{optimizer} \le \mathsf{mutualInformation}\,\mathsf{candidate}
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &\exists \mathsf{left}\,\mathsf{right} : \mathsf{FiniteLaw}\,(\mathsf{Bool} \times \mathsf{Bool}), \mathsf{left} \ne \mathsf{right}
+    \wedge (\mathsf{RateDistortionFeasible} \\
+
+    &\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion}\,(1 / 2)\,\mathsf{left} \wedge \forall \mathsf{candidate},
+    \\
+
+    &\mathsf{RateDistortionFeasible}\,\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion}\,(1 / 2)\,\mathsf{candidate}
+    \\
+
+    &\Rightarrow \mathsf{mutualInformation}\,\mathsf{left} \le \mathsf{mutualInformation}\,\mathsf{candidate}) \\
+
+    &\wedge (\mathsf{RateDistortionFeasible}\,\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion}\,(1 / 2)\,\mathsf{right}
+    \\
+
+    &\wedge \forall \mathsf{candidate}, \mathsf{RateDistortionFeasible}\,\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion}\,(1
+    \\
+
+    &/ 2)\,\mathsf{candidate} \Rightarrow \mathsf{mutualInformation}\,\mathsf{right} \le \mathsf{mutualInformation}\,\mathsf{candidate})
+
+    \end{aligned}'
+  - '\begin{aligned}
+
+    &\{\mathsf{Source}\,\mathsf{Code} : \mathsf{Type}^{*}\}\,[\mathsf{Fintype}\,\mathsf{Source}]\,[\mathsf{Fintype}\,\mathsf{Code}]
+    \\
+
+    &(\mathsf{joint} : \mathsf{FiniteLaw}\,(\mathsf{Bool} \times \mathsf{Bool}))\,(\mathsf{hjoint} : \mathsf{RateDistortionFeasible}
+    \\
+
+    &\mathsf{FiniteLaw.uniform}\,\mathsf{boolHammingDistortion}\,0\,\mathsf{joint}) \\
+
+    &\mathsf{joint} = \mathsf{boolZeroDistortionJoint}
 
     \end{aligned}'
 - id: fep-065

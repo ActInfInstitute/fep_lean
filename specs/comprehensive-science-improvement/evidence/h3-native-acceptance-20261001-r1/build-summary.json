@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/Users/hum/.elan/bin/lake",
+    "--wfail",
+    "--no-cache",
+    "build",
+    "FepSketches.fep_all",
+    "FepSketches.composed"
+  ],
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/lean",
+  "timeout_sec": 1200,
+  "returncode": 0,
+  "elapsed_sec": 19.960135541001364,
+  "source_unchanged": true,
+  "mathlib_unchanged": true
+}

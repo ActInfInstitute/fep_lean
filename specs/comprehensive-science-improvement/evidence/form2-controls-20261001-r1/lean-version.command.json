@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "/Users/hum/.elan/bin/lake",
+    "env",
+    "lean",
+    "--version"
+  ],
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/lean",
+  "timeout_sec": 30,
+  "returncode": 0,
+  "elapsed_sec": 3.4910619170004793
+}

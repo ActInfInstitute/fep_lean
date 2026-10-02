@@ -130,13 +130,19 @@ uv run python specs/gnn-bridge-q5-artifact-proof/generate_probe.py --check
 uv run python specs/geo-infer-notation-bridge/check_geo_notation_bridge.py --check
 ```
 
-Live bridge and native-receipt checks additionally require the explicitly
+The listed Q5 `generate_probe.py --check` and GEO notation checks validate
+retained static artifacts without a sibling checkout. CI runs both. Q5
+generation establishes fixture/probe/manifest freshness, not current
+GNN-renderer custody or native evidence.
+
+Live source-custody and current native-receipt checks require the explicitly
 named GNN pair: `fep-lean bridge status --gnn-root PATH`, both emitters'
-`--check`, and `verify_native.py --check --gnn-root PATH --receipt
-specs/gnn-bridge-q5-artifact-proof/native_receipt.json`; the listed
-`generate_probe.py --check` needs the same sibling checkout. They are not
-unconditionally runnable, are not executed by CI, and never repair content
-drift.
+`--check`, and the applicable `verify_native.py --check --gnn-root PATH
+--receipt PATH`. These additional live checks are conditional, are not
+executed by CI, and never repair content drift. Select the exact receipt for
+the claimed artifact proof. Historical Q5/Q6 receipts remain historical after
+a source re-pin; a fresh Q7 receipt establishes only its own checked native
+statements and source pair.
 
 Do not claim Lean verification from catalogue mode or from generated manuscript
 values. Native compilation and full Hermes/OpenGauss execution are distinct

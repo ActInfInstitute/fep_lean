@@ -1,0 +1,64 @@
+{
+  "explicit_environment": {
+    "unset": [
+      "PYTEST_ADDOPTS",
+      "PYTEST_PLUGINS",
+      "PYTEST_CURRENT_TEST"
+    ],
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "FEP_LEAN_LIVE_TESTS": "0"
+  },
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "-m",
+        "pytest",
+        "tests/test_formalism_catalogue_155.py",
+        "-q",
+        "-o",
+        "addopts=",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=specs/comprehensive-science-improvement/evidence/catalogue-155-regression-20261001-r1/pytest.junit.xml"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 1.2694363339978736
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "-m",
+        "ruff",
+        "check",
+        "tests/test_formalism_catalogue_155.py"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.03641845899983309
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "tests/test_formalism_catalogue_155.py"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 0.028275874996325
+    }
+  ]
+}

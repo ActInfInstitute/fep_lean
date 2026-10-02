@@ -1,0 +1,41 @@
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 159ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 258ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 258ms
+interpretation of Mathlib.Tactic._aux_Mathlib_Tactic_Linarith_Frontend___elabRules_Mathlib_Tactic_nlinarith_1._boxed took 146ms
+interpretation of Mathlib.Meta.FunProp.funPropTac._boxed took 842ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 147ms
+tactic execution of Lean.Parser.Tactic.rewriteSeq took 290ms
+interpretation of Mathlib.Tactic._aux_Mathlib_Tactic_Linarith_Frontend___elabRules_Mathlib_Tactic_nlinarith_1._boxed took 240ms
+interpretation of Mathlib.Tactic._aux_Mathlib_Tactic_Linarith_Frontend___elabRules_Mathlib_Tactic_nlinarith_1._boxed took 164ms
+interpretation of Mathlib.Tactic._aux_Mathlib_Tactic_Linarith_Frontend___elabRules_Mathlib_Tactic_nlinarith_1._boxed took 194ms
+
+import took 22.8s
+cumulative profiling times:
+	attribute application 5.47ms
+	blocked (unaccounted) 55.4s
+	compilation (IR) 2.15ms
+	compilation (LCNF base) 27.8ms
+	compilation (LCNF impure) 10.4ms
+	compilation (LCNF mono) 13ms
+	congr simp thm 40.9ms
+	dsimp 34.3ms
+	elaboration 820ms
+	fix level params 20.3ms
+	import 22.8s
+	initialization 31ms
+	instantiate metavars 37.2ms
+	interpretation 7.9s
+	let-to-have transformation 4.34ms
+	linting 176ms
+	module linting 0.0118ms
+	norm_num 1.05s
+	overlappingInstancesLinter 42.1ms
+	parsing 125ms
+	process pre-definitions 268ms
+	ring 334ms
+	share common exprs 257ms
+	simp 3.24s
+	tactic execution 4.03s
+	tacticAnalysis 299ms
+	type checking 1.72s
+	typeclass inference 6.8s

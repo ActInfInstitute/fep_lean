@@ -1,11 +1,9 @@
 """Custody apply-phase tests on isolated tmp_path fixture roots.
 
-Every pipeline run stages a ``shutil.copytree`` of the repo's ``specs/`` tree
-into ``tmp_path`` and flushes into a fresh output directory. Every drift
-injection lands on a ``tmp_path`` fixture root (see
-``tests/_support/custody_fixture_knobs.fixture_root``: a ``specs/`` copy plus
-byte-identical copies of every hashed non-specs surface), so no test ever
-writes the live tree. Gates are driven through injected
+Every pipeline run stages only its declared custody closure from an explicitly
+synthetic tmp_path epoch, and flushes into a fresh output directory. Drift
+injections never modify the live tree or reissue historical scientific receipts.
+Gates are driven through injected
 ``Census``/``Expectations`` objects per the evidence-fixture pattern, or the
 real census over the fixture when the fixture itself is the subject; every
 expected verdict derives from ``census``/``verify`` over the same tree, never
@@ -18,6 +16,7 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from pathlib import Path
 
 import pytest
@@ -53,6 +52,7 @@ from tests._support.custody_fixture_knobs import (
     drift_file,
     fixture_root,
     spec_path,
+    stage_specs,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -89,9 +89,24 @@ INSERTION_ORDER_FILES = frozenset(
 
 
 def _stage_specs(tmp_path: Path) -> Path:
-    target = tmp_path / "specs"
-    shutil.copytree(REPO_ROOT / "specs", target, symlinks=False)
-    return target
+    return stage_specs(REPO_ROOT, tmp_path / "specs")
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_custody_epoch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    root = fixture_root(tmp_path, monkeypatch)
+    packet = json.loads((root / TERMINAL_PACKET).read_text())
+    monkeypatch.setattr(sys.modules[__name__], "REPO_ROOT", root)
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "DIAGNOSTICS",
+        packet["diagnostics"]["path"],
+    )
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "REVIEW_FILES",
+        tuple(ref["path"] for ref in packet["reviews"]),
+    )
 
 
 def _out_dir(tmp_path: Path) -> Path:
@@ -525,7 +540,10 @@ def test_packet_current_sources_roster_drift_refuses(tmp_path: Path) -> None:
 
 def test_frozen_evidence_drift_refuses(tmp_path: Path) -> None:
     specs_dir = _stage_specs(tmp_path)
-    collection = specs_dir / (EVIDENCE + "collection.json")[len("specs/") :]
+    packet = json.loads((specs_dir / TERMINAL_PACKET[len("specs/") :]).read_text())
+    collection = (
+        specs_dir / packet["native_evidence"]["collection"]["path"][len("specs/") :]
+    )
     collection.write_bytes(collection.read_bytes() + b" ")
     out = _out_dir(tmp_path)
     census, expectations = _all_clear()
@@ -578,6 +596,122 @@ def test_h3_roster_drift_refuses(tmp_path: Path) -> None:
             authorized_changes=AUTHORIZED_RECAPTURE,
         )
     _assert_untouched(out)
+
+
+def test_fixture_staging_excludes_unrelated_scientific_outputs(tmp_path: Path) -> None:
+    """A future large H3 output is outside the declared validator closure."""
+    unrelated = REPO_ROOT / "specs/h3-reference-study/output/future-array.npy"
+    unrelated.parent.mkdir(parents=True)
+    unrelated.write_bytes(b"unrelated synthetic sentinel")
+    staged = _stage_specs(tmp_path)
+    assert not (staged / "h3-reference-study").exists()
+    marker = json.loads((REPO_ROOT / "output/custody-unit-fixture.json").read_text())
+    assert marker["real_native_or_scientific_acceptance"] is False
+    packet = json.loads((REPO_ROOT / TERMINAL_PACKET).read_text())
+    for reference in packet["reviews"]:
+        review = json.loads((REPO_ROOT / reference["path"]).read_text())
+        assert review["reviewer_id"].startswith("SYNTHETIC-UNIT-FIXTURE-")
+
+
+def test_expanded_native_roster_remains_rejected(tmp_path: Path) -> None:
+    """A genuine paired resource addition cannot inherit the synthetic seal."""
+    for owner in ("src/fep_lean/formal", "lean/FepSketches"):
+        (REPO_ROOT / owner / "unit_roster_expansion.lean").write_text(
+            "-- synthetic new formal resource, not captured\n"
+        )
+    derived = census_from_tree(REPO_ROOT / "specs", REPO_ROOT)
+    assert derived.is_gated()
+    with pytest.raises(ApplyRefused, match="source roster drift"):
+        _apply(tmp_path, authorized=())
+    _assert_untouched(_out_dir(tmp_path))
+
+
+def test_packet_referenced_moved_diagnostics_are_consumed(tmp_path: Path) -> None:
+    from fep_lean.custody.refresh import _diagnostics_byte_equality
+
+    staged = _stage_specs(tmp_path)
+    old = staged / DIAGNOSTICS[len("specs/") :]
+    relative = "specs/custody-unit-fixture/moved/diagnostics.json"
+    moved = staged / relative[len("specs/") :]
+    moved.parent.mkdir()
+    old.rename(moved)
+    _rewrite_json(
+        staged / TERMINAL_PACKET[len("specs/") :],
+        lambda packet: packet["diagnostics"].update(path=relative),
+    )
+    report = _apply(tmp_path, authorized=(TERMINAL_PACKET,), specs_dir=staged)
+    assert _out_bytes(Path(report.output_dir), relative) == moved.read_bytes()
+    assert not _out_path(Path(report.output_dir), DIAGNOSTICS).exists()
+    checked = _diagnostics_byte_equality(REPO_ROOT, staged)
+    assert checked["path"] == relative
+    assert checked["byte_equal"] is True
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "missing",
+        "boolean_sha",
+        "extra",
+        "absolute",
+        "traversal",
+        "repeated_slash_escape",
+        "embedded_repeated_slash",
+        "dot_component",
+        "file_symlink",
+        "parent_symlink",
+    ],
+)
+def test_packet_diagnostics_reference_refuses_invalid_ownership(
+    tmp_path: Path,
+    mutation: str,
+) -> None:
+    from fep_lean.custody.refresh import _diagnostics_byte_equality
+
+    staged = _stage_specs(tmp_path)
+    packet_path = staged / TERMINAL_PACKET[len("specs/") :]
+    packet = json.loads(packet_path.read_text())
+    reference = packet["diagnostics"]
+    expected = "malformed diagnostics reference"
+    if mutation == "missing":
+        reference.pop("sha256")
+    elif mutation == "boolean_sha":
+        reference["sha256"] = True
+    elif mutation == "extra":
+        reference["extra"] = "unsupported"
+    elif mutation == "absolute":
+        reference["path"] = str(tmp_path / "diagnostics.json")
+    elif mutation == "traversal":
+        reference["path"] = "specs/../outside/diagnostics.json"
+        expected = "path escapes project"
+    elif mutation == "repeated_slash_escape":
+        outside = tmp_path / "outside/diagnostics.json"
+        outside.parent.mkdir()
+        outside.write_bytes(b"outside bytes must not be consumed")
+        reference["path"] = "specs/" + str(outside)
+        expected = "path escapes project"
+    elif mutation == "embedded_repeated_slash":
+        reference["path"] = DIAGNOSTICS.replace("/", "//", 1)
+        expected = "path escapes project"
+    elif mutation == "dot_component":
+        reference["path"] = DIAGNOSTICS.replace("specs/", "specs/./", 1)
+        expected = "path escapes project"
+    else:
+        path = staged / DIAGNOSTICS[len("specs/") :]
+        outside = tmp_path / "outside-diagnostics"
+        if mutation == "file_symlink":
+            path.rename(outside)
+            path.symlink_to(outside)
+        else:
+            path.parent.rename(outside)
+            path.parent.symlink_to(outside, target_is_directory=True)
+        expected = "symlinked diagnostics reference"
+    packet_path.write_bytes(dump_json_bytes(packet, relative=TERMINAL_PACKET))
+    with pytest.raises(ApplyRefused, match=expected):
+        _apply(tmp_path, authorized=(TERMINAL_PACKET,), specs_dir=staged)
+    with pytest.raises(ApplyRefused, match=expected):
+        _diagnostics_byte_equality(REPO_ROOT, staged)
+    _assert_untouched(_out_dir(tmp_path))
 
 
 # ---------------------------------------------------------------------------

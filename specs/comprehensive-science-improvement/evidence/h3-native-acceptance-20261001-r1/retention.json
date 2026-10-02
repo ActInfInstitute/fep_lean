@@ -1,0 +1,73 @@
+{
+  "boundary": "Copies preserve original actual native aggregate, axiom audit and focused acceptance checkpoint; later source changes invalidate currency, not history.",
+  "decision": "retained_actual_execution",
+  "files": [
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/audit.stderr.txt",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/audit.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/audit.stdout.txt",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/audit.stdout.txt",
+      "sha256": "78053301e5699aa58c7bb516b7dbe872cf466bf59c3a23fec14de515046b925e"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/build-summary.json",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build-summary.json",
+      "sha256": "db5b1636273afb6e6da45af7bc29ab7baa44e1475a977a08feca5af2b3c10925"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/build.stderr.txt",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/build.stdout.txt",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/build.stdout.txt",
+      "sha256": "6b35e3bc778388bc7d139cfc2d3380ae516107c09c2bb9eb94d597fdd34a9f7c"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/source-after-audit.json",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-after-audit.json",
+      "sha256": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/source-after-build.json",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-after-build.json",
+      "sha256": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/source-before.json",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/source-before.json",
+      "sha256": "05d45e968707c584d713e100915748712db959a565f9f4860ec06e522dd8d08c"
+    },
+    {
+      "captured_from": "/tmp/h3-whole-acceptance-20261001T002607Z/summary.json",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/summary.json",
+      "sha256": "0b148fcfcfa5e1679bc76ef7562a3fbd68a344ba0fe19efb77616b7c3bfdaf6b"
+    },
+    {
+      "captured_from": "/tmp/h3-case-study-20261001T001306Z.log",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/h3-case-study-20261001T001306Z.log",
+      "sha256": "2c3e980b1311ceba5e1299c7b5df8e4032b11213a218880102743c368c15e68e"
+    },
+    {
+      "captured_from": "/tmp/h3-case-study-build-20261001T001410Z.log",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/h3-case-study-build-20261001T001410Z.log",
+      "sha256": "27ec767081b9159796fe40930db011011169deec1c162328027df657f7d0db0a"
+    },
+    {
+      "captured_from": "/tmp/h3-parser-final-20261001-r2.xml",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/h3-parser-final-20261001-r2.xml",
+      "sha256": "22b5c9a746646c21c98fc3b332e2d384a4a5d2640e1c32032498de287a0fcf44"
+    },
+    {
+      "captured_from": "/tmp/h3-infrastructure-final-20261001-r6.xml",
+      "path": "specs/comprehensive-science-improvement/evidence/h3-native-acceptance-20261001-r1/h3-infrastructure-final-20261001-r6.xml",
+      "sha256": "45e4079bd565b342e5882469a472a9693e3018dbe2fbe704b85306e8514aa4e1"
+    }
+  ],
+  "kind": "retained-native-checkpoint-capture",
+  "schema_version": 1
+}

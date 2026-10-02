@@ -236,10 +236,19 @@ def test_family_declaration_names_are_unique_stable_and_topic_scoped() -> None:
         "fep-063": (
             "fep063_finiteChannel_klDataProcessing",
             "fep063_referencePredictive_fullSupport",
+            "fep063_identityChannel_preservesKL",
+            "fep063_constantChannel_strict",
         ),
         "fep-064": (
             "fep064_rateDistortion_weakDuality",
             "fep064_zeroMultiplier_boundary",
+            "fep064_rateDistortion_exists_minimizer",
+            "fep064_rateDistortion_dual_lower_bound",
+            "fep064_dual_zeroMultiplier",
+            "fep064_negativeBudget_infeasible",
+            "fep064_quarterBudget_informative_optimum",
+            "fep064_halfBudget_nonunique",
+            "fep064_zeroBudget_unique",
         ),
     }
     bodies = {
@@ -256,3 +265,56 @@ def test_family_declaration_names_are_unique_stable_and_topic_scoped() -> None:
     assert actual == expected
     names = [name for topic_names in actual.values() for name in topic_names]
     assert len(names) == len(set(names))
+
+
+def test_rate_distortion_optimization_consumers_compile(tmp_path: Path) -> None:
+    """Exercise informative, infeasible, unique, and nonunique budget faces."""
+    consumer = tmp_path / "rate_distortion_consumers.lean"
+    consumer.write_text(
+        (FORMAL_ROOT / "variational_duality.lean").read_text(encoding="utf-8")
+        + """
+namespace RateDistortionConsumer
+open FEP FEP.FiniteInformation FEP.VariationalDuality
+
+example : ¬ ∃ joint, RateDistortionFeasible (FiniteLaw.uniform : FiniteLaw Bool)
+    boolHammingDistortion (-1) joint :=
+  rateDistortion_infeasible_of_negativeBudget _ _ _ boolHammingDistortion_nonneg (by norm_num)
+
+example : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4)
+    boolQuarterDistortionJoint := boolQuarterDistortionJoint_feasible
+
+example : ∃ optimizer : FiniteLaw (Bool × Bool),
+    RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4) optimizer ∧
+      0 < mutualInformation optimizer ∧
+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+          (1 / 4) candidate → mutualInformation optimizer ≤ mutualInformation candidate :=
+  boolQuarterBudget_exists_positive_minimizer
+
+example : rateDistortionDualValue (FiniteLaw.uniform : FiniteLaw Bool)
+    boolHammingDistortion (1 / 4) 2 ≤ mutualInformation boolQuarterDistortionJoint :=
+  rateDistortionDual_le_feasible_information _ _ _ _ boolHammingDistortion_nonneg
+    (by norm_num) _ boolQuarterDistortionJoint_feasible
+
+example : rateDistortionDualValue (FiniteLaw.uniform : FiniteLaw Bool)
+    boolHammingDistortion (-1) 0 = 0 := rateDistortionDual_zeroMultiplier _ _ _
+
+example (joint : FiniteLaw (Bool × Bool))
+    (hjoint : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0 joint) :
+    joint = boolZeroDistortionJoint := boolZeroBudget_unique_feasible joint hjoint
+
+example : ∃ left right : FiniteLaw (Bool × Bool), left ≠ right ∧
+    (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) left ∧
+      ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+        (1 / 2) candidate → mutualInformation left ≤ mutualInformation candidate) ∧
+    (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) right ∧
+      ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+        (1 / 2) candidate → mutualInformation right ≤ mutualInformation candidate) :=
+  boolHalfBudget_distinct_minimizers
+end RateDistortionConsumer
+""",
+        encoding="utf-8",
+    )
+    result = _compile(consumer)
+    output = result.stdout + result.stderr
+    assert result.returncode == 0, output
+    assert "warning:" not in output.lower()

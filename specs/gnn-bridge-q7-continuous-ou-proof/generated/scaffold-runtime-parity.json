@@ -1,0 +1,1006 @@
+{
+  "canonical_bytes": 56968,
+  "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+  "evidence_plane": "static parser and candidate serialization observations",
+  "input_stability_verified": true,
+  "inputs": {
+    "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py": "48f6cc92f1c7afd8fc002af528159f5bfabf7c4bdf20b322749c6e61dbc9d026",
+    "specs/gnn-bridge-q7-continuous-ou-proof/generate_probe.py": "609191d65130dd15d5c6229aca711da19429862907f23d9361c393e21befd661",
+    "specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md": "541d408dccaa8b383aa6cac45c33d5d9d9e072ad93e985f747c58b5a77dc4ea5",
+    "src/fep_lean/verification/_jsonutil.py": "8e389db30143881d795eecc8786df2ff5d9c21dd2fc1592e92e501991cee8e9d",
+    "src/fep_lean/verification/gnn_continuous_artifact_proof.py": "f6b557fc4b094abe525388e83a00210e4608dd2c9d985b6721542af56ded9aa3"
+  },
+  "kind": "q7-canonical-scaffold-runtime-parity",
+  "native_evidence": "not supplied; new native capture required separately",
+  "probe_command": "uv run --locked python specs/gnn-bridge-q7-continuous-ou-proof/generate_probe.py --record-scaffold-portability",
+  "runner_execution": false,
+  "runtimes": [
+    {
+      "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+      "controls": {
+        "annotation": true,
+        "argument_order": true,
+        "bool_identity": true,
+        "float_identity": true,
+        "keyword_order": true,
+        "nonempty_type_params": true,
+        "type_comment": true,
+        "unknown_attribute": true,
+        "unknown_field": true,
+        "unknown_node": true,
+        "validator_contract": true
+      },
+      "implementation": "cpython",
+      "machine": "arm64",
+      "observed_fields": {
+        "Add": [],
+        "Assign": [
+          "targets",
+          "value",
+          "type_comment"
+        ],
+        "Attribute": [
+          "value",
+          "attr",
+          "ctx"
+        ],
+        "BinOp": [
+          "left",
+          "op",
+          "right"
+        ],
+        "Call": [
+          "func",
+          "args",
+          "keywords"
+        ],
+        "Compare": [
+          "left",
+          "ops",
+          "comparators"
+        ],
+        "Constant": [
+          "value",
+          "kind"
+        ],
+        "Dict": [
+          "keys",
+          "values"
+        ],
+        "Div": [],
+        "Eq": [],
+        "ExceptHandler": [
+          "type",
+          "name",
+          "body"
+        ],
+        "Expr": [
+          "value"
+        ],
+        "For": [
+          "target",
+          "iter",
+          "body",
+          "orelse",
+          "type_comment"
+        ],
+        "FormattedValue": [
+          "value",
+          "conversion",
+          "format_spec"
+        ],
+        "FunctionDef": [
+          "name",
+          "args",
+          "body",
+          "decorator_list",
+          "returns",
+          "type_comment"
+        ],
+        "GeneratorExp": [
+          "elt",
+          "generators"
+        ],
+        "Gt": [],
+        "If": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "IfExp": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "Import": [
+          "names"
+        ],
+        "ImportFrom": [
+          "module",
+          "names",
+          "level"
+        ],
+        "IsNot": [],
+        "JoinedStr": [
+          "values"
+        ],
+        "List": [
+          "elts",
+          "ctx"
+        ],
+        "Load": [],
+        "MatMult": [],
+        "Module": [
+          "body",
+          "type_ignores"
+        ],
+        "Mult": [],
+        "Name": [
+          "id",
+          "ctx"
+        ],
+        "Pow": [],
+        "Return": [
+          "value"
+        ],
+        "Store": [],
+        "Sub": [],
+        "Subscript": [
+          "value",
+          "slice",
+          "ctx"
+        ],
+        "Try": [
+          "body",
+          "handlers",
+          "orelse",
+          "finalbody"
+        ],
+        "Tuple": [
+          "elts",
+          "ctx"
+        ],
+        "USub": [],
+        "UnaryOp": [
+          "op",
+          "operand"
+        ],
+        "With": [
+          "items",
+          "body",
+          "type_comment"
+        ],
+        "alias": [
+          "name",
+          "asname"
+        ],
+        "arg": [
+          "arg",
+          "annotation",
+          "type_comment"
+        ],
+        "arguments": [
+          "posonlyargs",
+          "args",
+          "vararg",
+          "kwonlyargs",
+          "kw_defaults",
+          "kwarg",
+          "defaults"
+        ],
+        "comprehension": [
+          "target",
+          "iter",
+          "ifs",
+          "is_async"
+        ],
+        "keyword": [
+          "arg",
+          "value"
+        ],
+        "withitem": [
+          "context_expr",
+          "optional_vars"
+        ]
+      },
+      "platform": "darwin",
+      "version": "3.10.20 (main, Jun 23 2026, 15:45:03) [Clang 22.1.3 ]",
+      "version_info": [
+        3,
+        10,
+        20
+      ]
+    },
+    {
+      "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+      "controls": {
+        "annotation": true,
+        "argument_order": true,
+        "bool_identity": true,
+        "float_identity": true,
+        "keyword_order": true,
+        "nonempty_type_params": true,
+        "type_comment": true,
+        "unknown_attribute": true,
+        "unknown_field": true,
+        "unknown_node": true,
+        "validator_contract": true
+      },
+      "implementation": "cpython",
+      "machine": "arm64",
+      "observed_fields": {
+        "Add": [],
+        "Assign": [
+          "targets",
+          "value",
+          "type_comment"
+        ],
+        "Attribute": [
+          "value",
+          "attr",
+          "ctx"
+        ],
+        "BinOp": [
+          "left",
+          "op",
+          "right"
+        ],
+        "Call": [
+          "func",
+          "args",
+          "keywords"
+        ],
+        "Compare": [
+          "left",
+          "ops",
+          "comparators"
+        ],
+        "Constant": [
+          "value",
+          "kind"
+        ],
+        "Dict": [
+          "keys",
+          "values"
+        ],
+        "Div": [],
+        "Eq": [],
+        "ExceptHandler": [
+          "type",
+          "name",
+          "body"
+        ],
+        "Expr": [
+          "value"
+        ],
+        "For": [
+          "target",
+          "iter",
+          "body",
+          "orelse",
+          "type_comment"
+        ],
+        "FormattedValue": [
+          "value",
+          "conversion",
+          "format_spec"
+        ],
+        "FunctionDef": [
+          "name",
+          "args",
+          "body",
+          "decorator_list",
+          "returns",
+          "type_comment"
+        ],
+        "GeneratorExp": [
+          "elt",
+          "generators"
+        ],
+        "Gt": [],
+        "If": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "IfExp": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "Import": [
+          "names"
+        ],
+        "ImportFrom": [
+          "module",
+          "names",
+          "level"
+        ],
+        "IsNot": [],
+        "JoinedStr": [
+          "values"
+        ],
+        "List": [
+          "elts",
+          "ctx"
+        ],
+        "Load": [],
+        "MatMult": [],
+        "Module": [
+          "body",
+          "type_ignores"
+        ],
+        "Mult": [],
+        "Name": [
+          "id",
+          "ctx"
+        ],
+        "Pow": [],
+        "Return": [
+          "value"
+        ],
+        "Store": [],
+        "Sub": [],
+        "Subscript": [
+          "value",
+          "slice",
+          "ctx"
+        ],
+        "Try": [
+          "body",
+          "handlers",
+          "orelse",
+          "finalbody"
+        ],
+        "Tuple": [
+          "elts",
+          "ctx"
+        ],
+        "USub": [],
+        "UnaryOp": [
+          "op",
+          "operand"
+        ],
+        "With": [
+          "items",
+          "body",
+          "type_comment"
+        ],
+        "alias": [
+          "name",
+          "asname"
+        ],
+        "arg": [
+          "arg",
+          "annotation",
+          "type_comment"
+        ],
+        "arguments": [
+          "posonlyargs",
+          "args",
+          "vararg",
+          "kwonlyargs",
+          "kw_defaults",
+          "kwarg",
+          "defaults"
+        ],
+        "comprehension": [
+          "target",
+          "iter",
+          "ifs",
+          "is_async"
+        ],
+        "keyword": [
+          "arg",
+          "value"
+        ],
+        "withitem": [
+          "context_expr",
+          "optional_vars"
+        ]
+      },
+      "platform": "darwin",
+      "version": "3.11.15 (main, May  4 2026, 21:04:48) [Clang 22.1.3 ]",
+      "version_info": [
+        3,
+        11,
+        15
+      ]
+    },
+    {
+      "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+      "controls": {
+        "annotation": true,
+        "argument_order": true,
+        "bool_identity": true,
+        "float_identity": true,
+        "keyword_order": true,
+        "nonempty_type_params": true,
+        "type_comment": true,
+        "unknown_attribute": true,
+        "unknown_field": true,
+        "unknown_node": true,
+        "validator_contract": true
+      },
+      "implementation": "cpython",
+      "machine": "arm64",
+      "observed_fields": {
+        "Add": [],
+        "Assign": [
+          "targets",
+          "value",
+          "type_comment"
+        ],
+        "Attribute": [
+          "value",
+          "attr",
+          "ctx"
+        ],
+        "BinOp": [
+          "left",
+          "op",
+          "right"
+        ],
+        "Call": [
+          "func",
+          "args",
+          "keywords"
+        ],
+        "Compare": [
+          "left",
+          "ops",
+          "comparators"
+        ],
+        "Constant": [
+          "value",
+          "kind"
+        ],
+        "Dict": [
+          "keys",
+          "values"
+        ],
+        "Div": [],
+        "Eq": [],
+        "ExceptHandler": [
+          "type",
+          "name",
+          "body"
+        ],
+        "Expr": [
+          "value"
+        ],
+        "For": [
+          "target",
+          "iter",
+          "body",
+          "orelse",
+          "type_comment"
+        ],
+        "FormattedValue": [
+          "value",
+          "conversion",
+          "format_spec"
+        ],
+        "FunctionDef": [
+          "name",
+          "args",
+          "body",
+          "decorator_list",
+          "returns",
+          "type_comment",
+          "type_params"
+        ],
+        "GeneratorExp": [
+          "elt",
+          "generators"
+        ],
+        "Gt": [],
+        "If": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "IfExp": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "Import": [
+          "names"
+        ],
+        "ImportFrom": [
+          "module",
+          "names",
+          "level"
+        ],
+        "IsNot": [],
+        "JoinedStr": [
+          "values"
+        ],
+        "List": [
+          "elts",
+          "ctx"
+        ],
+        "Load": [],
+        "MatMult": [],
+        "Module": [
+          "body",
+          "type_ignores"
+        ],
+        "Mult": [],
+        "Name": [
+          "id",
+          "ctx"
+        ],
+        "Pow": [],
+        "Return": [
+          "value"
+        ],
+        "Store": [],
+        "Sub": [],
+        "Subscript": [
+          "value",
+          "slice",
+          "ctx"
+        ],
+        "Try": [
+          "body",
+          "handlers",
+          "orelse",
+          "finalbody"
+        ],
+        "Tuple": [
+          "elts",
+          "ctx"
+        ],
+        "USub": [],
+        "UnaryOp": [
+          "op",
+          "operand"
+        ],
+        "With": [
+          "items",
+          "body",
+          "type_comment"
+        ],
+        "alias": [
+          "name",
+          "asname"
+        ],
+        "arg": [
+          "arg",
+          "annotation",
+          "type_comment"
+        ],
+        "arguments": [
+          "posonlyargs",
+          "args",
+          "vararg",
+          "kwonlyargs",
+          "kw_defaults",
+          "kwarg",
+          "defaults"
+        ],
+        "comprehension": [
+          "target",
+          "iter",
+          "ifs",
+          "is_async"
+        ],
+        "keyword": [
+          "arg",
+          "value"
+        ],
+        "withitem": [
+          "context_expr",
+          "optional_vars"
+        ]
+      },
+      "platform": "darwin",
+      "version": "3.12.13 (main, Jun  2 2026, 22:42:28) [Clang 22.1.3 ]",
+      "version_info": [
+        3,
+        12,
+        13
+      ]
+    },
+    {
+      "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+      "controls": {
+        "annotation": true,
+        "argument_order": true,
+        "bool_identity": true,
+        "float_identity": true,
+        "keyword_order": true,
+        "nonempty_type_params": true,
+        "type_comment": true,
+        "unknown_attribute": true,
+        "unknown_field": true,
+        "unknown_node": true,
+        "validator_contract": true
+      },
+      "implementation": "cpython",
+      "machine": "arm64",
+      "observed_fields": {
+        "Add": [],
+        "Assign": [
+          "targets",
+          "value",
+          "type_comment"
+        ],
+        "Attribute": [
+          "value",
+          "attr",
+          "ctx"
+        ],
+        "BinOp": [
+          "left",
+          "op",
+          "right"
+        ],
+        "Call": [
+          "func",
+          "args",
+          "keywords"
+        ],
+        "Compare": [
+          "left",
+          "ops",
+          "comparators"
+        ],
+        "Constant": [
+          "value",
+          "kind"
+        ],
+        "Dict": [
+          "keys",
+          "values"
+        ],
+        "Div": [],
+        "Eq": [],
+        "ExceptHandler": [
+          "type",
+          "name",
+          "body"
+        ],
+        "Expr": [
+          "value"
+        ],
+        "For": [
+          "target",
+          "iter",
+          "body",
+          "orelse",
+          "type_comment"
+        ],
+        "FormattedValue": [
+          "value",
+          "conversion",
+          "format_spec"
+        ],
+        "FunctionDef": [
+          "name",
+          "args",
+          "body",
+          "decorator_list",
+          "returns",
+          "type_comment",
+          "type_params"
+        ],
+        "GeneratorExp": [
+          "elt",
+          "generators"
+        ],
+        "Gt": [],
+        "If": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "IfExp": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "Import": [
+          "names"
+        ],
+        "ImportFrom": [
+          "module",
+          "names",
+          "level"
+        ],
+        "IsNot": [],
+        "JoinedStr": [
+          "values"
+        ],
+        "List": [
+          "elts",
+          "ctx"
+        ],
+        "Load": [],
+        "MatMult": [],
+        "Module": [
+          "body",
+          "type_ignores"
+        ],
+        "Mult": [],
+        "Name": [
+          "id",
+          "ctx"
+        ],
+        "Pow": [],
+        "Return": [
+          "value"
+        ],
+        "Store": [],
+        "Sub": [],
+        "Subscript": [
+          "value",
+          "slice",
+          "ctx"
+        ],
+        "Try": [
+          "body",
+          "handlers",
+          "orelse",
+          "finalbody"
+        ],
+        "Tuple": [
+          "elts",
+          "ctx"
+        ],
+        "USub": [],
+        "UnaryOp": [
+          "op",
+          "operand"
+        ],
+        "With": [
+          "items",
+          "body",
+          "type_comment"
+        ],
+        "alias": [
+          "name",
+          "asname"
+        ],
+        "arg": [
+          "arg",
+          "annotation",
+          "type_comment"
+        ],
+        "arguments": [
+          "posonlyargs",
+          "args",
+          "vararg",
+          "kwonlyargs",
+          "kw_defaults",
+          "kwarg",
+          "defaults"
+        ],
+        "comprehension": [
+          "target",
+          "iter",
+          "ifs",
+          "is_async"
+        ],
+        "keyword": [
+          "arg",
+          "value"
+        ],
+        "withitem": [
+          "context_expr",
+          "optional_vars"
+        ]
+      },
+      "platform": "darwin",
+      "version": "3.13.15 (main, Aug  5 2026, 12:25:43) [Clang 21.0.0 (clang-2100.1.1.101)]",
+      "version_info": [
+        3,
+        13,
+        15
+      ]
+    },
+    {
+      "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+      "controls": {
+        "annotation": true,
+        "argument_order": true,
+        "bool_identity": true,
+        "float_identity": true,
+        "keyword_order": true,
+        "nonempty_type_params": true,
+        "type_comment": true,
+        "unknown_attribute": true,
+        "unknown_field": true,
+        "unknown_node": true,
+        "validator_contract": true
+      },
+      "implementation": "cpython",
+      "machine": "arm64",
+      "observed_fields": {
+        "Add": [],
+        "Assign": [
+          "targets",
+          "value",
+          "type_comment"
+        ],
+        "Attribute": [
+          "value",
+          "attr",
+          "ctx"
+        ],
+        "BinOp": [
+          "left",
+          "op",
+          "right"
+        ],
+        "Call": [
+          "func",
+          "args",
+          "keywords"
+        ],
+        "Compare": [
+          "left",
+          "ops",
+          "comparators"
+        ],
+        "Constant": [
+          "value",
+          "kind"
+        ],
+        "Dict": [
+          "keys",
+          "values"
+        ],
+        "Div": [],
+        "Eq": [],
+        "ExceptHandler": [
+          "type",
+          "name",
+          "body"
+        ],
+        "Expr": [
+          "value"
+        ],
+        "For": [
+          "target",
+          "iter",
+          "body",
+          "orelse",
+          "type_comment"
+        ],
+        "FormattedValue": [
+          "value",
+          "conversion",
+          "format_spec"
+        ],
+        "FunctionDef": [
+          "name",
+          "args",
+          "body",
+          "decorator_list",
+          "returns",
+          "type_comment",
+          "type_params"
+        ],
+        "GeneratorExp": [
+          "elt",
+          "generators"
+        ],
+        "Gt": [],
+        "If": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "IfExp": [
+          "test",
+          "body",
+          "orelse"
+        ],
+        "Import": [
+          "names"
+        ],
+        "ImportFrom": [
+          "module",
+          "names",
+          "level"
+        ],
+        "IsNot": [],
+        "JoinedStr": [
+          "values"
+        ],
+        "List": [
+          "elts",
+          "ctx"
+        ],
+        "Load": [],
+        "MatMult": [],
+        "Module": [
+          "body",
+          "type_ignores"
+        ],
+        "Mult": [],
+        "Name": [
+          "id",
+          "ctx"
+        ],
+        "Pow": [],
+        "Return": [
+          "value"
+        ],
+        "Store": [],
+        "Sub": [],
+        "Subscript": [
+          "value",
+          "slice",
+          "ctx"
+        ],
+        "Try": [
+          "body",
+          "handlers",
+          "orelse",
+          "finalbody"
+        ],
+        "Tuple": [
+          "elts",
+          "ctx"
+        ],
+        "USub": [],
+        "UnaryOp": [
+          "op",
+          "operand"
+        ],
+        "With": [
+          "items",
+          "body",
+          "type_comment"
+        ],
+        "alias": [
+          "name",
+          "asname"
+        ],
+        "arg": [
+          "arg",
+          "annotation",
+          "type_comment"
+        ],
+        "arguments": [
+          "posonlyargs",
+          "args",
+          "vararg",
+          "kwonlyargs",
+          "kw_defaults",
+          "kwarg",
+          "defaults"
+        ],
+        "comprehension": [
+          "target",
+          "iter",
+          "ifs",
+          "is_async"
+        ],
+        "keyword": [
+          "arg",
+          "value"
+        ],
+        "withitem": [
+          "context_expr",
+          "optional_vars"
+        ]
+      },
+      "platform": "darwin",
+      "version": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+      "version_info": [
+        3,
+        14,
+        4
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "validator_interpreters": [
+    "cpython 3.14"
+  ]
+}

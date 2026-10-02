@@ -1,0 +1,16 @@
+{
+  "config/theorem_maturity.yaml": "7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded",
+  "lean/FepSketches/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
+  "lean/FepSketches/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
+  "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
+  "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
+  "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+  "src/fep_lean/catalogue/bodies/variational_duality.py": "41bca6f54ae5f1e8353d267b5388e1b6b2460c913049b965e836c1c0f43042eb",
+  "src/fep_lean/formal/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
+  "src/fep_lean/formal/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
+  "tests/test_horizon1_constrained_entropy.py": "1c3b844f74f5120c766b690a5fb3b7a1115c277b92d22673498987db67a7e2ab",
+  "tests/test_horizon1_decision_risk.py": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522",
+  "tests/test_horizon1_finite_reference.py": "cf68b3b0addf9900e6ca8f993362980d14fb941b1d6592fa45fa6e40f874ed74",
+  "tests/test_measure_variational_formalisms.py": "8e5507aa182138d0b582fc955a9a1ceb552975a6c312f8908c22efe5d7b16b32",
+  "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
+}

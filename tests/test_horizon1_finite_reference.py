@@ -225,7 +225,19 @@ def test_h12_public_theorem_owner_boundary_is_exact() -> None:
         if declaration.startswith(prefix) and module == "FepSketches.decision_risk"
     }
 
-    assert declarations == H12_THEOREMS
+    relative_support_extension = {
+        "embeddedLaw_withDensity_ratio_of_relativeSupport",
+        "weightedDirac_klDiv_eq_finiteKL_of_relativeSupport",
+        "finiteKL_mono_under_channel_of_relativeSupport",
+        "predictive_relativeSupport",
+        "joint_relativeSupport_productMarginals",
+        "embeddedLaw_product",
+        "nativeChannelMutualInformation_eq_finite",
+        "channelJoint_fstMarginal",
+        "embeddedJoint_klDiv_eq_mutualInformation",
+        "finiteMutualInformation_mono_under_observationGarbling",
+    }
+    assert declarations == H12_THEOREMS | relative_support_extension
 
 
 def test_h13_foundation_projection_and_import_order_are_exact() -> None:

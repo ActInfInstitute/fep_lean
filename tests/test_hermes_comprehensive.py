@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 import http.server
+import json
 import os
 import socket
 import threading
+import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+from pytest_httpserver import HTTPServer
 
+from fep_lean.llm import hermes
 from fep_lean.llm.hermes import (
     HermesAPIError,
     HermesConfig,
@@ -68,12 +73,13 @@ class _SlowResponseHandler(http.server.BaseHTTPRequestHandler):
 
     _delay_per_byte: float = 0.5  # 500 ms between bytes
     _total_bytes: int = 64
+    _status: int = 200
 
     def do_POST(self) -> None:
         length = int(self.headers.get("Content-Length", 0) or 0)
         if length:
             self.rfile.read(length)
-        self.send_response(200)
+        self.send_response(self._status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(self._total_bytes))
         self.end_headers()
@@ -133,13 +139,16 @@ def _start_truncated_body_server() -> tuple[http.server.HTTPServer, int]:
     return srv, port
 
 
-def _start_slow_response_server() -> tuple[http.server.ThreadingHTTPServer, int]:
+def _start_slow_response_server(
+    status: int = 200,
+) -> tuple[http.server.ThreadingHTTPServer, int]:
     """HTTPServer that drips bytes slowly so only a wall-clock deadline can bound it.
 
     Uses ``ThreadingHTTPServer`` with ``daemon_threads=True`` so the in-flight
     slow handler does not block ``server.shutdown()`` in the test teardown.
     """
-    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _SlowResponseHandler)
+    handler = type("_SlowHandler", (_SlowResponseHandler,), {"_status": status})
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
     srv.daemon_threads = True
     port: int = srv.server_address[1]
     t = threading.Thread(target=srv.serve_forever, daemon=True)
@@ -248,6 +257,202 @@ class TestLoadGaussDotenv:
         dotenv.chmod(0o644)
 
 
+class TestFallbackEnvironmentPolicy:
+    @pytest.mark.parametrize(
+        "raw",
+        [
+            "",
+            "[",
+            "null",
+            '"model/name"',
+            '{"models": ["model/name"]}',
+            "[]",
+            "[1]",
+            "[true]",
+            "[null]",
+            "[NaN]",
+            '["valid/model", []]',
+            '[""]',
+            '[" "]',
+            '[" model/name"]',
+            '["model/name "]',
+            json.dumps(["model/" + "x" * 256]),
+            json.dumps(["model/name"] * 33),
+            " " * 8193,
+            "[" * 2000 + "]" * 2000,
+        ],
+    )
+    def test_invalid_override_fails_closed_without_echoing_input(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, raw: str
+    ) -> None:
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        monkeypatch.setenv("HERMES_FALLBACK_MODELS", raw)
+        with pytest.raises(ValueError, match="HERMES_FALLBACK_MODELS") as rejected:
+            HermesConfig.from_settings(tmp_path)
+        assert str(rejected.value).startswith(
+            "HERMES_FALLBACK_MODELS must be a nonempty JSON list"
+        )
+        if raw and raw.strip():
+            assert raw not in str(rejected.value)
+
+    @pytest.mark.parametrize(
+        "fallbacks,expected",
+        [
+            (["stealth/space-bunny-alpha"], ["stealth/space-bunny-alpha"]),
+            (
+                ["stealth/space-bunny-alpha", "openai/gpt-6.1-sol:batch"],
+                ["stealth/space-bunny-alpha", "openai/gpt-6.1-sol:batch"],
+            ),
+            (
+                ["approved/second", "approved/first", "approved/second"],
+                ["stealth/space-bunny-alpha", "approved/second", "approved/first"],
+            ),
+        ],
+    )
+    def test_explicit_override_freezes_chain_without_settings_mutation(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        fallbacks: list[str],
+        expected: list[str],
+    ) -> None:
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        monkeypatch.setenv("HERMES_MODEL", "stealth/space-bunny-alpha")
+        monkeypatch.setenv("HERMES_API_BASE", "https://openrouter.ai/api/v1")
+        monkeypatch.setenv("HERMES_FALLBACK_MODELS", json.dumps(fallbacks))
+        config_dir = tmp_path / "config"
+        config_dir.mkdir()
+        settings = config_dir / "settings.yaml"
+        settings.write_text(
+            "hermes:\n  model: ambient/primary\n  fallback_models: [ambient/escape]\n",
+            encoding="utf-8",
+        )
+        before = (settings.read_bytes(), settings.stat().st_mtime_ns)
+        cfg = HermesConfig.from_settings(tmp_path)
+        assert cfg.fallback_models == fallbacks
+        assert HermesExplainer(cfg)._build_model_chain() == expected
+        assert "ambient/escape" not in expected
+        assert (settings.read_bytes(), settings.stat().st_mtime_ns) == before
+
+    def test_absent_override_preserves_yaml_and_builtin_defaults(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        monkeypatch.delenv("HERMES_FALLBACK_MODELS", raising=False)
+        monkeypatch.setenv("HERMES_MODEL", "primary/model")
+        monkeypatch.setenv("HERMES_API_BASE", "https://openrouter.ai/api/v1")
+        config_dir = tmp_path / "config"
+        config_dir.mkdir()
+        settings = config_dir / "settings.yaml"
+        settings.write_text(
+            "hermes:\n  fallback_models: [yaml/first, yaml/second]\n",
+            encoding="utf-8",
+        )
+        cfg = HermesConfig.from_settings(tmp_path)
+        assert HermesExplainer(cfg)._build_model_chain() == [
+            "primary/model",
+            "yaml/first",
+            "yaml/second",
+        ]
+        settings.unlink()
+        cfg = HermesConfig.from_settings(tmp_path)
+        assert HermesExplainer(cfg)._build_model_chain() == [
+            "primary/model",
+            *hermes._FREE_MODEL_CHAIN,
+        ]
+
+    def test_primary_only_rate_limit_never_escapes_to_ambient_models(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        httpserver: HTTPServer,
+    ) -> None:
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        monkeypatch.setenv("HERMES_MODEL", "approved/primary")
+        # The path selects the existing OpenRouter policy, while the host and
+        # every actual request remain on loopback with a synthetic credential.
+        endpoint = "/openrouter.ai/api/v1"
+        monkeypatch.setenv("HERMES_API_BASE", httpserver.url_for(endpoint))
+        monkeypatch.setenv("HERMES_FALLBACK_MODELS", '["approved/primary"]')
+        monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-synthetic-fixture")
+        monkeypatch.setenv("HERMES_429_MAX_RETRIES", "0")
+        monkeypatch.setenv("HERMES_NETWORK_MAX_RETRIES", "0")
+        httpserver.expect_request(
+            endpoint + "/chat/completions", method="POST"
+        ).respond_with_json({"error": {"message": "fixture rate limit"}}, status=429)
+        cfg = HermesConfig.from_settings(tmp_path)
+        explainer = HermesExplainer(cfg)
+        assert explainer._build_model_chain() == ["approved/primary"]
+        result = explainer.explain_topic(
+            SimpleNamespace(
+                id="fixture", lean_sketch="theorem fixture : True := by trivial"
+            )
+        )
+        assert not result.success and result.error
+        assert result.model_used == "approved/primary"
+        assert [request.get_json()["model"] for request, _ in httpserver.log] == [
+            "approved/primary"
+        ]
+
+    def test_runtime_policy_serialization_excludes_credentials_and_headers(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        key = "sk-or-synthetic-runtime-policy-secret"
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        monkeypatch.setenv("HERMES_MODEL", "approved/primary")
+        monkeypatch.setenv("HERMES_API_BASE", "https://openrouter.ai/api/v1")
+        monkeypatch.setenv("HERMES_FALLBACK_MODELS", '["approved/primary"]')
+        monkeypatch.setenv("OPENROUTER_API_KEY", key)
+        cfg = HermesConfig.from_settings(tmp_path)
+        cfg.http_referer = "https://example.invalid/private-header"
+        cfg.x_title = "synthetic-private-header"
+        policy = cfg.runtime_policy()
+        assert set(policy) == {
+            "schema_version",
+            "model",
+            "base_url",
+            "fallback_models",
+            "max_tokens",
+            "timeout_s",
+            "reasoning_max_tokens",
+            "reasoning_timeout_s",
+            "enabled",
+            "cache_ttl_hours",
+        }
+        serialized = json.dumps(policy, sort_keys=True)
+        assert key not in serialized and key not in repr(cfg)
+        assert "private-header" not in serialized
+        monkeypatch.setenv("OPENROUTER_API_KEY", "sk-or-another-synthetic-secret")
+        changed_key = HermesConfig.from_settings(tmp_path)
+        assert changed_key.runtime_policy() == policy
+        policy["fallback_models"].append("mutated/serialization")
+        assert cfg.fallback_models == ["approved/primary"]
+        assert not (tmp_path / "config" / "settings.yaml").exists()
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://user:synthetic-url-secret@example.invalid/api/v1",
+            "https://synthetic-url-secret@example.invalid/api/v1",
+            "https://example.invalid/api/v1?key=synthetic-url-secret",
+            "https://example.invalid/api/v1#synthetic-url-secret",
+            "https://example.invalid:synthetic-url-secret/api/v1",
+            "file:///synthetic-url-secret",
+            "relative/synthetic-url-secret",
+        ],
+    )
+    def test_runtime_policy_rejects_credential_bearing_endpoint_urls(
+        self, url: str
+    ) -> None:
+        cfg = HermesConfig(base_url=url)
+        with pytest.raises(
+            ValueError, match="without userinfo, query or fragment"
+        ) as e:
+            cfg.runtime_policy()
+        assert "synthetic-url-secret" not in str(e.value)
+        assert e.value.__suppress_context__
+
+
 class TestKeyAffinityValidation:
     """Test that API key ↔ endpoint mismatches are caught."""
 
@@ -337,6 +542,7 @@ class TestCallAPI:
                 h._call_api([{"role": "user", "content": "hi"}], "temporary-model")
             assert exc_info.value.status_code == 404
             assert exc_info.value.transient is False
+            assert "HTTP 404: Not Found — test error response" in str(exc_info.value)
         finally:
             # shutdown() only stops the serve_forever loop; without
             # server_close() the listening socket leaks — one FD per server
@@ -389,7 +595,8 @@ class TestCallAPI:
             server.shutdown()
             server.server_close()
 
-    def test_call_api_wall_clock_deadline_aborts_slow_stream(self) -> None:
+    @pytest.mark.parametrize("status", [200, 403, 503])
+    def test_call_api_wall_clock_deadline_aborts_slow_stream(self, status: int) -> None:
         """_make_request enforces a hard wall-clock deadline on slow responses.
 
         urllib's per-op ``timeout`` argument does not bound total wall time
@@ -399,8 +606,8 @@ class TestCallAPI:
         must abort the request and raise a transient ``HermesAPIError``
         within ``timeout_s`` seconds.
         """
-        server, port = _start_slow_response_server()
-        deadline_s = 2  # ~32 s of trickle would otherwise be needed (64B * 0.5s)
+        server, port = _start_slow_response_server(status)
+        deadline_s = 1  # ~32 s of trickle would otherwise be needed (64B * 0.5s)
         try:
             cfg = HermesConfig(
                 enabled=True,
@@ -415,14 +622,138 @@ class TestCallAPI:
             with pytest.raises(HermesAPIError) as exc_info:
                 h._call_api([{"role": "user", "content": "hi"}], "temporary-model")
             elapsed = _t.monotonic() - t0
-            # Must give up within roughly one deadline (allow 2x slack for
-            # thread scheduling + handshake).
-            assert elapsed < 2 * deadline_s + 10, (
+            # The same hard deadline covers the HTTPError body and its close.
+            assert elapsed < deadline_s + 2, (
                 f"deadline not enforced: elapsed={elapsed:.2f}s "
-                f"(expected < {2 * deadline_s + 1}s)"
+                f"(expected < {deadline_s + 2}s)"
             )
-            assert exc_info.value.transient is True
+            assert exc_info.value.transient is (status == 200)
+            assert exc_info.value.status_code == (None if status == 200 else status)
             assert "Wall-clock timeout" in str(exc_info.value)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    @pytest.mark.parametrize("status", [200, 403])
+    def test_call_api_caps_success_and_http_error_bodies(
+        self, monkeypatch: pytest.MonkeyPatch, status: int
+    ) -> None:
+        # Real loopback streams exercise the shared bounded reader with a small
+        # limit, keeping this failure probe independent of large allocations.
+        monkeypatch.setattr(hermes, "_MAX_RESPONSE_BYTES", 128)
+        monkeypatch.setattr(hermes, "_MAX_RESPONSE_CHUNK", 64)
+        handler = type(
+            "_OversizedHandler",
+            (_FixedStatusHandler,),
+            {"_status": status, "_body": b"x" * 1024},
+        )
+        server = http.server.HTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            explainer = HermesExplainer(
+                HermesConfig(
+                    enabled=True,
+                    api_key="fixture",
+                    base_url=f"http://127.0.0.1:{server.server_address[1]}",
+                    timeout_s=2,
+                )
+            )
+            with pytest.raises(HermesAPIError, match="exceeds 128 bytes") as error:
+                explainer._call_api([{"role": "user", "content": "hi"}], "fixture")
+            assert error.value.transient is (status == 200)
+            assert error.value.status_code == (None if status == 200 else status)
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    def test_http_error_message_replaces_invalid_utf8_and_caps_excerpt(self) -> None:
+        handler = type(
+            "_ErrorTextHandler",
+            (_FixedStatusHandler,),
+            {"_status": 401, "_body": b"\xffdenied " + b"x" * 400},
+        )
+        server = http.server.HTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            explainer = HermesExplainer(
+                HermesConfig(
+                    api_key="fixture",
+                    base_url=f"http://127.0.0.1:{server.server_address[1]}",
+                )
+            )
+            with pytest.raises(HermesAPIError) as error:
+                explainer._call_api([{"role": "user", "content": "hi"}], "fixture")
+            assert error.value.status_code == 401
+            assert error.value.transient is False
+            assert str(error.value).endswith(("�denied " + "x" * 400)[:300])
+        finally:
+            server.shutdown()
+            server.server_close()
+
+    @pytest.mark.parametrize("status", [403, 429])
+    @pytest.mark.parametrize("body_failure", ["oversized", "slow", "malformed"])
+    def test_failed_http_diagnostics_preserve_auth_and_rate_limit_retry_policy(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        status: int,
+        body_failure: str,
+    ) -> None:
+        monkeypatch.setattr(hermes, "_MAX_RESPONSE_BYTES", 128)
+        monkeypatch.setattr(hermes, "_MAX_RESPONSE_CHUNK", 64)
+        monkeypatch.setenv("HERMES_NETWORK_MAX_RETRIES", "3")
+        monkeypatch.setenv("HERMES_429_MAX_RETRIES", "1")
+        delays: list[float] = []
+        # Keep the server's real pacing; replace only Hermes' backoff clock.
+        monkeypatch.setattr(
+            hermes,
+            "time",
+            SimpleNamespace(monotonic=time.monotonic, sleep=delays.append),
+        )
+        requests: list[int] = []
+        base = _SlowResponseHandler if body_failure == "slow" else _FixedStatusHandler
+
+        class PolicyHandler(base):
+            _status = status
+            _body = b"x" * 1024
+            _delay_per_byte = 0.1
+
+            def do_POST(self) -> None:
+                requests.append(status)
+                if body_failure != "malformed":
+                    super().do_POST()
+                    return
+                length = int(self.headers.get("Content-Length", 0) or 0)
+                self.rfile.read(length)
+                self.send_response(status)
+                self.send_header("Transfer-Encoding", "chunked")
+                self.end_headers()
+                self.wfile.write(b"not-a-chunk-size\r\n")
+                self.wfile.flush()
+
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), PolicyHandler)
+        server.daemon_threads = True
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            cfg = HermesConfig(
+                api_key="fixture",
+                base_url=f"http://127.0.0.1:{server.server_address[1]}",
+                timeout_s=1,
+            )
+            explainer = HermesExplainer(cfg)
+            started = time.monotonic()
+            raw, fatal, error, retries, reason = explainer._try_fetch_raw(
+                [{"role": "user", "content": "hi"}], "fixture", "fep-001"
+            )
+            assert time.monotonic() - started < 4
+            assert raw is None
+            assert error.startswith(f"HTTP {status}:")
+            assert "diagnostic body unavailable" in error
+            assert requests == [status] * (2 if status == 429 else 1)
+            assert delays == ([2.0] if status == 429 else [])
+            assert retries == (1 if status == 429 else 0)
+            assert fatal is (status == 403)
+            assert cfg.enabled is (status == 429)
+            assert reason == "non_retriable_http"
         finally:
             server.shutdown()
             server.server_close()

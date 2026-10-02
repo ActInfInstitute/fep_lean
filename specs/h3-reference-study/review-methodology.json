@@ -1,0 +1,142 @@
+{
+  "activation_boundary": "These are proposed freeze bytes. Their frozen status and execution flag become active only after the coordinator creates the canonical preregistration.yaml and actual freeze receipt with both independent approvals. The canonical file did not exist at review. This review itself neither freezes the protocol nor starts H3 implementation or draws.",
+  "consistency_prerequisites_and_owner": [
+    {
+      "detail": "Nonnegative stepDuration admits zero. predictionVariance_pos/posteriorVariance_pos derive positivity and posteriorMean/posteriorVariance supply one-step algebra.",
+      "source": "src/fep_lean/formal/compositions/gaussian_filter.lean:45",
+      "status": "existing"
+    },
+    {
+      "detail": "transitionMean_zero, transitionVariance_zero and ouTransition_zero support no-dynamics identity prediction. Derive its filter specialization inside the H3 composition without modifying generic H2 owners.",
+      "source": "src/fep_lean/formal/scalar_gaussian_semigroup.lean:147",
+      "status": "existing"
+    },
+    {
+      "detail": "The one-observation joint identity, evidenceLaw_eq_gaussian and closedFormPosterior_ae_eq_native establish native conjugacy. Native version binding is evidence-almost-everywhere; deterministic fixtures evaluate the explicit closed version, not an arbitrary native posterior pointwise.",
+      "source": "src/fep_lean/formal/compositions/gaussian_filter.lean:448",
+      "status": "existing"
+    },
+    {
+      "detail": "Finite-list recursion has only definition/nil/cons equations. It supplies no existing batch likelihood/native posterior, n-formula, MSE or consistency theorem. Derive these in FEPComposed.H3CaseStudy.",
+      "source": "src/fep_lean/formal/compositions/gaussian_filter.lean:570",
+      "status": "new_proof_required"
+    },
+    {
+      "detail": "FixedVarianceGaussian.law_injective proves scalar mean identification for positive observation noise, not four-axis identification.",
+      "source": "src/fep_lean/formal/gaussian_information_geometry.lean:584",
+      "status": "existing"
+    },
+    {
+      "detail": "The quadratic Gaussian integral helper is private. Reuse public Mathlib integral_id_gaussianReal, variance_fun_id_gaussianReal and memLp_id_gaussianReal to derive MSE/integrability in H3, using the finite native joint/compProd identity.",
+      "source": "src/fep_lean/formal/compositions/gaussian_control.lean:174",
+      "status": "existing_proof_pattern"
+    },
+    {
+      "detail": "meas_ge_le_lintegral_div gives the squared-error tail bound after measurable nonnegative integrand/integral binding. Prove the rational P_n limit deterministically.",
+      "source": "lean/.lake/packages/mathlib/Mathlib/MeasureTheory/Integral/Lebesgue/Markov.lean:106",
+      "status": "existing_primary_dependency"
+    },
+    {
+      "detail": "FEP.H3ReferenceModel owns only exact intrinsic carrier/axis/transition/invariant laws with the design two direct Fep imports. FEPComposed.H3CaseStudy owns cross-domain recognition, scalar projection, finite-joint consistency, native EFE/control and information/countermodel proofs with the exact composition imports. The executable is a typed theorem export consumer, not a second model registry.",
+      "source": "docs/design/fep-research-program/horizon-3-scientific-case-study.md:70",
+      "status": "prospective_ownership"
+    }
+  ],
+  "decision": "approve",
+  "findings": [
+    {
+      "assessment": "Approve this exact prospective protocol. The old feasibility spike/seed is disclosed, and superseded e543, 7ab and 884fb draft bytes were checked. No new outcomes were generated or inspected. The 82b-to-proposed delta adds only proposed freeze state and the explicit source epoch; its added normalized rank mean and 32-bin frequency definitions are correct.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:1"
+    },
+    {
+      "assessment": "The exact Fin4 K and inverse Sigma are the single carrier. The required scalar kernel image covers every full-state initial state, and hidden-mode resetting is forbidden. The all-ones observation deviation from the older unfrozen sensory/active template is explicit before outcomes. Scalar posterior/calibration/consistency claims concern that observable; fully observed four-axis recovery is separate. There is no external-axis/interface-only inference or hidden-mode identification claim.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:50"
+    },
+    {
+      "assessment": "The active-coordinate clamp is a normalized imposed pushforward with unchanged external/sensory/internal joint marginal. Its singular active law cannot inherit the stationary blanket. Conditional covariance 1/56 and variances 15/56 agree with the exact K inverse. Precision zeros, covariance zeros and causal identification remain distinct.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:91"
+    },
+    {
+      "assessment": "EFE uses actual native mutual information with normalization/support/integrability obligations. Preference N(0,1/2) gives negative log density z^2+(1/2)log(pi); common terminal variance makes I=(1/2)log(1+V/R) independent of the Bool center. Preference center1 and belief mean1 reverse the stated risk ordering. These must be derived after freeze; no assumed information field or currently proved H3 result is accepted.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:102"
+    },
+    {
+      "assessment": "The convexity step gives B=3/2+r/2. Under centers parallel to all-ones the stationary hidden-mode second moments sum to 2/3. The full-state finite-horizon bound must be proved for actual measurable selector laws. The singleton first=true/second=true risk is strictly worse than the best opposite-center open-loop plan, so the class-containment failure witness is valid.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:121"
+    },
+    {
+      "assessment": "Independent primary samples, controls common-random-number reuse, pinned generator/dtype/environment, mode order, estimator formulas/centering, thresholds, jackknife failure handling and matched policy budgets are explicit. The conjunctive gate rejects any setting failure without clipping, jitter, mode deletion, seed reruns or outcome-dependent retuning. Jackknife intervals are descriptive asymptotic diagnostics, with failed replicates retained.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:160"
+    },
+    {
+      "assessment": "The design consistency gap is closed prospectively. For fixed Z~N(c,1/2), n independent noises of variance R and no intervening dynamics, P_n=R/(2R+n) and m_n=(2Rc+sum Y)/(2R+n). The unconditional generating-joint MSE is (nR+2R^2)/(2R+n)^2=P_n, including n=0. The Markov scalar-estimator-error bound tends to zero. This is convergence of finite-experiment error probabilities under the known generating prior/joint, not pointwise-for-every-truth, parameter consistency, changing-state concentration or an almost-sure infinite-process theorem. Native finite-batch conjugacy, normalization, integrability, MSE and tail/limit proofs remain required. All n=0,1,2,4,8,16 rational prefix fixtures were independently checked without draws; the uncapped n=0 bound 2 at epsilon=1/2 is valid.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:238"
+    },
+    {
+      "assessment": "SBC fixes independent seeds20261004/20261005, 20000 replications and 31 posterior draws, draw order, randomized ties, rank/(31N), count/N and conjunctive rank/residual/coverage gates. The correct posterior has standardized residual variance1. Identical generating/posterior normal draws with assumed Rprime=2R give exact variance targets A2/3 and B3/4 and explicit variance/coverage rejection. These frozen implementation thresholds imply no universal coverage or finite-sample confidence theorem.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:279"
+    },
+    {
+      "assessment": "Noise misspecification posterior variances/errors are exact. Zero-noise nondegenerate APIs and zero evidence likelihoods reject; null-point zeros of density representatives alone do not. Wrong-prior bias, nonstationary-mean substitution, even/odd diagnostics and preprocessing controls are fixed and retain failures. The rank1 observation witness changes a hidden mean while preserving scalar observation laws, without adding a second precision carrier.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:314"
+    },
+    {
+      "assessment": "The uncontrolled three-point information leg uses the same transition and explicit nonstationary initial law. Coordinate reversal is not physical reversed dynamics. The positive finite-grid KL 2(1-exp(-1)) and marginal KL exp(-4t) agree with the Gaussian equations. Repeated-time support requires separate native non-absolute-continuity/infinite-KL proof and forbids the finite inverse formula. Same path law/information with hypothetical energy-per-nat1 versus2 correctly demonstrates heat nonidentification without measured constitutive premises.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:363"
+    },
+    {
+      "assessment": "The licensed empirical branch is a governed no-go. Full formal chain, native compilation/axiom audit, source-bound executable, retained negative/sensitivity results, exact final claim-matrix review and clean-environment reproduction remain terminal gates. No remaining pre-outcome scientific blocker was found against the design exit scope. This is not H3 terminal acceptance or empirical/biological/universal FEP/physical heat approval.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:406"
+    },
+    {
+      "assessment": "The immutable H2/G0 prerequisite epoch is honest: new H3 modules/projections open a new source epoch without rebinding old evidence or editing the frozen protocol. Final H3 proof/export/claim acceptance must independently bind current H3 sources and unchanged carrier bytes. I ran the existing read-only current G0 validator and it matched the saved G0 record exactly, rechecked the H2 terminal/G0 digests and all208 live H2-map entries with no drift. This does not substitute for whole-program suite acceptance.",
+      "source": "specs/h3-reference-study/preregistration-proposed.yaml:430"
+    }
+  ],
+  "independence": "I did not author the proposed protocol, H3 model/executable, carrier proofs or terminal evidence. I proposed corrections as an independent reviewer; the coordinator authored the revisions. I authored this assessment only.",
+  "protocol_path": "specs/h3-reference-study/preregistration-proposed.yaml",
+  "protocol_sha256": "50b3575316fb272dc7bf209f50a21330fc5ea0764da9399e20aedeb0b2302c93",
+  "recorded_utc": "2026-09-30T20:45:17Z",
+  "review_identity_boundary": "One independent AI reviewer covering three aspects; this artifact is one review identity, not three reviewers or human approval.",
+  "reviewed_aspects": [
+    "methodology",
+    "domain",
+    "statistical"
+  ],
+  "reviewer_id": "/root/science_review",
+  "reviewer_kind": "AI_agent",
+  "role": "methodology",
+  "schema_version": 1,
+  "source_sha256": {
+    "docs/design/fep-research-program/horizon-3-scientific-case-study.md": "3db8585d373e102b278c254a43fc639722f65c731b86eb7e31eec0327696676a",
+    "specs/comprehensive-science-improvement/PROTOCOL.md": "cac6474312da3c06be0e45b14d789a116f329f0e3d020c1c9ace0033a273386c",
+    "specs/comprehensive-science-improvement/evidence/h2-capture-20260930-r2/review-source-map.json": "61a3fab748a022dae692fa3422b34c8824803c0a0570f66431d26fc7e048c6a7",
+    "specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json": "2d72e6b7205b92a625106e2830c2a01200682ffb3af036dd48118eb88f9067be",
+    "specs/h3-case-study/pre-outcome-metadata.json": "7a47e728765ceae608904f533a3f61421e56957e573141cc2aecdff68beb0468",
+    "specs/h3-case-study/spike-receipt.json": "be7e4fef1330f3eb987b0e50655b848cefde7733d4a3328485ec4f6ed326ab80",
+    "specs/h3-reference-study/output/g0-20260930.json": "6e3727aa85e64f81c89857a682915947ad3f901944914b3b53214746415bc5b1",
+    "specs/h3-reference-study/preregistration-proposed.yaml": "50b3575316fb272dc7bf209f50a21330fc5ea0764da9399e20aedeb0b2302c93",
+    "src/fep_lean/formal/compositions/gaussian_control.lean": "76b2e36f840682df5adac654456d2d94c81c636778fbcd1efa39bc3cbfe3d3f0",
+    "src/fep_lean/formal/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
+    "src/fep_lean/formal/compositions/gaussian_grid_path.lean": "d3b83fc1a746d533e855ef379d0ee961f850f03f806c909e1132355ab9dba8a6",
+    "src/fep_lean/formal/compositions/smooth_reference_kernel.lean": "156464de9e7c33e16fa22bd6939fa64938b03ee4f5554fb3ecd48fbfaed6d397",
+    "src/fep_lean/formal/fin4_gaussian_semigroup.lean": "a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c",
+    "src/fep_lean/formal/gaussian_information_geometry.lean": "cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c",
+    "src/fep_lean/formal/gaussian_precision_conditioning.lean": "64afcf45cf2ef44b78db7e5b2fb2de02bd3af80cefda888523baae1043b37c38",
+    "src/fep_lean/formal/linear_gaussian_semigroup.lean": "c5369be0ae88619dac310a81f0ec01295cfd7e12caef114dcb49074800709137",
+    "src/fep_lean/formal/scalar_gaussian_semigroup.lean": "d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e"
+  },
+  "stage": "H3.0_pre_outcome_proposed_freeze_review",
+  "verification_boundary": {
+    "current_G0_validator_passed_and_saved_record_matches": true,
+    "empirical_or_physical_claim_approved": false,
+    "h2_live_source_entries_rechecked_without_drift": 208,
+    "h3_code_or_model_authored": false,
+    "h3_proof_or_terminal_acceptance_approved": false,
+    "h3_protocol_frozen_by_this_review": false,
+    "lean_commands_run": false,
+    "protected_outcomes_accessed": false,
+    "synthetic_draws_generated": false,
+    "whole_program_acceptance_approved": false
+  }
+}

@@ -426,6 +426,15 @@ from fep_lean.output.release_bundle._constants import (
     RENDERER_PROVENANCE as RENDERER_PROVENANCE,
 )
 from fep_lean.output.release_bundle._core import (
+    PublicationCapturePlan as PublicationCapturePlan,
+)
+from fep_lean.output.release_bundle._core import (
+    PublicationCaptureResult as PublicationCaptureResult,
+)
+from fep_lean.output.release_bundle._core import (
+    PublicationCaptureStage as PublicationCaptureStage,
+)
+from fep_lean.output.release_bundle._core import (
     PublicationManuscript as PublicationManuscript,
 )
 from fep_lean.output.release_bundle._core import (
@@ -457,6 +466,12 @@ from fep_lean.output.release_bundle._core import (
 )
 from fep_lean.output.release_bundle._core import (
     _source_date_epoch as _source_date_epoch,
+)
+from fep_lean.output.release_bundle._core import (
+    plan_publication_capture as plan_publication_capture,
+)
+from fep_lean.output.release_bundle._core import (
+    run_publication_capture as run_publication_capture,
 )
 from fep_lean.output.release_bundle._identity import (
     _bounded_manuscript_projection_errors as _bounded_manuscript_projection_errors,
@@ -577,15 +592,20 @@ __all__ = [
     "PUBLICATION_PDF",
     "RELEASE_BUNDLE_SCHEMA_VERSION",
     "RENDERER_PROVENANCE",
+    "PublicationCapturePlan",
+    "PublicationCaptureResult",
+    "PublicationCaptureStage",
     "PublicationManuscript",
     "ReleaseBundleError",
     "ReleaseBundleValidation",
     "build_numerical_witness_receipt",
     "build_python_acceptance_receipt",
     "build_release_bundle",
+    "plan_publication_capture",
     "publication_manuscript_errors",
     "release_bundle_prerequisite_errors",
     "render_publication_manuscript",
+    "run_publication_capture",
     "run_python_acceptance",
     "validate_release_bundle",
     "write_numerical_witnesses",
