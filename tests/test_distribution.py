@@ -141,6 +141,24 @@ def test_distribution_exports_one_root_package_and_console_script() -> None:
     assert scripts == {"fep-lean": "fep_lean.cli:main"}
 
 
+def test_q7_scaffold_bytes_refuse_legacy_codepage_substitution() -> None:
+    """Wrong text decoding must not become accepted canonical AST evidence."""
+    from fep_lean.verification.gnn_continuous_artifact_proof import (
+        canonical_scaffold_bytes,
+    )
+
+    fixture_root = PROJECT_ROOT / "specs/gnn-bridge-q7-continuous-ou-proof"
+    source = fixture_root / "fixtures/continuous_ou_jax.py"
+    expected = json.loads((fixture_root / "expected.json").read_text(encoding="utf-8"))[
+        "runner_ast_sha256"
+    ]
+    utf8 = source.read_text(encoding="utf-8")
+    legacy = source.read_text(encoding="cp1252")
+    assert utf8 != legacy, "control requires the actual UTF-8 scaffold text"
+    assert hashlib.sha256(canonical_scaffold_bytes(utf8)).hexdigest() == expected
+    assert hashlib.sha256(canonical_scaffold_bytes(legacy)).hexdigest() != expected
+
+
 def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
     """Exercise the built bytes outside the checkout's import path."""
     uv = shutil.which("uv")
@@ -228,7 +246,7 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
                 "for path in installed_root.rglob('*') if path.is_file() and path.suffix in {'.py', '.lean', '.yaml'}}; "
                 "assert installed == expected, 'installed namespace roster or bytes differ'; "
                 "from fep_lean.verification.gnn_continuous_artifact_proof import ContinuousArtifactError, scaffold_digest, canonical_scaffold_bytes; "
-                f"q7_source = pathlib.Path({str(PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py')!r}).read_text(); "
+                f"q7_source = pathlib.Path({str(PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py')!r}).read_text(encoding='utf-8'); "
                 f"q7_expected = {json.loads((PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/expected.json').read_text())['runner_ast_sha256']!r}; "
                 "assert hashlib.sha256(canonical_scaffold_bytes(q7_source)).hexdigest() == q7_expected; "
                 "accepted = sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 14); "
