@@ -144,16 +144,7 @@ def run_simulation():
         "actions": [],
         "efe_history": [],
     }
-    if FRAMEWORK == "numpyro":
-        mcmc_means, r_hat_max = run_mcmc(
-            arr(observations), arr(controls), F, H, Q, R, prior_mean, prior_cov, T, n
-        )
-        results["mcmc_posterior_means"] = mcmc_means
-        results["mcmc_r_hat_max"] = r_hat_max
-        results["mcmc_rmse_vs_kalman"] = float(
-            np.sqrt(np.mean((np.asarray(mcmc_means) - beliefs_np) ** 2))
-        )
-        validation["mcmc_finite"] = bool(np.all(np.isfinite(np.asarray(mcmc_means))))
+
     validation["all_valid"] = all(validation.values())
     results["validation"] = validation
     results["execution_time_seconds"] = round(time.time() - start, 4)

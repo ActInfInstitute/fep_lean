@@ -50,6 +50,10 @@ CONTRACT = ArtifactContract(
         f"{SLICE}/expected.json",
         f"{SLICE}/probe.template.lean",
         f"{SLICE}/fixtures/FepLeanContinuousOU.md",
+        f"{SLICE}/scaffold-serialization.md",
+        f"{SLICE}/generated/scaffold-canonical.json",
+        f"{SLICE}/generated/scaffold-runtime-parity.json",
+        "src/fep_lean/verification/_jsonutil.py",
     ),
 )
 VERIFICATION = ArtifactVerifier(Path(__file__).resolve().parents[2], CONTRACT)

@@ -1,7 +1,7 @@
 # `fep_lean.catalogue`
 
 Typed catalogue ownership and deterministic projections for the schema-2
-155-topic formalism roster.
+168-topic formalism roster.
 
 ## Authoring graph
 
@@ -40,7 +40,7 @@ from fep_lean.catalogue import FEPTopicCatalogue, SemanticDisposition
 
 catalogue = FEPTopicCatalogue.default()
 assert catalogue.topics[0].id == "fep-001"
-assert catalogue.topics[-1].id == "fep-155"
+assert catalogue.topics[-1].id == "fep-168"
 assert SemanticDisposition.FORMALIZED.value == "formalized"
 ```
 

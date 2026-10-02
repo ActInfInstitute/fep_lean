@@ -1,0 +1,35 @@
+{
+  "boundary": "Local current transport acceptance only. No provider, native proof, hosted CI or publication readiness inferred.",
+  "command": "FEP_LEAN_LIVE_TESTS=0 uv run --locked python -m pytest tests/test_hermes_comprehensive.py tests/test_subprocess_watchdog.py tests/test_gauss_cli.py tests/test_gauss_cli_sad_paths.py tests/test_runtime_failure_contracts.py tests/test_status_verb.py -q --no-cov",
+  "duration_s": 204.63,
+  "failed": 0,
+  "independent_helper_review": {
+    "duration_s": 23.86,
+    "real_controls_passed": 8,
+    "reviewer": "/root/backlog_review",
+    "source_sha256": "56bc3aa53449a74007104227beb85baf22d131d8583bfed57bce5827884bd8a7"
+  },
+  "kind": "local-transport-acceptance-observation",
+  "passed": 155,
+  "returncode": 0,
+  "schema_version": 1,
+  "skip_boundary": "explicit opt-in live Gauss integration only",
+  "skipped": 1,
+  "source_sha256": {
+    "src/fep_lean/gauss/cli.py": "63458f1c5f5ef49266375b53b3358fa8bba9c888fd6404ffa40e300014bc5542",
+    "src/fep_lean/llm/hermes.py": "87ba20fb0bddec54754d1cc9d162f4e5e91ec5ff0320c9af6d713299a2b93991",
+    "src/fep_lean/verification/_subprocess.py": "56bc3aa53449a74007104227beb85baf22d131d8583bfed57bce5827884bd8a7",
+    "src/fep_lean/verification/environment.py": "a3b9c841d557416871c669172cd2c95ea194787c4a01173d50580764b0789a44",
+    "tests/test_gauss_cli.py": "c835e37c8f3e85911bfa4052bc4fc45e9ebf52afd5af07c8a8e182356d19e930",
+    "tests/test_gauss_cli_sad_paths.py": "1cd00e09057eba145d6696feb3436e697a4b22a7a9baeb551f286843dbba78c5",
+    "tests/test_hermes_comprehensive.py": "0e1ca449f70c9322bfdd38f6fbbb46e74cea73789605705ec9ea9e245b0c1219",
+    "tests/test_runtime_failure_contracts.py": "0a6e1edc3117df6852cd379378e1ceab152c6ff64db629544dd0e46c002e0ede",
+    "tests/test_status_verb.py": "ac0dc414f5a3219a674c5f0051d405d44ded5d4609f19522bc27c79707314df9",
+    "tests/test_subprocess_watchdog.py": "d5680ba4a45ad8070d89f8210a7e94ce0b55470346e2a975c53da5356497d764"
+  },
+  "source_snapshot_timing": "post_run; source map is observation, not a native or report receipt",
+  "transcript": {
+    "path": "specs/comprehensive-science-improvement/evidence/transport-acceptance-20260930.log",
+    "sha256": "a4c21a9c8d252f6768bc2b40abf7552d5f73e474e57a1e98979fd70e365d02c0"
+  }
+}

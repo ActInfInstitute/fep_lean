@@ -1,0 +1,7 @@
+/private/var/folders/r8/m8m857h1659dmg4lz07tlj500000gn/T/pytest-of-hum/pytest-1823/test_native_wrong_coefficient_1/q7_wrong_artifactQ.lean:104:53: error: unsolved goals
+hal : aLower ≤ a
+hau : a ≤ aUpper
+hsl : aLower * aLower ≤ a * a
+hsu : a * a ≤ aUpper * aUpper
+hlo : artifactQ - epsilon ≤ 1 - aUpper ^ 2
+⊢ False

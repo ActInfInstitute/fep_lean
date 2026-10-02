@@ -142,22 +142,103 @@ See [authorship-guide.md](authorship-guide.md), [testing.md](testing.md), and
 
 ## Interpreter contract
 
-`requires-python = ">=3.10"` declares the packaging floor, but the current
-dev/evidence reality is narrower and pinned: `.python-version` pins CPython
-3.14 for development and CI, mypy models 3.12 (`[tool.mypy] python_version`),
-and the runtime test suite runs under 3.14 only. The declared 3.10/3.11 floor
-is evidentially unsupported: `scaffold_digest` freezes `ast.dump` output,
-which differs across CPython minor versions, so a scaffold accepted under one
-interpreter cannot be re-validated under another. The Q7 module now enforces
-this in code: `scaffold_digest` refuses to run before parsing under any
-interpreter outside the accepted set — exactly CPython 3.14, the
-`.python-version` pin — raising a `ContinuousArtifactError` naming the
-accepted set and the running interpreter. The pinned `runner_ast_sha256`
-digest is interpreter-contract-pinned to that set and is unchanged by the
-guard. The guard does not relax the 3.14-only rule: a version-stable
-serialization or an explicit multi-interpreter acceptance record still lands
-as a new reviewed scaffold via `FEP-SCAFFOLD-PORTABILITY` with a coordinated
-custody re-pin.
+`requires-python = ">=3.10"` declares the packaging floor. CI tests fresh
+installed wheels on CPython 3.10, 3.11, 3.12, 3.13, and 3.14 on Ubuntu, macOS,
+and Windows. Each target environment resolves the wheel's declared runtime
+dependencies, imports the public API and catalogue, verifies every packaged
+Lean/YAML resource against the built sources, and exercises the console script
+outside the checkout. It has no editable install, parent site-packages,
+`PYTHONPATH`, or `PYTHONHOME`. This matrix is a package compatibility gate;
+its hosted results, rather than the declared floor, supply platform evidence.
+Future Python versions and alternate interpreters remain untested.
+
+Build distributions with `uv build --out-dir dist`. Its default route builds
+a source distribution first, then a wheel from that fresh source distribution.
+A direct `--wheel` build can retain deleted modules or Lean resources in an
+existing setuptools `build/lib` tree. Acceptance compares the exact Python,
+Lean and YAML member roster and bytes in both the archive and installed
+namespace; merely finding the expected resources is insufficient. The private
+legacy-cache regression retains orphan files and checks both build routes.
+See the [uv build contract](https://docs.astral.sh/uv/concepts/projects/build/).
+
+The development and evidence harness remains pinned to CPython 3.14 by
+`.python-version`; mypy models 3.12. Installed-package compatibility does not
+extend the validator contract. Q7's `scaffold_digest` uses the reviewed canonical
+AST serialization and accepts evidence validation only on CPython 3.14.
+Unsupported validator interpreters refuse before parsing with a
+`ContinuousArtifactError` naming the accepted set and running interpreter.
+The wheel matrix exercises that
+refusal on 3.10--3.13, alongside the canonical serializer's actual byte parity
+across 3.10--3.14. See the
+[serialization protocol](../specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md).
+That static parity does not extend validator acceptance or replace the new
+source-bound native/custody capture required by a serializer change. The current
+56,968-byte scaffold has accepted five-runtime parity and a separate accepted
+isolated Q7 native recapture; see the [Q7 report](../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md).
+The new native receipt covers static coefficient statements and explicitly
+leaves runner execution unverified. The original Q7 JSON and all Q5/Q6 native
+and delivery observations remain historical after the W2 re-pin.
+
+To exercise a target runtime locally while keeping the harness pinned:
+
+```bash
+FEP_DISTRIBUTION_PYTHON=3.10 \
+  uv run --locked python -m pytest tests/test_distribution.py -q -s --no-cov
+```
+
+The target interpreter must be available to uv; runtime dependencies may be
+acquired from the package index. No Lean compile or provider call occurs.
+
+The retained local wheel r7 observation comprises five cells: one actual
+installed target-runtime case plus 32 CPython 3.14 harness cases per cell,
+165 passes total. It does not report 33 target-runtime cases per interpreter.
+Its 235-file guarded epoch is historical after Q7 `expected.json` and the JAX
+fixture changed, and this README/development guidance refresh introduces further
+guarded changes. Local wheel r8 and the 15 hosted platform/interpreter cells
+remain unrun. Rebuild and rerun against final guidance and inputs before making
+current package acceptance claims.
+
+## Documentation PRs and retained renders
+
+Documentation-only pull requests run the documentation lane before merge.
+The allowlist covers root Markdown and prose under `docs/`; changes to the
+canonical manuscript, receipts, fonts, generated scientific projections,
+workflows, or any other owner take the full gates. A source deletion or rename
+out of an owner path also takes the full gates. Main pushes retain the complete
+integration workflow.
+
+The documentation lane materializes the generated manuscript inputs, then
+checks catalogue/formal projections, font requirements, the committed render
+receipt, links, Markdown hygiene, theorem references, citations, and
+cross-references. Font requirements are source projections; installed-font
+coverage is checked by the real render lane. Prose checks run no native build
+and neither manufacture nor overwrite an acceptance receipt.
+
+A successful render retains an `accepted-render-<commit>-<attempt>` artifact
+for 90 days. It contains the combined PDF, TeX, Markdown and compiler logs,
+accepted render receipt, font projection, native/declaration receipts,
+renderer/tool versions, template commit and tracked template input hashes,
+selected-font file hashes, a source manifest, and an artifact hash manifest.
+Staging freezes the accepted output bytes, brackets validation and tool/font
+discovery with source, output, template and font comparisons, and verifies the
+retained copies against that frozen snapshot. Authored manuscript membership
+is rechecked after reading the last source. Missing outputs, source drift, a
+different checkout SHA, a stale/rejecting receipt, or a changed retained copy
+rejects staging and removes its partial directory. Failed renders produce no
+accepted artifact.
+
+The version-1 render receipt binds manuscript sources and acceptance findings;
+it does not itself contain a PDF hash. The retained artifact manifest binds
+the PDF bytes kept by this stable staging interval. Neither record establishes
+an atomic filesystem snapshot or substitutes for a physical render.
+
+Download retained evidence into a separate temporary directory. Verify its
+commit against the intended workflow SHA, every file hash against
+`artifact-manifest.json`, and every source hash against the live checkout and
+its generated inputs. Re-run the native/audit/render receipt validators on
+those exact files before treating them as current. A green workflow or matching
+filename does not authorize replacing committed receipts or publishing; release
+bundle validation and the explicit publication boundary still apply.
 
 ## Custody refresh orchestration
 
@@ -213,3 +294,76 @@ Phase 0 correctness: a nonzero native capture exit, a missing, stale, or non-cla
 receipt, or post-capture drift refuses with exit 1 (the historical exit-0 `ok` behavior is
 fixed). Exit codes: 0 = report composed / fixpoint converged / resume completed; 1 = any
 gate or fail-closed check refused (JSON `{"status": "error", ...}`).
+
+## Bounded publication capture
+
+`fep-lean publication-capture` is an explicit local capture action. Planning
+reads the checkout and an explicitly selected rendering template without
+starting tools or writing a journal:
+
+```bash
+uv run fep-lean publication-capture --template /path/to/template --plan
+```
+
+Capture composes the existing native, formalism-audit, Python, render,
+numerical, browser and release-bundle owners. The render stage waits for
+native/audit/Python acceptance, browser waits for render/numerical acceptance,
+and the final stage requires all six. It builds two independent archives,
+strictly validates each against live inputs and requires byte equality.
+
+The rendered tree owns exact raw copies of `manuscript/config.yaml`,
+`manuscript/preamble.md` and `manuscript/references.bib`. These are metadata,
+not counted or substituted chapter bodies. Hydration stages their bytes with
+the chapters and assets; strict publication requires all three canonical
+inputs and output copies, compares their exact bytes, and rejects unexpected
+members. Capture declares each output and bundles require its recorded payload.
+
+```bash
+uv run fep-lean publication-capture --template /path/to/template \
+  --journal /tmp/fep-publication-capture --source-date-epoch 0 --timeout 21600
+uv run fep-lean publication-capture --template /path/to/template \
+  --journal /tmp/fep-publication-capture --source-date-epoch 0 --timeout 21600 --resume
+```
+
+The journal must be a new directory outside the checkout. Existing producers
+retain their declared project output paths; the manager preserves prior and
+new artifact bytes in numbered immutable attempts, including partial outputs
+and rejecting streams. Each attempt records exact inputs before and after,
+process outcomes, output hashes and the policy hash. Resume checks all retained
+history before starting a tool. Changed inputs or live outputs rerun the stage
+and its descendants; independent unchanged stages still run their strict owner
+checks before reuse. A rejected reuse check and its replacement capture share
+one stage budget, within the overall deadline.
+
+The policy seals the regular-file membership of consumed test, manuscript and
+template trees. Template resources include style, class, bibliography, browser
+and image assets. Only `.git`, `.venv`, `__pycache__`, `.pytest_cache`,
+`.mypy_cache`, `.ruff_cache` and Python bytecode are excluded. Added or removed
+members refuse an existing frozen plan; generate a new plan and journal after
+reviewing the changed roster. Undeclared symlinked inputs, destinations and
+journal history refuse capture. Template links are explicitly recorded with
+their exact raw targets: internal targets must be direct canonical resources
+outside excluded cache subtrees, with their consumed files sealed as inputs.
+Relative targets allow only a bounded leading run of `..` within the owner,
+then ordinary components. Empty, dot and later parent components refuse.
+The single external registration `projects/active/fep_lean` must point exactly
+to the selected project root. Descriptor-relative metadata checks compare the
+actual link referent with its canonical target by device, inode and type, and
+bind that identity into snapshots. Link identity and owned ancestor directories
+are checked around execution; directory membership remains sealed. Content
+edits with the same roster can resume selectively.
+
+Capture execution requires POSIX descriptor-relative file custody and the
+cooperative process supervisor. File-content reads, new journal files and
+directory creation use no-follow descriptor traversal; declared link referents
+are checked through metadata only. Timeout logs retain exact raw bytes; completed
+process logs encode the runner's normalized text output as UTF-8.
+Windows package imports, resources, help and static readiness remain supported.
+Windows capture execution refuses before creating a journal or starting a
+process. Equivalent Windows file custody and descendant supervision need a
+separate implementation and runtime acceptance.
+
+Exit 0 reports completed local capture. It performs no publication, hosted CI
+or provider action. `status` remains a separate process-free inspection. The
+custom Python capture API records its declared checks and does not establish
+the strict production evidence contract merely from zero process exits.

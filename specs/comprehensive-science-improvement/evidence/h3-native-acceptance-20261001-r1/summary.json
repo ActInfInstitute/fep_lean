@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/.venv/bin/python",
+    "scripts/audit_formalisms.py",
+    "--timeout",
+    "600",
+    "--receipt",
+    "output/formalism-audit.json"
+  ],
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal",
+  "outer_timeout_sec": 840,
+  "native_timeout_sec": 600,
+  "returncode": 0,
+  "elapsed_sec": 11.154157124998164,
+  "source_unchanged": true,
+  "mathlib_unchanged": true,
+  "receipt_sha256": "78053301e5699aa58c7bb516b7dbe872cf466bf59c3a23fec14de515046b925e",
+  "receipt_source_sha256": "8c18d2aac487beee0940fb0862bb9fe67d54ee6efb78a7aec7d77f6f21e0a8d1",
+  "complete": true,
+  "declaration_count": 1596,
+  "evidence_count": 1465,
+  "declarations_resolved": 1596,
+  "warnings": [],
+  "sorry_ax_detected": false,
+  "axiom_parse_errors": [],
+  "lean_version": "Lean (version 4.34.1, arm64-apple-darwin24.6.0, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "validation_errors": [],
+  "capture": "/tmp/h3-whole-acceptance-20261001T002607Z"
+}

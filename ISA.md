@@ -2,14 +2,14 @@
 title: fep_lean Ideal State Assessment
 status: active
 phase: verifying
-updated: 2026-09-07
+updated: 2026-10-02
 ---
 
 # fep_lean Ideal State Assessment
 
 ## Problem
 
-`fep_lean` combines a 155-row catalogue, generated Lean source, a pinned
+`fep_lean` combines a 168-row catalogue, generated Lean source, a pinned
 Lean/Mathlib workspace, Hermes model calls, OpenGauss persistence, manuscript
 projections, and strict run reports. The repository must distinguish a
 deterministic offline catalogue from real theorem verification. A green local
@@ -122,9 +122,9 @@ uv run python scripts/capture_browser_acceptance.py
 uv run python scripts/build_release_bundle.py --run-python-acceptance
 release_dir="$(mktemp -d)"
 SOURCE_DATE_EPOCH=0 uv run python scripts/build_release_bundle.py \
-  --output "$release_dir/fep-lean-1.1.0-155.tar.gz"
+  --output "$release_dir/fep-lean-candidate-168.tar.gz"
 SOURCE_DATE_EPOCH=0 uv run python scripts/build_release_bundle.py \
-  --check --output "$release_dir/fep-lean-1.1.0-155.tar.gz"
+  --check --output "$release_dir/fep-lean-candidate-168.tar.gz"
 uv run fep-lean preflight
 ```
 
@@ -147,187 +147,73 @@ open in [TODO.md](TODO.md).
 
 ## Current assessment
 
-The maintained schema-2 roster now spans `fep-001` through `fep-155` in 20
-families. Canonical bodies are family-owned and merged by one validated
-registry; formal resources are split into manifested foundations and leaf
-composition modules behind an import-only aggregate. The generated coverage
-and theorem-maturity projections own the live declaration, relation,
-capability, import, and semantic-disposition totals. The maturity ledger
-contains direct formalizations as well as conditional and structural proxies;
-compilation cannot erase those reviewed boundaries.
+The maintained schema-2 roster spans `fep-001` through `fep-168` in 22
+families. Canonical bodies are family-owned and formal resources are manifested
+foundations/composition leaves behind an import-only aggregate. The generated
+coverage and theorem-maturity projections own the live declaration, relation,
+capability, import, and semantic-disposition totals. The current reviewed
+maturity split is 149 formalized, 13 conditional proxies, and six structural
+proxies. Satisfied capability nodes refer to their narrowed statements;
+compilation cannot erase those boundaries.
 
-ISA-04 was closed for the frozen v1.1.0 155-topic release snapshot. Its exact
-sealed-roster native, schema-4 declaration/axiom, schema-3 Python, and schema-4
-Chrome receipts remain historical evidence for those bytes. The accepted
-post-v1.1.0 Horizon 1/Horizon 2 and publication source wave changes formal
-resources, tests, manuscript inputs, and the source-owner roster, so none of
-those retained receipts currently binds the live checkout.
-The coordinated refresh completed deterministically on 2026-09-12 after the
-source wave settled (recorded in [CHANGELOG.md](CHANGELOG.md)); neither a
-stale nor a refreshed receipt changes a maturity disposition.
+At the 2026-09-30 baseline, the same-commit hosted CI native and declaration/axiom artifacts
+independently validated against `main` at `cd4a84c`: 168/168 topics at the
+v4.34.1 pin with zero warnings or `sorry`, and no audit validation errors.
+This supports those exact baseline evidence planes. The pinned setup repair
+and subsequent warning-free aggregate build resolved the observed cache
+incompatibility. The expanded native audit covers 1,596 declarations and all
+146 H3 declarations with 1,465 evidence records. Native r3 verifies all 168
+topics without warnings or `sorry` against 291 unchanged owners. Strict
+production render preparation r2 passed at its recorded source epoch; fresh
+preparation r3 and production capture r2 remain unrun. Local wheel r7 has five
+cells, each with one actual installed target-runtime case and 32 CPython 3.14
+harness cases (165 total). It remains historical after the two guarded Q7 input
+changes and this guidance refresh; local wheel r8 and the 15 hosted cells are
+unrun. Complete guarded Python acceptance and production capture/two archives
+remain open. The canonical Python run reached
+2,303 passes and 90.66% coverage, but its wider guard rejected replacement of
+two unchanged generated manuscript files. The repaired programmatic fixture has
+11 passing focused tests with unchanged live bytes and metadata. See
+[the dated assessment](SCOPE-2026-09-30.md) for the baseline probes and hashes.
 
-The three provider reports created on 2026-08-20, including
-`output/reports/run_20260820_183143_709998`, remain historical evidence for
-their recorded 50-topic source snapshots. They cannot close ISA-06 or the
-provider-backed portion of ISA-07 for the current 155-topic source. A new full
-Hermes/OpenGauss receipt must pass independent live-source validation before
-its results are described as current. No provider secret is stored in the
-repository. Neither compilation nor provider execution establishes the FEP as
-a physical theory or authorizes publication.
+Isolated Q7 recapture r3 and seven-stage postcapture closure r2 are accepted,
+including current five-runtime scaffold parity and all three actual native
+positive/wrong-F/wrong-Q controls. The separately retained new native receipt
+is claim-ready for its exact static coefficient proof, with runtime execution
+unverified. The first seven recapture stages reuse freshly revalidated accepted
+substages of failed r2; that parent remains failed. Q5/Q6 native and delivery
+records remain historical after W2 re-pinning. Independent guidance review and
+fresh bridge/generation/native read-only checks remain required before backlog
+closure; [the Q7 report](specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md) and
+[execution ledger](specs/comprehensive-science-improvement/EXECUTION.md) own the
+receipt identities and scope.
+
+The H2.7 terminal validator passed at that baseline, closing the old
+reseal backlog item. The active [comprehensive implementation](specs/comprehensive-science-improvement/PROTOCOL.md)
+has since changed source owners; dependent receipts require fresh capture and
+review. The pinned setup rebuild now passes 8,995 jobs with unchanged pins.
+Fresh H2 custody and independent continuous G0 acceptance preceded the immutable
+H3.0 protocol freeze. The native H3 model/composition, current r2 export and
+three fresh proof-role reviews pass; the consumer input check opens no random
+generator. Actual package acceptance still precedes scientific draws. Frozen synthetic execution,
+claim review and bundle reproduction remain open, with a governed empirical
+no-go without licensed data. Historical Horizon and release checkpoints below
+retain their original evidence scope.
+
+The 2026-08-20 provider reports remain historical for their earlier source
+snapshots. They cannot close ISA-06 or the provider-backed portion of ISA-07
+for today's roster. A new full Hermes/OpenGauss receipt requires explicit
+credential/spend authorization and independent live-source validation.
 
 ## Release boundary
 
-The current source owns the 155-topic roster and the formal resources described
-above, but the retained native, formal-declaration, trusted-axiom, Python, and
-browser receipts do not validate these live bytes. Those current-source
-evidence claims were re-bound by the coordinated refresh completed
-deterministically on 2026-09-12 (recorded in [CHANGELOG.md](CHANGELOG.md)).
-The repository also
-does not support a current 155-topic provider claim until ISA-06 and the
-provider-backed parts of ISA-07 have fresh evidence for these exact bytes.
-Historical receipts remain useful provenance but do not cross that boundary.
-The final worktree must be inspected, its release receipts must validate, and
-published artifact bytes must match their recorded hashes before any release
-is accepted.
+Source metadata is 1.3.0; the existing v1.3.0 tag records the earlier 159-topic
+cut. As checked on 2026-09-30, the latest published GitHub release is v1.2.0.
+The current 168-topic tree is not a published GitHub release. Publication
+readiness requires all applicable final-source receipts, deterministic bundle
+parity, version/DOI agreement, and separately authorized publication with remote
+commit and artifact-hash verification. Historical receipts do not cross this
+boundary. Neither compilation nor provider execution establishes the FEP as a
+physical theory.
 
-## Coordinated reliability and artifact-proof delivery (2026-09-04)
-
-### Goal
-
-Deliver reliable model/run outcomes, read-only content-bound bridge checks,
-and concrete PyMDP artifact proofs, preserving existing fleet changes.
-
-### Criteria
-
-- [x] BRIDGE-OPS: new bridge operations regression suite passes.
-- [x] GNN-VALIDITY: current invalidity propagates across validation entry points.
-- [x] GNN-ROUNDTRIP: annotated connections survive JSON/Markdown round trips.
-- [x] GNN-RECEIPTS: retries and changed inputs do not inflate current outcomes.
-- [x] GNN-API: both APIs agree on warning exits and reject active deletion.
-- [x] GNN-MCP: transport behavior has functional PR tests.
-- [x] PROOF-PAYLOAD: a current rendered PyMDP artifact and an independent
-  asymmetric control have checked concrete payloads.
-- [x] PROOF-NEGATIVE: literal/axis/artifact/custody mutations reject acceptance.
-- [x] H2-AUDIT: existing H2.7 source is audited against its review gates.
-- [x] Anti-CURRENT: no stale numerical artifact is promoted to native proof or
-  current execution evidence.
-- [x] Anti-WORKTREE: baseline unrelated changes remain intact.
-
-### Verification strategy
-
-Use repository-native focused tests followed by full applicable gates. Source
-snapshots were captured before edits under `/tmp/gnn-fep-implementation-20260904`.
-Full baselines were attempted and interrupted in native dependency checks amid
-pre-existing fleets; logs retained under `/tmp/gnn-fep-*-baseline.log`.
-Focused fep_lean baseline: 65 passed (CLI/formal composition/native evidence).
-GNN focused baseline and subsequent regression results must be reported with
-exact scope. No baseline aggregate pass is inferred from partial progress.
-
-### Ownership
-
-Codex validation lane: parsers/validation/CLI. Codex receipt lane: API/MCP/render/
-execute. Omp: concrete artifact-proof slice. Parent: bridge operations, contract,
-source pins, ISA and integration. Generated owners settle before receipt refresh.
-No publication, paid provider runs, or H3 execution is authorized by this slice.
-
-### Verified delivery
-
-The coordinated delivery criteria above are complete. Evidence:
-
-- GNN applicable suite: 2,102 passed, one unavailable-PyTorch skip, 277 slow/
-  pipeline deselections. Twelve additional actual HTTP/auth socket tests passed.
-  Full source Ruff and strict documentation audit pass.
-- FEP full nonserial baseline: 1,159 passed, seven skipped, 523 native-marked
-  deselections in 760.17 seconds. That run initially missed coverage at 88.34%.
-  All 82 added failure-contract tests then passed in 4.02 seconds with
-  `--cov=src --cov-append --cov-fail-under=89`, bringing combined coverage to
-  **89.19%**. All 77 production Python files stayed byte-identical across those
-  runs. This records a full baseline plus the additional tests, not a claimed
-  second full-suite run. Logs: `/tmp/gnn-fep-fep-python-final.log` and
-  `/tmp/gnn-fep-contract-coverage-final.log`.
-- Q5: current actual canonical render, two concrete native probes, six standard-
-  axiom theorem checks, and three passing native regression tests including a
-  normalization-preserving wrong-axis rejection. The asymmetric control is
-  handcrafted; only the symmetric fixture has current render provenance.
-- H2 terminal audit: seven direct terminal tests, sixteen R0 tests including
-  three native probes, and two final prerequisite/custody checks passed.
-  Overall H2 acceptance remains open; this audit does not open H3.
-- Ten actual read-only bridge/Q5 checks preserved all fifteen watched artifacts'
-  bytes and mtimes. Numerical comparisons keep current-execution verification
-  and native-claim readiness false. The separate native Q5 receipt validates.
-- Eight source projections, manuscript projection/placeholder checks, Markdown
-  hygiene and manuscript references pass. Strict typing passes for ten bridge
-  and verification files. Both repository diffs pass whitespace checks.
-
-At the wave-1 checkpoint, the source-bound native receipt and source pin were
-current. Baseline files were preserved, the pre-existing FEP W1 REPORT is byte-identical to its initial
-snapshot, and neither repository HEAD changed. Later backend proofs, continuous
-semantics, wider H2 acceptance, H3, current-release/provider evidence, and
-publication retain their independent acceptance boundaries.
-
-Detailed evidence: [W2 operations](specs/gnn-bridge-w2-source-custody/REPORT.md), [Q5 proof](specs/gnn-bridge-q5-artifact-proof/REPORT.md), and [H2 audit](specs/done/horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md). The broader release criteria elsewhere in this ISA remain open.
-
-## Comprehensive continuation (2026-09-04, wave 2)
-
-User-authorized wave-2 implementation and verification are complete. Prior evidence above describes the
-wave-1 bytes; subsequent changes require fresh source-bound checks. Worktree
-snapshots and baseline logs are retained under
-`/tmp/gnn-fep-comprehensive-wave2-20260904`. Existing work remains preserved.
-
-### Acceptance criteria
-
-- [x] W2-GNN-QUALITY: declared GNN test scope, full typing, lint and format pass.
-- [x] W2-GNN-RUNS: source/config/artifact identity governs hashing, resume and reproduction.
-- [x] W2-GNN-CONTAINERS: reviewed container settings survive composition and paths reject unsafe aliases.
-- [x] W2-CONTINUOUS-ROUTE: public continuous dispatch and JAX output routing pass actual regressions.
-- [x] W2-Q6: actual Julia embedded input tables have positive and wrong-axis native evidence.
-- [x] W2-Q7: actual OU coefficients have source-bound exact-real error-bound evidence.
-- [x] W2-RECEIPTS: shared immutable contract verification preserves tamper and checked-byte safeguards.
-- [x] W2-H2-DIAGNOSTICS: scalar and Fin4 diagnostics use the existing typed witness registry.
-- [x] W2-H2-EXIT: mandatory predecessor/native results, diagnostics and three fresh reviews validate together.
-- [x] W2-H3-G0: eligibility checks the accepted H2 carrier and preserves prospective study boundaries.
-- [x] W2-FEP-QUALITY: relevant full Python gates and native additions pass with exact exclusions reported.
-- [x] W2-DOCS: current architecture/status and reviewable evidence match final code.
-- [x] Anti-W2-CLAIMS: static proofs do not imply runtime, empirical or whole-program equivalence.
-- [x] Anti-W2-CUSTODY: receipt regeneration is explicit; stale or edited evidence fails closed.
-- [x] Anti-W2-WORKTREE: unrelated baseline files and repository HEADs remain preserved.
-
-Native Lean/Lake commands are serialized. New FEP implementations are drafted
-outside the source trees until the frozen-source baseline settles. GNN's full
-applicable baseline completed with 4,028 passes, 11 skips, 557 deselections and
-two failures; those failures and the full typing findings are implementation
-inputs. Publication and paid provider execution are outside this continuation.
-
-### Wave 2 GNN verification checkpoint
-
-The integrated GNN run (`-m 'not pipeline and not mcp'`) completed with
-4,157 passes, 18 skips, 557 deselections and one UV environment-check failure.
-All 2,870 captured source/workspace files were unchanged during the run. The
-failure was an exact-sync check rejecting the concurrent GEO lane's optional
-`h3` package. Its documented non-pruning contract now uses `--inexact`; all
-35 tests in that environment file pass, with required dependencies still
-checked. This is the full run plus a scoped repair/recheck, not a second full
-run. Full typing (986 files), Ruff, formatting and four strict documentation
-audits pass; the changed environment test also passes typing and lint.
-
-Additional evidence includes 128 independent durable-run/pipeline tests,
-13 OpenAI synchronous-call tests, and 102 tests with optional scikit-learn
-present. Deserialization rejects cached pickle extension opcodes and trailing
-payloads at the shared GNN loader and the restricted classifier loader.
-
-The following final checkpoint supersedes the preceding in-progress status.
-
-### Final wave-2 checkpoint
-
-All wave-2 criteria above are verified. FEP's clean integrated Python run passed
-1,460 tests with seven skips, 529 native deselections, and 89.83% coverage.
-The frozen full native baseline and enabled Fin4 supplement passed. Q5/Q6/Q7
-schema-2 receipts validate 23 standard-axiom theorem reports. H2.7 acceptance
-binds 328 mandatory cases, 180 source hashes, independent diagnostics, and three
-fresh reviews. All 15 retained checks preserve 559 files' bytes and mtimes.
-
-H3.G0 machinery is implemented and tested; actual prospective study metadata
-remains unselected. No G0 study acceptance or H3.0--H3.7 execution is claimed.
-Broader release/provider criteria elsewhere in this ISA remain independent.
-
-Detailed changes, exact test scopes, repairs, and evidence: [wave-2 report](specs/gnn-bridge-w2-source-custody/WAVE2-REPORT.md).
+Prior delivery checkpoints remain in the [W2 operations record](specs/gnn-bridge-w2-source-custody/REPORT.md), [wave-2 report](specs/gnn-bridge-w2-source-custody/WAVE2-REPORT.md), [Q5 proof record](specs/gnn-bridge-q5-artifact-proof/REPORT.md), [H2 audit](specs/done/horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md), and repository history. They retain their original source and verification boundaries. Completed delivery checklists do not belong in this active assessment.

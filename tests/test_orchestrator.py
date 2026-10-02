@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -9,19 +10,27 @@ import pytest
 from fep_lean.catalogue.schema import load_catalogue_metadata
 from fep_lean.pipeline.core import PipelineResult
 from fep_lean.pipeline.orchestrator import project_root, run_pipeline, run_single_topic
+from tests._support.catalogue_project import manuscript_owner_state
 
 PROJ = Path(__file__).resolve().parent.parent
+pytest_plugins = ["tests._support.catalogue_project"]
 
 
 @pytest.fixture(autouse=True)
-def isolate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    monkeypatch.delenv("FEP_LEAN_PROJECT_ROOT", raising=False)
+def isolate(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, catalogue_project: Path
+) -> Iterator[None]:
+    live_before = manuscript_owner_state(PROJ)
+    monkeypatch.setenv("FEP_LEAN_PROJECT_ROOT", str(catalogue_project))
     monkeypatch.setenv("FEP_LEAN_OUTPUT_ROOT", str(tmp_path / "output"))
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    yield
+    assert manuscript_owner_state(PROJ) == live_before
 
 
-def test_project_root_default() -> None:
+def test_project_root_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("FEP_LEAN_PROJECT_ROOT", raising=False)
     assert project_root().resolve() == PROJ.resolve()
 
 
@@ -46,7 +55,7 @@ def test_run_single_topic_catalogue_mode() -> None:
     assert result.run_dir
 
 
-def test_run_pipeline_writes_catalogue_report() -> None:
+def test_run_pipeline_writes_catalogue_report(catalogue_project: Path) -> None:
     result = run_pipeline(mode="catalogue")
     assert result.complete is True
     assert result.mode == "catalogue"
@@ -54,6 +63,10 @@ def test_run_pipeline_writes_catalogue_report() -> None:
     report = Path(result.run_dir)
     assert (report / "summary.json").is_file()
     assert (report / "index.md").is_file()
+    assert (catalogue_project / "manuscript/manuscript_vars.yaml").is_file()
+    assert (
+        catalogue_project / "manuscript/09z_unified_formalism_catalogue.md"
+    ).is_file()
 
 
 def test_run_pipeline_area_filter() -> None:

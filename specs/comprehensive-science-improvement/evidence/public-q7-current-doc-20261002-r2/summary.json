@@ -1,0 +1,47 @@
+{
+  "accepted": true,
+  "boundary": "Actual three read-only checks for final documentation bytes. No new compile, runner simulation, provider, complete Python, package, hosted or primary scientific evidence. Full operator journals remain local.",
+  "checks": [
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 1.8309107500026585,
+      "name": "bridge-status",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 1.0278478330001235,
+      "name": "static-generation",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 2.821321125004033,
+      "name": "native-receipt-check",
+      "returncode": 0
+    }
+  ],
+  "claim_ready": false,
+  "document_delta": {
+    "specs/gnn-bridge-q7-continuous-ou-proof/README.md": {
+      "new_sha256": "f55a7d9da8d6680d7f93c4c3c4134a4dc095090d8e71861964f5f41b6d93e9fc",
+      "old_sha256": "7ad238c83b4e4ef2af9c3c5f07d22add113b817771f6d7c1d06bf89f4c931f85"
+    },
+    "specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md": {
+      "new_sha256": "27b8c5af8c094fed01d2753c0d5979884f64691398db337a11b4b8997836954d",
+      "old_sha256": "75944d113ae2cfd082d6c2f62b08b25052cbfc75ba8c3aac0914ef2a4a6d6123"
+    }
+  },
+  "elapsed_s": 36.55453545800265,
+  "independent_document_review_sha256": "9afc52ebeb3475b79f0fff0a52364c21cc8b8422d31a03db6b071e69cbd114b7",
+  "kind": "public-Q7-final-document-currency-observation-summary",
+  "native_receipt_reissued": false,
+  "native_receipt_sha256": "b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b",
+  "observation_receipt_sha256": "ede70a87cd57f041774d5dff2bc5947fe7b066ac30ebec55a3dfd78809ce986a",
+  "observational_summary_only": true,
+  "runtime_execution_verified": false,
+  "source_stable": true
+}

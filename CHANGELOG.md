@@ -1,5 +1,181 @@
 ## Unreleased — wave-4 catalogue delivery
 
+## 2026-10-02 — Q7 portability acceptance
+
+The [post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
+passes live bridge status, static generation and the exact new native receipt's
+read-only validation after independent document review, with stable custody.
+This closes `FEP-SCAFFOLD-PORTABILITY`. The accepted native JSON stays unchanged;
+Q5/Q6 remain historical, and static parity does not imply runner execution.
+
+
+### Isolated Q7 evidence and active guidance refresh (2026-10-02)
+
+The [public Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-closure-20261002-r1/summary.json)
+records isolated recapture r3 accepted in 644.5096 seconds at actual receipt
+SHA-256
+`8c7c8d89023eb9784405143c1750b4b7ddd4ff1453dbbd089e9d660633b912ad`.
+Seven actual accepted r2 substages were freshly revalidated; their parent
+attempt remains failed. R3 actually executes stages 8–12 and passes all 124 pure
+controls without skips. The independently isolated GNN Git checkout binds all
+703 owners to `536d949829f6aed11dc540e5c5dec77578b25016`, with a private copied
+runtime and read-only shared dependency base. Active GNN work/output is preserved.
+
+Five actual CPython 3.10.20, 3.11.15, 3.12.13, 3.13.15 and 3.14.4 runtimes
+produce 56,968 identical scaffold bytes at SHA-256
+`b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec`,
+with all 11 controls per runtime. Evidence validation remains CPython 3.14.
+The exact [new native receipt copy](specs/comprehensive-science-improvement/evidence/q7-accepted-native-retention-20261002-r1/native-receipt.json)
+has SHA-256 `b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b`,
+is native-claim-ready and leaves runtime execution unverified.
+Postcapture closure r2 accepts seven actual stages in 1,648.1618 seconds at
+actual receipt SHA-256
+`df7787a925bf1011a9bd09a8bcc5ae20240792ea0b4ca9bc435eb5204225ba59`.
+All three real positive-axiom/wrong-F/wrong-Q native controls pass; the actual
+outer process exits 0 with transport accepted. Failed attempts and the original
+Q5/Q6/Q7 JSON receipts remain unchanged. Q5/Q6 observations remain historical
+after W2 re-pinning; this Q7 result does not refresh them. Full operator-custody
+records remain local; the public summary records observations, while the
+separately validated official native receipt supplies the native claim.
+
+Fourteen maintained Markdown files now distinguish baseline hosted evidence,
+current native checkpoints and remaining acceptance. Their exact prior bytes,
+second-read verification and manifest are retained in
+`specs/comprehensive-science-improvement/evidence/active-guidance-history-20261002-r3/`.
+Only README and REPORT change within the Q7 artifact-document map; this is not
+a claim that the repository has only two changed files. Independent review and
+three fresh read-only Q7 checks after this edit remain pending, so the
+portability row stays open.
+
+Wheel r7 remains historical after two guarded Q7 inputs changed and before this
+guidance refresh. Its five cells each contain one actual installed target-runtime
+case and 32 CPython 3.14 harness cases, 165 passes total. Wheel r8, hosted 15-cell
+acceptance, canonical Python r2, render preparation r3, production capture r2,
+two accepted identical archives and frozen H3 primary execution remain unrun.
+The prior 2,303-pass, 12-skip, 90.66% Python run still fails its wider guard;
+the private orchestrator repair has 11 focused passes. A projected 2,318-test
+total is arithmetic only. Provider, release and H3/FORM-4 gates remain open.
+
+### Programmatic test isolation and current evidence (2026-10-01)
+
+Programmatic catalogue tests now use the same private canonical project fixture
+as direct pipeline tests. Redirecting output alone still allowed generated
+manuscript source files to be replaced in the live checkout. The default-root
+contract remains explicit, private projections are checked, and every test
+brackets the live manuscript's bytes and metadata. All 11 focused controls pass.
+The preceding canonical run's 2,303 passes and 90.66% coverage remain a rejected
+wider-guard attempt; identical bytes do not erase observed file replacement.
+
+Native r3 verifies all 168 topics without warnings or `sorry`; strict real
+template render preparation r2 and five local installed-wheel runtime probes
+pass at their recorded source scopes. H3 export r2 and three independent
+proof-role reviews pass, with no scientific draws executed. Production capture,
+complete guarded Python acceptance, hosted evidence and H3 outcomes remain open.
+Completed historical delivery checklists were removed from the active ISA;
+their exact prior text, scientific records and repository history are retained.
+Active GNN registry work is preserved; isolated Q7 capture requires separate
+runtime and root custody.
+
+### Render metadata ownership (2026-10-01)
+
+The actual template render produced legitimate `config.yaml`, `preamble.md`
+and `references.bib` copies that strict publication incorrectly rejected as
+unexpected. Hydration now stages the exact raw metadata roster, capture declares
+those outputs, and release archives require all three payloads with their own
+evidence class. Missing, altered and linked copies still reject; chapter counts,
+variable substitution and unknown-member rejection retain their contracts.
+The [focused acceptance](specs/comprehensive-science-improvement/evidence/render-metadata-repair-20261001-r1/receipt.json)
+records 247 passing nonserial rendering/release tests, whole-tree type/style
+checks and an unchanged 293-file source/test bracket. The original production
+validation failure is retained. Native, installed-wheel and production evidence
+must bind the resulting source epoch before current acceptance is claimed.
+
+### Finite information and rate–distortion acceptance (2026-10-01)
+
+FORM-1, FORM-2 and FORM-3 close with fresh independent
+[semantic review](specs/comprehensive-science-improvement/evidence/form-1-3-semantic-review-20261001-r2.json),
+38 passing current native consumer/source tests, a warning-free whole aggregate
+build and a live-validating 1,596-declaration axiom audit. The
+[native controls](specs/comprehensive-science-improvement/evidence/form-1-3-native-controls-20261001-r1/receipt.json)
+and [aggregate/audit packet](specs/comprehensive-science-improvement/evidence/form-1-3-aggregate-audit-20261001-r1/receipt.json)
+retain commands, compiler output and unchanged source brackets. The failed
+review/control attempts remain history.
+
+Deterministic identity and complete coarsening now have actual finite KL
+witnesses. Relative-support finite/native KL and mutual information identities
+retain shared-zero atoms, sparse observation garbling and the singular native
+infinity boundary. The asymmetric informative joint has positive information;
+the independent asymmetric product has exactly zero information.
+Finite fixed-source rate–distortion feasibility supplies a compact attained
+minimum and an infimum-derived dual lower bound, with zero multiplier, negative
+budget, informative quarter-budget, nonunique half-budget and unique zero-budget
+controls. The original primary theorem and structural-proxy disposition remain
+unchanged; general strong duality, dual attainment, an interior closed form and
+general optimizer uniqueness are excluded.
+
+The historical released-120 body and maturity digests remain unchanged. The
+[reviewed-delta regression](specs/comprehensive-science-improvement/evidence/catalogue-155-regression-20261001-r1/summary.json)
+reverses only the exact approved additions before checking both old digests;
+11 tests pass, including seven mutation refusals. Whole Python, package/H3
+synthetic, hosted and publication acceptance remain open.
+
+### Scientific improvement checkpoints (2026-09-30)
+
+PKG-1 closes: static status/readiness now rejects unavailable or changed inputs,
+captures no checkout stamp through Git, and never promotes missing runtime
+evidence. The independently reviewed status module passes all 26 focused cases
+in the current checkout, including reachable comparisons, input mutation and
+process/write sentinels. Strict publication validators remain separate.
+
+Fresh H2 acceptance binds 329 passing mandatory cases, unchanged native inputs
+and three actual source-bound reviews at terminal SHA-256
+`2d72e6b7205b92a625106e2830c2a01200682ffb3af036dd48118eb88f9067be`.
+The prior terminal bytes remain immutable history. Continuous G0 passed and
+H3.0 was frozen before implementation at protocol SHA-256
+`50b3575316fb272dc7bf209f50a21330fc5ea0764da9399e20aedeb0b2302c93`,
+with two independent AI reviews. New proof, synthetic and publication acceptance
+remain open; the empirical branch is governed no-go without licensed data.
+
+The automatic Gauss capability check now uses an isolated local version probe
+with dotenv and updates disabled, preserving required/advisory semantics.
+Independent process/account-home/real-dotenv controls pass, and the isolated
+upstream CLI reports v0.2.2. The requested free OpenRouter model returned HTTP
+404; the attempted full 168-topic path rejected all topics and produced no
+successful report. No paid fallback was enabled.
+
+`FEP-LEGACY-TRANSPORT` closes after 155 current transport/status controls pass,
+with one explicitly opt-in live Gauss test skipped. The earlier failing run is
+preserved. A stdlib-only isolated guard and bounded startup fixtures retain
+call-relative product deadlines, real descendant readiness, raw timeout bytes
+and cleanup boundaries; fresh independent review covers the final helper.
+The [local acceptance observation](specs/comprehensive-science-improvement/evidence/transport-acceptance-20260930.json)
+retains the exact transcript and post-run source map. This establishes local
+transport behavior; provider, native and publication evidence remain separate.
+
+### Main status and open-backlog reconciliation (2026-09-30)
+
+The [dated review](SCOPE-2026-09-30.md) checks `main`/remote parity at
+`cd4a84c`, reconciles the 168-topic/22-family source with the tagged 1.3.0
+cut and latest published GitHub release 1.2.0, and scopes minor, medium,
+and major package/formalization improvements. Current overview documents
+now distinguish the recorded H3 continuous selection and feasibility spike
+from independent acceptance and H3.0 protocol freezing.
+
+Removed `FEP-H27-RESEAL` from the open-only backlog: live
+`validate_terminal_acceptance(Path('.'))` passes at receipt SHA-256
+`8e20abbd4f5d63e09398014a0c64bee46ee6b42697eb24d16a488ede74e65c87`
+(328 mandatory cases, 208 source hashes, three reviews). The 40 focused
+H2/H3 custody/preregistration tests pass. Completed-history prose and dated
+clearing logs were removed from `TODO.md`; four genuine residual rows remain,
+with `FEP-FULL-CURRENT` replacing the stale 155-topic task name.
+
+Same-commit CI native and axiom-audit artifacts were independently validated
+against the live source (168/168 topics at v4.34.1, zero warnings or `sorry`,
+1,411 audited declarations). Older ignored local receipts were preserved.
+Local cache incompatibility and manuscript/render/bridge freshness remain
+explicit residuals; no new full native sweep, provider run, or publication
+is claimed by this review.
+
 ### Wave-4 catalogue wiring: 168 topics / 22 families (2026-09-28)
 
 The catalogue grows 165 → 168 topics (families unchanged at 22) with the
@@ -75,8 +251,8 @@ strip model in `tests/_support/h2_r0_custody.py` gaining this wave's
 added-module group so the reconstruction still hashes to the sealed R0
 manifest digest. Prerequisite for `fep-lean verify` claim-readiness at any
 tip containing the wave-4 catalogue (the native capture fails the roster
-pre-gate otherwise); the native capture, render re-acceptance, and pin-cycle
-#33 re-seal follow.
+pre-gate otherwise); the native capture, render re-acceptance, and pin-cycle #33
+re-seal follow.
 
 ### GEO-INFER notation slice growth to 17 rows (2026-09-28)
 
@@ -259,7 +435,7 @@ at GNN `083ddaf948c9` after the post-batch GNN wave landing (#117-#125).
 The Wave 2026-09-20 improvement wave ran seven read-only scout lanes and
 four implementation threads (docs, CI, tests, src/custody) plus this
 landing fold; method, constraints, assignments, and deferrals are recorded
-in [SCOPE-2026-09-20.md](SCOPE-2026-09-20.md).
+in the [historical September 20 scope](https://github.com/ActiveInferenceInstitute/fep_formal/blob/cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed/SCOPE-2026-09-20.md).
 
 ### Lean/Mathlib v4.34.0 toolchain program and pin cycle #7 (2026-09-15)
 
@@ -288,8 +464,8 @@ Post-entry bridge re-pins recorded here for the same program: `2b51c3d` pin
 cycle #8 (GNN wave changed the sealed owner roster — framework_common.py
 fold, context deletion, intelligent_analysis repoint); `1e4d634` pin cycle #9
 (GNN wave-2 landed bnlearn executor + B-orientation diagnostics on the
-sealed rosters; syntax-pin rebound for gnn_syntax.md); `26955f3` pin cycle
-#10 (ruff-format reflowed two sealed owner files: bnlearn_runner.py,
+sealed rosters; syntax-pin rebound for gnn_syntax.md); `26955f3` pin cycle #10
+(ruff-format reflowed two sealed owner files: bnlearn_runner.py,
 orientation.py). Each re-pin ran emit refresh + both-models
 `emit --check` green with `--fail-on-warnings`.
 
@@ -1232,4 +1408,3 @@ All gates re-run and passing after improvements:
 - All 6 doc audits pass (links, md_hygiene, pin_audit, xref, catalogue, receipt)
 Owner roster bumped
 15 → 17 for the new rostered modules.
-

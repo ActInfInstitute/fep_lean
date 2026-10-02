@@ -1,0 +1,12 @@
+{
+  "attempt": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-02",
+  "elapsed_sec": 7.79450899999938,
+  "mathlib_head_after": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "mathlib_head_before": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "probe_source_sha256": "3a6e34411d27a47679186a72ff04cdec2c78bfb216a95f9801ce63f80827d4dc",
+  "python_version": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+  "returncode": 0,
+  "source_count": 150,
+  "source_drift": [],
+  "test_sha256": "2dd50dabb5af800e637f8be30b690486c46de001ed563fbf2e1e3f94be9ee522"
+}

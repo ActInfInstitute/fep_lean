@@ -4,7 +4,9 @@ import hashlib
 import math
 import os
 import re
+import shlex
 import shutil
+import stat
 import subprocess
 import tempfile
 import time
@@ -21,7 +23,6 @@ from fep_lean.output import release_bundle as bundle
 from fep_lean.output.fsutil import (
     atomic_write_bytes,
     sha256_bytes,
-    sha256_file,
 )
 from fep_lean.output.publication_metadata import (
     GraphicalAbstractAsset,
@@ -43,24 +44,72 @@ from fep_lean.output.release_bundle._core import (
     PublicationManuscript,
     ReleaseBundleError,
     _canonical_json,
+    _capture_regular_file,
     _digest_named_bytes,
     _relative_file_bytes,
     _source_date_epoch,
 )
 from fep_lean.output.rendering import render_manuscript
-from fep_lean.verification._subprocess import run_process_group
+
+
+def _renderer_binary_state(executable: str) -> tuple[Path, str]:
+    """Capture the selected target and stable regular bytes, not invocation argv."""
+    try:
+        resolved = Path(executable).resolve(strict=True)
+        if os.name == "posix":
+            data = _capture_regular_file(resolved)
+        else:
+            # Keep imports/static APIs portable. Non-POSIX native publication is
+            # unverified; retain a bounded regular-descriptor read for identities.
+            flags = (
+                os.O_RDONLY
+                | getattr(os, "O_NONBLOCK", 0)
+                | getattr(os, "O_NOFOLLOW", 0)
+            )
+            descriptor = os.open(resolved, flags)
+            with os.fdopen(descriptor, "rb") as stream:
+                before = os.fstat(stream.fileno())
+                if not stat.S_ISREG(before.st_mode):
+                    raise ReleaseBundleError("renderer binary is not a regular file")
+                data = stream.read(before.st_size + 1)
+                after = os.fstat(stream.fileno())
+
+            def identity(value: os.stat_result) -> tuple[int, ...]:
+                return (
+                    value.st_dev,
+                    value.st_ino,
+                    value.st_mode,
+                    value.st_size,
+                    value.st_mtime_ns,
+                    value.st_ctime_ns,
+                )
+
+            if identity(before) != identity(after) or len(data) != before.st_size:
+                raise ReleaseBundleError("renderer binary changed while reading")
+        if Path(executable).resolve(strict=True) != resolved:
+            raise ReleaseBundleError("renderer binary target changed while reading")
+        return resolved, sha256_bytes(data)
+    except OSError as error:
+        raise ReleaseBundleError("cannot read renderer binary") from error
 
 
 def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
-    resolved = Path(executable).resolve()
+    from fep_lean.verification._subprocess import run_process_group
+
+    try:
+        initial = _renderer_binary_state(executable)
+    except ReleaseBundleError as exc:
+        raise ReleaseBundleError(
+            f"cannot identify renderer {executable}: {exc}"
+        ) from exc
     first_line: list[str] = []
     for version_flag in ("--version", "-v"):
         try:
-            completed = subprocess.run(
+            completed = run_process_group(
                 [executable, version_flag],
+                cwd=Path.cwd(),
                 check=False,
-                capture_output=True,
-                text=True,
+                capture=True,
                 timeout=timeout,
             )
         except (OSError, subprocess.SubprocessError) as exc:
@@ -72,10 +121,20 @@ def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
             break
     else:
         raise ReleaseBundleError(f"cannot identify renderer {executable}")
+    try:
+        stable = _renderer_binary_state(executable) == initial
+    except ReleaseBundleError as exc:
+        raise ReleaseBundleError(
+            f"renderer binary changed during identification: {executable}"
+        ) from exc
+    if not stable:
+        raise ReleaseBundleError(
+            f"renderer binary changed during identification: {executable}"
+        )
     return {
         "name": Path(executable).name,
         "version": first_line[0].strip(),
-        "binary_sha256": sha256_file(resolved),
+        "binary_sha256": initial[1],
     }
 
 
@@ -268,9 +327,8 @@ def _renderer_environment(
     command: Sequence[str],
     *,
     auxiliary_executables: Sequence[str] = (),
-    project_root: Path | None = None,
 ) -> dict[str, str]:
-    """Return the complete, controlled environment seen by local renderers."""
+    """Return controlled rendering inputs passed to the process supervisor."""
     root = Path(environment_root)
     home = root / "home"
     cache = root / "cache"
@@ -278,7 +336,7 @@ def _renderer_environment(
     texmf_config = root / "texmf-config"
     for path in (home, cache, texmf_var, texmf_config):
         path.mkdir(parents=True, exist_ok=True)
-    environment = {
+    return {
         "PATH": _controlled_renderer_path(
             command, auxiliary_executables=auxiliary_executables
         ),
@@ -292,24 +350,10 @@ def _renderer_environment(
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
     }
-    if project_root is not None:
-        environment["TEXINPUTS"] = (
-            os.pathsep.join(
-                str(Path(project_root).resolve() / relative)
-                for relative in (
-                    "output/manuscript",
-                    "output/manuscript/assets",
-                    "manuscript",
-                    "docs",
-                )
-            )
-            + os.pathsep
-        )
-    return environment
 
 
 def _normalized_renderer_environment(epoch: int) -> dict[str, str]:
-    """Describe the effective renderer environment without temporary paths."""
+    """Describe semantic render inputs without paths or private supervision."""
     return {
         "PATH": "<CONTROLLED_RENDERER_PATH>",
         "HOME": "<RENDER_TEMP>/home",
@@ -321,16 +365,6 @@ def _normalized_renderer_environment(epoch: int) -> dict[str, str]:
         "TZ": "UTC",
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
-        "TEXINPUTS": os.pathsep.join(
-            f"<PROJECT_ROOT>/{relative}"
-            for relative in (
-                "output/manuscript",
-                "output/manuscript/assets",
-                "manuscript",
-                "docs",
-            )
-        )
-        + os.pathsep,
     }
 
 
@@ -393,20 +427,24 @@ def _run_renderer(
     epoch: int,
     timeout: float,
     auxiliary_executables: Sequence[str] = (),
-    working_directory: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    # Keep imports lazy: the verification package also imports output owners.
+    # The supervisor adds its private cooperative lease, which is not a
+    # semantic render input and must never be serialized in provenance.
+    from fep_lean.verification._subprocess import run_process_group
+
     try:
         return run_process_group(
             list(command),
-            cwd=project_root if working_directory is None else working_directory,
+            cwd=project_root,
             env=_renderer_environment(
                 epoch,
                 environment_root,
                 command,
                 auxiliary_executables=auxiliary_executables,
-                project_root=project_root,
             ),
             check=False,
+            capture=True,
             timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
@@ -449,6 +487,7 @@ def _render_twice(
     auxiliary_executables: Sequence[str] = (),
     pdf_normalizer: str | None = None,
     pdf_engine: str | None = None,
+    pdf_driver: str | None = None,
 ) -> tuple[bytes | None, str]:
     if (
         isinstance(timeout, bool)
@@ -470,61 +509,64 @@ def _render_twice(
     outputs: list[bytes] = []
     with tempfile.TemporaryDirectory(prefix="fep-lean-render-") as raw_directory:
         directory = Path(raw_directory)
-        job = directory / "pdf-job"
         for index in range(2):
             run_root = directory / f"environment-{index}"
             run_root.mkdir()
             output = directory / f"render-{index}{suffix}"
             command = [*base_command, *extra_args]
             if pdf_engine is not None:
-                # TeX Live 2026 hashes the DVI/PDF filenames into font subset
-                # names. Own one private job path, freshly emptied per pass,
-                # so both complete renders see identical names and no warm aux.
-                if job.exists():
-                    shutil.rmtree(job)
-                job.mkdir(mode=0o700)
-                output = job / "manuscript.pdf"
-                command.append("--to=latex")
+                wrapper_directory = run_root / "bin"
+                wrapper_directory.mkdir()
+                wrapper = wrapper_directory / "xelatex"
+                quoted_engine = shlex.quote(pdf_engine)
+                driver_option = ""
+                if pdf_driver is not None:
+                    driver = wrapper_directory / "xdvipdfmx-stdout"
+                    # TeX Live 2025+ derives subset font tags from the driver's
+                    # input/output filenames. XeTeX supplies XDV on stdin, so
+                    # a documented stdout PDF target removes temporary-path
+                    # identity without rewriting fonts, CMaps or page content.
+                    # Preserve XeTeX's cwd for relative image/font resources.
+                    driver.write_text(
+                        "#!/bin/sh\n"
+                        "set -eu\n"
+                        '[ "$#" = 2 ] && [ "$1" = "-o" ] || exit 64\n'
+                        f'exec {shlex.quote(pdf_driver)} -q -E -o - > "$2"\n',
+                        encoding="utf-8",
+                    )
+                    driver.chmod(0o700)
+                    # XeTeX prefixes its bin directory when the command's
+                    # first character is not '/'. An initially quoted path
+                    # therefore breaks when the render directory has spaces.
+                    driver_option = shlex.quote(
+                        f"-output-driver=/bin/sh {shlex.quote(str(driver))}"
+                    )
+                wrapper.write_text(
+                    "#!/bin/sh\n"
+                    "set -eu\n"
+                    f'{quoted_engine} {driver_option} "$@"\n'
+                    f'exec {quoted_engine} {driver_option} "$@"\n',
+                    encoding="utf-8",
+                )
+                wrapper.chmod(0o755)
+                command.append(f"--pdf-engine={wrapper}")
             if include_header is not None:
-                header = (job if pdf_engine is not None else run_root) / "preamble.tex"
+                header = run_root / "preamble.tex"
                 header.write_bytes(include_header)
                 command.append(f"--include-in-header={header}")
-            pandoc_output = job / "manuscript.tex" if pdf_engine is not None else output
             completed = bundle._run_renderer(
-                [*command, f"--output={pandoc_output}"],
+                [*command, f"--output={output}"],
                 project_root=project_root,
                 environment_root=run_root,
                 epoch=epoch,
                 timeout=remaining(),
                 auxiliary_executables=auxiliary_executables,
             )
-            if completed.returncode != 0 or not pandoc_output.is_file():
+            if completed.returncode != 0 or not output.is_file():
                 return None, f"renderer_failed_returncode_{completed.returncode}"
-            if pdf_engine is not None:
-                for _ in range(2):
-                    compiled = bundle._run_renderer(
-                        [
-                            pdf_engine,
-                            "-no-shell-escape",
-                            "-halt-on-error",
-                            "-interaction=nonstopmode",
-                            "-output-directory=.",
-                            "manuscript.tex",
-                        ],
-                        project_root=project_root,
-                        environment_root=run_root,
-                        epoch=epoch,
-                        timeout=remaining(),
-                        auxiliary_executables=auxiliary_executables,
-                        working_directory=job,
-                    )
-                    if compiled.returncode != 0 or not output.is_file():
-                        return None, f"renderer_failed_returncode_{compiled.returncode}"
             rendered_bytes = output.read_bytes()
             if pdf_normalizer is not None:
-                normalized = (
-                    job if pdf_engine is not None else run_root
-                ) / "normalized.pdf"
+                normalized = run_root / "normalized.pdf"
                 normalizer_result = bundle._run_renderer(
                     [pdf_normalizer, "clean", str(output), str(normalized)],
                     project_root=project_root,
@@ -543,7 +585,11 @@ def _render_twice(
                 except ReleaseBundleError:
                     return None, "pdf_identifier_not_canonicalizable"
             outputs.append(rendered_bytes)
-    if outputs[0] != outputs[1]:
+    reproducible = outputs[0] == outputs[1]
+    # Artifact reads, normalization, comparison and private-directory cleanup
+    # consume the same budget as subprocesses. Never publish late evidence.
+    remaining()
+    if not reproducible:
         return None, "renderer_output_not_reproducible"
     return outputs[0], "reproducible"
 
@@ -626,7 +672,20 @@ def render_publication_manuscript(
     pandoc = shutil.which("pandoc")
     if pandoc is None:
         raise ReleaseBundleError("pandoc is required for the self-contained HTML")
-    pandoc_identity = bundle._tool_identity(pandoc)
+    binaries: dict[str, tuple[Path, str]] = {}
+
+    def identify(executable: str) -> dict[str, str]:
+        initial = _renderer_binary_state(executable)
+        identity = bundle._tool_identity(executable)
+        if (
+            _renderer_binary_state(executable) != initial
+            or identity["binary_sha256"] != initial[1]
+        ):
+            raise ReleaseBundleError("renderer binary changed during identification")
+        binaries[executable] = initial
+        return identity
+
+    pandoc_identity = identify(pandoc)
     base_command = _pandoc_base_command(root, pandoc)
     html, html_status = bundle._render_twice(
         base_command,
@@ -649,17 +708,19 @@ def render_publication_manuscript(
         raise ReleaseBundleError("rendered manuscript HTML contains external assets")
 
     xelatex = shutil.which("xelatex")
+    xdvipdfmx = shutil.which("xdvipdfmx")
     rsvg_convert = shutil.which("rsvg-convert")
     mutool = shutil.which("mutool")
     pdf: bytes | None = None
     pdf_status = "xelatex_unavailable"
-    pdf_renderer = bundle._tool_identity(xelatex) if xelatex is not None else None
-    rsvg_renderer = (
-        bundle._tool_identity(rsvg_convert) if rsvg_convert is not None else None
-    )
-    mutool_renderer = bundle._tool_identity(mutool) if mutool is not None else None
+    pdf_renderer = identify(xelatex) if xelatex is not None else None
+    pdf_driver_renderer = identify(xdvipdfmx) if xdvipdfmx is not None else None
+    rsvg_renderer = identify(rsvg_convert) if rsvg_convert is not None else None
+    mutool_renderer = identify(mutool) if mutool is not None else None
     if xelatex is not None and mutool is None:
         pdf_status = "mutool_unavailable"
+    elif xelatex is not None and xdvipdfmx is None:
+        pdf_status = "xdvipdfmx_unavailable"
     elif xelatex is not None:
         preamble = _latex_preamble(root)
         pdf, pdf_status = bundle._render_twice(
@@ -672,16 +733,26 @@ def render_publication_manuscript(
             timeout=_PDF_TIMEOUT_SECONDS,
             auxiliary_executables=tuple(
                 executable
-                for executable in (xelatex, rsvg_convert, mutool)
+                for executable in (xelatex, xdvipdfmx, rsvg_convert, mutool)
                 if executable is not None
             ),
             pdf_normalizer=mutool,
             pdf_engine=xelatex,
+            pdf_driver=xdvipdfmx,
         )
 
     final_resource_records = bundle._publication_resource_records(root)
     if _canonical_renderer_input_records(root, final_resource_records) != input_records:
         raise ReleaseBundleError("manuscript renderer inputs changed during rendering")
+    for executable, initial in binaries.items():
+        try:
+            stable = _renderer_binary_state(executable) == initial
+        except (OSError, ReleaseBundleError) as error:
+            raise ReleaseBundleError(
+                "renderer binary changed during rendering"
+            ) from error
+        if not stable:
+            raise ReleaseBundleError("renderer binary changed during rendering")
     source_digest = _digest_named_bytes(input_records)
     provenance: dict[str, Any] = {
         "schema_version": 1,
@@ -709,6 +780,7 @@ def render_publication_manuscript(
         "renderers": {
             "pandoc": pandoc_identity,
             "xelatex": pdf_renderer,
+            "xdvipdfmx": pdf_driver_renderer,
             "rsvg-convert": rsvg_renderer,
             "mutool": mutool_renderer,
         },
@@ -724,27 +796,19 @@ def render_publication_manuscript(
                 [
                     "pandoc",
                     *base_command[1:],
-                    "--to=latex",
-                    "--include-in-header=<RENDER_TEMP>/pdf-job/preamble.tex",
-                    "--output=<RENDER_TEMP>/pdf-job/manuscript.tex",
+                    "--pdf-engine=<TWO_PASS_XELATEX_WRAPPER>",
+                    "--include-in-header=<RENDER_TEMP>/preamble.tex",
+                    "--output=<OUTPUT.pdf>",
                 ]
                 if pdf_renderer is not None
                 else []
             ),
             "pdf_engine_passes": 2 if pdf_renderer is not None else 0,
-            "pdf_engine": (
-                [
-                    "xelatex",
-                    "-no-shell-escape",
-                    "-halt-on-error",
-                    "-interaction=nonstopmode",
-                    "-output-directory=.",
-                    "manuscript.tex",
-                ]
-                if pdf_renderer is not None
+            "pdf_driver": (
+                ["xdvipdfmx", "-q", "-E", "-o", "-", "<XDV_STDIN>"]
+                if pdf_driver_renderer is not None
                 else []
             ),
-            "pdf_working_directory": "<RENDER_TEMP>/pdf-job",
             "pdf_normalization": (
                 [
                     "mutool",

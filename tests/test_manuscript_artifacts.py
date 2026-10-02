@@ -190,11 +190,11 @@ def test_build_manuscript_vars_validates_the_canonical_graphical_abstract(
         "media_type": "image/png",
         "width_px": 1536,
         "height_px": 1024,
-        "sha256": "91a1898d10a0d8416661183e8cac9d6348489f6039b362b7a573d30a657b3503",
+        "sha256": "68b7819e8c799348b9d958cee41c5c4fdb5b716690749e0e586ef0e90086a904",
         "alt_text": (
             "Graphical abstract: the fep_lean verification pipeline. Maintained "
-            "GNN-typed authoring inputs join by stable topic ID into a 155-topic, "
-            "20-family catalogue with reviewed semantic dispositions; a pinned "
+            "GNN-typed authoring inputs join by stable topic ID into a 168-topic, "
+            "22-family catalogue with reviewed semantic dispositions; a pinned "
             "Lean 4 and Mathlib compile of FepSketches with zero warnings and "
             "zero sorry binds a source-digest-bound, claim-ready native evidence "
             "receipt; a dashed optional full mode adds Hermes and OpenGauss "
@@ -214,6 +214,11 @@ def test_render_graphical_abstract_writes_canonical_deterministic_png(
     import hashlib
     import struct
 
+    (tmp_path / "config").mkdir()
+    shutil.copyfile(
+        PROJ / "config/catalogue_metadata.yaml",
+        tmp_path / "config/catalogue_metadata.yaml",
+    )
     first = render_graphical_abstract(tmp_path)
     data = first.read_bytes()
     assert data[:8] == b"\x89PNG\r\n\x1a\n"
@@ -226,8 +231,32 @@ def test_render_graphical_abstract_writes_canonical_deterministic_png(
     assert second.read_bytes() == data
     assert (
         hashlib.sha256(data).hexdigest()
-        == "91a1898d10a0d8416661183e8cac9d6348489f6039b362b7a573d30a657b3503"
+        == yaml.safe_load((PROJ / "manuscript/config.yaml").read_text())["publication"][
+            "graphical_abstract"
+        ]["sha256"]
     )
+
+
+def test_graphical_abstract_label_follows_changed_roster(tmp_path: Path) -> None:
+    import matplotlib.pyplot as plt
+
+    from fep_lean.catalogue.schema import load_catalogue_metadata
+    from fep_lean.output.graphical_abstract import _draw
+
+    metadata = yaml.safe_load((PROJ / "config/catalogue_metadata.yaml").read_text())
+    metadata["roster"]["last_id"] = "fep-167"
+    metadata["topics"] = metadata["topics"][:-1]
+    owner = tmp_path / "metadata.yaml"
+    owner.write_text(yaml.safe_dump(metadata))
+    live = load_catalogue_metadata(owner)
+    figure = plt.figure()
+    try:
+        _draw(figure, live)
+        labels = [text.get_text() for axis in figure.axes for text in axis.texts]
+        assert any("167 topics · 22 families" in label for label in labels)
+        assert all("155 topics" not in label for label in labels)
+    finally:
+        plt.close(figure)
 
 
 def test_build_manuscript_vars_can_disable_test_count_cache(

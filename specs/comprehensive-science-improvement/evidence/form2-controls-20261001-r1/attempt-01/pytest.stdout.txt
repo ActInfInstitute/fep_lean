@@ -1,0 +1,40 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal
+configfile: pyproject.toml
+plugins: cov-7.1.0, xdist-3.8.0, timeout-2.4.0, pytest_httpserver-1.1.5
+timeout: 900.0s
+timeout method: thread
+timeout func_only: False
+collected 7 items
+
+tests/test_horizon1_decision_risk.py ..F
+
+=================================== FAILURES ===================================
+_____ test_relative_support_bridge_and_sparse_information_consumer_compile _____
+tests/test_horizon1_decision_risk.py:263: in test_relative_support_bridge_and_sparse_information_consumer_compile
+    assert result.returncode == 0, output
+E   AssertionError: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:566:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.instDivInvMonoid', which is 'noncomputable'
+E     /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:571:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.instDivInvMonoid', which is 'noncomputable'
+E     /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:577:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'informativePrior', which is 'noncomputable'
+E     /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:631:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'informativePrior', which is 'noncomputable'
+E     /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean:641:26: error: unsolved goals
+E     ⊢ { mass := fun xy => if xy.2 = false then if xy.1 = true then 1 / 6 else 5 / 6 else 0, nonneg := ⋯,
+E                   sum_one := ⋯ }.fstMarginal.mass
+E             true =
+E           0 ∨
+E         { mass := fun xy => if xy.2 = false then if xy.1 = true then 1 / 6 else 5 / 6 else 0, nonneg := ⋯,
+E                   sum_one := ⋯ }.sndMarginal.mass
+E             true =
+E           0
+E     'RelativeSupportConsumer.informative_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+E     'RelativeSupportConsumer.informative_native_information_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+E     'RelativeSupportConsumer.independent_native_joint_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+E     'RelativeSupportConsumer.independent_native_channel_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+E     
+E   assert 1 == 0
+E    +  where 1 = CompletedProcess(args=['/Users/hum/.elan/bin/lake', 'env', 'lean', '/Users/hum/Documents/GitHub/HumOS/projects/outside...portConsumer.independent_native_channel_zero' depends on axioms: [propext, Classical.choice, Quot.sound]\n", stderr='').returncode
+=========================== short test summary info ============================
+FAILED tests/test_horizon1_decision_risk.py::test_relative_support_bridge_and_sparse_information_consumer_compile
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+========================= 1 failed, 2 passed in 45.81s =========================

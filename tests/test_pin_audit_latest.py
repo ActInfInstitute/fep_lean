@@ -22,6 +22,33 @@ def _audit_module():
     return module
 
 
+def test_pin_audit_keeps_history_journals_out_of_current_guidance(
+    tmp_path: Path,
+) -> None:
+    audit = _audit_module()
+    names = (
+        "specs/comprehensive-science-improvement/evidence/retained/REPORT.md",
+        "specs/comprehensive-science-improvement/NEXT.md",
+        "docs/evidence/README.md",
+    )
+    paths = [tmp_path / name for name in names]
+    for path in paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("Historical Lean v4.33.1; current instructions use this pin.\n")
+    pins = audit.CanonicalPins(
+        lean_toolchain="leanprover/lean4:v4.34.1",
+        lean_version="4.34.1",
+        mathlib_tag="v4.34.1",
+        primary_model="fixture/model",
+        mathlib_revision="d" * 40,
+    )
+
+    current = audit._gather_files(tmp_path)
+
+    assert set(current) == set(paths[1:])
+    assert all(audit._scan_file(path, pins) for path in current)
+
+
 def test_latest_release_audit_accepts_matching_stable_pair() -> None:
     audit = _audit_module()
     pins = audit.CanonicalPins(

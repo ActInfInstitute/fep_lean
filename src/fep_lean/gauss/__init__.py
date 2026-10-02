@@ -5,7 +5,7 @@ orchestrator that binds the LLM and verification layers.
 
 Public API
 ----------
-    check_gauss_cli       — runs `gauss doctor`
+    check_gauss_cli       — probes isolated local CLI availability
     OpenGaussClient       — SQLite database client for topics/turns/logs
     SessionRecord         — data structure for an open session
     GaussRunner           — orchestrator running topics through LLM then Lean

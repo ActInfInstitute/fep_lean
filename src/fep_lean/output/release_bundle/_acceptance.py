@@ -178,7 +178,7 @@ def _pytest_receipt_errors(
         )
         if observed_testcases != expected_testcases:
             receipt_errors.append(
-                "Python test receipt testcase roster differs from live collection"
+                "Python test receipt testcase roster differs from collected node IDs"
             )
     try:
         manuscript_vars = yaml.safe_load(
@@ -687,17 +687,28 @@ def _python_evidence_summary(project_root: Path) -> dict[str, Any]:
     }
 
 
-def _python_acceptance_receipt_errors(project_root: Path) -> tuple[str, ...]:
+def _python_acceptance_receipt_errors(
+    project_root: Path, *, check_runtime: bool = True
+) -> tuple[str, ...]:
+    """Validate stored evidence, including fresh collection by default.
+
+    ``check_runtime=False`` checks stored source, schema, JUnit, coverage and
+    executor bindings without collecting tests. An empty result in that mode
+    is only static agreement; it cannot establish the live collected roster.
+    """
     root = Path(project_root).resolve()
     errors: list[str] = []
     live_node_ids: tuple[str, ...] | None = None
     current_collection: dict[str, Any] | None = None
     current_executor: dict[str, Any] | None = None
     try:
-        with tempfile.TemporaryDirectory(
-            prefix="fep-lean-pytest-check-"
-        ) as raw_directory:
-            live_node_ids = bundle._collect_python_node_ids(root, Path(raw_directory))
+        if check_runtime:
+            with tempfile.TemporaryDirectory(
+                prefix="fep-lean-pytest-check-"
+            ) as raw_directory:
+                live_node_ids = bundle._collect_python_node_ids(
+                    root, Path(raw_directory)
+                )
         current_collection = bundle.collection_runtime_identity()
         current_executor = bundle._python_acceptance_runtime_identity()
     except (OSError, TypeError, ValueError, ReleaseBundleError) as exc:
@@ -735,6 +746,22 @@ def _python_acceptance_receipt_errors(project_root: Path) -> tuple[str, ...]:
     if not isinstance(collection, dict):
         errors.append("Python acceptance receipt collection evidence is invalid")
     else:
+        stored_node_ids = collection.get("node_ids")
+        if (
+            not isinstance(stored_node_ids, list)
+            or not stored_node_ids
+            or not all(
+                isinstance(node_id, str) and node_id for node_id in stored_node_ids
+            )
+            or len(set(stored_node_ids)) != len(stored_node_ids)
+        ):
+            errors.append("Python acceptance receipt collected node IDs are invalid")
+        elif not check_runtime:
+            errors.extend(
+                bundle._pytest_receipt_errors(
+                    root, expected_node_ids=tuple(stored_node_ids)
+                )
+            )
         if current_collection is not None and collection.get("command") != [
             sys.executable,
             "-m",

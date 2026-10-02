@@ -1,0 +1,93 @@
+{
+  "accepted": true,
+  "artifacts": {
+    "commands.json": "3d27c1f7c25cae88993323ae8f86bf11503f8fa2ec128e4b0a0d77ae9194f60d",
+    "driver.py": "da0a95a7a2a75c689aae79dc8861b6d55111cd3a3b30edaf52458475235df332",
+    "format.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "format.stdout.log": "7f2ab93433f9714756ebf76d1b866ab973c89474f671606677ed14c6e84dda16",
+    "mypy.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mypy.stdout.log": "adbe2679a016996b4036b957085d8e2e478f4dfe4d280f71d524bdba164dc01f",
+    "pytest.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pytest.stdout.log": "10594a83598c26b509a639ba0c8d283fc9f0d42f67484cb002fa4dbb83d1efd4",
+    "pytest.xml": "0ad05653736b69a7022ce2924b2d1a198650b177046b9f7c8ccf392b817dbcd1",
+    "ruff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ruff.stdout.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "sources-after.json": "67bb30bb295bcc4628f756cd42478d2ee7c731ba2d0feb34ef9b05ce0f548574",
+    "sources-before.json": "67bb30bb295bcc4628f756cd42478d2ee7c731ba2d0feb34ef9b05ce0f548574"
+  },
+  "commands": [
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "pytest",
+        "tests/test_manuscript_rendering.py",
+        "tests/test_release_bundle.py",
+        "-q",
+        "--no-cov",
+        "-m",
+        "not serial_lean",
+        "--junitxml=/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/render-metadata-repair-20261001-r1/pytest.xml",
+        "-o",
+        "addopts="
+      ],
+      "elapsed_s": 149.40722549999919,
+      "exit_code": 0,
+      "name": "pytest"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "ruff",
+        "check",
+        "src",
+        "tests",
+        "scripts",
+        "docs"
+      ],
+      "elapsed_s": 0.0680321659965557,
+      "exit_code": 0,
+      "name": "ruff"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "ruff",
+        "format",
+        "--check",
+        "src",
+        "tests",
+        "scripts",
+        "docs"
+      ],
+      "elapsed_s": 0.026444082999660168,
+      "exit_code": 0,
+      "name": "format"
+    },
+    {
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "mypy",
+        "src"
+      ],
+      "elapsed_s": 0.5945286669957568,
+      "exit_code": 0,
+      "name": "mypy"
+    }
+  ],
+  "guarded_files": 293,
+  "kind": "focused-render-metadata-copy-acceptance",
+  "scope": "Actual focused nonserial Python controls and whole-tree type/style checks; no native, provider, render worker, archive publication or scientific sampling acceptance.",
+  "source_stable": true
+}

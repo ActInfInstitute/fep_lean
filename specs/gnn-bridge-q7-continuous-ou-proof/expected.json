@@ -45,6 +45,10 @@
     "step_duration": 1
   },
   "model": "selected scalar OU, passive, unit step",
-  "runner_ast_sha256": "793e6f58b3a79cbf7547e2869aefa4ca501e49d968cdd15fe2703f7c293241c2",
-  "schema_version": 1
+  "runner_ast_serialization": {
+    "format": "fep-q7-scaffold-ast",
+    "schema_version": 1
+  },
+  "runner_ast_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+  "schema_version": 2
 }

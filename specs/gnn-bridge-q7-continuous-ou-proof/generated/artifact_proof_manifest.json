@@ -74,20 +74,24 @@
         "lexeme": "1.0"
       }
     },
-    "scaffold_sha256": "793e6f58b3a79cbf7547e2869aefa4ca501e49d968cdd15fe2703f7c293241c2",
-    "source_sha256": "df224c183dc2c2b907d8ac9d7c846fe86b4a8d556a8b7f5a9ad25df49fc5e7f6"
+    "scaffold_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+    "source_sha256": "48f6cc92f1c7afd8fc002af528159f5bfabf7c4bdf20b322749c6e61dbc9d026"
   },
   "evidence_plane": "static artifact certificate inputs",
-  "expected_contract_sha256": "e2fe151f193f98f005ba3f09eb068bbdfa13cdc2be656251cb4ce4d02e7c4a9b",
+  "expected_contract_sha256": "54992fdf2c410e52f7ee36b1257914a3e40093f299c29c066b4a90a511f89b4a",
   "inputs": {
-    "specs/gnn-bridge-q7-continuous-ou-proof/expected.json": "e2fe151f193f98f005ba3f09eb068bbdfa13cdc2be656251cb4ce4d02e7c4a9b",
-    "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/FepLeanContinuousOU.md": "907b6d1dd2928cf942bc1540ee697e973e3387ea2120d0adf0279ce95d09bd02",
-    "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py": "df224c183dc2c2b907d8ac9d7c846fe86b4a8d556a8b7f5a9ad25df49fc5e7f6",
-    "specs/gnn-bridge-q7-continuous-ou-proof/generate_probe.py": "afe29da7d7e2b7f0b4b725b8349dfa9de6047cf16b22de5a0a8117209c61e6fb",
+    "specs/gnn-bridge-q7-continuous-ou-proof/expected.json": "54992fdf2c410e52f7ee36b1257914a3e40093f299c29c066b4a90a511f89b4a",
+    "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/FepLeanContinuousOU.md": "73ad695dbfad888ce846aeba01fa7d313c7aa4d653b03a346340cf9d893c18c4",
+    "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py": "48f6cc92f1c7afd8fc002af528159f5bfabf7c4bdf20b322749c6e61dbc9d026",
+    "specs/gnn-bridge-q7-continuous-ou-proof/generate_probe.py": "609191d65130dd15d5c6229aca711da19429862907f23d9361c393e21befd661",
+    "specs/gnn-bridge-q7-continuous-ou-proof/generated/scaffold-canonical.json": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec",
+    "specs/gnn-bridge-q7-continuous-ou-proof/generated/scaffold-runtime-parity.json": "2fb4614d63ad8b0509c826d5b0ebe76a9f37e343f6d937269bbc0c8554972422",
     "specs/gnn-bridge-q7-continuous-ou-proof/probe.template.lean": "4ca4dd970d49b09563b3cf3d7b63f1ee14278f0dd49a4ffc45611b599fdb453a",
     "specs/gnn-bridge-q7-continuous-ou-proof/refresh_render.py": "8c87d71db852a2f0db61d640603d5669f06bce9e3f2924e0b646ea99a330f6e7",
-    "specs/gnn-bridge-q7-continuous-ou-proof/render_provenance.json": "7bd074a265b77cb19ab034cecdb09c5d677a33a6d54677511c676151fa54a404",
-    "src/fep_lean/verification/gnn_continuous_artifact_proof.py": "e80de8bc15ed753ac6d072c67be8f6fa0cd2d16bd2b0694759f6b403e8a04237"
+    "specs/gnn-bridge-q7-continuous-ou-proof/render_provenance.json": "84333e2efef8c9d12da52305cb1d4bf99a2e425fe1a8e4d46b3009ce6dcf5ac2",
+    "specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md": "541d408dccaa8b383aa6cac45c33d5d9d9e072ad93e985f747c58b5a77dc4ea5",
+    "src/fep_lean/verification/_jsonutil.py": "8e389db30143881d795eecc8786df2ff5d9c21dd2fc1592e92e501991cee8e9d",
+    "src/fep_lean/verification/gnn_continuous_artifact_proof.py": "f6b557fc4b094abe525388e83a00210e4608dd2c9d985b6721542af56ded9aa3"
   },
   "native_evidence": "required separately; not supplied by generation",
   "outputs": {
@@ -104,7 +108,11 @@
       "specs/gnn-bridge-q7-continuous-ou-proof/expected.json",
       "specs/gnn-bridge-q7-continuous-ou-proof/probe.template.lean",
       "specs/gnn-bridge-q7-continuous-ou-proof/fixtures/FepLeanContinuousOU.md",
-      "specs/gnn-bridge-q7-continuous-ou-proof/refresh_render.py"
+      "specs/gnn-bridge-q7-continuous-ou-proof/refresh_render.py",
+      "specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md",
+      "specs/gnn-bridge-q7-continuous-ou-proof/generated/scaffold-canonical.json",
+      "specs/gnn-bridge-q7-continuous-ou-proof/generated/scaffold-runtime-parity.json",
+      "src/fep_lean/verification/_jsonutil.py"
     ],
     "extractor": "src/fep_lean/verification/gnn_continuous_artifact_proof.py",
     "fixtures": {

@@ -27,9 +27,12 @@ from fep_lean.verification.numerical_witnesses import (
 BASE = "specs/done/horizon-2-smooth-stochastic/readiness/"
 TERMINAL_RECEIPT = BASE + "terminal-acceptance.json"
 R0_SUCCESSOR = BASE + "repairs/07-gaussian-vfe-natural-gradient-custody.json"
-# Immutable full frozen-source collection; includes all parameterized case IDs.
+# Immutable complete H2 mandatory collection, including all parameterized IDs.
+# The historical 1771-node whole-suite capture remains archived; the reviewed
+# successor keeps every one of its 328 mandatory cases and adds one native case.
+# Whole Python acceptance is a separate publication/program gate.
 CAPTURED_COLLECTION_SHA256 = (
-    "22b5008f6c8a080bedff28385532d407cc4f2b31a47d440ca2d1705038b6b803"
+    "1eb38fce896307efabcdb90cebc5263a1d29b3e399fd5e818caa491e172af21d"
 )
 PREDECESSORS = {
     BASE

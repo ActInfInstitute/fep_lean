@@ -22,6 +22,7 @@ import FepSketches.compositions.bayesian_model_reduction
 import FepSketches.compositions.efe_time_scale_separation
 import FepSketches.compositions.helmholtz_ao_ness
 import FepSketches.compositions.geometric_mechanics
+import FepSketches.compositions.h3_case_study
 
 /-!
 This file is generated from the formal module manifest. Scientific cross-topic

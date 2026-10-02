@@ -6,9 +6,12 @@ acceptance is a separate serial gate owned by the shared receipt engine.
 
 from __future__ import annotations
 
+import ast
 import copy
+import hashlib
 import importlib.util
 import json
+import shutil
 import sys
 import types
 from fractions import Fraction
@@ -16,10 +19,12 @@ from pathlib import Path
 
 import pytest
 
+from fep_lean.verification import gnn_continuous_artifact_proof as q7
 from fep_lean.verification.gnn_continuous_artifact_proof import (
     EPSILON,
     ContinuousArtifactError,
     canonical_json,
+    canonical_scaffold_bytes,
     exact_coefficient_intervals,
     extract_continuous_artifact,
     read_json_object,
@@ -327,19 +332,49 @@ def test_generator_is_read_only_and_manifest_does_not_claim_native_evidence():
     )
 
 
+def test_native_contract_binds_portability_artifacts_and_json_reader(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The native snapshot must bind the actual retained serialization inputs."""
+    spec = importlib.util.spec_from_file_location(
+        "q7_native_contract_test", SLICE / "verify_native.py"
+    )
+    assert spec is not None and spec.loader is not None
+    adapter = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(adapter)
+    prefix = SLICE.relative_to(ROOT).as_posix()
+    required = {
+        f"{prefix}/scaffold-serialization.md",
+        f"{prefix}/generated/scaffold-canonical.json",
+        f"{prefix}/generated/scaffold-runtime-parity.json",
+        "src/fep_lean/verification/_jsonutil.py",
+    }
+    assert required <= set(adapter.CONTRACT.extra_files)
+    assert required <= adapter.VERIFICATION._artifact_files()
+    authority = {
+        name: q7.digest((ROOT / name).read_bytes())
+        for name in adapter.VERIFICATION._artifact_files()
+    }
+    poisoned = types.ModuleType("fep_lean.verification._jsonutil")
+
+    def reject_cached_reader(*_args, **_kwargs):
+        raise AssertionError("ambient cached JSON reader was executed")
+
+    poisoned.load_strict_json = reject_cached_reader
+    monkeypatch.setitem(sys.modules, poisoned.__name__, poisoned)
+    # Native regeneration must execute the bound reader bytes through the
+    # private checked-import authority, even when canonical imports are poisoned.
+    adapter.VERIFICATION._regenerate(authority[adapter.CONTRACT.generator], authority)
+
+
 def test_frozen_scaffold_digest_reproduces_the_pinned_interpreter_contract(
     monkeypatch: pytest.MonkeyPatch,
 ):
     """The accepted Q7 scaffold validates under exactly the pinned interpreter.
 
-    ``scaffold_digest`` freezes ``ast.dump`` output, which is CPython
-    minor-version-sensitive. The reviewed ``expected.json`` digest is pinned
-    under CPython 3.14 (the ``.python-version`` pin) and must be re-validated
-    on the same minor version; until FEP-SCAFFOLD-PORTABILITY records a
-    version-stable serialization with a new reviewed scaffold, no other
-    interpreter is accepted to reproduce ``runner_ast_sha256``. The in-module
-    guard enforces that refuse-before-parse: any interpreter outside the
-    accepted set is rejected with a clear error naming the set and itself.
+    Candidate canonical bytes have a separate portability contract. Actual
+    scaffold/extraction validation keeps the pinned CPython 3.14 guard and
+    refuses before parsing under an unsupported interpreter.
     """
     pinned = (ROOT / ".python-version").read_text().strip()
     assert pinned == "3.14"
@@ -349,7 +384,7 @@ def test_frozen_scaffold_digest_reproduces_the_pinned_interpreter_contract(
     )
     monkeypatch.setattr(sys, "version_info", (3, 12, 9, "final", 0), raising=True)
     with pytest.raises(ContinuousArtifactError) as refused:
-        scaffold_digest(RUNNER.read_text())
+        scaffold_digest("invalid syntax !!!")
     assert refused.value.reason == "interpreter"
     assert "cpython 3.14" in str(refused.value)
     assert "pypy 3.12" in str(refused.value)
@@ -364,3 +399,211 @@ def test_frozen_scaffold_digest_reproduces_the_pinned_interpreter_contract(
         == scaffold_digest(RUNNER.read_text())
         == json.loads((SLICE / "expected.json").read_text())["runner_ast_sha256"]
     )
+
+
+@pytest.mark.parametrize(
+    "old,new",
+    [
+        ("def solve(a, b):", "def solve(b, a):"),
+        ("def arr(x):", "def arr(x: int) -> float:"),
+        ("def eye(n):", "@arr\ndef eye(n):"),
+        ("RANDOM_SEED = 42", "RANDOM_SEED = 43"),
+        ("DT = 1.0", "DT = 1"),
+        ("jax_enable_x64', True", "jax_enable_x64', 1"),
+        ("gain * (goal - mu)", "gain * (mu - goal)"),
+        ("parents=True, exist_ok=True", "exist_ok=True, parents=True"),
+        ("{FRAMEWORK} continuous", "{FRAMEWORK!r} continuous"),
+        ("MODEL_NAME = 'FepLean", "MODEL_NAME = 'Other FepLean"),
+        ("RANDOM_SEED = 42", "RANDOM_SEED = 42  # type: int"),
+        ("def arr(x):", "def arr(x=1):"),
+    ],
+)
+def test_canonical_scaffold_retains_semantic_fields_types_and_order(
+    runner: str, old: str, new: str
+) -> None:
+    assert old in runner
+    assert canonical_scaffold_bytes(runner.replace(old, new)) != (
+        canonical_scaffold_bytes(runner)
+    )
+
+
+def test_canonical_scaffold_ignores_only_locations_comments_and_six_values(
+    runner: str,
+) -> None:
+    source = runner
+    for old, new in (
+        ("F_RAW = [[0.36787944117144233]]", "F_RAW = [[0.123]]"),
+        ("H_RAW = [[1.0]]", "H_RAW = [[2.0]]"),
+        ("Q_RAW = [[0.8646647167633873]]", "Q_RAW = [[0.234]]"),
+        ("R_RAW = [[1.0]]", "R_RAW = [[3.0]]"),
+        ("PRIOR_MEAN_RAW = [0.0]", "PRIOR_MEAN_RAW = [4.0]"),
+        ("PRIOR_COV_RAW = [[1.0]]", "PRIOR_COV_RAW = [[5.0]]"),
+    ):
+        assert old in source
+        source = source.replace(old, new)
+    assert canonical_scaffold_bytes("\n\n" + source + "\n# harmless comment\n") == (
+        canonical_scaffold_bytes(runner)
+    )
+
+
+def test_canonical_scaffold_normalizes_only_absent_empty_function_type_params(
+    runner: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    tree = ast.parse(runner, type_comments=True)
+    function = next(node for node in tree.body if isinstance(node, ast.FunctionDef))
+    expected_node = q7._canonical_scaffold_value(function)
+    absent = copy.deepcopy(function)
+    del absent.type_params
+    fields = ast.FunctionDef._fields
+    monkeypatch.setattr(ast.FunctionDef, "_fields", fields[:-1])
+    assert q7._canonical_scaffold_value(absent) == expected_node
+    absent.type_params = [ast.Name(id="T", ctx=ast.Load())]
+    with pytest.raises(
+        ContinuousArtifactError, match="type_params must be absent or empty"
+    ):
+        q7._canonical_scaffold_value(absent)
+
+
+@pytest.mark.parametrize(
+    "defect", ["unknown_field", "field_order", "attribute", "missing"]
+)
+def test_canonical_scaffold_rejects_unreviewed_field_schema(
+    monkeypatch: pytest.MonkeyPatch, defect: str
+) -> None:
+    node = ast.Name(id="x", ctx=ast.Load())
+    if defect == "unknown_field":
+        monkeypatch.setattr(ast.Name, "_fields", (*ast.Name._fields, "future_semantic"))
+    elif defect == "field_order":
+        monkeypatch.setattr(ast.Name, "_fields", tuple(reversed(ast.Name._fields)))
+    elif defect == "attribute":
+        node.future_semantic = "unreviewed"
+    else:
+        del node.id
+    with pytest.raises(ContinuousArtifactError) as error:
+        q7._canonical_scaffold_value(node)
+    assert error.value.reason == "scaffold_schema"
+
+
+@pytest.mark.parametrize(
+    "extra", ["class Unreviewed: pass", "def generator():\n    yield 1"]
+)
+def test_canonical_scaffold_rejects_unreviewed_nodes(runner: str, extra: str) -> None:
+    with pytest.raises(ContinuousArtifactError) as error:
+        canonical_scaffold_bytes(runner + "\n" + extra)
+    assert error.value.reason == "scaffold_schema"
+
+
+@pytest.mark.parametrize(
+    "value", [float("inf"), float("nan"), 1j, b"new literal", (1, 2)]
+)
+def test_canonical_scaffold_rejects_unreviewed_or_nonfinite_scalars(
+    value: object,
+) -> None:
+    with pytest.raises(ContinuousArtifactError) as error:
+        q7._canonical_scaffold_value(ast.Constant(value=value))
+    assert error.value.reason == "scaffold_schema"
+
+
+def test_canonical_candidate_interpreter_guard_runs_before_parse(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(sys, "version_info", (3, 15, 0, "final", 0))
+    with pytest.raises(ContinuousArtifactError) as error:
+        canonical_scaffold_bytes("invalid syntax !!!")
+    assert error.value.reason == "interpreter"
+
+
+@pytest.mark.parametrize(
+    "defect",
+    [
+        None,
+        "owner",
+        "canonical_bytes",
+        "schema_bool",
+        "missing_runtime",
+        "false_control",
+        "numeric_control",
+        "wrong_minor",
+        "unknown_fields",
+        "missing_present_node",
+        "absent_allowed_node",
+        "extra_absent_node",
+    ],
+)
+def test_retained_portability_observations_refuse_stale_or_rejecting_inputs(
+    tmp_path: Path, defect: str | None
+) -> None:
+    spec = importlib.util.spec_from_file_location(
+        "q7_parity_check_test", SLICE / "generate_probe.py"
+    )
+    assert spec is not None and spec.loader is not None
+    generator = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(generator)
+    api = generator._extractor(ROOT)
+    for name in (
+        *generator.PORTABILITY_INPUTS,
+        generator.CANONICAL_SCAFFOLD,
+        generator.PORTABILITY_EVIDENCE,
+    ):
+        destination = tmp_path / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(ROOT / name, destination)
+    evidence_path = tmp_path / generator.PORTABILITY_EVIDENCE
+    evidence = json.loads(evidence_path.read_text())
+    source = RUNNER.read_text()
+    if defect in {"absent_allowed_node", "extra_absent_node"}:
+        # Artificial parser fixture, never a renderer/native/scientific result:
+        # remove one allowed class and keep the other schema fields intact.
+        class WithoutPow(ast.NodeTransformer):
+            def visit_BinOp(self, node: ast.BinOp) -> ast.expr:
+                rewritten = self.generic_visit(node)
+                assert isinstance(rewritten, ast.BinOp)
+                if isinstance(rewritten.op, ast.Pow):
+                    return ast.copy_location(ast.Constant(value=0), rewritten)
+                return rewritten
+
+        source = ast.unparse(WithoutPow().visit(ast.parse(source)))
+        assert not any(
+            isinstance(node, ast.Pow) for node in ast.walk(ast.parse(source))
+        )
+        fixture = generator.FIXTURES["ou"]
+        (tmp_path / fixture).write_text(source)
+        encoded = api.canonical_scaffold_bytes(source)
+        (tmp_path / generator.CANONICAL_SCAFFOLD).write_bytes(encoded)
+        evidence["inputs"][fixture] = hashlib.sha256(source.encode()).hexdigest()
+        evidence["canonical_bytes"] = len(encoded)
+        evidence["canonical_sha256"] = hashlib.sha256(encoded).hexdigest()
+        for record in evidence["runtimes"]:
+            record["canonical_sha256"] = evidence["canonical_sha256"]
+            record["observed_fields"].pop("Pow")
+            if defect == "extra_absent_node":
+                record["observed_fields"]["Pow"] = []
+    if defect == "owner":
+        (tmp_path / generator.EXTRACTOR).write_text("# changed extractor\n")
+    elif defect == "canonical_bytes":
+        (tmp_path / generator.CANONICAL_SCAFFOLD).write_bytes(b"[]\n")
+    elif defect == "schema_bool":
+        evidence["schema_version"] = True
+    elif defect == "missing_runtime":
+        evidence["runtimes"].pop()
+    elif defect == "false_control":
+        evidence["runtimes"][0]["controls"]["unknown_field"] = False
+    elif defect == "numeric_control":
+        evidence["runtimes"][0]["controls"]["unknown_field"] = 1
+    elif defect == "wrong_minor":
+        evidence["runtimes"][0]["version_info"] = [3, 14, 4]
+    elif defect == "unknown_fields":
+        evidence["runtimes"][0]["observed_fields"]["FunctionDef"].append("future")
+    elif defect == "missing_present_node":
+        evidence["runtimes"][0]["observed_fields"].pop("Call")
+    evidence_path.write_text(json.dumps(evidence))
+    watched = [path for path in tmp_path.rglob("*") if path.is_file()]
+    before = {path: (path.read_bytes(), path.stat().st_mtime_ns) for path in watched}
+    if defect not in {None, "absent_allowed_node"}:
+        with pytest.raises(ValueError, match="Q7.*(parity|runtime observation)"):
+            generator.validate_scaffold_portability(tmp_path, api, source)
+    else:
+        generator.validate_scaffold_portability(tmp_path, api, source)
+    assert before == {
+        path: (path.read_bytes(), path.stat().st_mtime_ns) for path in watched
+    }

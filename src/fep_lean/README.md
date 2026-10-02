@@ -32,19 +32,16 @@ The wheel intentionally provides no obsolete top-level compatibility modules.
 
 ## Interpreter contract
 
-`requires-python = ">=3.10"` declares the packaging floor, but the current
-dev/evidence reality is narrower and pinned: `.python-version` pins CPython
-3.14 for development and CI, mypy models 3.12 (`[tool.mypy] python_version`),
-and the runtime test suite runs under 3.14 only. The declared 3.10/3.11 floor
-is evidentially unsupported: `scaffold_digest` freezes `ast.dump` output,
-which differs across CPython minor versions, so a scaffold accepted under one
-interpreter cannot be re-validated under another. The Q7 module now enforces
-this in code: `scaffold_digest` refuses to run before parsing under any
-interpreter outside the accepted set — exactly CPython 3.14, the
-`.python-version` pin — raising a `ContinuousArtifactError` naming the
-accepted set and the running interpreter. The pinned `runner_ast_sha256`
-digest is interpreter-contract-pinned to that set and is unchanged by the
-guard. The guard does not relax the 3.14-only rule: a version-stable
-serialization or an explicit multi-interpreter acceptance record still lands
-as a new reviewed scaffold via `FEP-SCAFFOLD-PORTABILITY` with a coordinated
-custody re-pin.
+`requires-python = ">=3.10"` declares the packaging floor. The isolated wheel
+checks install real dependencies into fresh environments outside the checkout,
+verify API/resource parity and CLI behavior, and exercise CPython 3.10–3.14.
+The 2026-09-30 local macOS checks pass that interpreter set; Ubuntu and Windows
+use the declared CI matrix and need their own hosted result before a platform
+acceptance claim. See [development](../../docs/development.md) for the boundary.
+
+Development and evidence validation remain pinned to CPython 3.14 in
+`.python-version`; mypy's 3.12 target is a separate static setting. Q7's current
+`ast.dump` scaffold contract explicitly refuses unsupported interpreters before
+parsing. That guard limits Q7 evidence validation, not installation or ordinary
+catalogue API use. The authorized version-stable scaffold replacement and
+coordinated custody re-pin remain open in [TODO.md](../../TODO.md).

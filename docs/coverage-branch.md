@@ -22,11 +22,10 @@ and no branch-dependent logic, so the gap is negligible.
 
 ## Expected values
 
-Current runs show approximately **89.6% branch coverage** across all non-figure
-modules. Branch coverage is **not** independently gated — `fail_under` in
-`pyproject.toml` applies to line coverage only. The line coverage threshold of
-89% provides adequate protection since branch coverage tracks within ~1.5
-percentage points of line coverage for this codebase's error-handling patterns.
+No fresh branch-coverage measurement is claimed for the active 2026-09-30
+implementation. Branch coverage is **not** independently gated; the declared
+89% line-coverage requirement does not establish branch coverage. Record the
+exact command, source identity and measured denominator with each new run.
 
 ## Related
 
@@ -54,7 +53,7 @@ Receipts:
 
 ### TESTS-7 cadence receipts
 
-- Definition (`SCOPE-2026-09-20.md:78`): "One serial-inclusive coverage run (no `-m` filter) after the wave lands; record per-module delta table in `docs/coverage-branch.md`. Requires the Lean toolchain; runs after the gate battery."
+- Historical cadence definition: one serial-inclusive coverage run after the wave, with a per-module delta table and the required Lean toolchain. The superseded 2026-09-20 planning file remains in Git history; this dated receipt does not establish current coverage.
 - Gate battery at `5cc9938`: GREEN — 11 gates + roster gate (0 errors) + pair gate (ok); G06/G07 healed by build-product regens (gitignored, zero tracked changes).
 - Serial-inclusive plane: the local battery deselects `serial_lean`; the CI serial lane is the serial-inclusive receipt plane — run 36144239624 on `5cc9938`, lean serial lane 527 passed / 1 failed (attempt 1) and 527 passed / 1 failed on the attempt-2 rerun, both the same figures-infra node. The local serial-inclusive coverage run stays deferred to the next settled cadence (Lean-toolchain requirement; no local battery re-run authorized in-thread).
 - Per-module delta table: the red-class table above (module-attributed: `horizon_acceptance`, `tests/test_custody_apply.py`, `test_manuscript_token_parity.py`, `test_manuscript_rendering.py`).

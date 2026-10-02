@@ -32,6 +32,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 
+from fep_lean.catalogue.schema import CatalogueMetadataManifest, load_catalogue_metadata
 from fep_lean.output.fsutil import atomic_write_bytes
 
 __all__ = [
@@ -173,7 +174,7 @@ def _arrow(
     )
 
 
-def _draw(fig: Figure) -> None:
+def _draw(fig: Figure, metadata: CatalogueMetadataManifest) -> None:
     """Compose the whole abstract on ``fig`` in inch coordinates."""
 
     ax = fig.add_axes((0, 0, 1, 1))
@@ -230,7 +231,7 @@ def _draw(fig: Figure) -> None:
         row1_h,
         title="Generated catalogue",
         lines=[
-            "155 topics · 20 families",
+            f"{len(metadata)} topics · {len(metadata.families)} families",
             "regeneration-identical",
             "YAML / Lean / docs projections",
             "reviewed dispositions: formalized,",
@@ -356,9 +357,10 @@ def render_graphical_abstract(project_root: Path) -> Path:
     """
 
     project_root = Path(project_root)
+    metadata = load_catalogue_metadata(project_root / "config/catalogue_metadata.yaml")
     fig = plt.figure(figsize=(CANVAS_W, CANVAS_H), dpi=200)
     try:
-        _draw(fig)
+        _draw(fig, metadata)
         fig.canvas.draw()
         rgba = cast(FigureCanvasAgg, fig.canvas).buffer_rgba()  # type: ignore[no-untyped-call]
         png = _encode_png_rgb(WIDTH_PX, HEIGHT_PX, bytes(rgba))

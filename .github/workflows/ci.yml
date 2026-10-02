@@ -5,9 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "docs/**"
-      - "*.md"
   workflow_dispatch:
     inputs:
       use_lean_cache:
@@ -45,7 +42,112 @@ concurrency:
   # can never skip a custody gate, fail-closed.
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.classify.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v10.0.1
+      - id: classify
+        name: Classify documentation-only pull requests
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          uv run --no-project --python 3.14 python - <<'PY'
+          import os
+          import re
+          import subprocess
+          from pathlib import Path, PurePosixPath
+
+          docs_only = False
+          if os.environ["EVENT_NAME"] == "pull_request":
+              base = os.environ["BASE_SHA"]
+              if not re.fullmatch(r"[0-9a-f]{40}", base):
+                  raise SystemExit("invalid pull-request base SHA")
+              changed = subprocess.check_output(
+                  ["git", "diff", "--no-renames", "--name-only", "-z", base, "HEAD"]
+              ).decode().split("\0")
+              paths = [PurePosixPath(name) for name in changed if name]
+              # An allowlist: publication inputs, generated scientific records,
+              # receipts, fonts, workflows and unknown paths take the full gates.
+              docs_only = bool(paths) and all(
+                  path.suffix == ".md"
+                  and (len(path.parts) == 1 or path.parts[0] == "docs")
+                  and path.name not in {
+                      "formalism-coverage.md", "theorem-maturity-audit.md",
+                      "lean-landscape.md",
+                  }
+                  for path in paths
+              )
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
+              output.write(f"docs_only={str(docs_only).lower()}\n")
+          print(f"documentation-only pull request: {docs_only}")
+          PY
+
+  documentation:
+    needs: changes
+    if: needs.changes.outputs.docs_only == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      - run: uv sync --locked --extra dev
+      - name: Materialize the generated manuscript inputs
+        run: uv run fep-lean catalogue
+      - name: Check documentation and committed publication evidence
+        run: |
+          uv run python scripts/_maint_build_topics_catalogue.py --check
+          uv run python scripts/_maint_build_fep_all_lean.py --check
+          uv run python scripts/_maint_build_formal_modules.py --check
+          uv run python scripts/theorem_maturity_audit.py --check
+          uv run python scripts/build_formalism_coverage.py --check
+          uv run python scripts/_maint_build_lean_landscape.py --check
+          uv run python scripts/build_formalism_atlas.py --check
+          uv run python scripts/build_formal_kernel_dashboard.py --check
+          uv run python scripts/build_render_fonts.py --check
+          uv run python scripts/check_render_log.py --verify-receipt
+          uv run python docs/theorem_ref_audit.py
+          uv run python docs/citation_audit.py
+          uv run python docs/check_links.py --strict --include-root
+          uv run python docs/md_hygiene.py --strict
+          uv run python docs/xref_audit.py
+          git diff --check
+
+  distribution:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          enable-cache: true
+      # The harness remains a 3.14 validator. Only the fresh wheel environment
+      # exercises the packaging floor; no Lean/provider evidence is claimed.
+      - run: uv sync --locked --extra dev --python 3.14
+      - run: uv python install ${{ matrix.python }}
+      - name: Exercise the installed wheel outside the checkout
+        env:
+          FEP_DISTRIBUTION_PYTHON: ${{ matrix.python }}
+        run: uv run --locked python -m pytest tests/test_distribution.py -q -s --no-cov
+
   python:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -131,6 +233,8 @@ jobs:
   # Runner-local installs (apt, fonts, mermaid CLI, elan/toolchain/Mathlib)
   # cannot cross job boundaries, so they stay in the render job itself.
   render-deps:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -318,11 +422,195 @@ jobs:
           uv run python scripts/check_render_log.py --verify-receipt
 
 
+      - name: Stage accepted render evidence with exact source and tool provenance
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          uv run python - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+
+          from fep_lean.output.evidence import validate_native_lean_receipt
+          from fep_lean.output.release_bundle._core import _capture_regular_file
+          from fep_lean.output.render_fonts import declared_fonts
+          from fep_lean.output.render_log import receipt_defects, rendered_manuscript_sources
+          from fep_lean.output.rendering import MANUSCRIPT_ASSETS
+          from fep_lean.verification.formalism_audit import validate_formalism_audit_receipt
+
+          root = Path.cwd().resolve()
+          sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          if sha != os.environ["EXPECTED_SHA"]:
+              raise SystemExit("render checkout differs from workflow SHA")
+          # Only acceptance outputs may differ from committed bytes. Renderer
+          # input drift must never be labeled evidence for the workflow SHA.
+          allowed_outputs = {"docs/render-acceptance.json", "docs/render-fonts.json"}
+
+          def validate_evidence():
+              if subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip() != sha:
+                  raise SystemExit("render checkout changed during evidence staging")
+              defects = receipt_defects(root / "docs/render-acceptance.json", root / "manuscript")
+              if defects:
+                  raise SystemExit("\n".join(defects))
+              native = validate_native_lean_receipt(root / "output/native-verification.json", project_root=root)
+              if not native["native_claim_ready"]:
+                  raise SystemExit("native evidence is not claim-ready at the render sources")
+              audit_errors = validate_formalism_audit_receipt(root / "output/formalism-audit.json", root)
+              if audit_errors:
+                  raise SystemExit("\n".join(audit_errors))
+              changed = subprocess.check_output(["git", "diff", "--name-only", "HEAD", "-z"]).decode().split("\0")
+              if set(changed) - allowed_outputs - {""}:
+                  raise SystemExit("tracked render inputs changed during acceptance")
+
+          files = [
+              "output/pdf/fep_lean_combined.pdf",
+              "output/pdf/_combined_manuscript.tex",
+              "output/pdf/_combined_manuscript.md",
+              "output/pdf/_combined_manuscript.log",
+              "output/pdf/_latex_stdout.log",
+              "output/native-verification.json",
+              "output/formalism-audit.json",
+              "docs/render-acceptance.json",
+              "docs/render-fonts.json",
+          ]
+          def artifact_bytes():
+              result = {}
+              for name in files:
+                  path = root / name
+                  if not path.is_file() or not path.stat().st_size:
+                      raise SystemExit(f"accepted render evidence is missing: {name}")
+                  result[name] = _capture_regular_file(path)
+              return result
+
+          accepted_bytes = artifact_bytes()
+          if not accepted_bytes[files[0]].startswith(b"%PDF-"):
+              raise SystemExit("accepted render PDF has no PDF signature")
+
+          tracked = set(filter(None, subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "-z", "HEAD"]).decode().split("\0")))
+          generated = {"manuscript/manuscript_vars.yaml", "manuscript/09z_unified_formalism_catalogue.md"}
+          source_names = tracked - allowed_outputs
+          source_names.update({"manuscript/manuscript_vars.yaml", "manuscript/09z_unified_formalism_catalogue.md"})
+          source_names.update(source.as_posix() for source, _destination in MANUSCRIPT_ASSETS.values())
+          def source_manifest():
+              for path in (*rendered_manuscript_sources(root / "manuscript"), root / "manuscript/preamble.md"):
+                  name = path.relative_to(root).as_posix()
+                  if name not in tracked and name not in generated:
+                      raise SystemExit(f"authored manuscript source is not tracked at workflow SHA: {name}")
+              result = {}
+              for name in sorted(source_names):
+                  path = root / name
+                  if not path.is_file() or path.is_symlink():
+                      raise SystemExit(f"source manifest input is absent or a symlink: {name}")
+                  result[name] = hashlib.sha256(_capture_regular_file(path)).hexdigest()
+              # Membership is rechecked after reading the last named input.
+              for path in (*rendered_manuscript_sources(root / "manuscript"), root / "manuscript/preamble.md"):
+                  name = path.relative_to(root).as_posix()
+                  if name not in tracked and name not in generated:
+                      raise SystemExit(f"authored manuscript source is not tracked at workflow SHA: {name}")
+              return result
+
+          sources = source_manifest()
+          template = root / "render-template"
+          template_sha = subprocess.check_output(["git", "-C", str(template), "rev-parse", "HEAD"], text=True).strip()
+
+          def template_manifest():
+              if subprocess.check_output(["git", "-C", str(template), "rev-parse", "HEAD"], text=True).strip() != template_sha:
+                  raise SystemExit("template checkout changed during evidence staging")
+              changed = subprocess.check_output(["git", "-C", str(template), "diff", "--name-only", "HEAD", "-z"])
+              untracked = subprocess.check_output(["git", "-C", str(template), "ls-files", "--others", "--exclude-standard", "-z"])
+              if changed or untracked:
+                  raise SystemExit("template authored inputs differ from its recorded commit")
+              names = filter(None, subprocess.check_output(["git", "-C", str(template), "ls-tree", "-r", "--name-only", "-z", "HEAD"]).decode().split("\0"))
+              return {name: hashlib.sha256(_capture_regular_file(template / name)).hexdigest() for name in names}
+
+          template_sources = template_manifest()
+          validate_evidence()
+          versions = {}
+          for command in ("xelatex", "pandoc", "rsvg-convert", "mmdc"):
+              versions[command] = subprocess.check_output([command, "--version"], text=True, timeout=30).strip()
+          fonts = {}
+          font_files = {}
+          for role, family in declared_fonts(root / "manuscript/preamble.md").items():
+              names = subprocess.check_output(["fc-match", "--format=%{file}\n", family], text=True, timeout=30).splitlines()
+              if not names or not Path(names[0]).is_file():
+                  raise SystemExit(f"selected font is absent: {family}")
+              font = Path(names[0])
+              font_files[role] = font.resolve()
+              fonts[role] = {"family": family, "file": font.name, "sha256": hashlib.sha256(_capture_regular_file(font_files[role])).hexdigest()}
+          provenance = {
+              "schema_version": 1, "commit": sha,
+              "workflow_run_id": os.environ["WORKFLOW_RUN_ID"],
+              "workflow_run_attempt": os.environ["WORKFLOW_RUN_ATTEMPT"],
+              "template_commit": template_sha, "template_sources": template_sources,
+              "python": sys.version, "tools": versions, "fonts": fonts,
+          }
+          def require_stable_snapshot():
+              try:
+                  stable = source_manifest() == sources and artifact_bytes() == accepted_bytes and template_manifest() == template_sources and all(hashlib.sha256(_capture_regular_file(path)).hexdigest() == fonts[role]["sha256"] for role, path in font_files.items())
+              except SystemExit as error:
+                  raise SystemExit(f"inputs changed during evidence staging: {error}") from error
+              if not stable:
+                  raise SystemExit("inputs or accepted outputs changed during evidence staging")
+
+          # Version/font discovery is executable work. Neither it nor receipt
+          # validation may change the source/output snapshot being retained.
+          require_stable_snapshot()
+          validate_evidence()
+          require_stable_snapshot()
+          staging = root / "output/render-evidence"
+          staging.mkdir(parents=True, exist_ok=False)
+          try:
+              retained = {
+                  **accepted_bytes,
+                  "renderer-provenance.json": (json.dumps(provenance, indent=2, sort_keys=True) + "\n").encode(),
+                  "source-manifest.json": (json.dumps({"schema_version": 1, "commit": sha, "sources": sources}, indent=2, sort_keys=True) + "\n").encode(),
+              }
+              for name, data in retained.items():
+                  destination = staging / name
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  destination.write_bytes(data)
+              require_stable_snapshot()
+              validate_evidence()
+              require_stable_snapshot()
+              artifacts = {name: hashlib.sha256(data).hexdigest() for name, data in retained.items()}
+              retained["artifact-manifest.json"] = (json.dumps({"schema_version": 1, "commit": sha, "files": artifacts}, indent=2, sort_keys=True) + "\n").encode()
+              (staging / "artifact-manifest.json").write_bytes(retained["artifact-manifest.json"])
+              require_stable_snapshot()
+              actual = set()
+              for path in staging.rglob("*"):
+                  if path.is_symlink():
+                      raise SystemExit("retained artifact changed during evidence staging")
+                  if path.is_file():
+                      actual.add(path.relative_to(staging).as_posix())
+              if actual != set(retained) or any(_capture_regular_file(staging / name) != data for name, data in retained.items()):
+                  raise SystemExit("retained artifact changed during evidence staging")
+              require_stable_snapshot()
+              validate_evidence()
+              require_stable_snapshot()
+          except BaseException:
+              # A rejected partial snapshot must not become an accepted upload.
+              import shutil
+              shutil.rmtree(staging)
+              raise
+          PY
+      - name: Retain the accepted render and its source-bound evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: accepted-render-${{ github.sha }}-${{ github.run_attempt }}
+          path: output/render-evidence/
+          if-no-files-found: error
+          retention-days: 90
+
   lean:
     runs-on: ubuntu-latest
-    needs: render-deps
-    # Push/PR runs always execute the lean lane; only dispatch runs can skip it.
-    if: github.event_name != 'workflow_dispatch' || inputs.run_lean
+    needs: [changes, render-deps]
+    # Pure documentation PRs stop at the read-only documentation lane.
+    if: needs.changes.outputs.docs_only != 'true' && (github.event_name != 'workflow_dispatch' || inputs.run_lean)
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
@@ -420,7 +708,7 @@ jobs:
           FEP_LEAN_SLICE04_COMPILE_TEST: "1"
           FEP_LEAN_SLICE05_COMPILE_TEST: "1"
         run: uv run pytest tests/ -q -m serial_lean -n 1 --no-cov
-      - name: Verify exact 155-topic native receipt
+      - name: Verify exact sealed-roster native receipt
         run: |
           uv run fep-lean verify \
             --fail-on-warnings \

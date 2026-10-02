@@ -3696,6 +3696,26 @@ theorem fep063_referencePredictive_fullSupport
     mul_pos (hreference input) (hchannel input output))
     Finset.univ_nonempty
 
+omit [Nonempty Input] in
+/-- A deterministic identity channel preserves finite KL exactly, despite
+its zero off-diagonal channel entries. -/
+theorem fep063_identityChannel_preservesKL [DecidableEq Input]
+    (actual reference : FiniteLaw Input) :
+    finiteKL (FiniteKernel.identity.predictive actual)
+        (FiniteKernel.identity.predictive reference) = finiteKL actual reference :=
+  finiteChannel_identity_preservesKL actual reference
+
+omit [Nonempty Input] in
+/-- Complete deterministic coarsening strictly reduces the repository's
+finite divergence for unequal normalized input laws. -/
+theorem fep063_constantChannel_strict
+    (actual reference : FiniteLaw Input) (hne : actual ≠ reference) :
+    finiteKL
+        ((FiniteKernel.deterministic (fun _ : Input => ())).predictive actual)
+        ((FiniteKernel.deterministic (fun _ : Input => ())).predictive reference) <
+      finiteKL actual reference :=
+  constantChannel_KL_strict actual reference hne
+
 end FEP063
 
 end fep_fep063
@@ -3731,6 +3751,73 @@ theorem fep064_zeroMultiplier_boundary
     rateDistortionLagrangian joint distortion 0 =
       mutualInformation joint := by
   simp [rateDistortionLagrangian]
+
+/-- Every nonempty finite fixed-source distortion problem has an attained
+information minimum, including feasible faces with zero-mass atoms. -/
+theorem fep064_rateDistortion_exists_minimizer
+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ)
+    (hfeasible : ∃ joint, RateDistortionFeasible source distortion budget joint) :
+    ∃ optimizer : FiniteLaw (Source × Code),
+      RateDistortionFeasible source distortion budget optimizer ∧
+        ∀ candidate : FiniteLaw (Source × Code),
+          RateDistortionFeasible source distortion budget candidate →
+            mutualInformation optimizer ≤ mutualInformation candidate :=
+  rateDistortion_exists_minimizer source distortion budget hfeasible
+
+/-- The actual Lagrangian infimum supplies weak duality for every feasible
+joint; no separately certified rate or distortion lower bounds are inputs. -/
+theorem fep064_rateDistortion_dual_lower_bound
+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ)
+    (budget multiplier : ℝ) (hdistortion : ∀ x y, 0 ≤ distortion x y)
+    (hmultiplier : 0 ≤ multiplier) (joint : FiniteLaw (Source × Code))
+    (hjoint : RateDistortionFeasible source distortion budget joint) :
+    rateDistortionDualValue source distortion budget multiplier ≤ mutualInformation joint :=
+  rateDistortionDual_le_feasible_information source distortion budget multiplier
+    hdistortion hmultiplier joint hjoint
+
+/-- Zero multiplier gives dual value zero on a nonempty finite reproduction
+alphabet, even when the distortion budget is infeasible. -/
+theorem fep064_dual_zeroMultiplier [Nonempty Code]
+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ) :
+    rateDistortionDualValue source distortion budget 0 = 0 :=
+  rateDistortionDual_zeroMultiplier source distortion budget
+
+/-- A negative budget is infeasible for nonnegative distortion. -/
+theorem fep064_negativeBudget_infeasible
+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ)
+    (hdistortion : ∀ x y, 0 ≤ distortion x y) (hbudget : budget < 0) :
+    ¬ ∃ joint, RateDistortionFeasible source distortion budget joint :=
+  rateDistortion_infeasible_of_negativeBudget source distortion budget hdistortion hbudget
+
+/-- Fair Boolean Hamming distortion at the interior budget one quarter has
+an attained and strictly informative optimum. -/
+theorem fep064_quarterBudget_informative_optimum :
+    ∃ optimizer : FiniteLaw (Bool × Bool),
+      RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4) optimizer ∧
+        0 < mutualInformation optimizer ∧
+          ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+            (1 / 4) candidate → mutualInformation optimizer ≤ mutualInformation candidate :=
+  boolQuarterBudget_exists_positive_minimizer
+
+/-- At Boolean Hamming budget one half there are distinct attained
+information minima, so general uniqueness is false. -/
+theorem fep064_halfBudget_nonunique :
+    ∃ left right : FiniteLaw (Bool × Bool), left ≠ right ∧
+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) left ∧
+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+          (1 / 2) candidate → mutualInformation left ≤ mutualInformation candidate) ∧
+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) right ∧
+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion
+          (1 / 2) candidate → mutualInformation right ≤ mutualInformation candidate) :=
+  boolHalfBudget_distinct_minimizers
+
+/-- At zero Boolean Hamming budget the fixed fair source forces a unique
+perfect-reproduction joint. -/
+theorem fep064_zeroBudget_unique
+    (joint : FiniteLaw (Bool × Bool))
+    (hjoint : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0 joint) :
+    joint = boolZeroDistortionJoint :=
+  boolZeroBudget_unique_feasible joint hjoint
 
 end FEP064
 

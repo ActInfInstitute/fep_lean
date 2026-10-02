@@ -1,10 +1,20 @@
 # H2.7 terminal acceptance record contract
 
-The retained [terminal acceptance record](terminal-acceptance.json) validates
-328 mandatory cases, the enabled Fin4 supplement, independently recomputed
-diagnostics, and three fresh source-bound reviews. Its evidence is retained in
-[evidence/20260904-wave2/](evidence/20260904-wave2/). Changes to the bound
-sources invalidate acceptance until new evidence is reviewed and sealed.
+The historical terminal acceptance validated 328 mandatory cases, the enabled
+Fin4 supplement, independently recomputed diagnostics and three source-bound
+reviews. Its evidence remains in [evidence/20260904-wave2/](evidence/20260904-wave2/)
+and Git history. Changed bound sources invalidate current acceptance until new
+evidence is reviewed and sealed into the [canonical terminal record](terminal-acceptance.json).
+
+The explicitly reviewed September 30 successor collection contains every
+historical mandatory case plus one sparse-information native consumer: 329
+cases in all 28 mandatory files, including every parameterized ID and the
+enabled heavy Fin4 case. Its pre-run and execution collections are byte-identical.
+The preparation and scope-review contract is retained in
+[the current capture protocol](../../../comprehensive-science-improvement/H2-CAPTURE-CONTRACT.md).
+Changing the collection pin alone is not terminal acceptance. Three fresh
+source-bound reviews and all validators remain required; independent whole
+Python acceptance remains a separate program/publication gate.
 
 The receipt has exactly `schema_version: 1`, `gate: H2.7`, `decision: accepted`,
 `native_evidence`, `current_sources`, `predecessors`, `reviews`, `diagnostics`,
@@ -18,7 +28,7 @@ and must match the captured stable bytes. They exclude later diagnostic and
 acceptance Python additions. Collection JSON has `schema_version: 1`, the
 complete ordered `nodeids` list, and `markers` mapping every node ID to its
 captured marker-name list. Its immutable SHA-256 is pinned by
-`CAPTURED_COLLECTION_SHA256` to the actual 1771-node baseline capture, preventing
+`CAPTURED_COLLECTION_SHA256` to the actual complete mandatory capture, preventing
 jointly rewritten collection/XML from dropping parameterized cases. Copy the
 captured JSON byte-for-byte when placing it in the project evidence directory.
 JUnit must contain exactly those nodes, no duplicate,
@@ -57,7 +67,7 @@ are immutable byte-pinned inputs. Their historical source bindings are checked;
 only the named successor may supersede the two reviewed R0 source differences.
 R0 native evidence must be verified and match its current source map.
 
-`uv run python specs/horizon-2-smooth-stochastic/readiness/terminal_acceptance.py
+`uv run python specs/done/horizon-2-smooth-stochastic/readiness/terminal_acceptance.py
 validate --project-root .` is read-only. `diagnostics` evaluates the numerical
 records. Either operation writes only when `--output` names a new explicit file;
 no input is overwritten. Success permits read-only H3.G0, not H3 implementation,

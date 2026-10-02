@@ -16,8 +16,10 @@ _LEAN_END_RE = re.compile(rf"^\s*end(?:\s+({_LEAN_QUALIFIED_NAME}))?\s*$")
 # consumer. Identifiers start with a letter (Lean's own rule for the names
 # these bodies use); one definition, imported everywhere a theorem roster is
 # parsed.
+LEAN_ATTRIBUTE_PREFIX = r"(?:@\[[^\]\r\n]*\][ \t]*)*"
 LEAN_THEOREM_RE = re.compile(
-    r"^\s*(?:theorem|lemma)\s+([A-Za-z][A-Za-z0-9_]*)", re.MULTILINE
+    rf"^\s*{LEAN_ATTRIBUTE_PREFIX}(?:theorem|lemma)\s+([A-Za-z][A-Za-z0-9_]*)",
+    re.MULTILINE,
 )
 
 
@@ -168,6 +170,7 @@ def lean_declaration_conclusion(source: str) -> str:
 
 
 __all__ = [
+    "LEAN_ATTRIBUTE_PREFIX",
     "LEAN_THEOREM_RE",
     "is_lean_qualified_name",
     "iter_lean_namespace_scopes",

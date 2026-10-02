@@ -1,7 +1,7 @@
 # Public Python API
 
-**Version:** 1.2.0
-**Last reviewed:** 2026-09-10
+**Version:** 1.3.0
+**Last reviewed:** 2026-09-30
 
 The installed distribution exposes one root namespace, `fep_lean`. Generic
 top-level names such as `catalogue`, `pipeline`, and `output` are not packages
@@ -20,7 +20,7 @@ from fep_lean.catalogue import FEPTopicCatalogue, TopicEntry
 
 catalogue = FEPTopicCatalogue.default()
 assert catalogue.topics[0].id == "fep-001"
-assert catalogue.topics[-1].id == "fep-155"
+assert catalogue.topics[-1].id == "fep-168"
 summary = catalogue.summary()
 ```
 

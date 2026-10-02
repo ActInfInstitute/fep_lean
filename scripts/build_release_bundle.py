@@ -41,6 +41,24 @@ def build_parser() -> argparse.ArgumentParser:
             "output/numerical-witnesses.json"
         ),
     )
+    actions.add_argument(
+        "--capture-journal",
+        type=Path,
+        help="explicit bounded publication capture journal outside the checkout",
+    )
+    actions.add_argument(
+        "--plan-capture",
+        action="store_true",
+        help="print the capture stage policy without running tools",
+    )
+    parser.add_argument(
+        "--resume", action="store_true", help="revalidate and resume --capture-journal"
+    )
+    parser.add_argument(
+        "--template", type=Path, help="explicit capture rendering template"
+    )
+    parser.add_argument("--source-date-epoch", type=int, default=0)
+    parser.add_argument("--timeout", type=float, default=21600)
     return parser
 
 
@@ -48,6 +66,35 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     project_root = Path(__file__).resolve().parents[1]
+    if args.capture_journal is not None or args.plan_capture:
+        from fep_lean.cli import main as run_cli
+
+        if args.output is not None:
+            parser.error("--output cannot be combined with a capture action")
+        if args.resume and args.capture_journal is None:
+            parser.error("--resume requires --capture-journal")
+        if args.template is None:
+            parser.error("capture requires --template")
+        arguments = [
+            "--project-root",
+            str(project_root),
+            "publication-capture",
+            "--template",
+            str(args.template),
+            "--source-date-epoch",
+            str(args.source_date_epoch),
+            "--timeout",
+            str(args.timeout),
+        ]
+        if args.capture_journal is not None:
+            arguments.extend(["--journal", str(args.capture_journal)])
+        if args.plan_capture:
+            arguments.append("--plan")
+        if args.resume:
+            arguments.append("--resume")
+        return run_cli(arguments)
+    if args.resume or args.template is not None:
+        parser.error("--resume and --template require a capture action")
     if (
         not args.run_python_acceptance
         and not args.write_numerical_witnesses

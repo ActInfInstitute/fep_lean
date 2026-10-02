@@ -12,7 +12,7 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Sequence
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -180,10 +180,10 @@ def _source_stamp_vars(project_root: Path) -> dict[str, str]:
         "exact_tag": exact_tag or "none",
         "commit_date": commit_date or "unknown",
         "dirty": "true" if dirty else "false",
-        "render_date": datetime.now(UTC).date().isoformat(),
+        "render_date": datetime.now(timezone.utc).date().isoformat(),
         # One ready-to-typeset line for the title page.
         "stamp": (
-            f"source snapshot {stamp}, rendered {datetime.now(UTC).date().isoformat()}"
+            f"source snapshot {stamp}, rendered {datetime.now(timezone.utc).date().isoformat()}"
         ),
     }
 
@@ -1063,7 +1063,15 @@ def build_manuscript_vars(
     *,
     output_root: Path | None = None,
     cache_test_count: bool = True,
+    capture_source_stamp: bool = True,
 ) -> dict[str, Any]:
+    """Build canonical variables, with strict live checkout stamping by default.
+
+    Static projection checks may disable checkout stamping. In that mode the
+    run-bound source block has its canonical all-string shape and explicitly
+    unverified values; no Git process is started. Projection checks already
+    exclude source values and compare only this block's mapping shape.
+    """
     summary = catalogue.summary()
     topics: dict[str, dict[str, Any]] = {}
     icons = {"real": "✅", "partial": "◐", "aspirational": "○"}
@@ -1141,7 +1149,26 @@ def build_manuscript_vars(
     )
     publication_author = load_publication_author(root)
     graphical_abstract = load_graphical_abstract(root)
-    source_stamp = _source_stamp_vars(project_root)
+    source_stamp = (
+        _source_stamp_vars(project_root)
+        if capture_source_stamp
+        else dict.fromkeys(
+            (
+                "commit",
+                "short_commit",
+                "published_ref",
+                "published",
+                "published_note",
+                "describe",
+                "exact_tag",
+                "commit_date",
+                "dirty",
+                "render_date",
+                "stamp",
+            ),
+            "unverified",
+        )
+    )
     repository_url = load_repository_url(root)
     return {
         **summary,

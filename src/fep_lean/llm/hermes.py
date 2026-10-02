@@ -22,6 +22,7 @@ Public API:
 
 Configuration priority (highest → lowest):
     1. Environment variables (OPENROUTER_API_KEY, ANTHROPIC_API_KEY, HERMES_MODEL,
+       HERMES_FALLBACK_MODELS,
        HERMES_429_MAX_RETRIES, HERMES_NETWORK_MAX_RETRIES, HERMES_MAX_MODEL_ATTEMPTS, …)
     2. config/settings.yaml  hermes: block
     3. Built-in defaults
@@ -45,6 +46,7 @@ import socket
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -91,6 +93,9 @@ when you know them.  Do not hallucinate non-existent Mathlib lemmas.
 
 _DEFAULT_BASE_URL = "https://openrouter.ai/api/v1"
 _DEFAULT_MODEL = "moonshotai/kimi-k2.6"
+_MAX_FALLBACK_OVERRIDE_CHARS = 8192
+_MAX_FALLBACK_OVERRIDE_MODELS = 32
+_MAX_MODEL_SLUG_CHARS = 256
 
 # Fallback chain — tried in order if the primary model fails. Ordered to keep
 # wall-clock latency low: instruct/non-reasoning models first (fast TTFT),
@@ -107,6 +112,42 @@ _FREE_MODEL_CHAIN = [
     "nvidia/nemotron-3-super-120b-a12b:free",
     "openrouter/free",
 ]
+
+
+def _env_fallback_models() -> list[str] | None:
+    """Read an exact bounded fallback override, rejecting invalid policy.
+
+    Absence preserves settings/default behavior. A nonempty JSON list containing
+    only the primary model freezes primary-only execution: chain deduplication
+    removes the repeated primary without selecting the built-in fallback list.
+    """
+    raw = os.environ.get("HERMES_FALLBACK_MODELS")
+    if raw is None:
+        return None
+    error = (
+        "HERMES_FALLBACK_MODELS must be a nonempty JSON list of at most "
+        f"{_MAX_FALLBACK_OVERRIDE_MODELS} exact nonblank model strings "
+        f"(at most {_MAX_MODEL_SLUG_CHARS} characters each)"
+    )
+    if len(raw) > _MAX_FALLBACK_OVERRIDE_CHARS:
+        raise ValueError(error)
+    try:
+        models = json.loads(raw)
+    except (ValueError, RecursionError):
+        raise ValueError(error) from None
+    if (
+        not isinstance(models, list)
+        or not 1 <= len(models) <= _MAX_FALLBACK_OVERRIDE_MODELS
+        or any(
+            type(model) is not str
+            or not model
+            or model != model.strip()
+            or len(model) > _MAX_MODEL_SLUG_CHARS
+            for model in models
+        )
+    ):
+        raise ValueError(error)
+    return models
 
 
 def _env_positive_int(name: str) -> int | None:
@@ -193,7 +234,7 @@ class HermesConfig:
 
     model: str = _DEFAULT_MODEL
     base_url: str = _DEFAULT_BASE_URL
-    api_key: str = ""
+    api_key: str = field(default="", repr=False)
     max_tokens: int = 16384
     timeout_s: int = 150
     reasoning_max_tokens: int = 65536
@@ -221,6 +262,45 @@ class HermesConfig:
             "OPENAI_BASE_URL",
         }
     )
+
+    def runtime_policy(self) -> dict[str, Any]:
+        """Return allowlisted configured policy without credential material.
+
+        This is configuration evidence, not authentication or execution evidence.
+        An empty fallback list still selects built-in defaults during execution;
+        retry and model-attempt environment limits are outside this projection.
+        Endpoint URLs with userinfo, query or fragment components cannot be
+        projected: those components may carry credentials even without an API key.
+        """
+        error = "Hermes runtime policy requires an HTTP(S) endpoint without userinfo, query or fragment"
+        try:
+            parsed = urllib.parse.urlsplit(self.base_url)
+            if (
+                parsed.scheme not in {"http", "https"}
+                or not parsed.hostname
+                or parsed.username is not None
+                or parsed.password is not None
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise ValueError(error)
+            _ = parsed.port
+        except ValueError:
+            raise ValueError(error) from None
+        return {
+            "schema_version": 1,
+            "model": self.model,
+            "base_url": urllib.parse.urlunsplit(
+                (parsed.scheme, parsed.netloc, parsed.path, "", "")
+            ),
+            "fallback_models": list(self.fallback_models),
+            "max_tokens": self.max_tokens,
+            "timeout_s": self.timeout_s,
+            "reasoning_max_tokens": self.reasoning_max_tokens,
+            "reasoning_timeout_s": self.reasoning_timeout_s,
+            "enabled": self.enabled,
+            "cache_ttl_hours": self.cache_ttl_hours,
+        }
 
     @classmethod
     def _load_gauss_dotenv(cls) -> None:
@@ -264,7 +344,7 @@ class HermesConfig:
 
         Resolution order (highest → lowest):
           1. Explicit ``HERMES_*`` process env vars (project-scoped overrides)
-             — ``HERMES_MODEL``, ``HERMES_API_BASE``
+             — ``HERMES_MODEL``, ``HERMES_API_BASE``, ``HERMES_FALLBACK_MODELS``
           2. ``config/settings.yaml``  ``hermes:`` block (committed project config)
           3. Shared gauss-level fallback env vars (``GAUSS_DEFAULT_MODEL``,
              ``OPENAI_BASE_URL``) — may come from the shell or ``~/.gauss/.env``
@@ -276,8 +356,12 @@ class HermesConfig:
 
         API keys (``OPENROUTER_API_KEY``, ``ANTHROPIC_API_KEY``,
         ``OPENAI_API_KEY``) follow the env-first convention and may be
-        sourced from the shell OR ``~/.gauss/.env``; the ``hermes.api_key``
-        yaml field is the lowest-priority fallback.
+        sourced from the shell OR ``~/.gauss/.env``. A ``hermes.api_key``
+        yaml field is rejected and never used.
+
+        ``HERMES_FALLBACK_MODELS`` must be a bounded nonempty JSON list of exact
+        model strings. Include only the primary model to freeze primary-only
+        execution; an empty or malformed override fails closed.
 
         After resolving the API key, the method validates that the key
         matches the configured ``base_url`` (e.g. an ``sk-ant-`` key must not
@@ -309,6 +393,9 @@ class HermesConfig:
 
         raw_fallbacks = cfg.get("fallback_models") or []
         fallbacks = [str(m).strip() for m in raw_fallbacks if str(m).strip()]
+        env_fallbacks = _env_fallback_models()
+        if env_fallbacks is not None:
+            fallbacks = env_fallbacks
 
         inst = cls(
             model=cfg.get("model") or _DEFAULT_MODEL,
@@ -885,29 +972,53 @@ class HermesExplainer:
 
         response_holder: list[Any] = []
 
+        def _read_response(resp: Any, *, errors: str = "strict") -> str:
+            # The byte cap and wall deadline apply equally to successful and
+            # error bodies; an HTTPError is also a live response stream.
+            chunks: list[bytes] = []
+            total = 0
+            while True:
+                chunk = resp.read(_MAX_RESPONSE_CHUNK)
+                if not chunk:
+                    break
+                total += len(chunk)
+                if total > _MAX_RESPONSE_BYTES:
+                    raise HermesAPIError(
+                        f"API response exceeds {_MAX_RESPONSE_BYTES} "
+                        "bytes; rejecting oversized stream.",
+                        status_code=None,
+                        transient=True,
+                    )
+                chunks.append(chunk)
+            return b"".join(chunks).decode("utf-8", errors=errors)
+
         def _do_request() -> None:
             try:
-                with urllib.request.urlopen(req, timeout=timeout) as resp:
+                try:
+                    resp = urllib.request.urlopen(req, timeout=timeout)
+                except urllib.error.HTTPError as exc:
+                    response_holder.append(exc)
+                    try:
+                        with exc:
+                            body_str = _read_response(exc, errors="replace")
+                    except (
+                        HermesAPIError,
+                        urllib.error.URLError,
+                        http.client.HTTPException,
+                        TimeoutError,
+                        OSError,
+                    ) as body_exc:
+                        # A broken diagnostic stream cannot erase an observed
+                        # auth/rate-limit status or turn it into a network retry.
+                        body_str = f"diagnostic body unavailable: {body_exc}"
+                    raise HermesAPIError(
+                        f"HTTP {exc.code}: {exc.reason} — {body_str[:300]}",
+                        status_code=exc.code,
+                        transient=False,
+                    ) from exc
+                with resp:
                     response_holder.append(resp)
-                    # Bounded read: a misbehaving endpoint can stream without
-                    # end, and a socket timeout bounds time, not bytes.
-                    chunks: list[bytes] = []
-                    total = 0
-                    while True:
-                        chunk = resp.read(_MAX_RESPONSE_CHUNK)
-                        if not chunk:
-                            break
-                        total += len(chunk)
-                        if total > _MAX_RESPONSE_BYTES:
-                            result["exc"] = HermesAPIError(
-                                f"API response exceeds {_MAX_RESPONSE_BYTES} "
-                                "bytes; rejecting oversized stream.",
-                                status_code=None,
-                                transient=True,
-                            )
-                            return
-                        chunks.append(chunk)
-                    result["raw"] = b"".join(chunks).decode("utf-8")
+                    result["raw"] = _read_response(resp)
             except BaseException as inner_exc:  # re-raised on the calling thread
                 result["exc"] = inner_exc
 
@@ -925,13 +1036,28 @@ class HermesExplainer:
                 # underlying socket into shutdown first; close() on a
                 # shutdown socket returns immediately.
                 with contextlib.suppress(OSError, ValueError, AttributeError):
-                    fp = getattr(resp_obj, "fp", None)
-                    raw = getattr(fp, "raw", None) or fp
-                    sock_obj = getattr(raw, "_sock", None)
-                    if sock_obj is not None:
-                        sock_obj.shutdown(socket.SHUT_RDWR)
+                    stream = resp_obj
+                    # HTTPError wraps HTTPResponse, which adds one fp layer
+                    # compared with a successful urlopen result.
+                    for _ in range(6):
+                        sock_obj = getattr(stream, "_sock", None)
+                        if sock_obj is not None:
+                            sock_obj.shutdown(socket.SHUT_RDWR)
+                            break
+                        stream = getattr(stream, "fp", None) or getattr(
+                            stream, "raw", None
+                        )
+                        if stream is None:
+                            break
                 with contextlib.suppress(OSError, ValueError):
                     resp_obj.close()
+            if isinstance(resp_obj, urllib.error.HTTPError):
+                raise HermesAPIError(
+                    f"HTTP {resp_obj.code}: {resp_obj.reason} — diagnostic body "
+                    f"unavailable: Wall-clock timeout after {timeout}s (model={model})",
+                    status_code=resp_obj.code,
+                    transient=False,
+                ) from resp_obj
             raise HermesAPIError(
                 f"Wall-clock timeout after {timeout}s "
                 f"(model={model}); abandoning request and advancing chain.",
@@ -941,13 +1067,6 @@ class HermesExplainer:
         if "exc" in result:
             try:
                 raise result["exc"]
-            except urllib.error.HTTPError as exc:
-                body_str = exc.read().decode("utf-8", errors="replace")
-                raise HermesAPIError(
-                    f"HTTP {exc.code}: {exc.reason} — {body_str[:300]}",
-                    status_code=exc.code,
-                    transient=False,
-                ) from exc
             except urllib.error.URLError as exc:
                 raise HermesAPIError(
                     f"Network error: {exc.reason}",

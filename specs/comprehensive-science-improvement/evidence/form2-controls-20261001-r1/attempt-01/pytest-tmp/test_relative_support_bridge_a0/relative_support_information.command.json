@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/Users/hum/.elan/bin/lake",
+    "env",
+    "lean",
+    "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form2-controls-20261001-r1/attempt-01/pytest-tmp/test_relative_support_bridge_a0/relative_support_information.lean"
+  ],
+  "cwd": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/lean",
+  "timeout_sec": 300,
+  "returncode": 1
+}

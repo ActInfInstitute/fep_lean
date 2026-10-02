@@ -122,7 +122,14 @@ def _browser_receipt_errors(
     project_root: Path,
     *,
     presentation: FormalismPresentation | None = None,
+    check_runtime: bool = True,
 ) -> tuple[str, ...]:
+    """Validate stored capture bindings, replaying the live browser by default.
+
+    Static mode checks schemas, source/projection hashes, screenshots and
+    recorded observations. It omits executable identification and live replay;
+    an empty result in that mode is not browser acceptance.
+    """
     root = Path(project_root).resolve()
     path = root / BROWSER_RECEIPT
     payload, error = _json_object(path, "browser receipt")
@@ -176,21 +183,22 @@ def _browser_receipt_errors(
             and browser_executable is not None
         ):
             browser_name = name
-            try:
-                live_version, live_digest = _live_browser_identity(
-                    name, browser_executable
-                )
-            except ReleaseBundleError as exc:
-                errors.append(str(exc))
-            else:
-                if version != live_version:
-                    errors.append(
-                        "browser receipt version differs from the live browser"
+            if check_runtime:
+                try:
+                    live_version, live_digest = _live_browser_identity(
+                        name, browser_executable
                     )
-                if executable_sha256 != live_digest:
-                    errors.append(
-                        "browser executable hash differs from the live browser binary"
-                    )
+                except ReleaseBundleError as exc:
+                    errors.append(str(exc))
+                else:
+                    if version != live_version:
+                        errors.append(
+                            "browser receipt version differs from the live browser"
+                        )
+                    if executable_sha256 != live_digest:
+                        errors.append(
+                            "browser executable hash differs from the live browser binary"
+                        )
     render_configuration = payload.get("render_configuration")
     if render_configuration != canonical_browser_render_configuration():
         errors.append("browser render configuration is not canonical")
@@ -364,7 +372,12 @@ def _browser_receipt_errors(
         errors.append("browser screenshot paths must be lexically ordered")
     if set(screenshot_roles) != set(_CANONICAL_BROWSER_SCREENSHOTS):
         errors.append("browser receipt screenshot roles are incomplete")
-    if not errors and browser_name is not None and browser_executable is not None:
+    if (
+        check_runtime
+        and not errors
+        and browser_name is not None
+        and browser_executable is not None
+    ):
         try:
             replay = bundle.replay_browser_acceptance(
                 root,

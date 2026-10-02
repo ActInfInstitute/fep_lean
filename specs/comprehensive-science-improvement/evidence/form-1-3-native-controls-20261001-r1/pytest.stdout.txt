@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal
+configfile: pyproject.toml
+plugins: cov-7.1.0, xdist-3.8.0, timeout-2.4.0, pytest_httpserver-1.1.5
+timeout: 900.0s
+timeout method: thread
+timeout func_only: False
+collected 38 items
+
+tests/test_measure_variational_formalisms.py .............               [ 34%]
+tests/test_horizon1_decision_risk.py .......                             [ 52%]
+tests/test_horizon1_finite_reference.py ..........                       [ 78%]
+tests/test_horizon1_constrained_entropy.py ........                      [100%]
+
+- generated xml file: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form-1-3-native-controls-20261001-r1/focused.junit.xml -
+======================== 38 passed in 216.31s (0:03:36) ========================

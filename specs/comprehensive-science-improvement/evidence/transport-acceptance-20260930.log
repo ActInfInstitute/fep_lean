@@ -1,0 +1,19 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.14.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal
+configfile: pyproject.toml
+plugins: cov-7.1.0, xdist-3.8.0, timeout-2.4.0, pytest_httpserver-1.1.5
+timeout: 900.0s
+timeout method: thread
+timeout func_only: False
+collected 156 items
+
+tests/test_hermes_comprehensive.py ..................................... [ 23%]
+...............................................                          [ 53%]
+tests/test_subprocess_watchdog.py ..................                     [ 65%]
+tests/test_gauss_cli.py s                                                [ 66%]
+tests/test_gauss_cli_sad_paths.py ............                           [ 73%]
+tests/test_runtime_failure_contracts.py ...............                  [ 83%]
+tests/test_status_verb.py ..........................                     [100%]
+
+================== 155 passed, 1 skipped in 204.63s (0:03:24) ==================

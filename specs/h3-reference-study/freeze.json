@@ -1,0 +1,34 @@
+{
+  "carrier_sources": {
+    "src/fep_lean/formal/fin4_gaussian_semigroup.lean": "a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c",
+    "src/fep_lean/formal/gaussian_precision_conditioning.lean": "64afcf45cf2ef44b78db7e5b2fb2de02bd3af80cefda888523baae1043b37c38",
+    "src/fep_lean/formal/scalar_gaussian_semigroup.lean": "d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e"
+  },
+  "decision": "accepted_pre_outcome_protocol",
+  "empirical_gate": "governed_no_go",
+  "frozen_utc": "2026-09-30T20:47:03Z",
+  "g0": {
+    "path": "specs/h3-reference-study/output/g0-20260930.json",
+    "sha256": "6e3727aa85e64f81c89857a682915947ad3f901944914b3b53214746415bc5b1"
+  },
+  "gate": "H3.0",
+  "h2_terminal_at_freeze_sha256": "2d72e6b7205b92a625106e2830c2a01200682ffb3af036dd48118eb88f9067be",
+  "new_model_implementation_started": false,
+  "new_outcomes_accessed": false,
+  "protocol": {
+    "path": "specs/h3-reference-study/preregistration.yaml",
+    "sha256": "50b3575316fb272dc7bf209f50a21330fc5ea0764da9399e20aedeb0b2302c93"
+  },
+  "reviews": {
+    "methodology": {
+      "path": "specs/h3-reference-study/review-methodology.json",
+      "sha256": "1fb83a201280faf933bcd985c7b574e9eb6387b883ceb7313c597c823770dc5a"
+    },
+    "statistical": {
+      "path": "specs/h3-reference-study/review-statistical.json",
+      "sha256": "230afe6c8538c2257a5c48136d885c09b5a100313cbe119a2b93e3bed00e6e28"
+    }
+  },
+  "schema_version": 1,
+  "scope": "Exactly one continuous synthetic branch; no proof, numerical outcome, physical, empirical or publication acceptance inferred."
+}

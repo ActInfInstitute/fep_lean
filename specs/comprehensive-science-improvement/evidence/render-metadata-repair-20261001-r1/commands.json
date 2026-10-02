@@ -1,0 +1,71 @@
+[
+  {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--no-sync",
+      "pytest",
+      "tests/test_manuscript_rendering.py",
+      "tests/test_release_bundle.py",
+      "-q",
+      "--no-cov",
+      "-m",
+      "not serial_lean",
+      "--junitxml=/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/render-metadata-repair-20261001-r1/pytest.xml",
+      "-o",
+      "addopts="
+    ],
+    "elapsed_s": 149.40722549999919,
+    "exit_code": 0,
+    "name": "pytest"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--no-sync",
+      "ruff",
+      "check",
+      "src",
+      "tests",
+      "scripts",
+      "docs"
+    ],
+    "elapsed_s": 0.0680321659965557,
+    "exit_code": 0,
+    "name": "ruff"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--no-sync",
+      "ruff",
+      "format",
+      "--check",
+      "src",
+      "tests",
+      "scripts",
+      "docs"
+    ],
+    "elapsed_s": 0.026444082999660168,
+    "exit_code": 0,
+    "name": "format"
+  },
+  {
+    "argv": [
+      "uv",
+      "run",
+      "--locked",
+      "--no-sync",
+      "mypy",
+      "src"
+    ],
+    "elapsed_s": 0.5945286669957568,
+    "exit_code": 0,
+    "name": "mypy"
+  }
+]

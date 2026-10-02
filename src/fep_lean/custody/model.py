@@ -8,10 +8,10 @@ means a structural or semantic break — a missing or unparseable receipt, a
 drifted ``PREDECESSORS`` pin, or custody semantics the validator itself
 rejects — which no re-bind of the recorded values may paper over.
 
-The FEP-H27-RESEAL row (TODO.md) is the reference case: the native capture
-stale on exactly the 2026-09-21 tests-wave files while the terminal receipt,
-the ``PREDECESSORS`` constant, and the 07-gaussian-vfe-natural-gradient R0
-successor custody stay intact.
+The completed 2026-09-21 tests-wave reseal is a historical reference case:
+the native capture was stale while the terminal receipt, ``PREDECESSORS``
+constant, and 07-gaussian-vfe-natural-gradient R0 successor stayed intact.
+Current classification always reads live bytes rather than that closed backlog.
 """
 
 from __future__ import annotations

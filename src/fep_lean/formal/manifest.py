@@ -327,6 +327,12 @@ FORMAL_MODULES: tuple[FormalModule, ...] = (
         declaration_namespace="FEP.LawWeightedSplit",
     ),
     FormalModule(
+        resource="h3_reference_model.lean",
+        lean_module="FepSketches.h3_reference_model",
+        role=FormalModuleRole.FOUNDATION,
+        declaration_namespace="FEP.H3ReferenceModel",
+    ),
+    FormalModule(
         resource="compositions/core.lean",
         lean_module="FepSketches.compositions.core",
         role=FormalModuleRole.COMPOSITION,
@@ -469,6 +475,12 @@ FORMAL_MODULES: tuple[FormalModule, ...] = (
         lean_module="FepSketches.compositions.geometric_mechanics",
         role=FormalModuleRole.COMPOSITION,
         declaration_namespace="FEPComposed",
+    ),
+    FormalModule(
+        resource="compositions/h3_case_study.lean",
+        lean_module="FepSketches.compositions.h3_case_study",
+        role=FormalModuleRole.COMPOSITION,
+        declaration_namespace="FEPComposed.H3CaseStudy",
     ),
     FormalModule(
         resource="composed.lean",

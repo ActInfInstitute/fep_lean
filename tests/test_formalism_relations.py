@@ -26,6 +26,40 @@ from fep_lean.formal.manifest import FORMAL_MODULES, FormalModuleRole
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SYNTHETIC_ROSTER = ("fep-001", "fep-002", "fep-003")
 
+
+def test_attributed_public_declarations_and_source_blocks_remain_visible(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from fep_lean.formal import declarations
+
+    source = """namespace Fixture
+-- @[simp] theorem commentOnly : True := by trivial
+def text := "@[simp] theorem stringOnly : True := by trivial"
+@[fun_prop] private theorem privateOnly : True := by trivial
+@[simp] @[fun_prop] theorem visible : True := by
+  trivial
+@[simp] def boundary := 1
+@[simp]
+lemma separateAttribute : True := by
+  trivial
+end Fixture
+"""
+    path = tmp_path / "fixture.lean"
+    path.write_text(source)
+    monkeypatch.setattr(declarations, "formal_resource_paths", lambda *a, **k: (path,))
+    assert declarations._qualified_theorems(source) == (
+        "Fixture.visible",
+        "Fixture.separateAttribute",
+    )
+    blocks = declarations.composed_theorem_sources(tmp_path)
+    assert set(blocks) == {"Fixture.visible", "Fixture.separateAttribute"}
+    assert blocks["Fixture.visible"].strip() == (
+        "@[simp] @[fun_prop] theorem visible : True := by\n  trivial"
+    )
+    assert "boundary" not in blocks["Fixture.visible"]
+    assert "privateOnly" not in blocks["Fixture.visible"]
+
+
 BASELINE_CAPABILITY_IDS = frozenset(
     {
         "cap-active-inference-generative-model",

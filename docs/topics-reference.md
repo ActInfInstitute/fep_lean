@@ -1,7 +1,7 @@
 # Topic reference
 
-The schema-2 catalogue currently seals 155 stable identifiers, `fep-001`
-through `fep-155`, across 20 named families. This page explains how to inspect
+The schema-2 catalogue currently seals 168 stable identifiers, `fep-001`
+through `fep-168`, across 22 named families. This page explains how to inspect
 them without copying a second, drift-prone roster.
 
 ## Authoritative views

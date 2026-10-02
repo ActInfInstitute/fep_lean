@@ -1,0 +1,42 @@
+{
+  "accepted_within_scope": true,
+  "actual_child_calls": 4,
+  "actual_child_returncodes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "actual_driver_returncode": 0,
+  "actual_outer_returncode": 0,
+  "changed_paths": [],
+  "claim_ready": false,
+  "collected_selected_nodes": 2320,
+  "coverage": {
+    "line_rate": 0.9065,
+    "lines_covered": 14914,
+    "lines_valid": 16452,
+    "required_minimum": 0.89
+  },
+  "deselected_serial_nodes": 537,
+  "elapsed_seconds": 1288.4937358330062,
+  "git_publication_verified": false,
+  "guarded_file_count": 1240,
+  "hosted_acceptance": false,
+  "kind": "dated-public-actual-canonical-python-acceptance-summary",
+  "official_output_sha256": {
+    "output/coverage.xml": "15a0afcbb7b81d0704b1e26c0bc11e5ae25fd6da806b7d41707e444069f7868b",
+    "output/pytest.xml": "0e043737b03a16f079c22829021e73f42cb00bc438e2100abe7c687f2ba254d3",
+    "output/python-acceptance.json": "da5ae12e4964cf8f04be0d155424311fc59e331ece708eefcaa44fdabd238dfe"
+  },
+  "passed": 2308,
+  "production_package_accepted": false,
+  "receipt_sha256": "04ca160b653da413f8ed090b6542cdc6bd69970b1975bf65a54a9277645b9d58",
+  "schema_version": 1,
+  "scientific_primary_executed": false,
+  "scope": "Actual unchanged complete nonserial canonical CPython3.14 validator, existing skip policy and coverage89 gate; native, provider, hosted, production package and H3 scientific outcomes remain separate. Private operator/outer-supervision journals stay local. Earlier rejected attempts are retained unchanged.",
+  "skipped": 12,
+  "source_stable": true,
+  "validation_errors": [],
+  "validator": "CPython 3.14.4"
+}

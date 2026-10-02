@@ -5,7 +5,8 @@ relations-ledger review entries recorded for every offender row on 2026-09-22.
 
 ## Context
 
-[SCOPE-2026-09-09](../SCOPE-2026-09-09.md) item SRC 1 proposed tightening the
+The [historical 2026-09-09 scope](https://github.com/ActiveInferenceInstitute/fep_formal/blob/cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed/SCOPE-2026-09-09.md)
+item SRC 1 proposed tightening the
 theorem-witness endpoint check in
 `src/fep_lean/catalogue/coverage.py:157-164`: instead of accepting any mention
 of each endpoint's topic namespace, require a qualified reference to each

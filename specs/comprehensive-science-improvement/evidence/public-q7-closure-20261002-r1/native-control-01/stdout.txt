@@ -1,0 +1,14 @@
+'FEPProbe.Q7ContinuousOU.selected_decay' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.selected_transitionVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.exact_row_eq_selected' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_exact_parameters' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.exact_noise_formula' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_F_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_Q_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_prediction_mean_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_prediction_variance_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.artifact_stationary_defect_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FEPProbe.Q7ContinuousOU.nonstationary_prediction_changes_mean' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'FEPProbe.Q7ContinuousOU.scalar_joseph_identity' depends on axioms: [propext, Classical.choice, Quot.sound]

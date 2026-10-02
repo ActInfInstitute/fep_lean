@@ -1,0 +1,56 @@
+{
+  "claim_ready": false,
+  "git_publication_verified": false,
+  "hosted_acceptance": false,
+  "installed_wheel_matrix_acceptance": false,
+  "kind": "dated-public-observational-prepublication-check-summary",
+  "observations": {
+    "actual_local_render": {
+      "accepted": true,
+      "actual_stages": [
+        "catalogue",
+        "render-produce",
+        "projection-check",
+        "font-check",
+        "render-log-check",
+        "render-check"
+      ],
+      "boundary": "Real local catalogue/render/strict checks; no complete production package, hosted or provider acceptance follows.",
+      "elapsed_s": 468.7105339169939,
+      "receipt_sha256": "08e205df2cecd21d71b42ec3b359a01b6d9c5b301fcb7a7c035d75e7aacff1ce",
+      "retained_artifact_count": 145,
+      "source_owner_count": 291,
+      "source_stable": true
+    },
+    "actual_q7_current_document_observation": {
+      "accepted": true,
+      "boundary": "Read-only checks over the unchanged accepted Q7 native receipt and source pair; Q5/Q6 remain historical.",
+      "elapsed_s": 39.12088545899314,
+      "official_native_receipt_sha256": "b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b",
+      "receipt_sha256": "447d1760e818f64830740448bde7db67f4b46ee7da9ea22e4874f9edff834605",
+      "runtime_execution_verified": false,
+      "source_stable": true
+    },
+    "focused_ci_and_pin_controls": {
+      "actual_passed": 34,
+      "boundary": "CPython3.14 harness controls; native/audit/tool discovery stubs in CI staging controls do not prove hosted rendering or native compilation.",
+      "junit_sha256": "bf636dec4a2b64991a5757210ecd726312bbb22188a39e5de7ea80b854315bc0",
+      "receipt_sha256": "38cc4ff1951c03a56ff401adc29e657932a5316382c671851de8a32a56766c3a",
+      "skipped": 0
+    }
+  },
+  "production_package_acceptance": false,
+  "reviewed_focused_source_sha256": {
+    ".github/workflows/ci.yml": "d86ed1d139edd6672a9ef4b0e818aec6838eff8da2eb57765cca79fc04058a80",
+    "docs/pin_audit.py": "3329988cbaaeebc5b45f13d6751f53f54639f1037747875d0f0eb09505d5f02e",
+    "specs/gnn-bridge-q5-artifact-proof/REPORT.md": "34b5f3365fff4d429376e572c0874380c0906d37808ed8724e093c55bf1dd8ee",
+    "specs/gnn-bridge-q6-activeinference-artifact/REPORT.md": "e7dd96f407ef218093416e4875bd699ebed288e70cbb9fd36dad9959fdc66db2",
+    "specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md": "ae3beebf1c077c370776d9ac0939e5287437ac78ae4f9b35ef5237b241e709e8",
+    "tests/test_distribution.py": "532c5f4c12d36c31eff72f216ee29c1d3bdb50a9ef5966aadd2e805a274de4cc",
+    "tests/test_pin_audit_latest.py": "1f6df0c6430dc4fbf3ad236d3ab4d171b6e21e6c841c887f8f8fd9f9c862280e"
+  },
+  "schema_version": 1,
+  "scientific_primary_acceptance": false,
+  "scope": "Curated public facts from actual closed scoped checks; private operator/acquisition/account and outer-supervisor journals remain local. No comprehensive completion claim.",
+  "whole_python_acceptance": false
+}

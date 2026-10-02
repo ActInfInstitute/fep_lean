@@ -15,7 +15,8 @@ Canonical sources of truth (read at every invocation, never the docs):
 
 The script then walks every current ``*.md`` in this standalone checkout
 (excluding ``manuscript/`` which uses ``{{...}}`` placeholders rendered from
-``manuscript_vars.yaml``, completed historical specs, and
+``manuscript_vars.yaml``, completed historical specs, retained scientific
+improvement evidence journals, and
 ``docs/_generated/`` which is build output) and flags any *literal* pin that
 does not match the canonical value. For ``CHANGELOG.md``, only the current
 ``Unreleased`` section is audited; older release notes intentionally retain
@@ -85,6 +86,7 @@ EXCLUDED_PATH_FRAGMENTS = (
     "/output/",
     "/.herdr-project/",
     "/specs/done/",
+    "/specs/comprehensive-science-improvement/evidence/",
 )
 
 _RE_LEAN_TOOLCHAIN = re.compile(r"leanprover/lean4:v(\d+\.\d+\.\d+)")

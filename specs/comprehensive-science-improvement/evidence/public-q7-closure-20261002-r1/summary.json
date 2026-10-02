@@ -1,0 +1,207 @@
+{
+  "boundary": "Compiler statements for the canonical selected OU artifact only. Generated runner execution, physical/causal/FEP universality, provider execution, whole-package/publication and H3 scientific acceptance are not established by these Q7 records.",
+  "canonical_scaffold": {
+    "boundary": "Actual static serialization parity; CPython3.14 remains the evidence validator.",
+    "bytes": 56968,
+    "controls_per_runtime": 11,
+    "runtimes": [
+      "3.10.20",
+      "3.11.15",
+      "3.12.13",
+      "3.13.15",
+      "3.14.4"
+    ],
+    "sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec"
+  },
+  "capture": {
+    "accepted": true,
+    "elapsed_s": 644.5096104589975,
+    "retained_prefix_origin": "Stages1\u20137 are actual accepted substages from the rejected r2 attempt, freshly revalidated by r3; the r2 parent remains failed. Stages8\u201312 were actually executed in r3.",
+    "stage_ids": [
+      "pin",
+      "emit-finite",
+      "emit-continuous",
+      "check-finite",
+      "check-continuous",
+      "bridge-status",
+      "q7-canonical-render",
+      "q7-parity-if-inputs-changed",
+      "q7-regenerate",
+      "q7-generation-check",
+      "q7-new-native-capture",
+      "q7-new-native-check"
+    ],
+    "stage_verdicts": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "claim_ready": false,
+  "closure": {
+    "accepted": true,
+    "elapsed_s": 1648.1617973339962,
+    "native_controls": [
+      {
+        "completed": true,
+        "elapsed_s": 461.6010143750027,
+        "failure": null,
+        "nodeid": "tests/test_gnn_continuous_native_proof.py::test_native_ou_bounds_have_complete_standard_axiom_census",
+        "returncode": 0
+      },
+      {
+        "completed": true,
+        "elapsed_s": 401.9785590829997,
+        "failure": null,
+        "nodeid": "tests/test_gnn_continuous_native_proof.py::test_native_wrong_coefficient_cannot_prove_rounding_bound[artifactF]",
+        "returncode": 1
+      },
+      {
+        "completed": true,
+        "elapsed_s": 61.22112762500183,
+        "failure": null,
+        "nodeid": "tests/test_gnn_continuous_native_proof.py::test_native_wrong_coefficient_cannot_prove_rounding_bound[artifactQ]",
+        "returncode": 1
+      }
+    ],
+    "stages": [
+      {
+        "accepted": true,
+        "elapsed_s": 72.10332404200017,
+        "name": "finite-emission",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 101.21374191599898,
+        "name": "continuous-emission",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 97.52968620799948,
+        "name": "bridge-status",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 78.88693537499785,
+        "name": "static-generation",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 121.2101177920049,
+        "name": "native-before-controls",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 1053.1227587920002,
+        "name": "three-native-controls",
+        "returncode": 0
+      },
+      {
+        "accepted": true,
+        "elapsed_s": 45.071439416999056,
+        "name": "native-after-controls",
+        "returncode": 0
+      }
+    ]
+  },
+  "kind": "public-Q7-actual-closure-observation",
+  "native_receipt": {
+    "boundary": "The byte-exact official receipt supplies its independently checked native claim. This observation is not a substitute native receipt.",
+    "native_claim_ready": true,
+    "path": "specs/comprehensive-science-improvement/evidence/q7-accepted-native-retention-20261002-r1/native-receipt.json",
+    "runtime_execution_verified": false,
+    "sha256": "b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b"
+  },
+  "observational_summary_only": true,
+  "private_capture_sha256": "8c7c8d89023eb9784405143c1750b4b7ddd4ff1453dbbd089e9d660633b912ad",
+  "private_closure_sha256": "df7787a925bf1011a9bd09a8bcc5ae20240792ea0b4ca9bc435eb5204225ba59",
+  "private_operator_journals_published": false,
+  "published_files": {
+    "native-control-01/result.json": {
+      "bytes": 1558,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "8ceb57ba4809f17b626e351352b84a49484a05eac4190bad98f142fdc4f0318f"
+    },
+    "native-control-01/stderr.txt": {
+      "bytes": 0,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-control-01/stdout.txt": {
+      "bytes": 1327,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "f7c8fa55b3c041ed2c9bdfbceac9bdce6a6e65b338be2ccc964cbdf1c58277dc"
+    },
+    "native-control-02/result.json": {
+      "bytes": 1575,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "027d5072acdd9812aa4aa73390e421c518436d01b3ccbacca9b415b824432260"
+    },
+    "native-control-02/stderr.txt": {
+      "bytes": 0,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-control-02/stdout.txt": {
+      "bytes": 178,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "7b5f472c32558fb003e831b9053ed0fa5af1752924caaa8f68fce6704a8bcb1a"
+    },
+    "native-control-03/result.json": {
+      "bytes": 1575,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "5d5b504a4048b2e68463f592cc7234398792eeaef4c820a0ad1b78592e3e9e84"
+    },
+    "native-control-03/stderr.txt": {
+      "bytes": 0,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-control-03/stdout.txt": {
+      "bytes": 326,
+      "scope": "Exact actual native child outcome or helper-decoded compiler text; no operator inventory.",
+      "sha256": "95e409c85a283b28ff587afa93ff9e4e5e7e87da84953dd29fa6cae33520ad81"
+    },
+    "static-controls.junit.xml": {
+      "bytes": 21544,
+      "scope": "Actual full124 static controls; JUnit unchanged.",
+      "sha256": "02083710da11651c02bb083a1bab8417aa62afeae4a3f3699f34d6794338c89b"
+    }
+  },
+  "remaining_planes": [
+    "complete canonical Python",
+    "final render and package capture",
+    "15 hosted distribution cells",
+    "H3 primary and outcome reviews/reproduction",
+    "optional full provider run"
+  ],
+  "schema_version": 1,
+  "source_scope": {
+    "boundary": "Canonical source/hash bindings and explicit source pair; full operator/environment/Git inventories are retained privately.",
+    "fep_owner_count": 191,
+    "gnn_commit": "536d949829f6aed11dc540e5c5dec77578b25016",
+    "gnn_owner_count": 703,
+    "native_source_config_count": 291
+  },
+  "static_controls": {
+    "errors": 0,
+    "failed": 0,
+    "inventory_controls_passed": 12
+  },
+  "static_controls_passed": 124,
+  "static_controls_skipped": 0
+}

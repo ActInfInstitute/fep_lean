@@ -1267,7 +1267,9 @@ topics:
   primary_theorem: fep063_finiteChannel_klDataProcessing
   supporting_theorems:
   - fep063_referencePredictive_fullSupport
-  boundary_theorems: []
+  - fep063_identityChannel_preservesKL
+  boundary_theorems:
+  - fep063_constantChannel_strict
   invariant: >-
     Passing two finite full-support laws through the same strictly positive
     finite channel cannot increase their finite KL divergence.
@@ -1278,32 +1280,63 @@ topics:
     most general measure-theoretic data-processing theorem.
   non_vacuity: >-
     Any noisy positive channel acting on unequal full-support input laws exercises
-    a genuine contraction comparison, while deterministic or zero-probability
-    channel rows are deliberately outside this statement.
+    a genuine contraction comparison. Separate identity and complete-coarsening
+    witnesses cover deterministic zero-entry channels: identity preserves finite
+    KL and complete coarsening strictly reduces it for unequal laws. These do not
+    weaken the support premises of the primary theorem or identify singular
+    native infinity with the project's totalized finite convention.
   acceptance_probe: >-
     native Lean compile of fep063_finiteChannel_klDataProcessing and
-    fep063_referencePredictive_fullSupport with all three support certificates.
+    fep063_referencePredictive_fullSupport with all three support certificates,
+    plus fep063_identityChannel_preservesKL and fep063_constantChannel_strict.
   disposition: conditional_proxy
 - id: fep-064
   primary_theorem: fep064_rateDistortion_weakDuality
-  supporting_theorems: []
+  supporting_theorems:
+  - fep064_rateDistortion_exists_minimizer
+  - fep064_rateDistortion_dual_lower_bound
+  - fep064_quarterBudget_informative_optimum
   boundary_theorems:
   - fep064_zeroMultiplier_boundary
+  - fep064_dual_zeroMultiplier
+  - fep064_negativeBudget_infeasible
+  - fep064_halfBudget_nonunique
+  - fep064_zeroBudget_unique
   invariant: >-
     Separately certified lower bounds on finite mutual information and expected
     distortion combine into a lower bound on their rate–distortion Lagrangian for
-    every nonnegative multiplier.
+    every nonnegative multiplier. Supporting theorems now additionally establish
+    an attained information minimum for every nonempty finite fixed-source
+    distortion-feasible set, an actual Lagrangian-infimum weak-duality bound,
+    and an attained strictly positive optimum at fair Boolean Hamming budget
+    one quarter.
   assumption_review: >-
     The theorem assumes both component lower bounds rather than deriving a dual
-    function or proving primal or dual optimizer existence. The multiplier is
-    nonnegative, and the zero-multiplier theorem identifies the exact rate-only
-    boundary.
+    function. The supporting attainment theorem instead derives primal optimizer
+    existence from compactness and the continuous zero-safe entropy expression
+    for mutual information, requiring only a feasible finite joint with fixed
+    source marginal. Infimum-derived weak duality requires nonnegative distortion
+    and multiplier; zero-multiplier dual value requires a nonempty code alphabet.
+    Neither general strong duality, dual attainment, a closed-form interior rate
+    function, nor general optimizer uniqueness is claimed. The structural-proxy
+    disposition and primary theorem remain unchanged: the primary theorem still
+    assumes separately certified component lower bounds, while the independently
+    reviewed supporting theorems establish finite optimizer attainment and
+    infimum-derived weak duality.
   non_vacuity: >-
     Positive multipliers make both certified components contribute, while setting
-    the multiplier to zero reduces the Lagrangian exactly to mutual information.
+    the multiplier to zero reduces the Lagrangian exactly to mutual information
+    and gives dual value zero. A concrete quarter-crossover Boolean joint makes
+    the interior budget feasible, while every independent fair-source joint has
+    distortion one half, forcing the attained quarter-budget optimum positive.
+    Negative budgets are infeasible, zero budget forces a unique diagonal joint,
+    and half budget has two distinct independent information minimizers.
   acceptance_probe: >-
     native Lean compile of fep064_rateDistortion_weakDuality and
-    fep064_zeroMultiplier_boundary without an optimizer-existence assumption.
+    fep064_zeroMultiplier_boundary, all three supporting attainment/duality/
+    informative-interior declarations, and the zero-dual, negative-budget,
+    nonunique-half-budget, and unique-zero-budget boundaries. The actual optimizer
+    is derived, never supplied as a certificate field.
   disposition: structural_proxy
 - id: fep-065
   primary_theorem: fep065_controlledKernel_normalization

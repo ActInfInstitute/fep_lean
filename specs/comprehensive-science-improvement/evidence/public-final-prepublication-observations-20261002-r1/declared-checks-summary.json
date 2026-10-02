@@ -1,0 +1,358 @@
+{
+  "accepted_within_listed_scope": true,
+  "checks": [
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "lock",
+        "--check"
+      ],
+      "name": "uv-lock",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "pip",
+        "check"
+      ],
+      "name": "uv-pip",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/_maint_build_topics_catalogue.py",
+        "--check"
+      ],
+      "name": "topics",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/_maint_build_fep_all_lean.py",
+        "--check"
+      ],
+      "name": "fep-all",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/_maint_build_formal_modules.py",
+        "--check"
+      ],
+      "name": "formal-modules",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/theorem_maturity_audit.py",
+        "--check"
+      ],
+      "name": "maturity",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/build_formalism_coverage.py",
+        "--check"
+      ],
+      "name": "coverage-projection",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/_maint_build_lean_landscape.py",
+        "--check"
+      ],
+      "name": "lean-landscape",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/build_formalism_atlas.py",
+        "--check"
+      ],
+      "name": "atlas",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/build_formal_kernel_dashboard.py",
+        "--check"
+      ],
+      "name": "dashboard",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/theorem_ref_audit.py"
+      ],
+      "name": "theorem-references",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/citation_audit.py"
+      ],
+      "name": "citations",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/render_manuscript.py",
+        "--check"
+      ],
+      "name": "manuscript-readonly",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/build_render_fonts.py",
+        "--check"
+      ],
+      "name": "fonts-readonly",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "scripts/check_render_log.py",
+        "--verify-receipt"
+      ],
+      "name": "render-log-readonly",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "mypy",
+        "src"
+      ],
+      "name": "mypy",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "ruff",
+        "check",
+        "src",
+        "tests",
+        "scripts",
+        "docs"
+      ],
+      "name": "ruff-check",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "ruff",
+        "format",
+        "--check",
+        "src",
+        "tests",
+        "scripts",
+        "docs"
+      ],
+      "name": "ruff-format-readonly",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/check_links.py",
+        "--strict",
+        "--include-root"
+      ],
+      "name": "strict-links",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/md_hygiene.py",
+        "--strict"
+      ],
+      "name": "markdown-hygiene",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/pin_audit.py",
+        "--check-latest"
+      ],
+      "name": "latest-pin-audit",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/xref_audit.py"
+      ],
+      "name": "cross-references",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "docs/check_orphan_compiles.py"
+      ],
+      "name": "orphan-compilation",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "specs/gnn-bridge-q5-artifact-proof/generate_probe.py",
+        "--check"
+      ],
+      "name": "q5-frozen-static",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "argv": [
+        "uv",
+        "run",
+        "--locked",
+        "--no-sync",
+        "python",
+        "specs/geo-infer-notation-bridge/check_geo_notation_bridge.py",
+        "--check"
+      ],
+      "name": "geo-notation-static",
+      "returncode": 0
+    }
+  ],
+  "claim_ready": false,
+  "elapsed_seconds": 172.30837529199198,
+  "kind": "dated-public-actual-declared-check-summary",
+  "receipt_sha256": "2bba9d8ff251347ec3d22fbf00c9723a191a782c64a002604e9914cbc943e359",
+  "schema_version": 1,
+  "scope": "Actual25 listed read-only repository checks including serialized orphan compilation, live latest-pin query and strict links/hygiene/xrefs. Complete Python, native168/audit, seven-stage package, hosted/provider and H3 scientific outcomes retain separate gates. Private raw command and operator journals remain local.",
+  "source_owner_count": 291,
+  "source_stable": true
+}

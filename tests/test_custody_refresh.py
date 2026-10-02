@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
@@ -48,6 +49,7 @@ from tests._support.custody_fixture_knobs import (
     drift_file,
     fixture_root,
     spec_path,
+    stage_specs,
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -75,9 +77,22 @@ def test_native_receipt_path_is_the_sealed_relative_contract() -> None:
 
 
 def _stage_specs(tmp_path: Path) -> Path:
-    target = tmp_path / "specs"
-    shutil.copytree(REPO_ROOT / "specs", target, symlinks=False)
-    return target
+    return stage_specs(REPO_ROOT, tmp_path / "specs")
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_custody_epoch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """All positive receipt/commit records here are fabricated unit inputs."""
+    root = fixture_root(tmp_path, monkeypatch)
+    monkeypatch.setattr(sys.modules[__name__], "REPO_ROOT", root)
+    committed = {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+    monkeypatch.setattr(
+        refresh_module, "_git_show", lambda project, relative: committed.get(relative)
+    )
 
 
 def _out_dir(tmp_path: Path) -> Path:
@@ -630,11 +645,12 @@ def sandboxed_receipt(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 
 def _claim_ready_payload() -> dict[str, object]:
-    """Build a claim-ready native receipt payload from the live tree.
+    """Build a validator-accepted synthetic payload bound to the fixture tree.
 
     Rows are synthetic (every topic compiles clean) but the digests, roster,
-    and toolchain identity are recomputed from the live tree, so validation
-    through the real validator exercises the full live binding.
+    and toolchain identity are recomputed from the disposable source tree.
+    No compiler runs; this exercises validation and composition, not actual
+    native acceptance.
     """
     pin = pinned_lean_semver(
         (REPO_ROOT / "lean" / "lean-toolchain").read_text().strip()
@@ -661,9 +677,9 @@ def _claim_ready_payload() -> dict[str, object]:
 
 @pytest.fixture()
 def claim_ready_receipt(sandboxed_receipt: Path) -> Iterator[Path]:
-    """A real claim-ready native receipt at the sandboxed path.
+    """A clearly synthetic native receipt at the sandboxed path.
 
-    The receipt bytes bind the live tree (digests, roster, toolchain pin)
+    The fabricated receipt binds the fixture (digests, roster, toolchain pin)
     and are revalidated through the real validator, so a toolchain-pin or
     roster bump fails loudly with the validator's errors, never as a silent
     test drift. The path lives in the test sandbox: parallel xdist workers
@@ -1092,6 +1108,13 @@ def test_cli_fixpoint_happy_path_payload(
 FIXTURE_PATH = "tests/_support/custody_fixture_knobs.py"
 
 
+def _head_bytes(relative: str) -> bytes:
+    """Read the explicit synthetic committed-byte seam, independent of drift."""
+    data = refresh_module._git_show(REPO_ROOT, relative)
+    assert data is not None, relative
+    return data
+
+
 def _resume_journal(
     tmp_path: Path,
     *,
@@ -1401,7 +1424,7 @@ def test_resume_barrier_fires_before_any_capture(
 
     _resume_ready(monkeypatch)
     monkeypatch.setattr(refresh_module, "_run", bomb)
-    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    docs = _head_bytes("docs/development.md")
     operation = _resume_journal(
         tmp_path, changed_paths={"docs/development.md": _sha(docs)}
     )
@@ -1427,7 +1450,7 @@ def test_resume_barrier_acknowledged_on_reinvocation(
 ) -> None:
     """Second resume with unchanged barrier paths: re-validate, then proceed."""
     calls = _resume_ready(monkeypatch)
-    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    docs = _head_bytes("docs/development.md")
     changed = {"docs/development.md": _sha(docs)}
     operation = _resume_journal(tmp_path, changed_paths=changed)
     with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
@@ -1438,7 +1461,11 @@ def test_resume_barrier_acknowledged_on_reinvocation(
             operation,
             reason="r",
         )
-    # The coordinator re-accepts the render and re-invokes --resume.
+    # Re-invocation must validate the actual acceptance rather than imply it.
+    accepted = {"receipt_sha256": "a" * 64}
+    monkeypatch.setattr(
+        refresh_module, "_validate_render_acceptance", lambda root: accepted
+    )
     journal = resume_refresh(
         REPO_ROOT / "specs",
         REPO_ROOT,
@@ -1449,6 +1476,7 @@ def test_resume_barrier_acknowledged_on_reinvocation(
     assert journal["state"] == "captured"
     assert journal["render_barrier_paths"] == []
     assert journal["resume_attempts"] == 1  # the barrier stop never counted
+    assert journal["render_acceptance"] == accepted
     assert len(calls) == 3  # verify set ran only on the acknowledged pass
     landed = json.loads((operation / "journal.json").read_text(encoding="utf-8"))
     assert landed["state"] == "captured"
@@ -1464,13 +1492,13 @@ def test_resume_barrier_rearms_on_a_new_render_input(
 ) -> None:
     """A changed-path set with a NEW render input re-triggers the barrier."""
     _resume_ready(monkeypatch)
-    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    docs = _head_bytes("docs/development.md")
     knobs = (REPO_ROOT / FIXTURE_PATH).read_bytes()
     changed = {
         "docs/development.md": _sha(docs),
         FIXTURE_PATH: _sha(knobs),
         "src/fep_lean/output/rendering.py": _sha(
-            (REPO_ROOT / "src/fep_lean/output/rendering.py").read_bytes()
+            _head_bytes("src/fep_lean/output/rendering.py")
         ),
     }
     operation = _resume_journal(tmp_path, changed_paths=changed)
@@ -1488,7 +1516,12 @@ def test_resume_barrier_rearms_on_a_new_render_input(
         "docs/development.md",
         "src/fep_lean/output/rendering.py",
     ]
-    # Acknowledge with the recorded paths: the re-invocation proceeds.
+    # Validate an accepted render before the re-invocation proceeds.
+    monkeypatch.setattr(
+        refresh_module,
+        "_validate_render_acceptance",
+        lambda root: {"receipt_sha256": "a" * 64},
+    )
     journal = resume_refresh(
         REPO_ROOT / "specs",
         REPO_ROOT,
@@ -1499,7 +1532,7 @@ def test_resume_barrier_rearms_on_a_new_render_input(
     assert journal["state"] == "captured"
     # A NEW render input after acknowledgment re-arms the barrier: rebuild a
     # fresh resumable journal (state awaiting-commit) with the new path added.
-    render_script = (REPO_ROOT / "scripts/render_manuscript.py").read_bytes()
+    render_script = _head_bytes("scripts/render_manuscript.py")
     rearmed_operation = _resume_journal(
         tmp_path,
         changed_paths={
@@ -1523,6 +1556,132 @@ def test_resume_barrier_rearms_on_a_new_render_input(
         "scripts/render_manuscript.py",
         "src/fep_lean/output/rendering.py",
     ]
+
+
+def test_resume_reinvocation_cannot_acknowledge_a_rejected_render(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls = _resume_ready(monkeypatch)
+    changed = {"docs/development.md": _sha(_head_bytes("docs/development.md"))}
+    operation = _resume_journal(tmp_path, changed_paths=changed)
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+        resume_refresh(
+            REPO_ROOT / "specs", REPO_ROOT, tmp_path / "output", operation, reason="r"
+        )
+
+    def rejected(root: Path) -> dict[str, str]:
+        raise RefreshRefused("render-acceptance barrier: stale manuscript")
+
+    monkeypatch.setattr(refresh_module, "_validate_render_acceptance", rejected)
+    with pytest.raises(RefreshRefused, match="stale manuscript"):
+        resume_refresh(
+            REPO_ROOT / "specs", REPO_ROOT, tmp_path / "output", operation, reason="r"
+        )
+    landed = json.loads((operation / "journal.json").read_text())
+    assert landed["state"] == "awaiting-render-acceptance"
+    assert "render_acceptance" not in landed
+    assert calls == []
+
+
+def _render_candidate(root: Path) -> Path:
+    from fep_lean.output.render_log import build_acceptance_receipt
+
+    manuscript = root / "manuscript"
+    manuscript.mkdir()
+    (manuscript / "01_abstract.md").write_text("A named scientific model.\n")
+    (manuscript / "09z_unified_formalism_catalogue.md").write_text("# Catalogue\n")
+    pdf = root / "output/pdf"
+    pdf.mkdir(parents=True)
+    counts = dict.fromkeys(
+        (
+            "tex_errors",
+            "missing_characters",
+            "mermaid_fallbacks",
+            "stale_sources",
+            "uncaptioned_tables",
+            "contents_number_overflows",
+        ),
+        0,
+    )
+    receipt = root / "docs/render-acceptance.json"
+    receipt.parent.mkdir()
+    receipt.write_text(
+        json.dumps(build_acceptance_receipt(manuscript, pdf, counts=counts))
+    )
+    provenance = root / "output/manuscript/renderer-provenance.json"
+    provenance.parent.mkdir(parents=True)
+    provenance.write_text('{"fixture": true}\n')
+    return receipt
+
+
+@pytest.mark.parametrize("defect", ("missing", "rejected", "stale", "malformed"))
+def test_render_barrier_rejects_invalid_receipts_before_reproduction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, defect: str
+) -> None:
+    from fep_lean.output import release_bundle
+
+    receipt = _render_candidate(tmp_path)
+    if defect == "missing":
+        receipt.unlink()
+    elif defect == "rejected":
+        payload = json.loads(receipt.read_text())
+        payload["accepted"] = False
+        receipt.write_text(json.dumps(payload))
+    elif defect == "malformed":
+        receipt.write_text("invalid JSON")
+    else:
+        (tmp_path / "manuscript/01_abstract.md").write_text("Changed model.\n")
+
+    def forbidden(root: Path) -> tuple[str, ...]:
+        raise AssertionError("invalid acceptance launched publication reproduction")
+
+    monkeypatch.setattr(release_bundle, "publication_manuscript_errors", forbidden)
+    with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+        refresh_module._validate_render_acceptance(tmp_path)
+
+
+@pytest.mark.parametrize(
+    "defect", ("none", "hydration_drift", "output_drift", "source_race", "receipt_race")
+)
+def test_render_barrier_binds_acceptance_and_independent_reproduction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, defect: str
+) -> None:
+    from fep_lean.output import release_bundle
+
+    receipt = _render_candidate(tmp_path)
+    before = receipt.read_bytes()
+    calls: list[Path] = []
+    hydration_calls: list[Path] = []
+
+    def hydrate_check(root: Path) -> tuple[str, ...]:
+        hydration_calls.append(root)
+        if defect == "hydration_drift":
+            return ("rendered manuscript is stale: output/manuscript/01_abstract.md",)
+        return ()
+
+    def reproduce(root: Path) -> tuple[str, ...]:
+        calls.append(root)
+        if defect == "output_drift":
+            return (
+                "publication manuscript member is stale: output/manuscript/fep.pdf",
+            )
+        if defect == "source_race":
+            (root / "manuscript/01_abstract.md").write_text("Changed during check.\n")
+        elif defect == "receipt_race":
+            receipt.write_text(receipt.read_text() + "\n")
+        return ()
+
+    monkeypatch.setattr(release_bundle, "publication_manuscript_errors", reproduce)
+    monkeypatch.setattr(release_bundle, "_rendered_manuscript_errors", hydrate_check)
+    if defect == "none":
+        accepted = refresh_module._validate_render_acceptance(tmp_path)
+        assert accepted["receipt_sha256"] == _sha(before)
+        assert len(accepted["renderer_provenance_sha256"]) == 64
+    else:
+        with pytest.raises(RefreshRefused, match="render-acceptance barrier"):
+            refresh_module._validate_render_acceptance(tmp_path)
+    assert hydration_calls == [tmp_path]
+    assert calls == ([] if defect == "hydration_drift" else [tmp_path])
 
 
 def test_resume_native_happy_path_captures_claim_ready(
@@ -1711,7 +1870,7 @@ def test_cli_resume_render_barrier_exits_one_with_state(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     _resume_ready(monkeypatch)
-    docs = (REPO_ROOT / "docs/development.md").read_bytes()
+    docs = _head_bytes("docs/development.md")
     operation = _resume_journal(
         tmp_path, changed_paths={"docs/development.md": _sha(docs)}
     )

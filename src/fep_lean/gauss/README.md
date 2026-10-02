@@ -15,9 +15,13 @@ prose-only prompt. Both turns are stored, separately cached, and required for
 workflow success. Compiler warnings remain explicit topic failures even when
 Lean returns zero.
 
-`check_gauss_cli(project_root, require=...)` runs `gauss doctor`. Missing or
-unhealthy Gauss is advisory when `require=False` and fatal when `require=True`;
-full pipeline mode always requires it. There is no environment switch that
+`check_gauss_cli(project_root, require=...)` runs a bounded `gauss --version`
+with a fresh temporary `GAUSS_HOME` and update checks disabled. Missing or
+unrecognized CLI output is advisory when `require=False` and fatal when
+`require=True`; full pipeline mode always requires it. CLI availability does
+not establish provider or session health. Automatic preflight avoids upstream
+`doctor`, which can read or refresh managed account credentials. Separate Hermes,
+SQLite and pinned Lean checks remain strict. There is no environment switch that
 turns a requested full run into an offline run—select `mode="catalogue"`
 explicitly for offline artifact generation.
 

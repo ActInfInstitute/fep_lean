@@ -1,0 +1,47 @@
+{
+  "accepted": true,
+  "boundary": "Actual three read-only checks after independent two-document review. Separate accepted native receipt supplies its own claim. No compiler run, runner simulation, provider, complete Python, package, hosted or primary study evidence is inferred. Detailed operator custody records stay local.",
+  "checks": [
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 1.6154645419956069,
+      "name": "bridge-status",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 0.9985710410037427,
+      "name": "static-generation",
+      "returncode": 0
+    },
+    {
+      "accepted": true,
+      "completed": true,
+      "elapsed_s": 1.9736289580032462,
+      "name": "native-receipt-check",
+      "returncode": 0
+    }
+  ],
+  "claim_ready": false,
+  "document_delta": {
+    "specs/gnn-bridge-q7-continuous-ou-proof/README.md": {
+      "new_sha256": "ddc8ae74419f1867837bdd4a97a95cda408ed57262d9c1af717cda7bfb02c69c",
+      "old_sha256": "7ad238c83b4e4ef2af9c3c5f07d22add113b817771f6d7c1d06bf89f4c931f85"
+    },
+    "specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md": {
+      "new_sha256": "02e581105648033cca352027447d7c810a5436918566e8e2ac1de151f072233b",
+      "old_sha256": "75944d113ae2cfd082d6c2f62b08b25052cbfc75ba8c3aac0914ef2a4a6d6123"
+    }
+  },
+  "elapsed_s": 42.681916082998214,
+  "independent_document_review_sha256": "5128e9e9d8ffd5c8c657598e6ae86c0b2e2bded311e17f427e9460caead292ea",
+  "kind": "public-Q7-current-document-observation-summary",
+  "native_receipt_reissued": false,
+  "native_receipt_sha256": "b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b",
+  "observation_receipt_sha256": "1775c0cd0084990861c56fff0e2d800ef9f02c74a0b26431d905dd480b115d69",
+  "observational_summary_only": true,
+  "runtime_execution_verified": false,
+  "source_stable": true
+}

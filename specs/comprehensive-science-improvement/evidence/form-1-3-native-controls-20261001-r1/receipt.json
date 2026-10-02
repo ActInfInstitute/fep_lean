@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "uv",
+    "run",
+    "--locked",
+    "python",
+    "-m",
+    "pytest",
+    "tests/test_measure_variational_formalisms.py",
+    "tests/test_horizon1_decision_risk.py",
+    "tests/test_horizon1_finite_reference.py",
+    "tests/test_horizon1_constrained_entropy.py",
+    "-q",
+    "--no-cov",
+    "--basetemp=/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form-1-3-native-controls-20261001-r1/pytest-tmp",
+    "--junitxml=/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/specs/comprehensive-science-improvement/evidence/form-1-3-native-controls-20261001-r1/focused.junit.xml"
+  ],
+  "artifacts": {
+    "focused.junit.xml": "706bcb6c1036f1865e03e03e39dc3f646bf7f5c7bb40ef371f64cd6c8a5b79c2",
+    "pytest.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pytest.stdout.txt": "393683a3ffe12e3a94e31066309d21d35edf7304702ff87c097dd67d78a950b6",
+    "source-after.json": "60dbe4ba2cb934850e9064c2593e9f41504349df82121d021f897a076348c913",
+    "source-before.json": "60dbe4ba2cb934850e9064c2593e9f41504349df82121d021f897a076348c913"
+  },
+  "elapsed_seconds": 217.12713137499668,
+  "exit_code": 0,
+  "kind": "current-form-1-3-native-controls",
+  "schema_version": 1,
+  "scope": "Actual named native consumer/source tests only; whole native, Python and publication gates remain separate.",
+  "sources_unchanged": true
+}

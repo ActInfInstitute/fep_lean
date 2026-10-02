@@ -1,0 +1,322 @@
+[
+  {
+    "nodeid": "tests.test_custody_apply::test_gate_refuses_real_tree_live_red_classification[sealed_fixture_census_green]",
+    "message": "AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nassert False",
+    "text": "tests/test_custody_apply.py:266: in test_gate_refuses_real_tree_live_red_classification\n    assert ok, problems\nE   AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nE   assert False"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_gate_all_clear_fixture_admits_the_pipeline[sealed]",
+    "message": "AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nassert False",
+    "text": "tests/test_custody_apply.py:308: in test_gate_all_clear_fixture_admits_the_pipeline\n    assert ok, problems\nE   AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nE   assert False"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_gate_all_clear_fixture_admits_the_pipeline[forced]",
+    "message": "AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nassert False",
+    "text": "tests/test_custody_apply.py:308: in test_gate_all_clear_fixture_admits_the_pipeline\n    assert ok, problems\nE   AssertionError: ['live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs f...irs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py']\nE   assert False"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_missing_staged_receipt_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'missing staged/source file'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:421: in test_missing_staged_receipt_refuses\n    with pytest.raises(ApplyRefused, match=\"missing staged/source file\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'missing staged/source file'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_successor_probe_map_inconsistency_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'probe map differs'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:451: in test_successor_probe_map_inconsistency_refuses\n    with pytest.raises(ApplyRefused, match=\"probe map differs\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'probe map differs'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_successor_manifest_transition_inconsistency_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'manifest_transition inconsistent'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:467: in test_successor_manifest_transition_inconsistency_refuses\n    with pytest.raises(ApplyRefused, match=\"manifest_transition inconsistent\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'manifest_transition inconsistent'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_successor_prior_reference_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'prior reference drift'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:478: in test_successor_prior_reference_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"prior reference drift\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'prior reference drift'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_diagnostics_byte_drift_without_source_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'byte drift without source drift'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:493: in test_diagnostics_byte_drift_without_source_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"byte drift without source drift\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'byte drift without source drift'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_packet_current_sources_roster_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'current_sources roster drift'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:514: in test_packet_current_sources_roster_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"current_sources roster drift\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'current_sources roster drift'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_frozen_evidence_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'frozen evidence drifted'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:532: in test_frozen_evidence_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"frozen evidence drifted\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'frozen evidence drifted'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_review_roster_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'source roster drift'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:553: in test_review_roster_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"source roster drift\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'source roster drift'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_h3_roster_drift_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'PINNED_SOURCES roster drift'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:571: in test_h3_roster_drift_refuses\n    with pytest.raises(ApplyRefused, match=\"PINNED_SOURCES roster drift\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'PINNED_SOURCES roster drift'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_recapture_rebind_mutates_exactly_the_evidence_surfaces[sealed]",
+    "message": "fep_lean.custody.apply.ApplyRefused: custody verify gate refused: live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs from the live native plane; live-red: specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py",
+    "text": "tests/test_custody_apply.py:596: in test_recapture_rebind_mutates_exactly_the_evidence_surfaces\n    report = apply_refresh(root / \"specs\", root, out)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/custody/apply.py:864: in apply_refresh\n    raise ApplyRefused(\"custody verify gate refused: \" + \"; \".join(reasons))\nE   fep_lean.custody.apply.ApplyRefused: custody verify gate refused: live-red: specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json: native capture roster differs from the live native plane; live-red: specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient-custody.json: R0 successor custody digest drift: src/fep_lean/formal/manifest.py"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_recapture_rebind_mutates_exactly_the_evidence_surfaces[recapture]",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:611: in test_recapture_rebind_mutates_exactly_the_evidence_surfaces\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cascade_matrix_follows_acceptance_rebind",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:674: in test_cascade_matrix_follows_acceptance_rebind\n    report, out = _run_cascade(tmp_path)\n                  ^^^^^^^^^^^^^^^^^^^^^^\ntests/test_custody_apply.py:662: in _run_cascade\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cascade_serialization_discipline[probe_rewrite]",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:704: in test_cascade_serialization_discipline\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cascade_serialization_discipline[diagnostics_stale]",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:704: in test_cascade_serialization_discipline\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cascade_emits_repo_side_directives",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:736: in test_cascade_emits_repo_side_directives\n    report, out = _run_cascade(tmp_path)\n                  ^^^^^^^^^^^^^^^^^^^^^^\ntests/test_custody_apply.py:662: in _run_cascade\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cascade_h3_lockstep_agrees_with_spike_receipt",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:756: in test_cascade_h3_lockstep_agrees_with_spike_receipt\n    _report, out = _run_cascade(tmp_path)\n                   ^^^^^^^^^^^^^^^^^^^^^^\ntests/test_custody_apply.py:662: in _run_cascade\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_structural_tampers_refuse",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'native_evidence missing'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:888: in test_structural_tampers_refuse\n    with pytest.raises(ApplyRefused, match=message):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'native_evidence missing'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_successor_probe_roster_missing_refuses",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'native_evidence.probes missing'\n  Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_apply.py:904: in test_successor_probe_roster_missing_refuses\n    with pytest.raises(ApplyRefused, match=\"native_evidence.probes missing\"):\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'native_evidence.probes missing'\nE     Actual message: \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cli_census_report_composes_read_only[green]",
+    "message": "assert True is False",
+    "text": "tests/test_custody_apply.py:954: in test_cli_census_report_composes_read_only\n    assert payload[\"gated\"] is False\nE   assert True is False"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cli_census_report_composes_read_only[residual]",
+    "message": "AssertionError: assert 'specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json' in []",
+    "text": "tests/test_custody_apply.py:959: in test_cli_census_report_composes_read_only\n    assert TERMINAL_PACKET in payload[\"stale\"]\nE   AssertionError: assert 'specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json' in []"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_cli_apply_gate_refusal_writes_nothing[sealed]",
+    "message": "AssertionError: assert 1 == 0\n +  where 1 = <function main at 0x10e405c70>(['custody', 'apply', '--output-dir', '/private/var/folders/r8/m8m857h1659dmg4lz07tlj500000gn/T/pytest-of-hum/pytest-644/test_cli_apply_gate_refusal_wr0/output'])",
+    "text": "tests/test_custody_apply.py:990: in test_cli_apply_gate_refusal_writes_nothing\n    assert cli_main([\"custody\", \"apply\", \"--output-dir\", str(out)]) == 0\nE   AssertionError: assert 1 == 0\nE    +  where 1 = <function main at 0x10e405c70>(['custody', 'apply', '--output-dir', '/private/var/folders/r8/m8m857h1659dmg4lz07tlj500000gn/T/pytest-of-hum/pytest-644/test_cli_apply_gate_refusal_wr0/output'])"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_predecessors_patch_resolves_old_digests_from_view_bytes",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:1068: in test_predecessors_patch_resolves_old_digests_from_view_bytes\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_directive_projection_feeds_downstream_digest_phases",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:1097: in test_directive_projection_feeds_downstream_digest_phases\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_apply::test_apply_report_projections_are_the_chained_directives",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_apply.py:1135: in test_apply_report_projections_are_the_chained_directives\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_all_clear_composes_every_phase",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:162: in test_refresh_all_clear_composes_every_phase\n    report = refresh(_stage_specs(tmp_path), REPO_ROOT, out, reason=\"composition\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_appends_the_bridge_cascade_warning",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:189: in test_refresh_appends_the_bridge_cascade_warning\n    report = refresh(_stage_specs(tmp_path), REPO_ROOT, _out_dir(tmp_path), reason=\"r\")\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_verify_set_failure_blocks_the_report",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:204: in test_refresh_verify_set_failure_blocks_the_report\n    refresh(_stage_specs(tmp_path), REPO_ROOT, _out_dir(tmp_path), reason=\"r\")\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_refused_on_owner_errors",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:229: in test_refresh_native_refused_on_owner_errors\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_refused_on_dirty_tip",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:255: in test_refresh_native_refused_on_dirty_tip\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_runs_the_sealed_capture_command",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:282: in test_refresh_native_runs_the_sealed_capture_command\n    report = refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_command_failure_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:323: in test_refresh_native_command_failure_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_missing_receipt_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:361: in test_refresh_native_missing_receipt_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_stale_receipt_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:382: in test_refresh_native_stale_receipt_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_owner_drift_during_capture_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:406: in test_refresh_native_owner_drift_during_capture_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_head_moved_during_capture_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:430: in test_refresh_native_head_moved_during_capture_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_refresh_native_tree_drift_during_capture_refused",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:454: in test_refresh_native_tree_drift_during_capture_refused\n    refresh(\nsrc/fep_lean/custody/refresh.py:265: in refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_cli_refresh_payload_native_status",
+    "message": "assert 1 == 0",
+    "text": "tests/test_custody_refresh.py:583: in test_cli_refresh_payload_native_status\n    assert exit_code == 0\nE   assert 1 == 0"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_fixpoint_converges_by_round_two_with_the_carry",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:918: in test_fixpoint_converges_by_round_two_with_the_carry\n    journal = fixpoint_refresh(root / \"specs\", root, out, authorized, \"fixpoint\")\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/custody/refresh.py:744: in fixpoint_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_fixpoint_sealed_tree_converges_at_round_one",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:949: in test_fixpoint_sealed_tree_converges_at_round_one\n    journal = fixpoint_refresh(\nsrc/fep_lean/custody/refresh.py:744: in fixpoint_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_fixpoint_did_not_converge_within_the_bound",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:968: in test_fixpoint_did_not_converge_within_the_bound\n    fixpoint_refresh(\nsrc/fep_lean/custody/refresh.py:744: in fixpoint_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_fixpoint_cycle_detection_refuses_a_repeated_state_hash",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:982: in test_fixpoint_cycle_detection_refuses_a_repeated_state_hash\n    fixpoint_refresh(root / \"specs\", root, tmp_path / \"output\", authorized, \"cycle\")\nsrc/fep_lean/custody/refresh.py:744: in fixpoint_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_cli_fixpoint_happy_path_payload",
+    "message": "KeyError: 'journal_path'",
+    "text": "tests/test_custody_refresh.py:1071: in test_cli_fixpoint_happy_path_payload\n    assert exit_code == 0\nE   assert 1 == 0\n\nDuring handling of the above exception, another exception occurred:\ntests/test_custody_refresh.py:1083: in test_cli_fixpoint_happy_path_payload\n    shutil.rmtree(Path(payload[\"journal_path\"]).parent, ignore_errors=True)\n                       ^^^^^^^^^^^^^^^^^^^^^^^\nE   KeyError: 'journal_path'"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_happy_path_completes_verify_set_without_capture",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1174: in test_resume_happy_path_completes_verify_set_without_capture\n    journal = resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_parent_directory_with_one_operation_child_resolves",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1216: in test_resume_parent_directory_with_one_operation_child_resolves\n    journal = resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_barrier_fires_before_any_capture",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1416: in test_resume_barrier_fires_before_any_capture\n    resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_barrier_acknowledged_on_reinvocation",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1441: in test_resume_barrier_acknowledged_on_reinvocation\n    resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_barrier_rearms_on_a_new_render_input",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1490: in test_resume_barrier_rearms_on_a_new_render_input\n    resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_reinvocation_cannot_acknowledge_a_rejected_render",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1552: in test_resume_reinvocation_cannot_acknowledge_a_rejected_render\n    resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_native_happy_path_captures_claim_ready",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1679: in test_resume_native_happy_path_captures_claim_ready\n    journal = resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_resume_journal_atomic_rewrite_preserves_landed_path",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1701: in test_resume_journal_atomic_rewrite_preserves_landed_path\n    journal = resume_refresh(\nsrc/fep_lean/custody/refresh.py:1117: in resume_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_fixpoint_journal_carries_changed_paths_for_resume",
+    "message": "fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']",
+    "text": "tests/test_custody_refresh.py:1763: in test_fixpoint_journal_carries_changed_paths_for_resume\n    journal = fixpoint_refresh(\nsrc/fep_lean/custody/refresh.py:744: in fixpoint_refresh\n    report = apply_refresh(\nsrc/fep_lean/custody/apply.py:876: in apply_refresh\n    phase(ctx)\nsrc/fep_lean/custody/apply.py:454: in _phase_successor_07_reissue\n    raise ApplyRefused(\nE   fep_lean.custody.apply.ApplyRefused: 07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_cli_resume_happy_path_payload",
+    "message": "assert 1 == 0",
+    "text": "tests/test_custody_refresh.py:1815: in test_cli_resume_happy_path_payload\n    assert exit_code == 0\nE   assert 1 == 0"
+  },
+  {
+    "nodeid": "tests.test_custody_refresh::test_cli_resume_render_barrier_exits_one_with_state",
+    "message": "assert 'render-acceptance barrier' in \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\"",
+    "text": "tests/test_custody_refresh.py:1875: in test_cli_resume_render_barrier_exits_one_with_state\n    assert \"render-acceptance barrier\" in payload[\"error\"]\nE   assert 'render-acceptance barrier' in \"07 successor receipt: unexplained source drift: ['src/fep_lean/formal/manifest.py']\""
+  },
+  {
+    "nodeid": "tests.test_formalism_catalogue_155::test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction",
+    "message": "AssertionError: assert '028fa353d641...0945e24b8815d' == '86fa947829c5...017b1c42cfd57'\n  \n  - 86fa947829c564c3a354f755329d5d1e92f7484ecbd7b1efa70017b1c42cfd57\n  + 028fa353d641bcb40a4a3a604320879cbc467c8b8bb0e18f82d0945e24b8815d",
+    "text": "tests/test_formalism_catalogue_155.py:173: in test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction\n    assert (\nE   AssertionError: assert '028fa353d641...0945e24b8815d' == '86fa947829c5...017b1c42cfd57'\nE     \nE     - 86fa947829c564c3a354f755329d5d1e92f7484ecbd7b1efa70017b1c42cfd57\nE     + 028fa353d641bcb40a4a3a604320879cbc467c8b8bb0e18f82d0945e24b8815d"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_terminal_validation_is_read_only_and_does_not_promote_h3",
+    "message": "ValueError: stale predecessor source",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:197: in test_terminal_validation_is_read_only_and_does_not_promote_h3\n    ???\nsrc/fep_lean/verification/horizon_acceptance.py:634: in validate_terminal_acceptance\n    _predecessors(root, raw[\"predecessors\"])\nsrc/fep_lean/verification/horizon_acceptance.py:451: in _predecessors\n    _require(\nsrc/fep_lean/verification/horizon_acceptance.py:160: in _require\n    raise ValueError(message)\nE   ValueError: stale predecessor source"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_heavy_probe_skip_requires_exact_source_identical_passing_supplement",
+    "message": "ValueError: stale predecessor source",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:343: in test_heavy_probe_skip_requires_exact_source_identical_passing_supplement\n    ???\nsrc/fep_lean/verification/horizon_acceptance.py:634: in validate_terminal_acceptance\n    _predecessors(root, raw[\"predecessors\"])\nsrc/fep_lean/verification/horizon_acceptance.py:451: in _predecessors\n    _require(\nsrc/fep_lean/verification/horizon_acceptance.py:160: in _require\n    raise ValueError(message)\nE   ValueError: stale predecessor source"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_g0_rejects_branch_or_outcome_substitution[finite]",
+    "message": "ValueError: stale predecessor source",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:364: in test_g0_rejects_branch_or_outcome_substitution\n    ???\nsrc/fep_lean/verification/horizon_acceptance.py:697: in validate_continuous_eligibility\n    acceptance = validate_terminal_acceptance(root)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/verification/horizon_acceptance.py:634: in validate_terminal_acceptance\n    _predecessors(root, raw[\"predecessors\"])\nsrc/fep_lean/verification/horizon_acceptance.py:451: in _predecessors\n    _require(\nsrc/fep_lean/verification/horizon_acceptance.py:160: in _require\n    raise ValueError(message)\nE   ValueError: stale predecessor source"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_g0_rejects_branch_or_outcome_substitution[outcomes]",
+    "message": "ValueError: stale predecessor source",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:364: in test_g0_rejects_branch_or_outcome_substitution\n    ???\nsrc/fep_lean/verification/horizon_acceptance.py:697: in validate_continuous_eligibility\n    acceptance = validate_terminal_acceptance(root)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/verification/horizon_acceptance.py:634: in validate_terminal_acceptance\n    _predecessors(root, raw[\"predecessors\"])\nsrc/fep_lean/verification/horizon_acceptance.py:451: in _predecessors\n    _require(\nsrc/fep_lean/verification/horizon_acceptance.py:160: in _require\n    raise ValueError(message)\nE   ValueError: stale predecessor source"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_g0_rejects_branch_or_outcome_substitution[consider_finite]",
+    "message": "ValueError: stale predecessor source",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:364: in test_g0_rejects_branch_or_outcome_substitution\n    ???\nsrc/fep_lean/verification/horizon_acceptance.py:697: in validate_continuous_eligibility\n    acceptance = validate_terminal_acceptance(root)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsrc/fep_lean/verification/horizon_acceptance.py:634: in validate_terminal_acceptance\n    _predecessors(root, raw[\"predecessors\"])\nsrc/fep_lean/verification/horizon_acceptance.py:451: in _predecessors\n    _require(\nsrc/fep_lean/verification/horizon_acceptance.py:160: in _require\n    raise ValueError(message)\nE   ValueError: stale predecessor source"
+  },
+  {
+    "nodeid": "tests.test_horizon_acceptance::test_terminal_rejects_input_mtime_change_during_validation",
+    "message": "AssertionError: Regex pattern did not match.\n  Expected regex: 'input changed during validation'\n  Actual message: 'stale predecessor source'",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_horizon_acceptance.py:420: in test_terminal_rejects_input_mtime_change_during_validation\n    ???\nE   AssertionError: Regex pattern did not match.\nE     Expected regex: 'input changed during validation'\nE     Actual message: 'stale predecessor source'"
+  },
+  {
+    "nodeid": "tests.test_render_publication::test_the_committed_receipt_covers_the_committed_manuscript",
+    "message": "AssertionError: assert ('/Users/hum/...d appendix)',) == ()\n  \n  Left contains one more item: '/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/docs/render-acceptance.json: covers manuscript s...t with `uv run fep-lean catalogue`; changed since that render: 09z_unified_formalism_catalogue.md (generated appendix)'\n  Use -v to get more diff",
+    "text": "/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_lean/tests/test_render_publication.py:461: in test_the_committed_receipt_covers_the_committed_manuscript\n    ???\nE   AssertionError: assert ('/Users/hum/...d appendix)',) == ()\nE     \nE     Left contains one more item: '/Users/hum/Documents/GitHub/HumOS/projects/outside_of_hum/fep_formal/docs/render-acceptance.json: covers manuscript s...t with `uv run fep-lean catalogue`; changed since that render: 09z_unified_formalism_catalogue.md (generated appendix)'\nE     Use -v to get more diff"
+  }
+]

@@ -1,10 +1,12 @@
 # Q5 — concrete PyMDP artifact proof
 
-Status: **native proof and applicable Python/coverage gates verified**.
-Evidence date: 2026-09-04. See the [delivery report](REPORT.md) for exact
-receipt hashes, observed results, and remaining checks.
+Status: **historical native proof and Python/coverage observations**.
+Evidence date: 2026-09-04. The W2 source re-pin makes the retained native and
+delivery observations historical; a fresh Q7 receipt does not refresh Q5.
+See the [delivery report](REPORT.md) for dated reported hashes, actual retained
+file hashes and the separate current-currency requirement.
 
-Q5 connects the five literal tables in one current, canonically rendered
+Q5 connects the five literal tables in one retained, canonically rendered
 PyMDP runner to the accepted Q2 Boolean denotation and Q4 matrix statement.
 A second, handcrafted asymmetric fixture exercises the same static proof
 construction. The [GNN bridge contract](../../docs/design/gnn-bridge/bridge-contract.md)
@@ -36,18 +38,20 @@ is no C/EFE equivalence, runtime behavior, physical, or H3 claim.
 
 | Artifact | Role |
 | --- | --- |
-| [Symmetric runner](fixtures/pymdp_symmetric_runner.py) | Actual output of the current canonical GNN render route |
+| [Symmetric runner](fixtures/pymdp_symmetric_runner.py) | Actual canonical GNN render output at its retained source epoch |
 | [Asymmetric runner](fixtures/pymdp_asymmetric_runner.py) | Handcrafted normalized dyadic control, not a second live-render result |
 | [Render provenance](render_provenance.json) | Actual renderer command/output, input/output digests, and unchanged before/after owner bindings |
 | [Generated manifest](generated/artifact_proof_manifest.json) | Extracted rational table summary and fixture/extractor/probe digests |
 | [Symmetric probe](generated/probe_symmetric.lean) | Four concrete theorems on the Boolean carrier |
 | [Asymmetric probe](generated/probe_asymmetric.lean) | Two concrete theorems for the control fixture |
-| [Native receipt](native_receipt.json) | Successful native transcripts, six axiom reports, source bindings, and compiled-import hashes |
+| [Historical native receipt](native_receipt.json) | Retained native transcripts, six axiom reports, historical source bindings, and compiled-import hashes |
 
 The retained fixtures support sibling-independent static tests. Checking
 current renderer/source custody additionally requires the explicitly
 selected GNN checkout and the current
 [source pin](../gnn-bridge-w2-source-custody/source-pin.json).
+That check must validate the exact selected receipt against the selected source
+pair; retained success flags cannot establish currency after re-pinning.
 
 ## Frozen layout and restricted extraction
 
@@ -108,7 +112,7 @@ uv run python specs/gnn-bridge-q5-artifact-proof/refresh_render.py \
 uv run python specs/gnn-bridge-q5-artifact-proof/generate_probe.py
 uv run python specs/gnn-bridge-q5-artifact-proof/verify_native.py \
   --compile --gnn-root "$GNN_ROOT" \
-  --receipt specs/gnn-bridge-q5-artifact-proof/native_receipt.json
+  --receipt output/bridge/q5-native-candidate.json
 ```
 
 `refresh_render.py` explicitly invokes the current GNN extractor
@@ -125,13 +129,15 @@ across the pair. Process-group-safe native calls are serialized. Successful
 exit, no warnings or `sorry`, and complete parsed reports using only
 `propext`, `Classical.choice`, and `Quot.sound` are required.
 
-For subsequent read-only checks:
+Use a fresh candidate path for each capture; preserve the historical
+`native_receipt.json`. Check the same candidate with the same explicitly named
+GNN root. For subsequent read-only checks:
 
 ```bash
 uv run python specs/gnn-bridge-q5-artifact-proof/generate_probe.py --check
 uv run python specs/gnn-bridge-q5-artifact-proof/verify_native.py \
   --check --gnn-root "$GNN_ROOT" \
-  --receipt specs/gnn-bridge-q5-artifact-proof/native_receipt.json
+  --receipt output/bridge/q5-native-candidate.json
 ```
 
 The native CLI defaults to `--check` when neither mode is supplied. It
@@ -153,6 +159,7 @@ cover tampering, stale owners, missing native evidence, read-only behavior,
 output collisions, and generator-read races. Receipt tests use synthetic
 transcripts and are not themselves native execution evidence.
 
-The separate [H2.7 audit](../horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md)
+The separate [H2.7 audit](../done/horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md)
 records its terminal/custody work and scientific limitations. Q5 does not
-accept the wider H2 horizon; overall H2 acceptance remains open and H3 closed.
+accept the wider H2 horizon. The maintained [root handoff](../../HANDOFF.md)
+owns current H2/H3 acceptance and remaining scientific gates.

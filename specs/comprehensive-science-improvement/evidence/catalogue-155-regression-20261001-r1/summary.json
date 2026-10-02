@@ -1,0 +1,170 @@
+{
+  "artifacts": {
+    "tests/fixtures/formalism_catalogue_155_reviewed_deltas.json": "45737c2af7a8b81084b56d3d136fc2e0a312c44af1c37b2bd0c8c28a205b4111",
+    "tests/test_formalism_catalogue_155.py": "8239dcb4270309ea21cb6a01670c0a2093a2bf467cf98baa67761bf8ce7b0826"
+  },
+  "body_delta": {
+    "fep-063": {
+      "added_declarations": [
+        "fep063_identityChannel_preservesKL",
+        "fep063_constantChannel_strict"
+      ],
+      "additions_sha256": "422eff06238264b5d807bc3eccfc92c488c7dcdfa142560f9fdc0002691ec893",
+      "exact_unified_delta": "--- fep-063 released\n+++ fep-063 reviewed\n@@ -34,4 +34,24 @@\n     mul_pos (hreference input) (hchannel input output))\n     Finset.univ_nonempty\n \n+omit [Nonempty Input] in\n+/-- A deterministic identity channel preserves finite KL exactly, despite\n+its zero off-diagonal channel entries. -/\n+theorem fep063_identityChannel_preservesKL [DecidableEq Input]\n+    (actual reference : FiniteLaw Input) :\n+    finiteKL (FiniteKernel.identity.predictive actual)\n+        (FiniteKernel.identity.predictive reference) = finiteKL actual reference :=\n+  finiteChannel_identity_preservesKL actual reference\n+\n+omit [Nonempty Input] in\n+/-- Complete deterministic coarsening strictly reduces the repository's\n+finite divergence for unequal normalized input laws. -/\n+theorem fep063_constantChannel_strict\n+    (actual reference : FiniteLaw Input) (hne : actual ≠ reference) :\n+    finiteKL\n+        ((FiniteKernel.deterministic (fun _ : Input => ())).predictive actual)\n+        ((FiniteKernel.deterministic (fun _ : Input => ())).predictive reference) <\n+      finiteKL actual reference :=\n+  constantChannel_KL_strict actual reference hne\n+\n end FEP063\n",
+      "inserted_line_count": 20,
+      "released_body_sha256": "732e4cb053bb0181aba4980d832e54fbe1e249e21832ca9eab559feff371a8c2",
+      "removed_line_count": 0,
+      "reviewed_body_sha256": "a8e11d95db3fa8a10c2ce98c9e0f330f199bd508c54cf9b2eb5f9a126191e4e4"
+    },
+    "fep-064": {
+      "added_declarations": [
+        "fep064_rateDistortion_exists_minimizer",
+        "fep064_rateDistortion_dual_lower_bound",
+        "fep064_dual_zeroMultiplier",
+        "fep064_negativeBudget_infeasible",
+        "fep064_quarterBudget_informative_optimum",
+        "fep064_halfBudget_nonunique",
+        "fep064_zeroBudget_unique"
+      ],
+      "additions_sha256": "64b1089d0bbe0e2313a5505e2cc915effb2d92999278bfb6afdea82d1afdf191",
+      "exact_unified_delta": "--- fep-064 released\n+++ fep-064 reviewed\n@@ -30,4 +30,71 @@\n       mutualInformation joint := by\n   simp [rateDistortionLagrangian]\n \n+/-- Every nonempty finite fixed-source distortion problem has an attained\n+information minimum, including feasible faces with zero-mass atoms. -/\n+theorem fep064_rateDistortion_exists_minimizer\n+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ)\n+    (hfeasible : ∃ joint, RateDistortionFeasible source distortion budget joint) :\n+    ∃ optimizer : FiniteLaw (Source × Code),\n+      RateDistortionFeasible source distortion budget optimizer ∧\n+        ∀ candidate : FiniteLaw (Source × Code),\n+          RateDistortionFeasible source distortion budget candidate →\n+            mutualInformation optimizer ≤ mutualInformation candidate :=\n+  rateDistortion_exists_minimizer source distortion budget hfeasible\n+\n+/-- The actual Lagrangian infimum supplies weak duality for every feasible\n+joint; no separately certified rate or distortion lower bounds are inputs. -/\n+theorem fep064_rateDistortion_dual_lower_bound\n+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ)\n+    (budget multiplier : ℝ) (hdistortion : ∀ x y, 0 ≤ distortion x y)\n+    (hmultiplier : 0 ≤ multiplier) (joint : FiniteLaw (Source × Code))\n+    (hjoint : RateDistortionFeasible source distortion budget joint) :\n+    rateDistortionDualValue source distortion budget multiplier ≤ mutualInformation joint :=\n+  rateDistortionDual_le_feasible_information source distortion budget multiplier\n+    hdistortion hmultiplier joint hjoint\n+\n+/-- Zero multiplier gives dual value zero on a nonempty finite reproduction\n+alphabet, even when the distortion budget is infeasible. -/\n+theorem fep064_dual_zeroMultiplier [Nonempty Code]\n+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ) :\n+    rateDistortionDualValue source distortion budget 0 = 0 :=\n+  rateDistortionDual_zeroMultiplier source distortion budget\n+\n+/-- A negative budget is infeasible for nonnegative distortion. -/\n+theorem fep064_negativeBudget_infeasible\n+    (source : FiniteLaw Source) (distortion : Source → Code → ℝ) (budget : ℝ)\n+    (hdistortion : ∀ x y, 0 ≤ distortion x y) (hbudget : budget < 0) :\n+    ¬ ∃ joint, RateDistortionFeasible source distortion budget joint :=\n+  rateDistortion_infeasible_of_negativeBudget source distortion budget hdistortion hbudget\n+\n+/-- Fair Boolean Hamming distortion at the interior budget one quarter has\n+an attained and strictly informative optimum. -/\n+theorem fep064_quarterBudget_informative_optimum :\n+    ∃ optimizer : FiniteLaw (Bool × Bool),\n+      RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 4) optimizer ∧\n+        0 < mutualInformation optimizer ∧\n+          ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion\n+            (1 / 4) candidate → mutualInformation optimizer ≤ mutualInformation candidate :=\n+  boolQuarterBudget_exists_positive_minimizer\n+\n+/-- At Boolean Hamming budget one half there are distinct attained\n+information minima, so general uniqueness is false. -/\n+theorem fep064_halfBudget_nonunique :\n+    ∃ left right : FiniteLaw (Bool × Bool), left ≠ right ∧\n+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) left ∧\n+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion\n+          (1 / 2) candidate → mutualInformation left ≤ mutualInformation candidate) ∧\n+      (RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion (1 / 2) right ∧\n+        ∀ candidate, RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion\n+          (1 / 2) candidate → mutualInformation right ≤ mutualInformation candidate) :=\n+  boolHalfBudget_distinct_minimizers\n+\n+/-- At zero Boolean Hamming budget the fixed fair source forces a unique\n+perfect-reproduction joint. -/\n+theorem fep064_zeroBudget_unique\n+    (joint : FiniteLaw (Bool × Bool))\n+    (hjoint : RateDistortionFeasible FiniteLaw.uniform boolHammingDistortion 0 joint) :\n+    joint = boolZeroDistortionJoint :=\n+  boolZeroBudget_unique_feasible joint hjoint\n+\n end FEP064\n",
+      "inserted_line_count": 67,
+      "released_body_sha256": "4b41f69a84428b224dcc8909ebe625edb99a793923f6acde2fb4b62070de10d6",
+      "removed_line_count": 0,
+      "reviewed_body_sha256": "1b7e1cdb1008511f4a8f33cb10e9b6f47f68de2c43640307cde988d44fdcf83d"
+    }
+  },
+  "failure": {
+    "actual_failure": {
+      "message": "AssertionError: assert '028fa353d641...0945e24b8815d' == '86fa947829c5...017b1c42cfd57'\n  \n  - 86fa947829c564c3a354f755329d5d1e92f7484ecbd7b1efa70017b1c42cfd57\n  + 028fa353d641bcb40a4a3a604320879cbc467c8b8bb0e18f82d0945e24b8815d",
+      "nodeid": "tests.test_formalism_catalogue_155::test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction",
+      "text": "tests/test_formalism_catalogue_155.py:173: in test_expansion_vii_preserves_released_rows_except_h1_0_pin_correction\n    assert (\nE   AssertionError: assert '028fa353d641...0945e24b8815d' == '86fa947829c5...017b1c42cfd57'\nE     \nE     - 86fa947829c564c3a354f755329d5d1e92f7484ecbd7b1efa70017b1c42cfd57\nE     + 028fa353d641bcb40a4a3a604320879cbc467c8b8bb0e18f82d0945e24b8815d"
+    },
+    "historical_receipt_preserved": true,
+    "other_full_suite_failures_remaining_outside_scope": 63,
+    "receipt": "specs/comprehensive-science-improvement/evidence/python-acceptance-20260930-independent-r1/failures.json",
+    "sha256": "04b7aa1ad9597460d9fc3188ebb8bd894ca674da7c5ab95960ed4c16b19b602a"
+  },
+  "git_head": "cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed",
+  "independent_semantic_review": {
+    "fep064_final_assumption_sentence": "The structural-proxy disposition and primary theorem remain unchanged: the primary theorem still assumes separately certified component lower bounds, while the independently reviewed supporting theorems establish finite optimizer attainment and infimum-derived weak duality.",
+    "path": "specs/comprehensive-science-improvement/evidence/form-1-3-semantic-review-20261001-r2.json",
+    "sha256": "44ac9dd63a76203e8c75194eaf81d68df4479216fd1ee5122a8c3754619080e6"
+  },
+  "invariants": {
+    "baseline_fixture_path": "specs/done/formalism-catalogue-155/assets/baseline-120-sha256.json",
+    "baseline_fixture_sha256": "4978e1bfe79c6ec8b0862185e9d452c5f4342a1f6e1d7160b0a56b0f7c6be975",
+    "baseline_fixture_unchanged": true,
+    "current_body_digest": "028fa353d641bcb40a4a3a604320879cbc467c8b8bb0e18f82d0945e24b8815d",
+    "historical_metadata_novelty_capability_edge_gates_retained": true,
+    "normalized_body_digest": "86fa947829c564c3a354f755329d5d1e92f7484ecbd7b1efa70017b1c42cfd57",
+    "normalized_maturity_digest": "3ec4802ca5bba80553c8921d63aa3fee199de22cb33ec74f59399f47840af778",
+    "primary_theorems_and_dispositions_unchanged": [
+      "fep-063",
+      "fep-064"
+    ],
+    "released_topic_count": 120,
+    "source_owner_roster_unchanged": true,
+    "unchanged_body_count": 118,
+    "unreviewed_maturity_rows_protected": 117
+  },
+  "kind": "scoped-catalogue-regression-repair",
+  "limitations": [
+    "This targeted pass is not a new whole-suite acceptance, custody refresh, native acceptance, or H3 outcome.",
+    "Current primary theorem dispositions remain conditional_proxy and structural_proxy; no promotion is part of this test repair.",
+    "The prior failed whole-suite receipt remains immutable and rejecting. Its other failures remain for their owning lanes."
+  ],
+  "maturity_delta": {
+    "fep-063": {
+      "acceptance_probe": {
+        "released": "native Lean compile of fep063_finiteChannel_klDataProcessing and fep063_referencePredictive_fullSupport with all three support certificates.",
+        "reviewed": "native Lean compile of fep063_finiteChannel_klDataProcessing and fep063_referencePredictive_fullSupport with all three support certificates, plus fep063_identityChannel_preservesKL and fep063_constantChannel_strict."
+      },
+      "boundary_theorems": {
+        "released": [],
+        "reviewed": [
+          "fep063_constantChannel_strict"
+        ]
+      },
+      "non_vacuity": {
+        "released": "Any noisy positive channel acting on unequal full-support input laws exercises a genuine contraction comparison, while deterministic or zero-probability channel rows are deliberately outside this statement.",
+        "reviewed": "Any noisy positive channel acting on unequal full-support input laws exercises a genuine contraction comparison. Separate identity and complete-coarsening witnesses cover deterministic zero-entry channels: identity preserves finite KL and complete coarsening strictly reduces it for unequal laws. These do not weaken the support premises of the primary theorem or identify singular native infinity with the project's totalized finite convention."
+      },
+      "supporting_theorems": {
+        "released": [
+          "fep063_referencePredictive_fullSupport"
+        ],
+        "reviewed": [
+          "fep063_referencePredictive_fullSupport",
+          "fep063_identityChannel_preservesKL"
+        ]
+      }
+    },
+    "fep-064": {
+      "acceptance_probe": {
+        "released": "native Lean compile of fep064_rateDistortion_weakDuality and fep064_zeroMultiplier_boundary without an optimizer-existence assumption.",
+        "reviewed": "native Lean compile of fep064_rateDistortion_weakDuality and fep064_zeroMultiplier_boundary, all three supporting attainment/duality/ informative-interior declarations, and the zero-dual, negative-budget, nonunique-half-budget, and unique-zero-budget boundaries. The actual optimizer is derived, never supplied as a certificate field."
+      },
+      "assumption_review": {
+        "released": "The theorem assumes both component lower bounds rather than deriving a dual function or proving primal or dual optimizer existence. The multiplier is nonnegative, and the zero-multiplier theorem identifies the exact rate-only boundary.",
+        "reviewed": "The theorem assumes both component lower bounds rather than deriving a dual function. The supporting attainment theorem instead derives primal optimizer existence from compactness and the continuous zero-safe entropy expression for mutual information, requiring only a feasible finite joint with fixed source marginal. Infimum-derived weak duality requires nonnegative distortion and multiplier; zero-multiplier dual value requires a nonempty code alphabet. Neither general strong duality, dual attainment, a closed-form interior rate function, nor general optimizer uniqueness is claimed. The structural-proxy disposition and primary theorem remain unchanged: the primary theorem still assumes separately certified component lower bounds, while the independently reviewed supporting theorems establish finite optimizer attainment and infimum-derived weak duality."
+      },
+      "boundary_theorems": {
+        "released": [
+          "fep064_zeroMultiplier_boundary"
+        ],
+        "reviewed": [
+          "fep064_zeroMultiplier_boundary",
+          "fep064_dual_zeroMultiplier",
+          "fep064_negativeBudget_infeasible",
+          "fep064_halfBudget_nonunique",
+          "fep064_zeroBudget_unique"
+        ]
+      },
+      "invariant": {
+        "released": "Separately certified lower bounds on finite mutual information and expected distortion combine into a lower bound on their rate–distortion Lagrangian for every nonnegative multiplier.",
+        "reviewed": "Separately certified lower bounds on finite mutual information and expected distortion combine into a lower bound on their rate–distortion Lagrangian for every nonnegative multiplier. Supporting theorems now additionally establish an attained information minimum for every nonempty finite fixed-source distortion-feasible set, an actual Lagrangian-infimum weak-duality bound, and an attained strictly positive optimum at fair Boolean Hamming budget one quarter."
+      },
+      "non_vacuity": {
+        "released": "Positive multipliers make both certified components contribute, while setting the multiplier to zero reduces the Lagrangian exactly to mutual information.",
+        "reviewed": "Positive multipliers make both certified components contribute, while setting the multiplier to zero reduces the Lagrangian exactly to mutual information and gives dual value zero. A concrete quarter-crossover Boolean joint makes the interior budget feasible, while every independent fair-source joint has distortion one half, forcing the attained quarter-budget optimum positive. Negative budgets are infeasible, zero budget forces a unique diagonal joint, and half budget has two distinct independent information minimizers."
+      },
+      "supporting_theorems": {
+        "released": [],
+        "reviewed": [
+          "fep064_rateDistortion_exists_minimizer",
+          "fep064_rateDistortion_dual_lower_bound",
+          "fep064_quarterBudget_informative_optimum"
+        ]
+      }
+    }
+  },
+  "python_version": "3.14.4 (main, Apr 14 2026, 14:46:33) [Clang 22.1.3 ]",
+  "recorded_at_utc": "2026-10-01T15:42:19.305855+00:00",
+  "root_cause": "The released-120 body digest intentionally pins exact bytes. FORM-1/3 inserted nine approved wrappers into two preserved bodies without updating the preservation test. Their ten reviewed maturity field edits also require explicit restoration before the historical maturity gate.",
+  "schema_version": 1,
+  "scope": "Only tests/test_formalism_catalogue_155.py and its new reviewed-delta JSON fixture; no source owner, metadata, Lean/native, GNN, scientific RNG, TODO, or historical receipt mutation.",
+  "validation": {
+    "commands_path": "specs/comprehensive-science-improvement/evidence/catalogue-155-regression-20261001-r1/command-results.json",
+    "protected_source_interval": {
+      "changed_paths": [
+        "tests/test_formalism_catalogue_155.py"
+      ],
+      "snapshot_file_count": 17,
+      "unchanged_count": 16
+    },
+    "pytest": {
+      "elapsed_reported_seconds": 1.08,
+      "failed": 0,
+      "negative_cases": 7,
+      "passed": 11,
+      "returncode": 0
+    },
+    "ruff_check": {
+      "returncode": 0
+    },
+    "ruff_format_check": {
+      "returncode": 0
+    }
+  }
+}

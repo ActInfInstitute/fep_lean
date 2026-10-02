@@ -14,6 +14,7 @@ from fep_lean.formal.manifest import (
     FormalModuleRole,
     formal_resource_paths,
 )
+from fep_lean.lean_source import lean_code_without_comments
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -53,7 +54,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.information_geometry": 33,
         "FepSketches.statistical_convergence": 7,
         "FepSketches.measure_bayes": 12,
-        "FepSketches.variational_duality": 27,
+        "FepSketches.variational_duality": 56,
         "FepSketches.controlled_markov": 30,
         "FepSketches.temporal_inference": 34,
         "FepSketches.finite_markov_dynamics": 17,
@@ -76,7 +77,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.linear_gaussian_semigroup": 25,
         "FepSketches.fin4_gaussian_semigroup": 42,
         "FepSketches.gaussian_precision_conditioning": 25,
-        "FepSketches.decision_risk": 15,
+        "FepSketches.decision_risk": 25,
         "FepSketches.finite_posterior_learning": 13,
         "FepSketches.posterior_convergence": 26,
         "FepSketches.compositions.core": 22,
@@ -110,6 +111,8 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.compositions.helmholtz_ao_ness": 2,
         "FepSketches.compositions.geometric_mechanics": 7,
         "FepSketches.law_weighted_split": 7,
+        "FepSketches.h3_reference_model": 53,
+        "FepSketches.compositions.h3_case_study": 93,
     }
 
 
@@ -284,7 +287,7 @@ def test_foundations_pin_the_claims_that_make_the_kernel_substantive() -> None:
 def test_formal_resources_contain_no_proof_placeholders() -> None:
     placeholder = re.compile(r"\b(?:sorry|admit)\b")
     for path in formal_resource_paths(project_root=PROJECT_ROOT):
-        body = path.read_text(encoding="utf-8")
+        body = lean_code_without_comments(path.read_text(encoding="utf-8"))
         assert placeholder.search(body) is None, path.name
         assert "set_option autoImplicit false" not in body or "theorem" in body
 

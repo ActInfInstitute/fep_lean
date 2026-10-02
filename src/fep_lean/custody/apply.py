@@ -161,7 +161,12 @@ class _StagedView:
 
     def _resolve(self, relative: str) -> Path:
         path = Path(relative)
-        if path.is_absolute() or ".." in path.parts or not path.parts:
+        if (
+            path.is_absolute()
+            or ".." in path.parts
+            or not path.parts
+            or path.as_posix() != relative
+        ):
             raise ApplyRefused(f"path escapes project: {relative}")
         if relative.startswith("specs/"):
             target = self.specs_dir / relative[len("specs/") :]
@@ -651,14 +656,42 @@ def _phase_reviews_reissue(ctx: _PhaseContext) -> None:
         _write_json(ctx.view, entry["path"], record)
 
 
+def _packet_diagnostics_path(view: _StagedView) -> str:
+    """Resolve the packet's owned diagnostic record without selecting an epoch."""
+    packet = _load_json(view, TERMINAL_PACKET, "terminal packet")
+    reference = packet.get("diagnostics")
+    if (
+        not isinstance(reference, dict)
+        or set(reference) != {"path", "sha256"}
+        or not isinstance(reference.get("path"), str)
+        or not isinstance(reference.get("sha256"), str)
+        or re.fullmatch(r"[0-9a-f]{64}", reference["sha256"]) is None
+        or not reference["path"].startswith("specs/")
+        or Path(reference["path"]).name != "diagnostics.json"
+    ):
+        raise ApplyRefused("terminal packet: malformed diagnostics reference")
+    relative = str(reference["path"])
+    target = view._resolve(relative)
+    if not target.absolute().is_relative_to(view.specs_dir.absolute()):
+        raise ApplyRefused("terminal packet: diagnostics reference escapes specs")
+    owner = view.specs_dir
+    for component in (target, *target.parents):
+        if component.is_symlink():
+            raise ApplyRefused("terminal packet: symlinked diagnostics reference")
+        if component == owner:
+            break
+    return relative
+
+
 def _phase_diagnostics_regen(ctx: _PhaseContext) -> None:
-    """Regenerate diagnostics.json wholesale from the live tree (insertion order)."""
+    """Regenerate the packet's diagnostics from the live tree (insertion order)."""
+    relative = _packet_diagnostics_path(ctx.view)
     record = diagnostic_record(ctx.view.repo_root)
-    serialized = dump_json_bytes(record, relative=DIAGNOSTICS)
-    staged = ctx.view.read(DIAGNOSTICS)
+    serialized = dump_json_bytes(record, relative=relative)
+    staged = ctx.view.read(relative)
     if serialized == staged:
         return
-    staged_record = _load_json(ctx.view, DIAGNOSTICS, "diagnostics")
+    staged_record = _load_json(ctx.view, relative, "diagnostics")
     old_map = _read_digest_map(staged_record, "source_before", "diagnostics")
     new_map = _read_digest_map(record, "source_before", "diagnostics")
     if set(old_map) != set(new_map):
@@ -671,7 +704,7 @@ def _phase_diagnostics_regen(ctx: _PhaseContext) -> None:
         )
     if not drift:
         raise ApplyRefused("diagnostics: byte drift without source drift")
-    ctx.view.put(DIAGNOSTICS, serialized)
+    ctx.view.put(relative, serialized)
 
 
 def _pin_artifact_ref(
