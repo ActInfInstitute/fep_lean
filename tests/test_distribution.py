@@ -9,6 +9,8 @@ import shutil
 import subprocess
 import sys
 import zipfile
+from email import policy
+from email.parser import Parser
 from importlib.metadata import distribution
 from pathlib import Path
 
@@ -19,6 +21,84 @@ from fep_lean.output.render_log import build_acceptance_receipt
 from fep_lean.output.rendering import MANUSCRIPT_ASSETS
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _assert_wheel_metadata_headers(metadata_text: str) -> None:
+    metadata = Parser(policy=policy.strict).parsestr(metadata_text, headersonly=True)
+    assert not metadata.defects
+    expected = {
+        "License-Expression": ["CC-BY-4.0"],
+        "License-File": ["LICENSE"],
+        "Author-email": ["Daniel Ari Friedman <daniel@activeinference.institute>"],
+        "Description-Content-Type": ["text/markdown"],
+        "Project-URL": [
+            "Repository, https://github.com/ActiveInferenceInstitute/fep_formal",
+            "Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md",
+            "Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+        ],
+    }
+    for header, values in expected.items():
+        # Header order is irrelevant; complete values and multiplicity are exact.
+        assert sorted(metadata.get_all(header, [])) == sorted(values), header
+
+
+def _wheel_metadata_fixture() -> str:
+    return (
+        "Metadata-Version: 2.4\n"
+        "Name: fep_lean\n"
+        "License-Expression: CC-BY-4.0\n"
+        "License-File: LICENSE\n"
+        "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>\n"
+        "Description-Content-Type: text/markdown\n"
+        "Project-URL: Repository, https://github.com/ActiveInferenceInstitute/fep_formal\n"
+        "Project-URL: Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md\n"
+        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233\n"
+        "\nA package description.\n"
+    )
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+def test_wheel_metadata_headers_accept_standard_line_endings(line_ending: str) -> None:
+    _assert_wheel_metadata_headers(_wheel_metadata_fixture().replace("\n", line_ending))
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+@pytest.mark.parametrize(
+    "duplicate",
+    [
+        "License-Expression: CC-BY-4.0",
+        "License-File: LICENSE",
+        "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>",
+        "Description-Content-Type: text/markdown",
+        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+    ],
+)
+def test_wheel_metadata_headers_refuse_duplicate_values(
+    line_ending: str, duplicate: str
+) -> None:
+    metadata = _wheel_metadata_fixture().replace("\n\n", f"\n{duplicate}\n\n", 1)
+    with pytest.raises(AssertionError, match=duplicate.split(":", 1)[0]):
+        _assert_wheel_metadata_headers(metadata.replace("\n", line_ending))
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+@pytest.mark.parametrize("failure", ["body_only_license", "wrong_project_url"])
+def test_wheel_metadata_headers_refuse_body_spoof_and_wrong_url(
+    line_ending: str, failure: str
+) -> None:
+    metadata = _wheel_metadata_fixture()
+    if failure == "body_only_license":
+        metadata = metadata.replace("License-Expression: CC-BY-4.0\n", "", 1)
+        metadata += "License-Expression: CC-BY-4.0\n"
+        header = "License-Expression"
+    else:
+        metadata = metadata.replace(
+            "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+            "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.1",
+        )
+        header = "Project-URL"
+    with pytest.raises(AssertionError, match=header):
+        _assert_wheel_metadata_headers(metadata.replace("\n", line_ending))
 
 
 def _package_namespace_digests(project_root: Path) -> dict[str, str]:
@@ -83,24 +163,7 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
             name for name in archive.namelist() if name.endswith(".dist-info/METADATA")
         )
         wheel_metadata = archive.read(metadata_name).decode("utf-8")
-    assert "License-Expression: CC-BY-4.0\n" in wheel_metadata
-    assert "License-File: LICENSE\n" in wheel_metadata
-    assert "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>\n" in (
-        wheel_metadata
-    )
-    assert "Description-Content-Type: text/markdown\n" in wheel_metadata
-    assert (
-        "Project-URL: Repository, https://github.com/ActiveInferenceInstitute/fep_formal\n"
-        in wheel_metadata
-    )
-    assert (
-        "Project-URL: Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md\n"
-        in wheel_metadata
-    )
-    assert (
-        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233\n"
-        in wheel_metadata
-    )
+    _assert_wheel_metadata_headers(wheel_metadata)
 
     environment = tmp_path / "venv"
     target_python = os.environ.get("FEP_DISTRIBUTION_PYTHON", sys.executable)
@@ -741,6 +804,14 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         check=False,
     )
     staged = tmp_path / "output/render-evidence"
+    if os.name != "posix" and (
+        "capture custody requires POSIX descriptor-relative reads" in result.stderr
+    ):
+        # Publication capture runs on Linux. This platform certifies the
+        # explicit custody refusal before the later POSIX mutation controls.
+        assert result.returncode != 0
+        assert not staged.exists()
+        return
     if failure:
         assert result.returncode != 0
         assert not staged.exists()
