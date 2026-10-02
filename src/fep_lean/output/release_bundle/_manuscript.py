@@ -1,12 +1,13 @@
 """Deterministic manuscript rendering and publication-set replacement."""
 
 import hashlib
+import math
 import os
 import re
-import shlex
 import shutil
 import subprocess
 import tempfile
+import time
 from collections.abc import (
     Mapping,
     Sequence,
@@ -47,6 +48,7 @@ from fep_lean.output.release_bundle._core import (
     _source_date_epoch,
 )
 from fep_lean.output.rendering import render_manuscript
+from fep_lean.verification._subprocess import run_process_group
 
 
 def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
@@ -266,6 +268,7 @@ def _renderer_environment(
     command: Sequence[str],
     *,
     auxiliary_executables: Sequence[str] = (),
+    project_root: Path | None = None,
 ) -> dict[str, str]:
     """Return the complete, controlled environment seen by local renderers."""
     root = Path(environment_root)
@@ -275,7 +278,7 @@ def _renderer_environment(
     texmf_config = root / "texmf-config"
     for path in (home, cache, texmf_var, texmf_config):
         path.mkdir(parents=True, exist_ok=True)
-    return {
+    environment = {
         "PATH": _controlled_renderer_path(
             command, auxiliary_executables=auxiliary_executables
         ),
@@ -289,6 +292,20 @@ def _renderer_environment(
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
     }
+    if project_root is not None:
+        environment["TEXINPUTS"] = (
+            os.pathsep.join(
+                str(Path(project_root).resolve() / relative)
+                for relative in (
+                    "output/manuscript",
+                    "output/manuscript/assets",
+                    "manuscript",
+                    "docs",
+                )
+            )
+            + os.pathsep
+        )
+    return environment
 
 
 def _normalized_renderer_environment(epoch: int) -> dict[str, str]:
@@ -304,6 +321,16 @@ def _normalized_renderer_environment(epoch: int) -> dict[str, str]:
         "TZ": "UTC",
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
+        "TEXINPUTS": os.pathsep.join(
+            f"<PROJECT_ROOT>/{relative}"
+            for relative in (
+                "output/manuscript",
+                "output/manuscript/assets",
+                "manuscript",
+                "docs",
+            )
+        )
+        + os.pathsep,
     }
 
 
@@ -364,22 +391,22 @@ def _run_renderer(
     project_root: Path,
     environment_root: Path,
     epoch: int,
-    timeout: int,
+    timeout: float,
     auxiliary_executables: Sequence[str] = (),
+    working_directory: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
     try:
-        return subprocess.run(
+        return run_process_group(
             list(command),
-            cwd=project_root,
+            cwd=project_root if working_directory is None else working_directory,
             env=_renderer_environment(
                 epoch,
                 environment_root,
                 command,
                 auxiliary_executables=auxiliary_executables,
+                project_root=project_root,
             ),
             check=False,
-            capture_output=True,
-            text=True,
             timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
@@ -423,51 +450,87 @@ def _render_twice(
     pdf_normalizer: str | None = None,
     pdf_engine: str | None = None,
 ) -> tuple[bytes | None, str]:
+    if (
+        isinstance(timeout, bool)
+        or not isinstance(timeout, (int, float))
+        or not math.isfinite(timeout)
+        or timeout <= 0
+    ):
+        raise ReleaseBundleError("renderer timeout must be finite and positive")
+    deadline = time.monotonic() + timeout
+
+    def remaining() -> float:
+        value = deadline - time.monotonic()
+        if value <= 0:
+            raise ReleaseBundleError(
+                f"renderer exceeded its {timeout}-second deterministic budget"
+            )
+        return value
+
     outputs: list[bytes] = []
     with tempfile.TemporaryDirectory(prefix="fep-lean-render-") as raw_directory:
         directory = Path(raw_directory)
+        job = directory / "pdf-job"
         for index in range(2):
             run_root = directory / f"environment-{index}"
             run_root.mkdir()
             output = directory / f"render-{index}{suffix}"
             command = [*base_command, *extra_args]
             if pdf_engine is not None:
-                wrapper_directory = run_root / "bin"
-                wrapper_directory.mkdir()
-                wrapper = wrapper_directory / "xelatex"
-                quoted_engine = shlex.quote(pdf_engine)
-                wrapper.write_text(
-                    "#!/bin/sh\n"
-                    "set -eu\n"
-                    f'{quoted_engine} "$@"\n'
-                    f'exec {quoted_engine} "$@"\n',
-                    encoding="utf-8",
-                )
-                wrapper.chmod(0o755)
-                command.append(f"--pdf-engine={wrapper}")
+                # TeX Live 2026 hashes the DVI/PDF filenames into font subset
+                # names. Own one private job path, freshly emptied per pass,
+                # so both complete renders see identical names and no warm aux.
+                if job.exists():
+                    shutil.rmtree(job)
+                job.mkdir(mode=0o700)
+                output = job / "manuscript.pdf"
+                command.append("--to=latex")
             if include_header is not None:
-                header = run_root / "preamble.tex"
+                header = (job if pdf_engine is not None else run_root) / "preamble.tex"
                 header.write_bytes(include_header)
                 command.append(f"--include-in-header={header}")
+            pandoc_output = job / "manuscript.tex" if pdf_engine is not None else output
             completed = bundle._run_renderer(
-                [*command, f"--output={output}"],
+                [*command, f"--output={pandoc_output}"],
                 project_root=project_root,
                 environment_root=run_root,
                 epoch=epoch,
-                timeout=timeout,
+                timeout=remaining(),
                 auxiliary_executables=auxiliary_executables,
             )
-            if completed.returncode != 0 or not output.is_file():
+            if completed.returncode != 0 or not pandoc_output.is_file():
                 return None, f"renderer_failed_returncode_{completed.returncode}"
+            if pdf_engine is not None:
+                for _ in range(2):
+                    compiled = bundle._run_renderer(
+                        [
+                            pdf_engine,
+                            "-no-shell-escape",
+                            "-halt-on-error",
+                            "-interaction=nonstopmode",
+                            "-output-directory=.",
+                            "manuscript.tex",
+                        ],
+                        project_root=project_root,
+                        environment_root=run_root,
+                        epoch=epoch,
+                        timeout=remaining(),
+                        auxiliary_executables=auxiliary_executables,
+                        working_directory=job,
+                    )
+                    if compiled.returncode != 0 or not output.is_file():
+                        return None, f"renderer_failed_returncode_{compiled.returncode}"
             rendered_bytes = output.read_bytes()
             if pdf_normalizer is not None:
-                normalized = run_root / "normalized.pdf"
+                normalized = (
+                    job if pdf_engine is not None else run_root
+                ) / "normalized.pdf"
                 normalizer_result = bundle._run_renderer(
                     [pdf_normalizer, "clean", str(output), str(normalized)],
                     project_root=project_root,
                     environment_root=run_root,
                     epoch=epoch,
-                    timeout=timeout,
+                    timeout=remaining(),
                     auxiliary_executables=auxiliary_executables,
                 )
                 if normalizer_result.returncode != 0 or not normalized.is_file():
@@ -661,14 +724,27 @@ def render_publication_manuscript(
                 [
                     "pandoc",
                     *base_command[1:],
-                    "--pdf-engine=<TWO_PASS_XELATEX_WRAPPER>",
-                    "--include-in-header=<RENDER_TEMP>/preamble.tex",
-                    "--output=<OUTPUT.pdf>",
+                    "--to=latex",
+                    "--include-in-header=<RENDER_TEMP>/pdf-job/preamble.tex",
+                    "--output=<RENDER_TEMP>/pdf-job/manuscript.tex",
                 ]
                 if pdf_renderer is not None
                 else []
             ),
             "pdf_engine_passes": 2 if pdf_renderer is not None else 0,
+            "pdf_engine": (
+                [
+                    "xelatex",
+                    "-no-shell-escape",
+                    "-halt-on-error",
+                    "-interaction=nonstopmode",
+                    "-output-directory=.",
+                    "manuscript.tex",
+                ]
+                if pdf_renderer is not None
+                else []
+            ),
+            "pdf_working_directory": "<RENDER_TEMP>/pdf-job",
             "pdf_normalization": (
                 [
                     "mutool",

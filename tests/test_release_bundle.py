@@ -11,9 +11,12 @@ import re
 import shutil
 import struct
 import subprocess
+import sys
 import tarfile
+import time
 import zlib
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -1087,6 +1090,7 @@ def test_publication_html_is_two_render_reproducible_and_checkable(
         "TZ",
         "LANG",
         "LC_ALL",
+        "TEXINPUTS",
     }
     assert (
         provenance["renderers"]["pandoc"]["binary_sha256"]
@@ -1283,7 +1287,8 @@ def test_controlled_renderer_path_includes_pdf_asset_converter() -> None:
 def test_pdf_renderer_uses_two_xelatex_passes_per_isolated_render(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    wrappers: list[str] = []
+    engine_jobs: list[Path] = []
+    fresh_jobs: list[Path] = []
 
     def fake_renderer(
         command: object,
@@ -1293,21 +1298,26 @@ def test_pdf_renderer_uses_two_xelatex_passes_per_isolated_render(
         epoch: int,
         timeout: int,
         auxiliary_executables: object = (),
+        working_directory: Path | None = None,
     ) -> subprocess.CompletedProcess[str]:
         del project_root, environment_root, epoch, timeout, auxiliary_executables
         argv = list(command)  # type: ignore[arg-type]
-        output_arg = next(arg for arg in argv if str(arg).startswith("--output="))
-        output = Path(str(output_arg).split("=", 1)[1])
-        engine_arg = next(arg for arg in argv if str(arg).startswith("--pdf-engine="))
-        wrapper = Path(str(engine_arg).split("=", 1)[1])
-        wrappers.append(wrapper.read_text(encoding="utf-8"))
-        output.write_bytes(
-            b"%PDF-1.5\ntrailer<</ID[<"
-            + b"A" * 32
-            + b"><"
-            + b"B" * 32
-            + b">]>>\n%%EOF\n"
-        )
+        if argv[0] == "/render/bin/pandoc":
+            output_arg = next(arg for arg in argv if str(arg).startswith("--output="))
+            output = Path(str(output_arg).split("=", 1)[1])
+            assert output.name == "manuscript.tex"
+            assert not (output.parent / "manuscript.pdf").exists()
+            fresh_jobs.append(output.parent)
+            output.write_text("% valid fixture\n", encoding="utf-8")
+        else:
+            assert argv[0] == "/tex/bin/xelatex"
+            assert argv[-1] == "manuscript.tex"
+            assert "-output-directory=." in argv
+            assert "-no-shell-escape" in argv
+            assert working_directory is not None
+            assert working_directory.stat().st_mode & 0o077 == 0
+            engine_jobs.append(working_directory)
+            (working_directory / "manuscript.pdf").write_bytes(b"checked PDF fixture")
         return subprocess.CompletedProcess(argv, 0, "", "")
 
     monkeypatch.setattr(bundle_module, "_run_renderer", fake_renderer)
@@ -1324,8 +1334,83 @@ def test_pdf_renderer_uses_two_xelatex_passes_per_isolated_render(
 
     assert status == "reproducible"
     assert rendered is not None
-    assert len(wrappers) == 2
-    assert all(wrapper.count("/tex/bin/xelatex") == 2 for wrapper in wrappers)
+    assert len(engine_jobs) == 4
+    assert len(fresh_jobs) == 2
+    assert len(set(engine_jobs)) == 1
+    assert not engine_jobs[0].exists()
+
+
+def test_native_publication_pdf_is_reproducible_across_concurrent_private_jobs(
+    tmp_path: Path,
+) -> None:
+    if any(shutil.which(name) is None for name in ("pandoc", "xelatex", "mutool")):
+        pytest.skip("complete PDF renderer toolchain is unavailable")
+    _minimal_manuscript(tmp_path)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [
+            pool.submit(render_publication_manuscript, tmp_path, source_date_epoch=0)
+            for _ in range(2)
+        ]
+        results = [future.result(timeout=180) for future in futures]
+    assert results[0].pdf is not None
+    assert results[0].pdf == results[1].pdf
+    assert results[0].provenance == results[1].provenance
+    assert all(
+        json.loads(result.provenance)["pdf"]["status"] == "reproducible"
+        for result in results
+    )
+
+
+@pytest.mark.parametrize("timeout", [0, -1, float("inf"), float("nan"), True])
+def test_render_budget_rejects_malformed_values_before_dispatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, timeout: float
+) -> None:
+    def unexpected_dispatch(*args: object, **kwargs: object) -> None:
+        pytest.fail("invalid budget reached renderer dispatch")
+
+    monkeypatch.setattr(bundle_module, "_run_renderer", unexpected_dispatch)
+    with pytest.raises(bundle_module.ReleaseBundleError, match="finite and positive"):
+        bundle_module._render_twice(
+            ("unused",),
+            project_root=tmp_path,
+            epoch=0,
+            suffix=".pdf",
+            extra_args=(),
+            timeout=timeout,
+        )
+
+
+@pytest.mark.skipif(os.name != "posix", reason="process groups require POSIX")
+def test_renderer_timeout_reaps_parent_and_stops_pipe_holding_grandchild(
+    tmp_path: Path,
+) -> None:
+    pid_file = tmp_path / "owned-child.pid"
+    script = (
+        "import subprocess, sys, time\n"
+        "from pathlib import Path\n"
+        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
+        "Path(sys.argv[1]).write_text(str(child.pid))\n"
+        "time.sleep(60)\n"
+    )
+    started = time.monotonic()
+    with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
+        bundle_module._run_renderer(
+            (sys.executable, "-c", script, str(pid_file)),
+            project_root=tmp_path,
+            environment_root=tmp_path / "environment",
+            epoch=0,
+            timeout=0.5,
+        )
+    assert time.monotonic() - started < 5
+    assert pid_file.is_file()
+    status = subprocess.run(
+        ("ps", "-o", "stat=", "-p", pid_file.read_text()),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=3,
+    )
+    assert not status.stdout.strip() or status.stdout.lstrip().startswith("Z")
 
 
 def test_publication_renderer_numbers_sections_for_resolvable_references(
