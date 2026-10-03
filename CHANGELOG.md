@@ -1,4 +1,67 @@
-## Unreleased — wave-4 catalogue delivery
+## Unreleased — v1.4.0 candidate
+
+The next minor release is authorized for the comprehensive package and
+formalization improvements. Coordinated source, runtime, citation, manuscript,
+configuration, sidecar and strict bundle metadata identify the `1.4.0` candidate
+prepared on 2026-10-02. The candidate citation targets release on 2026-10-03;
+the manuscript retains its authored snapshot date of 2026-10-02. The citation describes 168 canonical topic bodies and separates
+compiled statements from semantic adequacy and empirical validity. Dependency
+pins and historical releases/receipts retain their identities. Publication
+awaits current acceptance, same-SHA hosted evidence and artifact validation.
+
+Publication capture now refreshes the paired manuscript projections and test
+census only after strict native acceptance, renders those final values, then
+runs Python acceptance against the accepted render. The seven evidence stages
+retain their deadlines and independent validators. Generated cache ownership
+and the citation, configured image, manuscript and font/receipt input guards
+are explicit; missing projection preparation fails before tools start.
+
+CI render custody binds the checkout to the declared template revision and
+records its exact uninitialized submodule entry separately from tracked blobs.
+Only the pinned path and commit in a canonical empty directory are accepted;
+unknown entries, initialization, aliases, population and metadata drift are
+rejected before evidence can be retained. Git does not enter submodule stores.
+
+The canonical backlog contains open work only. The
+[upcoming scope](docs/design/fep-research-program/next-improvements.md) defines
+minor, medium and major improvements for package and formal work with explicit
+dependency, acceptance and failure boundaries.
+
+## 2026-10-02 — Fresh Q7 source-pair closure
+
+The [fresh Q7 capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+passes all 12 newly executed stages and four closing checks in 1,249.5858
+seconds under the unchanged 7,200-second acceptance bound. All 124 pure controls
+pass without skips; five actual CPython runtimes produce the same 56,968
+canonical scaffold bytes. The new native receipt has SHA-256
+`5630eef0b58185dfd359f627453e386174d25157ddcf935c928930c2d8eef7f0`
+and is independently validated as native-claim-ready for its exact checked
+statements and source pair. Runner execution remains unverified. No historical
+accepted prefix or native receipt is promoted, and active GNN work is preserved.
+
+`FEP-Q7-CURRENT` leaves the open-only backlog. The former Q7 README heading is
+explicitly historical; its exact capture-time preimage remains retained. These
+postcapture guidance changes do not alter the 191 FEP or 291 native inputs.
+Catalogue-native, full package/hosted acceptance, H3 outcomes, provider evidence
+and the v1.4.0 release remain separate pending gates.
+
+## 2026-10-02 — Main publication and hosted follow-up
+
+Published reviewed improvements to `main` at
+[409ee71](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088),
+with exact local/direct-remote parity. Complete guarded Python acceptance
+passed 2,308 tests and 90.65% coverage at that source epoch; all 25 declared
+static checks and strict real-template render preparation passed separately.
+
+The [exact-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37035715408)
+finished with five Windows matrix failures, one Python runtime-fixture failure
+and two H2 custody failures. All ten Ubuntu/macOS matrix cells passed. The
+failed Lean job produced no native or accepted-render artifact. Follow-up
+repairs and active guidance changes reopen dependent source-currency gates;
+prior accepted observations retain their recorded epochs. Historical receipts,
+failed attempts, frozen scientific protocol and active GNN work are preserved.
+The open-only [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
+records the full original scope and execution order.
 
 ## 2026-10-02 — Q7 portability acceptance
 

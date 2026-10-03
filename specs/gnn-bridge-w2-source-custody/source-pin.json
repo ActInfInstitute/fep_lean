@@ -1,15 +1,15 @@
 {
   "fep_lean": {
-    "commit": "cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed",
+    "commit": "409ee71f82b3353303e6306e87c1b1fedc949088",
     "owners": {
       "docs/design/gnn-bridge/bridge-contract.md": "61102fa2602c482106365b1eb655c34f3d55ad5fc481637dbc6d0d6777612c53",
       "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
       "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
       "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
-      "pyproject.toml": "71af4247c0daccfbec4f8ba7670bc217cda3647f58501c7a58d46d8a4852b9bc",
+      "pyproject.toml": "f8f2b0a7e575237fe75041d836d0c30a545b2efb3bc9a9e1a91f2c16abb44b96",
       "specs/gnn-bridge-p1-finite-spike/projection.py": "fbfc63d13d38a319bc8c54b4969a2fbb7c96b5bae4f2d2c80facc5cfe35a527b",
       "specs/gnn-bridge-p4b-continuous-emission/projection_continuous.py": "70d29ff7ff68df98d4fb327fcd92383b8167602e563b0d5d766f35cc9aa5b1ea",
-      "src/fep_lean/__init__.py": "c4746caeda155e2096b2af48ea63df8c25cfc29a97b061744aa8fabd95a36730",
+      "src/fep_lean/__init__.py": "13b7c9bea176309269163111fd30f459b3e2fa25dcb97f4f7b4fb1389ef84fc9",
       "src/fep_lean/_paths.py": "ad1f095e76592b4d2d5faaa7f1a9610018b6aa76b1c6f7d0ccb41edaf829ec26",
       "src/fep_lean/bridge/__init__.py": "8ec08fcdb4b9877dc1f61e67419b1bac92d946c5ca9619395c884f5862492587",
       "src/fep_lean/bridge/certificates.py": "1035429fa14684a558168d439c69fccf662be757e70eadb23ca82372def63866",
@@ -51,7 +51,7 @@
       "src/fep_lean/catalogue/semantics.py": "fc851fb7f7d65dfee5ec83dde4bba60c92fdaa30dd597f81c2a4c8517c28de67",
       "src/fep_lean/catalogue/theorem_maturity_projection.py": "5e4895dcdcda08989f640a97b545f24577b43bdc023ca56708957a2ba4d450f6",
       "src/fep_lean/catalogue/topics.py": "02745cba6bb6564cf8b43ba9e6f36832348e6338748975314ebecba27758dc64",
-      "src/fep_lean/cli.py": "3ab8d2a9a9331ba6112c34268e2138cf35e811abc2270d8eca29f88e472cafde",
+      "src/fep_lean/cli.py": "7e79708031a70b3c3dd249e80dcebffc3902a7e24ad305436361bef83d5adf0a",
       "src/fep_lean/custody/__init__.py": "01d95ff4f342f82f81ecd39ed41900d44c93033253057e2bb6e450bb79757537",
       "src/fep_lean/custody/apply.py": "201b2b106ac79ecec0b97981e3ea7fb6e5fc86edf7ea45d608b7bba83a8912c9",
       "src/fep_lean/custody/census.py": "30370b4ba83a54eec03418ffaec40859cc89abe2b76dcf312667840574e39816",
@@ -158,8 +158,8 @@
       "src/fep_lean/output/release_bundle/_acceptance.py": "a20946a3e84cdb270e8e2a7f0f262d93ede3270174edd2c18eddb7af0a04cf2b",
       "src/fep_lean/output/release_bundle/_assemble.py": "d7b080904af9861a6df879d22eec247fef79a91448075d8f6db67c50aa2d710c",
       "src/fep_lean/output/release_bundle/_browser.py": "82d51f66c04dc9b0da2c565a51cf602823da90e4af4dcecbed62ff8783b69183",
-      "src/fep_lean/output/release_bundle/_constants.py": "24ec550e85a425445513efb60b30149907381220ecd06304052939edbdc51de8",
-      "src/fep_lean/output/release_bundle/_core.py": "38c9a35e61dac62260805d9d3354b2f1ddd05a34fb87437b6163e95cc854aa1b",
+      "src/fep_lean/output/release_bundle/_constants.py": "b420fbe3a7412370581b2b62e8d35391118a125cff85425b627efbaed904d2bd",
+      "src/fep_lean/output/release_bundle/_core.py": "c8a12cc75284d9d6361e0bda9052f28ab307657e6bd0f982deff9a9e54166fe2",
       "src/fep_lean/output/release_bundle/_identity.py": "5d31fb337992ae51e621ae1a4ba1937a8bd850b7b5118296efd8ef1a17402760",
       "src/fep_lean/output/release_bundle/_manuscript.py": "3e13828eb1c6c9566d122e530ad5fb8fe30034b231f280f98638d44ecde01a91",
       "src/fep_lean/output/release_bundle/_prerequisites.py": "cda2e8972b442839c1450d35b8d0b58d5f9367d0ffdb82b1039ba9b79d314624",
@@ -192,7 +192,7 @@
       "src/fep_lean/verification/lean_verifier.py": "4f968c7b055d12f11389868b28d515da12caa7bed6bcc8407887e0b575ced9d6",
       "src/fep_lean/verification/numerical_witnesses.py": "709e98a9f22eeaf985563852b69029ade43deafdcc5fd500e1b3788dd4404533",
       "src/fep_lean/verification/preflight.py": "2b80ab8cefa2f93d7648f2b3d607fda18591d2b0294ffffea1cd45ad51441ebc",
-      "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
+      "uv.lock": "1747826c69488e5271faf542702c1e2294d2ca51855d19bd40789a219c16fd6d"
     }
   },
   "gnn": {

@@ -1,6 +1,6 @@
 # Public Python API
 
-**Version:** 1.3.0
+**Version:** 1.4.0
 **Last reviewed:** 2026-09-30
 
 The installed distribution exposes one root namespace, `fep_lean`. Generic

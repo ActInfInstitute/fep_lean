@@ -9,6 +9,17 @@ The earlier broader roadmap and August conditional draft are preserved in
 [the baseline commit](https://github.com/ActiveInferenceInstitute/fep_formal/blob/cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed/docs/design/fep-research-program/horizon-3-scientific-case-study.md).
 Their alternative branches and unaccepted targets are superseded for this cycle.
 
+At the pre-release checkpoint on 2026-10-02 the frozen primary was unopened
+and the H3 scientific exit was not accepted. Later measured results belong to
+the study's source-bound execution and claim records.
+Implemented theorem bodies, generators and earlier receipt checkpoints do not
+close the current source-bound package/export/review/outcome/reproduction chain.
+The next minor release candidate is `1.4.0`, subject to the original
+[nine-criterion program](../../../specs/comprehensive-science-improvement/PROTOCOL.md)
+and final release acceptance. [TODO.md](../../../TODO.md) and
+[remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
+own open execution; [future scopes](next-improvements.md) cannot alter this freeze.
+
 ## Current ownership and evidence gates
 
 The accepted H2/G0 prerequisite and pre-outcome freeze are historical inputs to
@@ -31,9 +42,9 @@ aggregate imports the composition once; its foundation is a transitive import.
 The three slice-local Python producers do not enter `FORMAL_MODULES` or expand
 the package's reviewed Python source-owner roster.
 
-Local warning-free native checks and focused consumers establish the exact
-53 foundation and 93 composition public theorems. The current whole-roster
-audit/export and final review chain remain separate gates. The
+Recorded local warning-free native checks and focused consumers establish their
+exact foundation/composition declarations at their captured source epochs. The
+current whole-roster audit/export and final review chain remain separate gates. The
 [execution log](../../../specs/comprehensive-science-improvement/EXECUTION.md)
 records actual commands, failed probes and subsequent evidence; this guide
 is not a successful study receipt.

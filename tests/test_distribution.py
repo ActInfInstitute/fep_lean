@@ -9,6 +9,8 @@ import shutil
 import subprocess
 import sys
 import zipfile
+from email import policy
+from email.parser import Parser
 from importlib.metadata import distribution
 from pathlib import Path
 
@@ -19,6 +21,96 @@ from fep_lean.output.render_log import build_acceptance_receipt
 from fep_lean.output.rendering import MANUSCRIPT_ASSETS
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+
+def _assert_wheel_metadata_headers(metadata_text: str) -> None:
+    metadata = Parser(policy=policy.strict).parsestr(metadata_text, headersonly=True)
+    assert not metadata.defects
+    expected = {
+        "License-Expression": ["CC-BY-4.0"],
+        "License-File": ["LICENSE"],
+        "Author-email": ["Daniel Ari Friedman <daniel@activeinference.institute>"],
+        "Description-Content-Type": ["text/markdown"],
+        "Project-URL": [
+            "Repository, https://github.com/ActiveInferenceInstitute/fep_formal",
+            "Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md",
+            "Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+        ],
+    }
+    for header, values in expected.items():
+        # Header order is irrelevant; complete values and multiplicity are exact.
+        assert sorted(metadata.get_all(header, [])) == sorted(values), header
+
+
+def _wheel_metadata_fixture() -> str:
+    return (
+        "Metadata-Version: 2.4\n"
+        "Name: fep_lean\n"
+        "License-Expression: CC-BY-4.0\n"
+        "License-File: LICENSE\n"
+        "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>\n"
+        "Description-Content-Type: text/markdown\n"
+        "Project-URL: Repository, https://github.com/ActiveInferenceInstitute/fep_formal\n"
+        "Project-URL: Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md\n"
+        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233\n"
+        "\nA package description.\n"
+    )
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+def test_wheel_metadata_headers_accept_standard_line_endings(line_ending: str) -> None:
+    _assert_wheel_metadata_headers(_wheel_metadata_fixture().replace("\n", line_ending))
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+@pytest.mark.parametrize(
+    "duplicate",
+    [
+        "License-Expression: CC-BY-4.0",
+        "License-File: LICENSE",
+        "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>",
+        "Description-Content-Type: text/markdown",
+        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+    ],
+)
+def test_wheel_metadata_headers_refuse_duplicate_values(
+    line_ending: str, duplicate: str
+) -> None:
+    metadata = _wheel_metadata_fixture().replace("\n\n", f"\n{duplicate}\n\n", 1)
+    with pytest.raises(AssertionError, match=duplicate.split(":", 1)[0]):
+        _assert_wheel_metadata_headers(metadata.replace("\n", line_ending))
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"], ids=["LF", "CRLF"])
+@pytest.mark.parametrize("failure", ["body_only_license", "wrong_project_url"])
+def test_wheel_metadata_headers_refuse_body_spoof_and_wrong_url(
+    line_ending: str, failure: str
+) -> None:
+    metadata = _wheel_metadata_fixture()
+    if failure == "body_only_license":
+        metadata = metadata.replace("License-Expression: CC-BY-4.0\n", "", 1)
+        metadata += "License-Expression: CC-BY-4.0\n"
+        header = "License-Expression"
+    else:
+        metadata = metadata.replace(
+            "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233",
+            "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.1",
+        )
+        header = "Project-URL"
+    with pytest.raises(AssertionError, match=header):
+        _assert_wheel_metadata_headers(metadata.replace("\n", line_ending))
+
+
+def _init_fixture_repository(root: Path) -> None:
+    # A user's fsmonitor setting must not launch detached daemons for these
+    # disposable repositories. Override only this fixture's local config.
+    subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "init", "-q", str(root)], check=True
+    )
+    subprocess.run(
+        ["git", "-C", str(root), "config", "--local", "core.fsmonitor", "false"],
+        check=True,
+    )
 
 
 def _package_namespace_digests(project_root: Path) -> dict[str, str]:
@@ -83,24 +175,7 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
             name for name in archive.namelist() if name.endswith(".dist-info/METADATA")
         )
         wheel_metadata = archive.read(metadata_name).decode("utf-8")
-    assert "License-Expression: CC-BY-4.0\n" in wheel_metadata
-    assert "License-File: LICENSE\n" in wheel_metadata
-    assert "Author-email: Daniel Ari Friedman <daniel@activeinference.institute>\n" in (
-        wheel_metadata
-    )
-    assert "Description-Content-Type: text/markdown\n" in wheel_metadata
-    assert (
-        "Project-URL: Repository, https://github.com/ActiveInferenceInstitute/fep_formal\n"
-        in wheel_metadata
-    )
-    assert (
-        "Project-URL: Changelog, https://github.com/ActiveInferenceInstitute/fep_formal/blob/main/CHANGELOG.md\n"
-        in wheel_metadata
-    )
-    assert (
-        "Project-URL: Concept DOI, https://doi.org/10.5281/zenodo.19699233\n"
-        in wheel_metadata
-    )
+    _assert_wheel_metadata_headers(wheel_metadata)
 
     environment = tmp_path / "venv"
     target_python = os.environ.get("FEP_DISTRIBUTION_PYTHON", sys.executable)
@@ -165,8 +240,8 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
                 "for path in installed_root.rglob('*') if path.is_file() and path.suffix in {'.py', '.lean', '.yaml'}}; "
                 "assert installed == expected, 'installed namespace roster or bytes differ'; "
                 "from fep_lean.verification.gnn_continuous_artifact_proof import ContinuousArtifactError, scaffold_digest, canonical_scaffold_bytes; "
-                f"q7_source = pathlib.Path({str(PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py')!r}).read_text(); "
-                f"q7_expected = {json.loads((PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/expected.json').read_text())['runner_ast_sha256']!r}; "
+                f"q7_source = pathlib.Path({str(PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py')!r}).read_text(encoding='utf-8'); "
+                f"q7_expected = {json.loads((PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/expected.json').read_text(encoding='utf-8'))['runner_ast_sha256']!r}; "
                 "assert hashlib.sha256(canonical_scaffold_bytes(q7_source)).hexdigest() == q7_expected; "
                 "accepted = sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 14); "
                 "\nif not accepted:\n"
@@ -439,7 +514,7 @@ def test_documentation_classifier_keeps_publication_inputs_on_full_gates(
     tmp_path: Path, changed_path: str, docs_only: bool
 ) -> None:
     """Exercise the actual CI classifier against a real git difference."""
-    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    _init_fixture_repository(tmp_path)
     git_env = dict(os.environ)
     git_env.update(
         GIT_AUTHOR_NAME="Test",
@@ -492,7 +567,7 @@ def test_documentation_classifier_rejects_source_rename_into_prose(
     tmp_path: Path,
 ) -> None:
     """A 100-percent rename must preserve the removed owner's full gates."""
-    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    _init_fixture_repository(tmp_path)
     source = tmp_path / "src/owner.py"
     source.parent.mkdir()
     source.write_text("A file renamed without any content change.\n")
@@ -573,6 +648,115 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
     tmp_path: Path, failure: str | None
 ) -> None:
     """Execute CI staging; valid output hashes bind, plausible failures refuse."""
+    _exercise_render_artifact_staging(tmp_path, failure=failure)
+
+
+_TEMPLATE_SUCCESS_CASES = frozenset(
+    {
+        "relative_file",
+        "relative_directory",
+        "relative_file_and_directory",
+        "absolute_internal_file",
+        "directory_excluded_cache",
+    }
+)
+_TEMPLATE_GITLINK = (
+    "infrastructure/steganography/kmyth",
+    "cb23c6d94423cbe4f5ef0caf23594d1095ddde79",
+)
+
+_TEMPLATE_LINK_CASES = (
+    "relative_file",
+    "relative_directory",
+    "relative_file_and_directory",
+    "absolute_internal_file",
+    "directory_excluded_cache",
+    "absolute_escape",
+    "missing_target",
+    "cyclic_target",
+    "noncanonical_target",
+    "excluded_target",
+    "link_mode_as_regular",
+    "regular_mode_as_link",
+    "untracked_file_referent",
+    "untracked_directory_referent",
+    "empty_directory_referent",
+    "modified_referent",
+    "modified_referent_hidden_from_git_diff",
+    "unsupported_git_mode",
+    "ignored_untracked_link",
+    "wrong_internal_registration",
+    "tracked_registration",
+    "missing_registration",
+    "discovery_template_source",
+    "discovery_template_link",
+    "discovery_template_referent",
+    "discovery_registration",
+    "retention_template_source",
+    "retention_template_link",
+    "retention_template_referent",
+    "retention_registration",
+)
+
+
+@pytest.mark.parametrize("template_case", _TEMPLATE_LINK_CASES)
+def test_render_artifact_staging_binds_template_links(
+    tmp_path: Path, template_case: str
+) -> None:
+    """Run the actual workflow against committed link and referent controls."""
+    if template_case == "unsupported_git_mode":
+        # Keep the collected public 80-case matrix while exercising every real
+        # gitlink rejection in its own independent repository and staging path.
+        for variant in (
+            "unknown_path",
+            "changed_commit",
+            "changed_mode_regular",
+            "changed_mode_symlink",
+            "wrong_template_sha",
+            "nonempty",
+            "initialized_gitfile",
+            "initialized_gitdirectory",
+            "symlink",
+            "regular_file",
+            "missing",
+            "parent_symlink",
+            "inventory_nonempty",
+            "inventory_empty_metadata",
+            "discovery_nonempty",
+            "discovery_empty_metadata",
+            "retention_nonempty",
+            "retention_empty_metadata",
+        ):
+            child = tmp_path / variant
+            child.mkdir()
+            _exercise_render_artifact_staging(
+                child, template_case=template_case, gitlink_case=variant
+            )
+        return
+    _exercise_render_artifact_staging(tmp_path, template_case=template_case)
+
+
+def _exercise_render_artifact_staging(
+    tmp_path: Path,
+    *,
+    failure: str | None = None,
+    template_case: str | None = None,
+    gitlink_case: str | None = None,
+) -> None:
+    staging_step = next(
+        step
+        for step in yaml.safe_load(
+            (PROJECT_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        )["jobs"]["render"]["steps"]
+        if step.get("name")
+        == "Stage accepted render evidence with exact source and tool provenance"
+    )
+    assert (
+        staging_step["env"]["EXPECTED_TEMPLATE_SHA"]
+        == "5b3c0f43940f0322fbc6205b3be4c2854f99329d"
+    )
+    # The operator context supplies this real fixture HEAD below. Git commands
+    # and recorded entry OIDs stay real; the fixture is never called the pin.
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
     (manuscript / "01_abstract.md").write_text("A rendered statement.\n")
@@ -627,7 +811,7 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         "GIT_COMMITTER_NAME": "Test",
         "GIT_COMMITTER_EMAIL": "test@example.invalid",
     }
-    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    _init_fixture_repository(tmp_path)
     subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
     subprocess.run(
         ["git", "-c", "commit.gpgsign=false", "commit", "-qm", "fixture"],
@@ -640,9 +824,93 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
     ).strip()
     template = tmp_path / "render-template"
     template.mkdir()
-    subprocess.run(["git", "init", "-q"], cwd=template, check=True)
-    (template / "README.md").write_text("Pinned template source.\n")
+    _init_fixture_repository(template)
+    template_files = {"README.md": b"Pinned template source.\n"}
+    template_links: dict[str, str] = {}
+    template_gitlinks: dict[str, str] = {}
+    template_ignore = "projects/active/fep_lean\n"
+    registration = template / "projects/active/fep_lean"
+    # Unsupported platforms refuse at the real artifact custody reader before
+    # template discovery. Every parameter still executes that staging boundary.
+    if os.name == "posix":
+        gitlink_path = template / _TEMPLATE_GITLINK[0]
+        gitlink_path.mkdir(parents=True)
+        template_gitlinks[_TEMPLATE_GITLINK[0]] = _TEMPLATE_GITLINK[1]
+        registration.parent.mkdir(parents=True)
+        registration.symlink_to(tmp_path, target_is_directory=True)
+        if template_case is not None:
+            template_files.update(
+                {
+                    "resources/data.txt": b"First template resource.\n",
+                    "resources/other.txt": b"Other template resource.\n",
+                }
+            )
+            if template_case != "relative_directory":
+                template_links["file-link"] = "resources/data.txt"
+            if template_case not in {"relative_file", "absolute_internal_file"}:
+                template_links["directory-link"] = "resources"
+            if template_case == "absolute_internal_file":
+                template_links["file-link"] = str(template / "resources/data.txt")
+            elif template_case == "absolute_escape":
+                template_links["file-link"] = str(font)
+            elif template_case == "missing_target":
+                template_links["file-link"] = "resources/missing.txt"
+            elif template_case == "cyclic_target":
+                template_links["file-link"] = "cycle-link"
+                template_links["cycle-link"] = "file-link"
+            elif template_case == "noncanonical_target":
+                template_links["file-link"] = "resources/../README.md"
+            elif template_case == "excluded_target":
+                template_ignore += ".venv/\n"
+                cache = template / ".venv/cache.txt"
+                cache.parent.mkdir()
+                cache.write_bytes(b"private fixture cache")
+                template_links["file-link"] = ".venv/cache.txt"
+            elif template_case == "regular_mode_as_link":
+                template_files["mode-owner.txt"] = b"resources/data.txt"
+            elif template_case == "untracked_file_referent":
+                template_links["file-link"] = "resources/ignored.txt"
+            elif template_case == "empty_directory_referent":
+                (template / "empty-resources").mkdir()
+                template_links["directory-link"] = "empty-resources"
+            elif template_case == "ignored_untracked_link":
+                template_ignore += "ignored-link\n"
+                template_links["ignored-link"] = "README.md"
+            if template_case in {
+                "untracked_file_referent",
+                "untracked_directory_referent",
+            }:
+                template_ignore += "resources/ignored.txt\n"
+                ignored = template / "resources/ignored.txt"
+                ignored.parent.mkdir(exist_ok=True)
+                ignored.write_bytes(b"untracked template referent")
+            elif template_case == "directory_excluded_cache":
+                template_ignore += "resources/__pycache__/\n"
+                cache = template / "resources/__pycache__/ignored.pyc"
+                cache.parent.mkdir(parents=True)
+                cache.write_bytes(b"excluded fixture bytecode")
+    template_files[".gitignore"] = template_ignore.encode("utf-8")
+    for name, data in template_files.items():
+        path = template / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    for name, target in template_links.items():
+        (template / name).symlink_to(
+            target, target_is_directory=name == "directory-link"
+        )
     subprocess.run(["git", "add", "."], cwd=template, check=True)
+    for name, commit in template_gitlinks.items():
+        subprocess.run(
+            ["git", "update-index", "--add", "--cacheinfo", f"160000,{commit},{name}"],
+            cwd=template,
+            check=True,
+        )
+    if os.name == "posix" and template_case == "tracked_registration":
+        subprocess.run(
+            ["git", "add", "-f", "--", "projects/active/fep_lean"],
+            cwd=template,
+            check=True,
+        )
     subprocess.run(
         [
             "git",
@@ -657,6 +925,125 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         env=git_env,
         check=True,
     )
+    if os.name == "posix":
+        hidden_owner = None
+        if template_case == "link_mode_as_regular":
+            owner = template / "file-link"
+            owner.unlink()
+            owner.write_bytes(b"resources/data.txt")
+            hidden_owner = "file-link"
+        elif template_case == "regular_mode_as_link":
+            owner = template / "mode-owner.txt"
+            owner.unlink()
+            owner.symlink_to("resources/data.txt")
+            hidden_owner = "mode-owner.txt"
+        elif template_case in {
+            "modified_referent",
+            "modified_referent_hidden_from_git_diff",
+        }:
+            (template / "resources/data.txt").write_bytes(
+                b"Changed template resource.\n"
+            )
+            if template_case == "modified_referent_hidden_from_git_diff":
+                hidden_owner = "resources/data.txt"
+        elif template_case == "wrong_internal_registration":
+            registration.unlink()
+            registration.symlink_to("../../README.md")
+        elif template_case == "missing_registration":
+            registration.unlink()
+        elif template_case == "unsupported_git_mode":
+            if gitlink_case in {"changed_mode_regular", "changed_mode_symlink"}:
+                gitlink_path.rmdir()
+                if gitlink_case == "changed_mode_regular":
+                    gitlink_path.write_text("changed Git mode")
+                else:
+                    gitlink_path.symlink_to("../../README.md")
+                subprocess.run(
+                    [
+                        "git",
+                        "update-index",
+                        "--force-remove",
+                        "--",
+                        _TEMPLATE_GITLINK[0],
+                    ],
+                    cwd=template,
+                    check=True,
+                )
+                subprocess.run(
+                    ["git", "add", "--", _TEMPLATE_GITLINK[0]], cwd=template, check=True
+                )
+                subprocess.run(
+                    [
+                        "git",
+                        "-c",
+                        "commit.gpgsign=false",
+                        "commit",
+                        "-qm",
+                        "changed gitlink mode",
+                    ],
+                    cwd=template,
+                    env=git_env,
+                    check=True,
+                )
+            elif gitlink_case in {"unknown_path", "changed_commit"}:
+                name = (
+                    "gitlink"
+                    if gitlink_case == "unknown_path"
+                    else _TEMPLATE_GITLINK[0]
+                )
+                oid = subprocess.check_output(
+                    ["git", "rev-parse", "HEAD"], cwd=template, text=True
+                ).strip()
+                if gitlink_case == "unknown_path":
+                    (template / name).mkdir()
+                subprocess.run(
+                    [
+                        "git",
+                        "update-index",
+                        "--add",
+                        "--cacheinfo",
+                        f"160000,{oid},{name}",
+                    ],
+                    cwd=template,
+                    check=True,
+                )
+                subprocess.run(
+                    ["git", "-c", "commit.gpgsign=false", "commit", "-qm", "gitlink"],
+                    cwd=template,
+                    env=git_env,
+                    check=True,
+                )
+            elif gitlink_case == "nonempty":
+                (gitlink_path / "payload.txt").write_text("uninitialized content")
+            elif gitlink_case == "initialized_gitfile":
+                (gitlink_path / ".git").write_text(
+                    "gitdir: /must-not-read-external-git-store\n"
+                )
+            elif gitlink_case == "initialized_gitdirectory":
+                (gitlink_path / ".git").mkdir()
+            elif gitlink_case in {"symlink", "regular_file", "missing"}:
+                gitlink_path.rmdir()
+                if gitlink_case == "symlink":
+                    gitlink_path.symlink_to(template / "README.md")
+                elif gitlink_case == "regular_file":
+                    gitlink_path.write_text("gitlink must be a directory")
+            elif gitlink_case == "parent_symlink":
+                gitlink_path.rmdir()
+                gitlink_path.parent.rmdir()
+                redirected = template / "redirected-steganography"
+                (redirected / "kmyth").mkdir(parents=True)
+                gitlink_path.parent.symlink_to(redirected, target_is_directory=True)
+        if hidden_owner is not None:
+            # Exercise the manifest's real mode/blob checks independently of
+            # Git's advisory worktree status; no Git command output is mocked.
+            subprocess.run(
+                ["git", "update-index", "--assume-unchanged", "--", hidden_owner],
+                cwd=template,
+                check=True,
+            )
+            assert not subprocess.check_output(
+                ["git", "diff", "--name-only", "HEAD", "-z"], cwd=template
+            )
     if failure == "stale_receipt":
         (manuscript / "01_abstract.md").write_text("Unaccepted change.\n")
     elif failure == "missing_pdf":
@@ -683,6 +1070,25 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         "while_staging_pdf_drift": "_real_write_bytes(Path('output/pdf/fep_lean_combined.pdf'), b'%PDF-changed while retaining evidence')",
         "retained_pdf_drift": "_real_write_bytes(path, b'%PDF-corrupted retained artifact')",
     }.get(failure, "pass")
+    template_mutations = {
+        "template_source": "Path('render-template/README.md').write_bytes(b'Changed template source.\\n')",
+        "template_link": "Path('render-template/file-link').unlink(); Path('render-template/file-link').symlink_to('resources/other.txt')",
+        "template_referent": "Path('render-template/resources/data.txt').write_bytes(b'Changed template referent.\\n')",
+        "registration": "Path('render-template/projects/active/fep_lean').unlink(); Path('render-template/projects/active/fep_lean').symlink_to('../../README.md')",
+    }
+    gitlink_mutation = (
+        f"Path('render-template/{_TEMPLATE_GITLINK[0]}/unexpected').write_text('changed gitlink')"
+        if gitlink_case is not None and gitlink_case.endswith("nonempty")
+        else f"_gitlink = Path('render-template/{_TEMPLATE_GITLINK[0]}'); _before = _gitlink.stat(); os.utime(_gitlink, ns=(_before.st_atime_ns, _before.st_mtime_ns + 1))"
+    )
+    if template_case is not None and template_case.startswith("discovery_"):
+        version_mutation = template_mutations[template_case.removeprefix("discovery_")]
+    elif template_case is not None and template_case.startswith("retention_"):
+        staged_mutation = template_mutations[template_case.removeprefix("retention_")]
+    if gitlink_case is not None and gitlink_case.startswith("discovery_"):
+        version_mutation = gitlink_mutation
+    elif gitlink_case is not None and gitlink_case.startswith("retention_"):
+        staged_mutation = gitlink_mutation
     retained_read_mutation = {
         "retained_read_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed while verifying retained bytes.\\n')",
         "retained_read_pdf_drift": "_real_write_bytes(Path('output/pdf/fep_lean_combined.pdf'), b'%PDF-changed during retained read')",
@@ -715,8 +1121,13 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         "Path.write_bytes = _staged_write\n"
         "import fep_lean.output.release_bundle._core as _capture_owner\n"
         "_real_regular_read = _capture_owner._capture_regular_file\n"
+        "_inventory_gitlink_mutated = False\n"
         "def _retained_read(path):\n"
+        "    global _inventory_gitlink_mutated\n"
         "    data = _real_regular_read(path)\n"
+        f"    if {gitlink_case is not None and gitlink_case.startswith('inventory_')!r} and path.name == 'README.md' and path.parent.name == 'render-template' and not _inventory_gitlink_mutated:\n"
+        f"        {gitlink_mutation}\n"
+        "        _inventory_gitlink_mutated = True\n"
         "    if 'render-evidence' in path.parts and path.name == 'fep_lean_combined.pdf':\n"
         f"        {retained_read_mutation}\n"
         "    return data\n"
@@ -733,6 +1144,11 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
             **os.environ,
             "PYTHONPATH": str(PROJECT_ROOT / "src"),
             "EXPECTED_SHA": "0" * 40 if failure == "wrong_sha" else sha,
+            "EXPECTED_TEMPLATE_SHA": "0" * 40
+            if gitlink_case == "wrong_template_sha"
+            else subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=template, text=True
+            ).strip(),
             "WORKFLOW_RUN_ID": "fixture",
             "WORKFLOW_RUN_ATTEMPT": "1",
         },
@@ -741,7 +1157,58 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         check=False,
     )
     staged = tmp_path / "output/render-evidence"
-    if failure:
+    if os.name != "posix" and failure not in {
+        "wrong_sha",
+        "missing_pdf",
+        "legacy_pdf_only",
+    }:
+        # The real custody reader refuses before source/receipt drift checks
+        # on unsupported platforms. Execute the stage and assert that boundary.
+        assert result.returncode != 0
+        assert (
+            "ReleaseBundleError: capture custody requires POSIX descriptor-relative reads"
+            in result.stderr
+        )
+        assert not staged.exists()
+        return
+    if template_case is not None and template_case not in _TEMPLATE_SUCCESS_CASES:
+        assert result.returncode != 0
+        assert not staged.exists()
+        expected_error = {
+            "absolute_escape": "capture resource link escapes its owner",
+            "missing_target": "capture resource link target is missing or cyclic",
+            "cyclic_target": "capture resource link target is missing or cyclic",
+            "noncanonical_target": "capture resource link target spelling is invalid",
+            "excluded_target": "capture resource link targets an excluded subtree",
+            "link_mode_as_regular": "template resource link membership differs from its recorded commit",
+            "regular_mode_as_link": "template resource link membership differs from its recorded commit",
+            "untracked_file_referent": "template link referent is not tracked at its recorded commit",
+            "untracked_directory_referent": "template link referent is not tracked at its recorded commit",
+            "empty_directory_referent": "template link referent is not tracked at its recorded commit",
+            "modified_referent": "template authored inputs differ from its recorded commit",
+            "modified_referent_hidden_from_git_diff": "template tracked resource differs from its recorded blob",
+            "unsupported_git_mode": (
+                "template checkout differs from the workflow template pin"
+                if gitlink_case == "wrong_template_sha"
+                else "template tracked resource mode is unsupported"
+                if gitlink_case
+                in {
+                    "unknown_path",
+                    "changed_commit",
+                    "changed_mode_regular",
+                    "changed_mode_symlink",
+                }
+                else "changed during evidence staging"
+                if gitlink_case is not None and gitlink_case.endswith("empty_metadata")
+                else "template allowed gitlink is not a canonical empty directory"
+            ),
+            "ignored_untracked_link": "template resource link membership differs from its recorded commit",
+            "wrong_internal_registration": "template active-project registration differs from this checkout",
+            "tracked_registration": "template active-project registration differs from this checkout",
+            "missing_registration": "template resource link membership differs from its recorded commit",
+        }.get(template_case, "changed during evidence staging")
+        assert expected_error in result.stderr
+    elif failure:
         assert result.returncode != 0
         assert not staged.exists()
         expected_error = {
@@ -781,3 +1248,79 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
             sources["sources"]["manuscript/01_abstract.md"]
             == hashlib.sha256((manuscript / "01_abstract.md").read_bytes()).hexdigest()
         )
+        from fep_lean.output.release_bundle._core import _capture_link_bytes
+
+        provenance = json.loads((staged / "renderer-provenance.json").read_text())
+        template_sources = provenance["template_sources"]
+        object_format = subprocess.check_output(
+            ["git", "rev-parse", "--show-object-format"], cwd=template, text=True
+        ).strip()
+        known_bytes = {
+            **template_files,
+            **{name: os.fsencode(target) for name, target in template_links.items()},
+        }
+        expected_sources = {
+            name: {
+                "mode": "120000" if name in template_links else "100644",
+                "git_blob": hashlib.new(
+                    object_format,
+                    b"blob " + str(len(data)).encode("ascii") + b"\0" + data,
+                ).hexdigest(),
+                "sha256": hashlib.sha256(data).hexdigest(),
+            }
+            for name, data in known_bytes.items()
+        }
+        assert template_sources["sources"] == expected_sources
+        assert set(template_sources["uninitialized_gitlinks"]) == set(template_gitlinks)
+        for name, commit in template_gitlinks.items():
+            gitlink_stat = (template / name).lstat()
+            assert template_sources["uninitialized_gitlinks"][name] == {
+                "mode": "160000",
+                "git_commit": commit,
+                "empty": True,
+                "identity": [
+                    gitlink_stat.st_dev,
+                    gitlink_stat.st_ino,
+                    gitlink_stat.st_mode,
+                    gitlink_stat.st_size,
+                    gitlink_stat.st_mtime_ns,
+                    gitlink_stat.st_ctime_ns,
+                ],
+            }
+            assert not list((template / name).iterdir())
+        assert set(template_sources["links"]) == {
+            *template_links,
+            "projects/active/fep_lean",
+        }
+        for name, target in {
+            **template_links,
+            "projects/active/fep_lean": str(tmp_path),
+        }.items():
+            link = template_sources["links"][name]
+            path = template / name
+            resolved = path.resolve(strict=True)
+            assert link["target"] == target
+            assert (
+                link["custody_sha256"]
+                == hashlib.sha256(
+                    _capture_link_bytes(path, target, template)
+                ).hexdigest()
+            )
+            if name == "projects/active/fep_lean":
+                assert link["resolved_target"] == str(tmp_path)
+                assert link["referents"] == {}
+            else:
+                relative = resolved.relative_to(template).as_posix()
+                assert link["resolved_target"] == relative
+                names = (
+                    {
+                        item
+                        for item in expected_sources
+                        if item.startswith(relative + "/")
+                    }
+                    if resolved.is_dir()
+                    else {relative}
+                )
+                assert link["referents"] == {
+                    item: expected_sources[item] for item in names
+                }

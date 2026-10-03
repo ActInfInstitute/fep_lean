@@ -1,5 +1,14 @@
 # Horizon 2: smooth and stochastic lifting
 
+Horizon 2 exited at its retained
+[terminal acceptance](../../../specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json).
+This guide preserves its mathematical contracts and exclusions, not an active
+delivery checklist. Acceptance statements below refer to their recorded source
+epochs; later H3/package changes need their own current native/custody evidence.
+The [H3 guide](horizon-3-scientific-case-study.md) owns the selected continuous
+cycle and actual H3.0 freeze. [Remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
+owns current execution; [upcoming scopes](next-improvements.md) own proposals.
+
 ## Outcome
 
 Horizon 2 lifts only the reusable parts of the H1 finite theorem chain to one
@@ -20,23 +29,23 @@ fixed positive variance/covariance. A general finite-outcome vector exponential
 family remains optional. The multidimensional OU lift is not optional: H2.5
 must construct it on the exact symmetric-precision `Fin 4` carrier and H2.7
 must verify it as an accepted export alongside the scalar terminal theorem.
-H3.G0 is therefore a post-H2, read-only acceptance and branch-selection gate.
-It may accept the H2 evidence or select the finite H1 fallback; it may not
-extend `fin4_gaussian_semigroup.lean` under an H3 work package.
+The post-H2 read-only H3.G0 gate accepted the continuous carrier for the current
+cycle. The original finite H1 fallback remains unselected design history; the
+actual H3.0 freeze does not reopen branch selection. H3 may not extend
+`fin4_gaussian_semigroup.lean` under its work packages.
 
 ## Implementation authority and refined owner map
 
-The [active H2 spec](../../../specs/done/horizon-2-smooth-stochastic/README.md)
-owns implementation state, refined slice dependencies, exact probe evidence,
-provisional imports, and package-level stop/go decisions. This design owns the
-mathematical targets and scientific firewalls. If the two disagree, dependent
-implementation stops until both documents are reconciled.
+The [accepted H2 spec](../../../specs/done/horizon-2-smooth-stochastic/README.md)
+owns the implementation history, refined slice dependencies, exact probe
+evidence, frozen imports and package-level stop/go decisions. This design owns
+the mathematical contracts and scientific firewalls. A current-source successor
+must reconcile any discrepancy before dependent execution.
 
-H2.0 has frozen the pinned external API routes. Exact project direct imports
-remain provisional until each maintained slice starts. The
+H2.0 froze the pinned external API routes. The
 [readiness matrix](../../../specs/done/horizon-2-smooth-stochastic/readiness/matrix.yaml)
-and each active slice freeze the source-true import tuple before its maintained
-resource opens.
+and accepted slice records retain their source-true import tuples. New work
+requires a new bounded seam review rather than reopening those old decisions.
 
 | Slice | Canonical owner | Role and declaration namespace | Solid predecessors |
 | --- | --- | --- | --- |
@@ -59,10 +68,10 @@ resource opens.
 | H2.7 | `compositions/smooth_reference_kernel.lean` | composition; `FEPComposed.SmoothReferenceKernel` | every solid predecessor named in the active H2 DAG |
 
 H2.3 parameter learning and H2.6a latent-state filtering are distinct lanes.
-Neither is a substitute for the other; they meet only at H2.7. The live
-generated aggregate directly imports the three accepted H2 composition leaves.
-The prospective H2 end state adds `smooth_reference_kernel.lean` as the fourth
-only after H2.7 passes; explicit imports provide the foundation closure.
+Neither substitutes for the other; they meet at the accepted H2.7 leaf.
+The formal manifest owns the aggregate's exact imports, including
+`smooth_reference_kernel.lean`; its projection provides the foundation closure.
+The historical pre-H2.7 aggregate is not the current authoring target.
 
 ## H2.0 — pinned-library readiness matrix
 
@@ -127,7 +136,7 @@ only when its probe rows and every solid upstream DAG dependency are green.
 
 **Depends on:** H2.0.
 
-**Single owner:** new foundation `formal/gaussian_information_geometry.lean`.
+**Single owner:** maintained foundation `formal/gaussian_information_geometry.lean`.
 The existing finite `exponential_family.lean` remains unchanged and supplies
 algebraic orientation/regression examples; it is not the Gaussian measure
 carrier.
@@ -210,7 +219,7 @@ gate H2.7 and are never substituted for the Gaussian carrier.
 
 **Depends on:** H2.1 and the H2.0 coordinate-duality/Fréchet-derivative probes.
 
-**Single owner:** one new foundation `formal/smooth_information_geometry.lean`
+**Single owner:** maintained foundation `formal/smooth_information_geometry.lean`
 owns the smooth statistical-domain construction. H2.2a imports H2.1 and only
 the Mathlib scalar/Fréchet calculus owners it uses. Existing
 `information_geometry.lean` continues to own the distinct finite Bernoulli
@@ -525,7 +534,7 @@ covariance. H2.5d owns only the resulting observational native conditional
 factorization; H3.2, not H2.5, owns any scientific, causal, or interventional
 blanket interpretation.
 
-### Stop/go slices
+### Retained stop/go slice contracts
 
 1. **H2.5a — scalar regression:** prove the scalar transition, native
    semigroup, invariant law, weak convergence, and exact H2.1 constructor
@@ -542,17 +551,17 @@ blanket interpretation.
    stationary law, reconstruct the actual blanket/endpoints joint as a
    `compProd`, identify Mathlib's conditional distribution blanket-marginal
    almost everywhere, and prove the endpoint `CondIndepFun` theorem. A PDF or
-   Schur-complement identity alone is not acceptance. Failure keeps H2.5d,
-   H2.7, and continuous H3 closed.
+   Schur-complement identity alone was not acceptance. Failure would have kept
+   H2.5d, H2.7, and continuous H3 eligibility closed.
 5. **H2.5d — maintained conditioning/precision:** promote the accepted R0
    route to arbitrary centers in the maintained owner and add the exact bounded
    endpoint-precision perturbation/non-independence witness. This is not a
    generic converse. This slice is accepted; its exact declarations are solid
    H2.7 inputs. Failure would have blocked H2.7 and continuous H3 eligibility.
 
-All four maintained resources and the R0 decision land before H2.7. H3.G0 may inspect their accepted
-declarations and source-bound evidence; it may not prove, patch, extend, or
-replace them.
+All four maintained resources and the R0 decision preceded H2.7. The accepted
+H3.G0 decision inspected those declarations and their source-bound evidence;
+it did not prove, patch, extend or replace the H2 carrier.
 
 ### Brownian representation branch
 
@@ -633,11 +642,16 @@ path entropy production are stretch goals blocked on their own API spikes.
 H2.5a, H2.5c, H2.5d, H2.6a, H2.6b, and H2.6c. H2.2b is optional.
 
 H2.7-R0 is the source-bound proof gate for the previously missing continuous
-Gaussian seam. It must derive density-relative evidence surprisal, the
+Gaussian seam. Its accepted statement derives density-relative evidence surprisal, the
 recognition-to-exact-posterior native-KL VFE gap, its mean-coordinate
 differential, the Fisher-metric-dual natural-gradient tangent, and strict local
 descent away from the posterior mean. H1 finite-law VFE and H2.2a coordinate
 duality are not substitutes.
+
+H2.7 and its prerequisite R0 record are accepted history. An append-only custody
+successor may bind a later owner epoch while preserving those original bytes;
+it does not fabricate new native execution. Current receipt currency remains
+an explicit acceptance obligation.
 
 **Single owner:** one manifested composition leaf
 `formal/compositions/smooth_reference_kernel.lean`, namespace
@@ -682,4 +696,6 @@ density identity.
 - The terminal theorem receives formal, domain, and skeptical review under the
   [research contract](research-contract.md).
 
-Horizon 3 remains closed until this gate and its claim review pass.
+This exit opened the subsequently accepted H3.G0 selection and H3.0 freeze.
+It did not accept H3 scientific outcomes or publication. The frozen primary and
+H3 exit remain subject to the current guide's separate acceptance gates.
