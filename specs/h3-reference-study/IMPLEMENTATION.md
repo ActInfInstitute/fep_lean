@@ -41,9 +41,11 @@ source-racing or altered attempts reject before any study generator opens.
 Fresh prospective custody review r5 approves the producer, replay and bundle
 implementation at its recorded hashes, with 115 independent controls passing.
 Actual native export r1 and its reviews remain earlier-source checkpoints.
-Current r2 export and three fresh proof-role reviews bind the unchanged 293-file
-source roster; the actual consumer input check passes without opening a
-generator. Complete package acceptance still precedes the frozen primary run.
+The retained r2 export and its three proof-role reviews bind their recorded
+293-file source roster; the consumer input check passed without opening a
+generator. They remain historical checkpoints. Fresh export and proof-role
+reviews must bind the current source epoch, and complete package acceptance
+still precedes the frozen primary run.
 Real-child fixture tests use an explicitly fake compiler only to exercise
 custody and failure retention. Captured absolute command paths are bound to an
 explicit recorded project root. Replay reads bytes only from its current root;

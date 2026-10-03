@@ -31,6 +31,16 @@ READINESS_TEST_PATH = "tests/test_horizon2_gaussian_vfe_readiness.py"
 VALIDATOR_PATH = "tests/_support/h2_r0_custody.py"
 ALLOWED_PRIOR_CHANGES = (MANIFEST_PATH, READINESS_TEST_PATH)
 H3_CUSTODY_SUPPORT_CHANGES = (VALIDATOR_PATH, READINESS_TEST_PATH)
+RELEASE_METADATA_REPLACEMENTS = {
+    "pyproject.toml": (
+        '[project]\nname = "fep_lean"\nversion = "1.3.0"\n',
+        '[project]\nname = "fep_lean"\nversion = "1.4.0"\n',
+    ),
+    "uv.lock": (
+        '[[package]]\nname = "fep-lean"\nversion = "1.3.0"\n',
+        '[[package]]\nname = "fep-lean"\nversion = "1.4.0"\n',
+    ),
+}
 H3_OWNER_SOURCE_PATHS = (
     "src/fep_lean/formal/h3_reference_model.lean",
     "lean/FepSketches/h3_reference_model.lean",
@@ -352,6 +362,7 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
             "approved_custody_support_changes",
             "historical_support_source_sha256",
             "manifest_transition",
+            "release_metadata_transition",
             "source_sha256",
             "downstream",
             "native_evidence",
@@ -545,7 +556,45 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
         set(historical_sources) == source_paths,
         "historical custody source paths changed",
     )
-    stable_sources = source_paths - set(H3_CUSTODY_SUPPORT_CHANGES) - {MANIFEST_PATH}
+    release_transition = {}
+    for path, (
+        historical_token,
+        current_token,
+    ) in RELEASE_METADATA_REPLACEMENTS.items():
+        data = (project_root / path).read_bytes()
+        _require(
+            data.count(current_token.encode()) == 1
+            and historical_token.encode() not in data,
+            "release metadata must contain exactly the approved root version: " + path,
+        )
+        reconstructed = data.replace(
+            current_token.encode(), historical_token.encode(), 1
+        )
+        _require(
+            _sha256(reconstructed) == historical_sources[path],
+            "release metadata has unlisted changes beyond the root version: " + path,
+        )
+        release_transition[path] = {
+            "historical_sha256": historical_sources[path],
+            "current_sha256": current[path],
+            "historical_token": historical_token,
+            "current_token": current_token,
+        }
+    _require(
+        addendum["release_metadata_transition"]
+        == {
+            "historical_version": "1.3.0",
+            "current_version": "1.4.0",
+            "sources": release_transition,
+        },
+        "release metadata transition does not match the exact root-version delta",
+    )
+    stable_sources = (
+        source_paths
+        - set(H3_CUSTODY_SUPPORT_CHANGES)
+        - set(RELEASE_METADATA_REPLACEMENTS)
+        - {MANIFEST_PATH}
+    )
     _require(
         all(historical_sources[path] == current[path] for path in stable_sources),
         "stale historical custody source digest",

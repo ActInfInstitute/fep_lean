@@ -1,6 +1,6 @@
 # fep_lean/lean/
 
-**Version**: v1.3.0 | **Status**: Active | **Last Updated**: September 2026
+**Version**: v1.4.0 | **Status**: Active | **Last Updated**: October 2026
 
 Full **Lake** workspace with **Mathlib4** dependency for FEP theorem verification.
 
@@ -20,21 +20,19 @@ Full **Lake** workspace with **Mathlib4** dependency for FEP theorem verificatio
 | `FepSketches/` | Library root containing generated `fep_all.lean` and `composed.lean`; verifier-owned temporary probes are removed |
 | `.lake/packages/mathlib/` | Downloaded Mathlib4 source (after `lake exe cache get`) |
 
-## One-Time Setup (non-sandboxed terminal)
+## One-Time Setup
 
 ```bash
 # From the project root
 
-# 1. Run the automated bootstrap script
-bash scripts/_maint_bootstrap_lean_toolchain.sh
-# (`fep-lean setup` wraps the same script.)
-
-# Or manually:
-cd lean
-lake update           # fetch Mathlib4 @ v4.34.0 (see `lakefile.lean`)
-lake exe cache get    # download ~3 GB prebuilt .olean cache
-lake build            # build FepSketches against Mathlib
+uv run fep-lean setup
 ```
+
+Setup owns dependency acquisition under `FEP_LEAN_SETUP_TIMEOUT_SEC`. It checks
+the four dependency pins before and after child processes, resolves the exact
+Mathlib revision, and preserves the lock; it never runs `lake update`. Validation
+and receipt checks remain read-only. Pin upgrades require a separately reviewed
+migration and fresh evidence.
 
 ## Verification Workflow
 
@@ -55,7 +53,7 @@ in sandboxed AI agent shells.  `LeanVerifier` bypasses this by:
 1. Setting `ELAN_HOME` to a per-user writable tempdir
    (`<tmpdir>/fep_lean_elan_<uid>`, e.g. `/tmp/fep_lean_elan_501` on Linux, `$TMPDIR/fep_lean_elan_501` on macOS)
 2. Resolving `lake`/`lean` via direct toolchain path:
-   `~/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lake`
+   `~/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lake`
 3. Respecting `FEP_LEAN_LAKE_EXE` / `FEP_LEAN_LEAN_EXE` env overrides
 
 ## Concurrency boundary

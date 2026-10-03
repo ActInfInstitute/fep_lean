@@ -3247,8 +3247,8 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
     )
     (project_root / "CITATION.cff").write_text(
         "cff-version: 1.2.0\n"
-        'version: "1.3.0"\n'
-        'date-released: "2026-09-26"\n'
+        'version: "1.4.0"\n'
+        'date-released: "2026-10-02"\n'
         "repository-code: https://github.com/ActiveInferenceInstitute/fep_formal\n"
         "url: https://github.com/ActiveInferenceInstitute/fep_formal\n"
         "license: CC-BY-4.0\n"
@@ -3269,8 +3269,8 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
     )
     (project_root / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.3.0"\n'
-        '  date: "2026-09-26"\n'
+        '  version: "1.4.0"\n'
+        '  date: "2026-10-02"\n'
         "publication:\n"
         "  doi: 10.5281/zenodo.19699233\n"
         "  journal: Active Inference Journal\n"
@@ -3281,7 +3281,7 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
     (project_root / "pyproject.toml").write_text(
         '[build-system]\nrequires = ["setuptools>=77.0.3"]\n'
         'build-backend = "setuptools.build_meta"\n\n'
-        '[project]\nname = "fixture"\nversion = "1.3.0"\n'
+        '[project]\nname = "fixture"\nversion = "1.4.0"\n'
         'readme = "README.md"\n'
         'authors = [{ name = "Daniel Ari Friedman", email = "daniel@activeinference.institute" }]\n'
         'license = "CC-BY-4.0"\n',
@@ -3295,17 +3295,17 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
             '"Concept DOI" = "https://doi.org/10.5281/zenodo.19699233"\n'
         )
     (project_root / "src/fep_lean/__init__.py").write_text(
-        '__version__ = "1.3.0"\n', encoding="utf-8"
+        '__version__ = "1.4.0"\n', encoding="utf-8"
     )
     (project_root / "config/settings.yaml").write_text(
-        'project:\n  version: "1.3.0"\n', encoding="utf-8"
+        'project:\n  version: "1.4.0"\n', encoding="utf-8"
     )
     (project_root / ".aii/config.yaml").write_text(
         "meta:\n"
-        "  updated: '2026-09-26'\n"
+        "  updated: '2026-10-02'\n"
         "repo:\n"
         "  full_name: ActiveInferenceInstitute/fep_formal\n"
-        "  description: 'Release v1.3.0 (2026-09-26); concept DOI 10.5281/zenodo.19699233'\n"
+        "  description: 'Release v1.4.0 (2026-10-02); concept DOI 10.5281/zenodo.19699233'\n"
         "ecosystem:\n"
         "  links:\n"
         "    github: https://github.com/ActiveInferenceInstitute/fep_formal\n"
@@ -3321,12 +3321,12 @@ def test_release_metadata_rejects_a_stale_institute_sidecar(tmp_path: Path) -> N
     _write_release_metadata_fixture(tmp_path)
     sidecar = tmp_path / ".aii/config.yaml"
     sidecar.write_text(
-        sidecar.read_text(encoding="utf-8").replace("v1.3.0", "v1.0.0"),
+        sidecar.read_text(encoding="utf-8").replace("v1.4.0", "v1.0.0"),
         encoding="utf-8",
     )
 
     assert bundle_module._license_metadata_errors(tmp_path) == (
-        "InstituteOS sidecar description must identify release v1.3.0",
+        "InstituteOS sidecar description must identify release v1.4.0",
     )
 
 
@@ -3412,8 +3412,8 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.3.0"\n'
-        '  date: "2026-09-26"\n'
+        '  version: "1.4.0"\n'
+        '  date: "2026-10-02"\n'
         "publication:\n"
         "  doi: 10.0000/wrong\n"
         "  journal: Active Inference Journal\n"
@@ -3427,8 +3427,8 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.3.0"\n'
-        '  date: "2026-09-26"\n'
+        '  version: "1.4.0"\n'
+        '  date: "2026-10-02"\n'
         "publication:\n"
         "  doi: 10.5281/zenodo.19699233\n"
         "  journal: Other Journal\n"
@@ -3443,8 +3443,8 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.3.0"\n'
-        '  date: "2026-09-26"\n'
+        '  version: "1.4.0"\n'
+        '  date: "2026-10-02"\n'
         "publication:\n"
         "  doi: 10.5281/zenodo.19699233\n"
         "  journal: Active Inference Journal\n"
@@ -3463,7 +3463,7 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
     assert bundle_module._license_metadata_errors(tmp_path) == (
         "Python build system must require setuptools>=77.0.3",
         "Python package license must be CC-BY-4.0",
-        "Python package version must be 1.3.0",
+        "Python package version must be 1.4.0",
     )
 
     _write_release_metadata_fixture(tmp_path)
@@ -3495,45 +3495,45 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
     [
         (
             "CITATION.cff",
-            'version: "1.3.0"',
+            'version: "1.4.0"',
             'version: "1.2.0"',
-            "CITATION.cff version must be 1.3.0",
+            "CITATION.cff version must be 1.4.0",
         ),
         (
             "CITATION.cff",
-            'date-released: "2026-09-26"',
+            'date-released: "2026-10-02"',
             'date-released: "2026-09-16"',
-            "CITATION.cff date-released must be 2026-09-26",
+            "CITATION.cff date-released must be 2026-10-02",
         ),
         (
             "manuscript/config.yaml",
-            'version: "1.3.0"',
+            'version: "1.4.0"',
             'version: "1.2.0"',
-            "manuscript paper version must be 1.3.0",
+            "manuscript paper version must be 1.4.0",
         ),
         (
             "manuscript/config.yaml",
-            'date: "2026-09-26"',
+            'date: "2026-10-02"',
             'date: "2026-09-16"',
-            "manuscript paper date must be 2026-09-26",
+            "manuscript paper date must be 2026-10-02",
         ),
         (
             "pyproject.toml",
-            'version = "1.3.0"',
+            'version = "1.4.0"',
             'version = "1.2.0"',
-            "Python package version must be 1.3.0",
+            "Python package version must be 1.4.0",
         ),
         (
             "src/fep_lean/__init__.py",
-            '__version__ = "1.3.0"',
+            '__version__ = "1.4.0"',
             '__version__ = "1.2.0"',
-            "Python runtime version must be 1.3.0",
+            "Python runtime version must be 1.4.0",
         ),
         (
             "config/settings.yaml",
-            'version: "1.3.0"',
+            'version: "1.4.0"',
             'version: "1.2.0"',
-            "runtime settings version must be 1.3.0",
+            "runtime settings version must be 1.4.0",
         ),
     ],
 )
@@ -3559,12 +3559,12 @@ def test_release_metadata_rejects_each_version_and_date_plane_independently(
         (
             "pyproject.toml",
             'version = "1.2.0"\n',
-            "Python package version must be 1.3.0",
+            "Python package version must be 1.4.0",
         ),
         (
             "src/fep_lean/__init__.py",
             '__version__ = "1.2.0"\n',
-            "Python runtime version must be 1.3.0",
+            "Python runtime version must be 1.4.0",
         ),
     ],
 )
@@ -3579,8 +3579,8 @@ def test_release_metadata_rejects_ambiguous_duplicate_runtime_versions(
     contents = path.read_text(encoding="utf-8")
     if relative == "pyproject.toml":
         contents = contents.replace(
-            'version = "1.3.0"\n',
-            'version = "1.3.0"\n' + duplicate,
+            'version = "1.4.0"\n',
+            'version = "1.4.0"\n' + duplicate,
             1,
         )
     else:
@@ -4202,8 +4202,8 @@ def test_publication_capture_plan_is_process_free(
     assert tuple(s.name for s in plan.stages) == (
         "native",
         "formalism-audit",
-        "python",
         "render",
+        "python",
         "numerical",
         "browser",
         "bundle",
@@ -4213,6 +4213,214 @@ def test_publication_capture_plan_is_process_free(
         "{attempt}/release-b.tar.gz",
     )
     assert not (tmp_path / "journal").exists()
+    native, render, python = (
+        next(s for s in plan.stages if s.name == name)
+        for name in ("native", "render", "python")
+    )
+    assert render.dependencies == ("native", "formalism-audit")
+    assert python.dependencies == ("render",)
+    variables = str(PROJ / "manuscript/manuscript_vars.yaml")
+    appendix = str(PROJ / "manuscript/09z_unified_formalism_catalogue.md")
+    cache = str(PROJ / "output/.cache/tests_collected.json")
+    assert {variables, appendix, cache} <= set(native.outputs)
+    assert not {variables, appendix, cache} & set(native.inputs)
+    assert {variables, appendix, cache} <= set(render.inputs) & set(python.inputs)
+    assert not set(python.outputs) & set(render.inputs)
+    assert str(PROJ / "CITATION.cff") in native.inputs
+    assert str(PROJ / "manuscript/assets/graphical-abstract.png") in native.inputs
+    assert str(PROJ / "docs/render-acceptance.json") in python.inputs
+    assert str(PROJ / "docs/render-fonts.json") in python.inputs
+
+
+@pytest.mark.parametrize(
+    "missing", ["manuscript_vars.yaml", "09z_unified_formalism_catalogue.md"]
+)
+def test_publication_capture_missing_projection_pair_rejects_before_tools(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing: str
+) -> None:
+    from fep_lean.output.release_bundle._core import plan_publication_capture
+
+    root = tmp_path / "project"
+    manuscript = root / "manuscript"
+    manuscript.mkdir(parents=True)
+    for name in ("manuscript_vars.yaml", "09z_unified_formalism_catalogue.md"):
+        if name != missing:
+            (manuscript / name).write_text("preserve existing member\n")
+
+    def forbid(*_args, **_kwargs):
+        pytest.fail("missing projection preparation launched a process")
+
+    monkeypatch.setattr(subprocess, "Popen", forbid)
+    with pytest.raises(
+        bundle_module.ReleaseBundleError, match="catalogue before planning"
+    ):
+        plan_publication_capture(root, template_root=tmp_path / "template")
+    assert {p.name for p in manuscript.iterdir()} == {
+        "manuscript_vars.yaml",
+        "09z_unified_formalism_catalogue.md",
+    } - {missing}
+
+
+@pytest.mark.parametrize("boundary", ["exit", "invalid", "unbound", "unready", "alias"])
+def test_publication_capture_native_rejection_preserves_projection_pair(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: str
+) -> None:
+    from fep_lean import cli
+    from fep_lean.output import evidence, manuscript
+    from fep_lean.output.release_bundle._core import _publication_capture_worker
+
+    directory = tmp_path / "manuscript"
+    directory.mkdir()
+    originals = {
+        name: b"preserved projection\n"
+        for name in ("manuscript_vars.yaml", "09z_unified_formalism_catalogue.md")
+    }
+    for name, data in originals.items():
+        (directory / name).write_bytes(data)
+    validation = {"valid": True, "source_bound": True, "native_claim_ready": True}
+    if boundary != "exit":
+        key = {
+            "invalid": "valid",
+            "unbound": "source_bound",
+            "unready": "native_claim_ready",
+            "alias": "valid",
+        }[boundary]
+        validation[key] = 1 if boundary == "alias" else False
+    monkeypatch.setattr(cli, "main", lambda _args: 7 if boundary == "exit" else 0)
+    monkeypatch.setattr(
+        evidence, "validate_native_lean_receipt", lambda *_args, **_kwargs: validation
+    )
+
+    def forbid(*_args, **_kwargs):
+        pytest.fail("rejected native evidence refreshed manuscript projections")
+
+    monkeypatch.setattr(manuscript, "write_manuscript_vars", forbid)
+    assert _publication_capture_worker(
+        "native", "produce", str(tmp_path), str(tmp_path), str(tmp_path), "0"
+    ) == (7 if boundary == "exit" else 1)
+    assert {name: (directory / name).read_bytes() for name in originals} == originals
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    ["none", "duration", "compile_rate", "appendix", "source_date", "source_shape"],
+)
+def test_publication_capture_projects_final_native_values_and_rejects_stale_values(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    from fep_lean import cli
+    from fep_lean.catalogue.topics import FEPTopicCatalogue
+    from fep_lean.output import evidence, manuscript
+    from fep_lean.output.release_bundle._core import _publication_capture_worker
+
+    (tmp_path / "manuscript").mkdir()
+    (tmp_path / "output/.cache").mkdir(parents=True)
+    receipt = tmp_path / "output/native-verification.json"
+    receipt.write_text(json.dumps({"duration_s": 1.125}))
+    monkeypatch.setattr(
+        FEPTopicCatalogue,
+        "from_yaml",
+        lambda _path: SimpleNamespace(marker="canonical appendix\n"),
+    )
+    monkeypatch.setattr(
+        manuscript,
+        "build_unified_formalism_appendix_markdown",
+        lambda cat, _root: cat.marker,
+    )
+    monkeypatch.setattr(
+        evidence,
+        "validate_native_lean_receipt",
+        lambda *_args, **_kwargs: {
+            "valid": True,
+            "source_bound": True,
+            "native_claim_ready": True,
+        },
+    )
+
+    def variables(_cat, root, *, output_root=None, cache_test_count=True):
+        assert root == tmp_path and output_root is None
+        cache = root / "output/.cache/tests_collected.json"
+        if cache_test_count:
+            cache.write_text(json.dumps({"collected": 1}))
+        assert json.loads(cache.read_text()) == {"collected": 1}
+        return {
+            "verify": {
+                "duration_seconds": json.loads(receipt.read_text())["duration_s"],
+                "claim_ready": True,
+            },
+            "compile_rate": {"total": "100%"},
+            "source": {"render_date": "2026-10-02", "stamp": "captured source stamp"},
+        }
+
+    monkeypatch.setattr(manuscript, "build_manuscript_vars", variables)
+    # Use the real transactional pair writer, serializer and drift validator.
+    manuscript.write_manuscript_vars(tmp_path)
+    old = (tmp_path / "manuscript/manuscript_vars.yaml").read_bytes()
+
+    def final_native(_args):
+        receipt.write_text(json.dumps({"duration_s": 17.875}))
+        return 0
+
+    monkeypatch.setattr(cli, "main", final_native)
+    assert (
+        _publication_capture_worker(
+            "native", "produce", str(tmp_path), str(tmp_path), str(tmp_path), "0"
+        )
+        == 0
+    )
+    projection = tmp_path / "manuscript/manuscript_vars.yaml"
+    current = yaml.safe_load(projection.read_text())
+    assert current["verify"]["duration_seconds"] == 17.875
+    assert projection.read_bytes() != old
+    if mutation == "duration":
+        current["verify"]["duration_seconds"] = 1.125
+    elif mutation == "compile_rate":
+        current["compile_rate"]["total"] = "0%"
+    elif mutation == "appendix":
+        (tmp_path / "manuscript/09z_unified_formalism_catalogue.md").write_text(
+            "stale appendix\n"
+        )
+    elif mutation == "source_date":
+        # A later check may run after UTC midnight; native values stay fixed.
+        current["source"]["render_date"] = "2026-10-01"
+        current["source"]["stamp"] = "previous captured source stamp"
+    elif mutation == "source_shape":
+        current["source"]["render_date"] = 20261002
+    if mutation in {"duration", "compile_rate", "source_date", "source_shape"}:
+        projection.write_text(manuscript._dump_manuscript_vars(current))
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    assert _publication_capture_worker(
+        "native", "check", str(tmp_path), str(tmp_path), str(tmp_path), "0"
+    ) == (0 if mutation in {"none", "source_date"} else 1)
+    assert {p: p.read_bytes() for p in before} == before
+
+
+def test_publication_capture_projection_failure_is_fatal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from fep_lean import cli
+    from fep_lean.output import evidence, manuscript
+    from fep_lean.output.release_bundle._core import _publication_capture_worker
+
+    monkeypatch.setattr(cli, "main", lambda _args: 0)
+    monkeypatch.setattr(
+        evidence,
+        "validate_native_lean_receipt",
+        lambda *_args, **_kwargs: {
+            "valid": True,
+            "source_bound": True,
+            "native_claim_ready": True,
+        },
+    )
+
+    def reject(*_args, **_kwargs):
+        raise OSError("projection transaction failed")
+
+    monkeypatch.setattr(manuscript, "write_manuscript_vars", reject)
+    with pytest.raises(OSError, match="projection transaction failed"):
+        _publication_capture_worker(
+            "native", "produce", str(tmp_path), str(tmp_path), str(tmp_path), "0"
+        )
 
 
 def test_publication_capture_reuses_unchanged_stages_and_invalidates_descendants(
@@ -5228,7 +5436,9 @@ def test_publication_capture_plan_owns_every_render_asset_and_generated_collecti
         resolved = str(PROJ / "output/manuscript" / name)
         assert resolved in render.outputs and resolved in bundle.inputs
     cache = str(PROJ / "output/.cache/tests_collected.json")
-    assert cache in render.outputs and cache not in render.inputs
+    native = next(s for s in plan.stages if s.name == "native")
+    assert cache in native.outputs and cache in render.inputs
+    assert cache not in render.outputs
     assert cache in bundle.inputs
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -174,6 +175,63 @@ def test_bridge_pin_detects_fep_lean_owner_drift(tmp_path: Path) -> None:
     section = bridge_pin_section(tmp_path)
     assert section.state == "stale"
     assert any("owner roster mismatch" in finding for finding in section.findings)
+
+
+@pytest.mark.parametrize("named_gnn", [False, True])
+@pytest.mark.parametrize("owner_drift", [False, True])
+def test_bridge_currency_agrees_on_both_status_surfaces(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    named_gnn: bool,
+    owner_drift: bool,
+) -> None:
+    root, gnn = tmp_path / "fep", tmp_path / "gnn"
+    root.mkdir()
+    gnn.mkdir()
+    for checkout in (root, gnn):
+        (checkout / "owner.txt").write_bytes(b"pinned owner\n")
+    owners = {"owner.txt": hashlib.sha256(b"pinned owner\n").hexdigest()}
+    pin = root / SOURCE_PIN
+    pin.parent.mkdir(parents=True)
+    pin.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "fep_lean": {"commit": "0" * 40, "owners": owners},
+                "gnn": {"commit": "1" * 40, "owners": owners},
+            }
+        )
+    )
+    monkeypatch.setattr(cli.operations, "owner_roster", lambda *_args: ("owner.txt",))
+    if owner_drift:
+        ((gnn if named_gnn else root) / "owner.txt").write_bytes(b"changed owner\n")
+
+    def forbid_process(*_args: object, **_kwargs: object) -> None:
+        pytest.fail("bridge currency check started a process")
+
+    monkeypatch.setattr(subprocess, "run", forbid_process)
+    monkeypatch.setattr(subprocess, "Popen", forbid_process)
+    before = {
+        path.relative_to(tmp_path): (path.read_bytes(), path.stat().st_mtime_ns)
+        for path in tmp_path.rglob("*")
+        if path.is_file()
+    }
+    payload = build_status_report(root, gnn if named_gnn else None).as_dict()
+    expected = "stale" if owner_drift else "current" if named_gnn else "unverified"
+    for sections in (
+        payload["sections"],
+        payload["publication_readiness"]["sections"],
+    ):
+        bridge = next(row for row in sections if row["name"] == "bridge_source_pin")
+        assert bridge["state"] == expected
+        if not named_gnn:
+            assert any("not compared" in item for item in bridge["findings"])
+    after = {
+        path.relative_to(tmp_path): (path.read_bytes(), path.stat().st_mtime_ns)
+        for path in tmp_path.rglob("*")
+        if path.is_file()
+    }
+    assert before == after
 
 
 def test_malformed_receipts_fail_closed_without_exceptions(tmp_path: Path) -> None:

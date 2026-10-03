@@ -1213,8 +1213,8 @@ def run_publication_capture(
 _PUBLICATION_CAPTURE_STAGE_NAMES = (
     "native",
     "formalism-audit",
-    "python",
     "render",
+    "python",
     "numerical",
     "browser",
     "bundle",
@@ -1242,7 +1242,9 @@ def plan_publication_capture(
         BROWSER_RECEIPT,
         CANONICAL_BROWSER_SCREENSHOTS,
     )
+    from fep_lean.output.manuscript import UNIFIED_FORMALISM_CATALOGUE_FILENAME
     from fep_lean.output.provenance import config_owner_paths, source_owner_paths
+    from fep_lean.output.publication_metadata import load_graphical_abstract
     from fep_lean.output.release_bundle._constants import (
         _MANUSCRIPT_FIGURE_REFERENCES,
         _REQUIRED_STATIC_MEMBERS,
@@ -1258,6 +1260,13 @@ def plan_publication_capture(
     root = Path(project_root).resolve()
     template = Path(template_root).resolve()
     epoch = _source_date_epoch(source_date_epoch)
+    for name in ("manuscript_vars.yaml", UNIFIED_FORMALISM_CATALOGUE_FILENAME):
+        if not (root / "manuscript" / name).is_file():
+            raise ReleaseBundleError(
+                "capture requires existing paired manuscript projections; "
+                "run fep-lean catalogue before planning"
+            )
+        _capture_regular_file(root / "manuscript" / name)
     # Enumerating owned files is read-only. Missing inputs fail when their stage
     # consumes them, so upstream receipt producers can run in topological order.
     common = tuple(
@@ -1308,8 +1317,14 @@ def plan_publication_capture(
     asset_origins = paths(
         *(source.as_posix() for source, _destination in MANUSCRIPT_ASSETS.values()),
         *_MANUSCRIPT_FIGURE_REFERENCES.values(),
+        load_graphical_abstract(root).source_path,
     )
     collection_cache = paths("output/.cache/tests_collected.json")
+    manuscript_projections = paths(
+        "manuscript/manuscript_vars.yaml",
+        f"manuscript/{UNIFIED_FORMALISM_CATALOGUE_FILENAME}",
+    )
+    citation = paths("CITATION.cff")
     render = paths(
         "docs/render-acceptance.json",
         "output/pdf/fep_lean_combined.pdf",
@@ -1324,7 +1339,6 @@ def plan_publication_capture(
             f"output/manuscript/{destination.as_posix()}"
             for _source, destination in MANUSCRIPT_ASSETS.values()
         ),
-        *collection_cache,
         *(
             f"output/manuscript/{p.name}"
             for p in manuscript_source_files(root / "manuscript")
@@ -1340,19 +1354,18 @@ def plan_publication_capture(
         )
     )
     roster = (
-        stage("native", (), common, native, 10800),
-        stage("formalism-audit", (), common, audit, 3600),
         stage(
-            "python",
+            "native",
             (),
-            (*common, *test_paths, *paths("manuscript/manuscript_vars.yaml")),
-            python,
+            (*common, *test_paths, *citation, *asset_origins),
+            (*native, *manuscript_projections, *collection_cache),
             10800,
             ((root / "tests", test_paths),),
         ),
+        stage("formalism-audit", (), common, audit, 3600),
         stage(
             "render",
-            ("native", "formalism-audit", "python"),
+            ("native", "formalism-audit"),
             (
                 *common,
                 *manuscript_paths,
@@ -1361,11 +1374,29 @@ def plan_publication_capture(
                 *projections,
                 *native,
                 *audit,
-                *python,
+                *citation,
+                *collection_cache,
             ),
             render,
             3600,
             ((root / "manuscript", manuscript_paths), (template, template_paths)),
+        ),
+        stage(
+            "python",
+            ("render",),
+            (
+                *common,
+                *test_paths,
+                *manuscript_paths,
+                *projections,
+                *citation,
+                *asset_origins,
+                *collection_cache,
+                *paths("docs/render-acceptance.json", "docs/render-fonts.json"),
+            ),
+            python,
+            10800,
+            ((root / "tests", test_paths), (root / "manuscript", manuscript_paths)),
         ),
         stage("numerical", (), common, numerical, 120),
         stage(
@@ -1397,6 +1428,7 @@ def plan_publication_capture(
                 *render,
                 *numerical,
                 *browser,
+                *collection_cache,
             ),
             ("{attempt}/release-a.tar.gz", "{attempt}/release-b.tar.gz"),
             3600,
@@ -1443,8 +1475,9 @@ def _publication_capture_worker(
     if mode == "produce":
         if stage == "native":
             from fep_lean.cli import main
+            from fep_lean.output.manuscript import write_manuscript_vars
 
-            return main(
+            native_returncode = main(
                 [
                     "--project-root",
                     str(root),
@@ -1454,6 +1487,20 @@ def _publication_capture_worker(
                     "--fail-on-warnings",
                 ]
             )
+            if native_returncode:
+                return native_returncode
+            validation = validate_native_lean_receipt(
+                root / "output/native-verification.json", project_root=root
+            )
+            if not all(
+                validation.get(name) is True
+                for name in ("valid", "source_bound", "native_claim_ready")
+            ):
+                return 1
+            # Native timings and evidence values become immutable render/Python
+            # inputs only after their final source-bound receipt is accepted.
+            write_manuscript_vars(root)
+            return 0
         if stage == "formalism-audit":
             result = run_formalism_audit(root, timeout=300)
             write_formalism_audit_receipt(root / "output/formalism-audit.json", result)
@@ -1488,6 +1535,53 @@ def _publication_capture_worker(
             and native_result.get("native_claim_ready") is True
         ):
             errors = ("native receipt is not live-source-bound and claim-ready",)
+        else:
+            import yaml
+
+            from fep_lean.catalogue.topics import FEPTopicCatalogue
+            from fep_lean.output.manuscript import (
+                build_manuscript_vars,
+                manuscript_projection_drift,
+            )
+
+            variables = build_manuscript_vars(
+                FEPTopicCatalogue.from_yaml(root / "config/topics.yaml"),
+                root,
+                cache_test_count=False,
+            )
+            errors = tuple(
+                f"stale native manuscript projection: {path.relative_to(root)}"
+                for path in manuscript_projection_drift(
+                    root, expected_variables=variables
+                )
+            )
+            actual_variables = yaml.safe_load(
+                _capture_regular_file(root / "manuscript/manuscript_vars.yaml")
+            )
+            actual_source = (
+                actual_variables.get("source")
+                if type(actual_variables) is dict
+                else None
+            )
+            if (
+                type(actual_source) is not dict
+                or set(actual_source) != set(variables["source"])
+                or any(type(value) is not str for value in actual_source.values())
+            ):
+                errors = (*errors, "native manuscript source stamp schema is invalid")
+            # The source block has the established run-bound string schema,
+            # including the render date. All other values, including every
+            # current native result and timing, must still match exactly.
+            if type(actual_variables) is not dict or _canonical_json(
+                {
+                    key: value
+                    for key, value in actual_variables.items()
+                    if key != "source"
+                }
+            ) != _canonical_json(
+                {key: value for key, value in variables.items() if key != "source"}
+            ):
+                errors = (*errors, "native manuscript evidence values are stale")
     elif stage == "formalism-audit":
         errors = validate_formalism_audit_receipt(
             root / "output/formalism-audit.json", root

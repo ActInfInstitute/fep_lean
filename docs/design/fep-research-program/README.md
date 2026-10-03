@@ -1,25 +1,28 @@
 # FEP research program: Horizons 1, 2, and 3
 
-Status: **active implementation program; Horizon 1 exited, the
-[active H2 spec](../../../specs/done/horizon-2-smooth-stochastic/README.md) has
-accepted H2.0--H2.3b, H2.4a/b, H2.5a/b/c, H2.5b-R0, H2.5d-R0,
-H2.5d, H2.6a/b/c, H2.6a-R0, H2.7-R0, and H2.7; only read-only H3.G0
-eligibility is open, with H3.0--H3.7 closed**. The
-[terminal acceptance record](../../../specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json)
-binds the actual native evidence, diagnostics, and three independent reviews.
-The accepted H1
-record preserves the first uninhabited carrier merge and separately proves the
-repaired finite one-step terminal theorem. H2 implementation state and reviewed
-topology live in the active spec; the horizon documents own mathematical goals
-and scientific firewalls. H3 rows remain prospective rather than theorem or
-empirical evidence.
+Pre-release checkpoint, 2026-10-02: **H1 and H2 exits are retained accepted history; H3.G0 selected the
+continuous branch and H3.0 froze its pre-outcome protocol. H3 implementation is
+present, but its final source-bound scientific exit is not accepted.** The
+[current H3 guide](horizon-3-scientific-case-study.md) projects the unchanged
+protocol and its remaining gates. At this checkpoint the frozen primary was unopened; native
+compilation, export/review, package acceptance, measured synthetic outcomes,
+claim review and installed reproduction each need their own accepted evidence.
 
-The released catalogue establishes many exact finite, measure-theoretic,
-geometric, control, learning, and thermodynamic results. Its own limitations
-identify the next problem: those results do not yet form one end-to-end
-scientific derivation from dynamics through inference and action to an
-empirically testable claim. This program therefore makes **vertical depth and
-falsifiability** the progress measures. Topic count is explicitly a non-goal.
+The [H1 handoff](../../../specs/done/horizon-1-finite-synthesis/HANDOFF.md) and
+[H2 terminal record](../../../specs/done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json)
+retain their original source epochs, countermodels and reviewed boundaries.
+They are prerequisites, not fresh compilation of subsequent source. The horizon
+documents own mathematical goals and scientific firewalls; bounded specs own
+implementation/evidence and [TODO.md](../../../TODO.md) owns open delivery work.
+
+The package contains exact finite, measure-theoretic, geometric, control,
+learning and thermodynamic results on declared carriers. The current program
+must complete one end-to-end formal/export/synthetic/reproduction chain before
+claiming its scientific exit. A separately licensed empirical branch remains
+governed no-go. **Vertical depth and falsifiability** are the progress measures;
+topic count is a non-goal. The next minor candidate is `1.4.0`, pending the
+[comprehensive program](../../../specs/comprehensive-science-improvement/PROTOCOL.md)
+and final release acceptance.
 
 ## North star
 
@@ -68,7 +71,7 @@ reported only as maintenance facts. Increasing them is not a research result.
 | --- | --- | --- | --- |
 | [Horizon 1: finite synthesis and falsification](horizon-1-finite-synthesis.md) | One synthetic finite one-step posterior--decision--action certificate, native decision/information bridges, and countermodels for stronger blanket-to-inference readings | The prerequisite pin and ownership audit is green | A connected finite theorem chain, positive witnesses, negative boundary theorems, warning-free native and declaration/axiom evidence |
 | [Horizon 2: smooth and stochastic lifting](horizon-2-smooth-stochastic.md) | The reusable parts of the finite chain lifted on one scalar Gaussian vertical carrier, plus a required pre-H2.7 symmetric-precision `Fin 4` OU export for H3 | Horizon 1 exits and every required Mathlib API passes an exact compile spike | A same-carrier scalar smooth/stochastic kernel, the accepted four-coordinate export, and mechanical exclusion of unsupported global geometry, Itô, SDE, and path-measure claims |
-| [Horizon 3: end-to-end scientific case study](horizon-3-scientific-case-study.md) | One preregistered, typed, executable model on exactly one continuous or finite branch, confronted with synthetic recovery tests and then an optional separately licensed real-data branch | Horizon 2 exits; read-only H3.G0 accepts source-bound carriers and selects one branch; H3.0 freezes that branch and model/data protocol | Formal, numerical, synthetic, optional empirical, and publication claim matrices; retained no-go/null results; independent replication |
+| [Horizon 3: end-to-end scientific case study](horizon-3-scientific-case-study.md) | The frozen continuous model, confronted with synthetic recovery and negative controls; an optional separately licensed empirical branch | Accepted H2/G0 prerequisites and actual H3.0 freeze are retained; current-source export/review and package gates precede the primary | Outcome-bound formal/synthetic/no-go claim matrix, independent reviews, two identical study archives and clean installed reproduction; final exit remains open |
 
 These are dependency horizons, not calendar promises. Work may proceed in
 parallel only where the [dependency map](dependency-map.md) permits it.
@@ -128,77 +131,22 @@ fixes the following choices so an implementing agent does not reopen them:
     identifiability are theorems, not model fields, and continuous/finite
     branches never hybridize.
 
-## Program checklist
+## Current and upcoming work
 
-- [x] H1.0 correct and lock the pin-surface and composition-ownership facts.
-- [x] H1.1 formalize the headline implication contracts and countermodels.
-- [x] H1.2 bridge native KL, Bayesian decision risk, and finite carriers.
-- [x] H1.3 prove a repeated-sample posterior-learning result on the exact H1
-      terminal carrier; keep broad calibration/evidence work optional.
-- [x] H1.4 connect posterior-form VFE, finite decision feedback, and emitted
-      actions while preserving the transition-aware-planning no-go.
-- [x] H1.5 optionally derive a finite constrained-entropy optimizer under
-      visible relative-interior/boundary-support qualifications.
-- [x] H1.6 characterize blanket mixture/invariance and finite causal limits.
-- [x] H1.7 generalize the two-state model to action-indexed finite semigroups,
-      a sampled controlled-kernel seam, a nonreversible three-state witness,
-      and strict KL decrease on the nondegenerate reference-agent product.
-- [x] H1.8 preserve the rejected first merge, repair the posterior/policy and
-      transition/semigroup carriers, and prove the finite terminal theorem.
-- [x] H2.0 classify every smooth/stochastic library-readiness row with
-      source-bound positive or bounded no-go evidence.
-- [x] H2.1a construct the fixed-positive-variance scalar Gaussian measure,
-      density/support surface, and oriented native-KL theorem.
-- [x] H2.1b derive its natural/mean coordinate maps, scores, Fisher values,
-      covariance distinction, and Bregman identity; leave general
-      finite-vector geometry as an optional capability.
-- [x] H2.2a construct its scalar Fisher pairings, exact coordinate pullback,
-      same-point flat duality rule, affine paths, and Fréchet-derived
-      rank-deficiency boundary without a second geometry hierarchy.
-- [ ] H2.2b optionally package the accepted equations in Mathlib's manifold
-      API only if a usefulness test proves net simplification.
-- [x] H2.3a prove the selected native Gaussian parameter-posterior martingale
-      and its limiting-observation conditional-expectation endpoint.
-- [x] H2.3b prove identification, consistency, bounded-observable transfer,
-      decision-risk convergence, and the nonidentifiable boundary.
-- [x] H2.4a prove exact identity/composition preservation in the existing
-      `embeddedKernel` owner.
-- [x] H2.4b define `NativeKernelSemigroup` and
-      `NativeActionIndexedKernelSemigroup` and prove the exact H1 lift.
-- [x] H2.5a construct the scalar OU kernel.
-- [x] H2.5b-R0 derive the actual generic transition-covariance zero, PSD,
-      positive-time PD, and chronological addition laws.
-- [x] H2.5b prove reusable symmetric-precision linear-Gaussian laws.
-- [x] H2.5c land the exact `Fin 4` export.
-- [x] H2.5d-R0 prove the fixed-Fin4 stationary native conditioning seam in a
-      source-bound spike before any maintained conditioning owner opens.
-- [x] H2.5d prove its native conditioning/precision seam. Generator and
-      weak-forward results remain optional.
-- [x] H2.6a-R0 prove the selected scalar Gaussian density factorization,
-      joint-law identity, and evidence-a.e. native-posterior equality.
-- [x] H2.6a connect the scalar native filter.
-- [x] H2.6b prove one-step finite filter-consuming quadratic control without
-      reward--EFE or policy-recursion relabeling.
-- [x] H2.6c prove monotone finite-grid path-law and support-aware native-KL
-      results without continuous-path or physical-entropy claims.
-- [x] H2.7 assemble the scalar terminal theorem and separately verify the
-      accepted H2.5c export and accepted H2.5d conditioning result.
-- [ ] H3.G0 inspect already-landed H1/H2 source and evidence read-only, record
-      exactly one continuous or finite branch, and prove or patch nothing.
-- [ ] H3.0 preregister the model-selection and empirical protocol.
-- [ ] H3.1 fix `Axis ≃ Fin 4`, dimensionless state, the positive affine
-      raw-unit bridge, and primitive-only model boundary; H3.2 then owns the H1
-      tuple-permutation bridge and H3.2--H3.5 derive dynamics,
-      covariance/invariance, blanket, recognition/identifiability, inference,
-      action, and thermodynamic clauses.
-- [ ] H3.6S run synthetic recovery; open H3.6E only for the licensed, frozen
-      held-out empirical branch.
-- [ ] H3.7 commission independent formal, statistical, and domain review, even
-      when the empirical branch is unavailable or null.
+Completed delivery checklists belong in accepted specs and repository history,
+not in this active reading path. The
+[remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
+keeps the original nine program criteria intact, including current package,
+native, custody, rendering and scientific evidence. The H3.0 freeze is already
+an actual prerequisite; repeating branch selection or preregistration would
+rewrite the current cycle.
 
-Checkboxes summarize accepted package progress but are not themselves evidence.
-Canonical open work is mirrored at high level in [`TODO.md`](../../../TODO.md),
-while exact implementation acceptance belongs to completed or active specs.
+The [upcoming improvement scopes](next-improvements.md) distinguish implemented
+work awaiting acceptance from genuinely new minor, medium and major package and
+formalization work. Optional manifold packaging remains unopened unless its
+proof-compression usefulness gate passes. Licensed data, unsupported path APIs
+and stronger physical/causal claims cannot be supplied by a successful local
+fixture or a release version.
 
 ## Reading order
 
@@ -209,3 +157,4 @@ while exact implementation acceptance belongs to completed or active specs.
 5. [Horizon 3](horizon-3-scientific-case-study.md)
 6. [Primary sources and pinned-library seams](references.md)
 7. [Next-agent handoff](handoff.md)
+8. [Upcoming minor, medium and major improvements](next-improvements.md)

@@ -13,11 +13,13 @@ feasibility evidence. G0 eligibility checks revalidate the complete H2 terminal
 contract. After H3 opens its new source epoch, the accepted prerequisite packet
 remains historical; it must not be resealed to imply new H2 execution.
 
-The current foundation and composition have 53 and 93 native public theorems.
-Whole aggregate and axiom checks pass. The current r2 native export, all three
-independent proof-role reviews and the consumer input check pass against the
-same 293 source bindings; the input check opens no random generator. Actual
-package acceptance remains required before the frozen synthetic seeds open.
+The foundation and composition declare 53 and 93 public theorems. Retained
+aggregate and axiom checks, the r2 native export, all three independent
+proof-role reviews and the consumer input check passed against their recorded
+293 source bindings. These are historical checkpoints; the input check opened
+no random generator. Fresh export and proof-role reviews must bind the current
+source epoch, and actual package acceptance remains required before the frozen
+synthetic seeds open.
 Final claim review, accepted package/study archives and fresh
 reproduction remain open. See [IMPLEMENTATION.md](IMPLEMENTATION.md) and the
 [execution log](../comprehensive-science-improvement/EXECUTION.md).

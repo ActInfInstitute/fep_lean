@@ -467,6 +467,24 @@
     "path": "specs/done/horizon-2-smooth-stochastic/readiness/repairs/07-gaussian-vfe-natural-gradient-custody.json",
     "sha256": "6311a998b1a66bb31949e194eb9e36a2e361dfbfb0f0e7d715b3a17e3e396bae"
   },
+  "release_metadata_transition": {
+    "current_version": "1.4.0",
+    "historical_version": "1.3.0",
+    "sources": {
+      "pyproject.toml": {
+        "current_sha256": "f8f2b0a7e575237fe75041d836d0c30a545b2efb3bc9a9e1a91f2c16abb44b96",
+        "current_token": "[project]\nname = \"fep_lean\"\nversion = \"1.4.0\"\n",
+        "historical_sha256": "71af4247c0daccfbec4f8ba7670bc217cda3647f58501c7a58d46d8a4852b9bc",
+        "historical_token": "[project]\nname = \"fep_lean\"\nversion = \"1.3.0\"\n"
+      },
+      "uv.lock": {
+        "current_sha256": "1747826c69488e5271faf542702c1e2294d2ca51855d19bd40789a219c16fd6d",
+        "current_token": "[[package]]\nname = \"fep-lean\"\nversion = \"1.4.0\"\n",
+        "historical_sha256": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463",
+        "historical_token": "[[package]]\nname = \"fep-lean\"\nversion = \"1.3.0\"\n"
+      }
+    }
+  },
   "schema_version": 1,
   "source_sha256": {
     "lean/FepSketches/compositions/gaussian_filter.lean": "2b0ec699ab07e19800fb978157721e82420b650478479368aa3c4a7878ea156e",
@@ -477,7 +495,7 @@
     "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
     "lean/lakefile.lean": "a0bf66128a95f6f44658c6ef2d465dd1bf0ef4816637dfdea00bb74d92ab5794",
     "lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
-    "pyproject.toml": "71af4247c0daccfbec4f8ba7670bc217cda3647f58501c7a58d46d8a4852b9bc",
+    "pyproject.toml": "f8f2b0a7e575237fe75041d836d0c30a545b2efb3bc9a9e1a91f2c16abb44b96",
     "specs/done/horizon-2-smooth-stochastic/readiness/acceptance.json": "834aecf37e4a9392261fcc6838cd87b0b01043650e5cbec0aac6708c99dc9f3b",
     "specs/done/horizon-2-smooth-stochastic/readiness/matrix.yaml": "9206c925b239edcc9bc8e3477b72514e270bfdf400c18e51f213a81b50808bf2",
     "specs/done/horizon-2-smooth-stochastic/slices/07-r0-gaussian-vfe-natural-gradient.md": "3b41191f2a26c55ddad5eeb21982c145d814be259264330f97ca3ce731e802f7",
@@ -488,8 +506,8 @@
     "src/fep_lean/formal/h3_reference_model.lean": "eb4f49d24fb49bfd064421d7f88e4cc554f7df5989690c28138b900adebfe47a",
     "src/fep_lean/formal/manifest.py": "c1dff5c5753162d1cf91fb27c5cb08777d385db4c606bd65a136d2c93acf07ce",
     "src/fep_lean/formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
-    "tests/_support/h2_r0_custody.py": "c75ac17e5704b8f082e9ab7d35293491c699aa641fef7637b6226b552b5b5c2d",
-    "tests/test_horizon2_gaussian_vfe_readiness.py": "327228ba461b531814d5ac173ee37bb03bd0485f6f3e1b03402321756b3e6cc0",
-    "uv.lock": "32eb45482cfdc6579fa9ee5c406e1edf2fa8fe70742543d508be89afd7ef5463"
+    "tests/_support/h2_r0_custody.py": "46c45d3eb5a19c8a6c9814d660ff9e6f8f0ddaeff6b4cd17ff14520fded27b53",
+    "tests/test_horizon2_gaussian_vfe_readiness.py": "b36f3a1b9e80f7e83705178c31d7483b8a334e8c2d905508f39154e13fcb2455",
+    "uv.lock": "1747826c69488e5271faf542702c1e2294d2ca51855d19bd40789a219c16fd6d"
   }
 }

@@ -1,6 +1,6 @@
 # Lean workspace — FEP Sketches
 
-**Version**: v1.3.0 | **Status**: Active | **Last Updated**: September 2026
+**Version**: v1.4.0 | **Status**: Active | **Last Updated**: October 2026
 
 Lake package with full **Mathlib4 v4.34.1** dependency (see `lakefile.lean` / `lake-manifest.json`).
 
@@ -12,22 +12,18 @@ pair upgrade then requires the full migration and evidence cascade.
 
 ## One-Time Setup
 
-Run from a regular (non-sandboxed) terminal:
+Run from the project root:
 
 ```bash
 # From the project root (directory containing pyproject.toml)
-bash scripts/_maint_bootstrap_lean_toolchain.sh
-# (``fep-lean setup`` is a thin wrapper to the same bootstrap.)
+uv run fep-lean setup
 ```
 
-Or manually:
-
-```bash
-cd lean
-lake update        # fetch Mathlib4
-lake exe cache get # download ~3 GB prebuilt .olean cache
-lake build         # build FepSketches
-```
+The guarded setup validates the declared toolchain and resolved Mathlib revision,
+acquires their exact cache and builds under one bounded process-group deadline.
+It preserves the dependency pins and never runs `lake update`. Set
+`FEP_LEAN_SETUP_TIMEOUT_SEC` to bound acquisition; read-only validation acquires
+nothing. A deliberate pin upgrade requires its own migration and evidence refresh.
 
 ## Manual Verification
 

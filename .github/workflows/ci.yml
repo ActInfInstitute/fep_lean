@@ -425,6 +425,7 @@ jobs:
       - name: Stage accepted render evidence with exact source and tool provenance
         env:
           EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_TEMPLATE_SHA: 5b3c0f43940f0322fbc6205b3be4c2854f99329d
           WORKFLOW_RUN_ID: ${{ github.run_id }}
           WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
@@ -438,7 +439,14 @@ jobs:
           from pathlib import Path
 
           from fep_lean.output.evidence import validate_native_lean_receipt
-          from fep_lean.output.release_bundle._core import _capture_parent_fd, _capture_regular_file
+          from fep_lean.output.release_bundle._core import (
+              _capture_directory_paths,
+              _capture_link_bytes,
+              _capture_parent_fd,
+              _capture_regular_file,
+              _capture_resource_link_target,
+              _capture_template_links,
+          )
           from fep_lean.output.render_fonts import declared_fonts
           from fep_lean.output.render_log import receipt_defects, rendered_manuscript_sources
           from fep_lean.output.rendering import MANUSCRIPT_ASSETS
@@ -518,88 +526,126 @@ jobs:
           sources = source_manifest()
           template = root / "render-template"
           template_sha = subprocess.check_output(["git", "-C", str(template), "rev-parse", "HEAD"], text=True).strip()
+          if template_sha != os.environ.get("EXPECTED_TEMPLATE_SHA"):
+              raise SystemExit("template checkout differs from the workflow template pin")
+          template_object_format = subprocess.check_output(["git", "-C", str(template), "rev-parse", "--show-object-format"], text=True).strip()
 
-          def template_file_identity(value):
-              return (value.st_dev, value.st_ino, value.st_mode, value.st_size, value.st_mtime_ns, value.st_ctime_ns)
-
-          def template_manifest():
+          def require_clean_template():
               if subprocess.check_output(["git", "-C", str(template), "rev-parse", "HEAD"], text=True).strip() != template_sha:
                   raise SystemExit("template checkout changed during evidence staging")
-              changed = subprocess.check_output(["git", "-C", str(template), "diff", "--name-only", "HEAD", "-z"])
+              # Git must not enter a gitlink's own or external Git store. The
+              # exact uninitialized directory state is checked independently.
+              changed = subprocess.check_output(["git", "-C", str(template), "diff", "--ignore-submodules=all", "--name-only", "HEAD", "-z"])
               untracked = subprocess.check_output(["git", "-C", str(template), "ls-files", "--others", "--exclude-standard", "-z"])
               if changed or untracked:
                   raise SystemExit("template authored inputs differ from its recorded commit")
-              object_format = subprocess.check_output(["git", "-C", str(template), "rev-parse", "--show-object-format"], text=True).strip()
-              if object_format not in {"sha1", "sha256"}:
-                  raise SystemExit("unsupported template Git object format")
-              tree = subprocess.check_output(["git", "-C", str(template), "ls-tree", "-r", "-z", "HEAD"])
+
+          def template_blob(data):
+              return hashlib.new(template_object_format, b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest()
+
+          allowed_gitlink = ("infrastructure/steganography/kmyth", "cb23c6d94423cbe4f5ef0caf23594d1095ddde79")
+
+          def template_identity(item):
+              return [item.st_dev, item.st_ino, item.st_mode, item.st_size, item.st_mtime_ns, item.st_ctime_ns]
+
+          def uninitialized_gitlink(name, mode, oid):
+              if mode != "160000" or (name, oid) != allowed_gitlink:
+                  raise SystemExit("template tracked resource mode is unsupported")
+              path = template / name
+              try:
+                  before = path.lstat()
+                  if not stat.S_ISDIR(before.st_mode) or path.resolve(strict=True) != path or any(parent.is_symlink() for parent in path.parents):
+                      raise SystemExit("template allowed gitlink is not a canonical empty directory")
+                  parent_fd = _capture_parent_fd(path)
+                  try:
+                      fd = os.open(path.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent_fd)
+                      try:
+                          opened = os.fstat(fd)
+                          members = os.listdir(fd)
+                          after = os.fstat(fd)
+                          leaf = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
+                          if members or any(template_identity(item) != template_identity(before) for item in (opened, after, leaf, path.lstat())):
+                              raise SystemExit("template allowed gitlink is not a canonical empty directory")
+                          return {"mode": mode, "git_commit": oid, "empty": True, "identity": template_identity(after)}
+                      finally:
+                          os.close(fd)
+                  finally:
+                      os.close(parent_fd)
+              except OSError as error:
+                  raise SystemExit("template allowed gitlink is not a canonical empty directory") from error
+
+          def template_manifest():
+              tree = subprocess.check_output(["git", "-C", str(template), "ls-tree", "-r", "-z", template_sha])
               entries = {}
-              for raw_entry in filter(None, tree.split(b"\0")):
-                  header, raw_name = raw_entry.split(b"\t", 1)
+              gitlinks = {}
+              for record in filter(None, tree.split(b"\0")):
+                  header, raw_name = record.split(b"\t", 1)
                   mode, kind, oid = header.decode("ascii").split()
                   name = os.fsdecode(raw_name)
-                  relative = Path(name)
-                  if relative.is_absolute() or any(part in {".", ".."} for part in relative.parts):
-                      raise SystemExit("unsafe template tree path")
-                  path = template / relative
-                  entry = {"mode": mode, "type": kind, "git_oid": oid}
-                  if (mode, kind) in {("100644", "blob"), ("100755", "blob")}:
+                  if name in entries or name in gitlinks:
+                      raise SystemExit("template tracked resource mode is unsupported")
+                  if mode == "160000" and kind == "commit":
+                      gitlinks[name] = uninitialized_gitlink(name, mode, oid)
+                  elif kind == "blob" and mode in {"100644", "100755", "120000"} and name != allowed_gitlink[0]:
+                      entries[name] = (mode, oid)
+                  else:
+                      raise SystemExit("template tracked resource mode is unsupported")
+              require_clean_template()
+              declared_links = _capture_template_links(template, root)
+              expected_links = {str(template / name) for name, (mode, _oid) in entries.items() if mode == "120000"}
+              expected_links.add(str(template / "projects/active/fep_lean"))
+              if {name for name, _target in declared_links} != expected_links:
+                  raise SystemExit("template resource link membership differs from its recorded commit")
+              link_bytes = {name: _capture_link_bytes(Path(name), raw, template) for name, raw in declared_links}
+              captured = {}
+              for name, (mode, oid) in sorted(entries.items()):
+                  path = template / name
+                  if mode == "120000":
+                      data = os.fsencode(dict(declared_links)[str(path)])
+                  else:
                       parent_fd = _capture_parent_fd(path)
                       try:
                           before = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
                           if not stat.S_ISREG(before.st_mode) or bool(before.st_mode & stat.S_IXUSR) != (mode == "100755"):
-                              raise SystemExit(f"template regular-file mode differs from its Git tree: {name}")
+                              raise SystemExit("template tracked resource physical mode differs from its recorded mode")
                           data = _capture_regular_file(path)
                           after = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
-                          if template_file_identity(before) != template_file_identity(after):
-                              raise SystemExit(f"template regular file changed while reading: {name}")
+                          if template_identity(before) != template_identity(after) or template_identity(after) != template_identity(path.lstat()):
+                              raise SystemExit("template tracked resource changed while reading")
                       finally:
                           os.close(parent_fd)
-                  elif (mode, kind) == ("120000", "blob"):
-                      parent_fd = _capture_parent_fd(path)
-                      try:
-                          before = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
-                          if not stat.S_ISLNK(before.st_mode):
-                              raise SystemExit(f"template symlink was replaced: {name}")
-                          data = os.readlink(os.fsencode(path.name), dir_fd=parent_fd)
-                          after = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
-                          if template_file_identity(before) != template_file_identity(after):
-                              raise SystemExit(f"template symlink changed while reading: {name}")
-                      finally:
-                          os.close(parent_fd)
-                      entry["target_hex"] = data.hex()
-                  elif (mode, kind) == ("160000", "commit"):
-                      parent_fd = _capture_parent_fd(path)
-                      directory_fd = None
-                      try:
-                          before = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
-                          if not stat.S_ISDIR(before.st_mode):
-                              raise SystemExit(f"template gitlink was replaced: {name}")
-                          directory_fd = os.open(path.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent_fd)
-                          opened = os.fstat(directory_fd)
-                          if (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino) or os.listdir(directory_fd):
-                              raise SystemExit(f"template gitlink has unbound checkout content: {name}")
-                          after = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
-                          if template_file_identity(before) != template_file_identity(after):
-                              raise SystemExit(f"template gitlink changed while reading: {name}")
-                          entry["checkout_state"] = "uninitialized-empty"
-                      finally:
-                          if directory_fd is not None:
-                              os.close(directory_fd)
-                          os.close(parent_fd)
-                      entries[name] = entry
-                      continue
+                  if template_blob(data) != oid:
+                      raise SystemExit("template tracked resource differs from its recorded blob")
+                  captured[name] = {"mode": mode, "git_blob": oid, "sha256": hashlib.sha256(data).hexdigest()}
+              links = {}
+              for name, raw in declared_links:
+                  path = Path(name)
+                  target = _capture_resource_link_target(path, raw, template, root)
+                  registration = path == template / "projects/active/fep_lean"
+                  if registration:
+                      if raw != str(root) or target != root or path.relative_to(template).as_posix() in entries:
+                          raise SystemExit("template active-project registration differs from this checkout")
+                      referents = {}
                   else:
-                      raise SystemExit(f"unsupported template tree mode/type: {mode} {kind} {name}")
-                  blob = b"blob " + str(len(data)).encode("ascii") + b"\0" + data
-                  if hashlib.new(object_format, blob).hexdigest() != oid:
-                      raise SystemExit(f"template captured bytes differ from its recorded Git object: {name}")
-                  entry["sha256"] = hashlib.sha256(data).hexdigest()
-                  entries[name] = entry
-              return entries
+                      paths = _capture_directory_paths(target, resource_links=declared_links) if target.is_dir() else (str(target),)
+                      referent_names = [Path(item).relative_to(template).as_posix() for item in paths]
+                      if not referent_names or any(item not in captured for item in referent_names):
+                          raise SystemExit("template link referent is not tracked at its recorded commit")
+                      referents = {item: captured[item] for item in referent_names}
+                  links[path.relative_to(template).as_posix()] = {
+                      "target": raw,
+                      "resolved_target": str(root) if registration else target.relative_to(template).as_posix(),
+                      "custody_sha256": hashlib.sha256(link_bytes[name]).hexdigest(),
+                      "referents": referents,
+                  }
+              if _capture_template_links(template, root) != declared_links or any(_capture_link_bytes(Path(name), raw, template) != link_bytes[name] for name, raw in declared_links):
+                  raise SystemExit("template resource links changed during evidence staging")
+              if any(uninitialized_gitlink(name, item["mode"], item["git_commit"]) != item for name, item in gitlinks.items()):
+                  raise SystemExit("template allowed gitlink changed during evidence staging")
+              require_clean_template()
+              return {"sources": captured, "links": links, "uninitialized_gitlinks": gitlinks}
 
-          template_tree = template_manifest()
-          template_sources = {name: entry["sha256"] for name, entry in template_tree.items() if entry["mode"] in {"100644", "100755"}}
+          template_sources = template_manifest()
           validate_evidence()
           versions = {}
           for command in ("xelatex", "pandoc", "rsvg-convert", "mmdc"):
@@ -617,12 +663,12 @@ jobs:
               "schema_version": 1, "commit": sha,
               "workflow_run_id": os.environ["WORKFLOW_RUN_ID"],
               "workflow_run_attempt": os.environ["WORKFLOW_RUN_ATTEMPT"],
-              "template_commit": template_sha, "template_sources": template_sources, "template_tree": template_tree,
+              "template_commit": template_sha, "template_sources": template_sources,
               "python": sys.version, "tools": versions, "fonts": fonts,
           }
           def require_stable_snapshot():
               try:
-                  stable = source_manifest() == sources and artifact_bytes() == accepted_bytes and template_manifest() == template_tree and all(hashlib.sha256(_capture_regular_file(path)).hexdigest() == fonts[role]["sha256"] for role, path in font_files.items())
+                  stable = source_manifest() == sources and artifact_bytes() == accepted_bytes and template_manifest() == template_sources and all(hashlib.sha256(_capture_regular_file(path)).hexdigest() == fonts[role]["sha256"] for role, path in font_files.items())
               except SystemExit as error:
                   raise SystemExit(f"inputs changed during evidence staging: {error}") from error
               if not stable:

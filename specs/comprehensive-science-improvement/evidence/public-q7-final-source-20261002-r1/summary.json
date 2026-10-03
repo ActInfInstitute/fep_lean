@@ -1,0 +1,189 @@
+{
+  "H3_primary_execution": false,
+  "accepted_capture": true,
+  "actual_terminal": {
+    "acceptance_max_s": 7200,
+    "elapsed_s": 1249.5858229589994,
+    "returncode": 0,
+    "supervision_max_s": 7260,
+    "timed_out": false
+  },
+  "boundary": "This public summary records actual separately retained source, native and terminal observations. Detailed operator custody records remain local. Only the exact independently validated native receipt establishes its checked static coefficient statements. It does not prove GNN runner behavior, full FEP semantics or physical validity. Historical Q5/Q6 and earlier Q7 receipts retain their own epochs. Capture-time guidance bytes and the later historical prose label are separately retained; the native input bytes are unchanged.",
+  "capture_receipt_sha256": "e85bcffe981d609b3c9f3beacc00f9dcced1184cfac4fabb2b5d1a436c5a1406",
+  "claim_ready": false,
+  "fresh_closing_checks": [
+    {
+      "accepted": true,
+      "id": "check-finite"
+    },
+    {
+      "accepted": true,
+      "id": "check-continuous"
+    },
+    {
+      "accepted": true,
+      "id": "bridge-status"
+    },
+    {
+      "accepted": true,
+      "id": "q7-generation-check"
+    }
+  ],
+  "fresh_stages": [
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "pin"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "emit-finite"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "emit-continuous"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "check-finite"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "check-continuous"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "bridge-status"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-canonical-render"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-parity-if-inputs-changed"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-regenerate"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-generation-check"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-new-native-capture"
+    },
+    {
+      "accepted": true,
+      "executed": true,
+      "id": "q7-new-native-check"
+    }
+  ],
+  "historical_receipts_promoted": false,
+  "hosted_acceptance": false,
+  "independent_execution_acceptance_sha256": "c6e000bcfaaa5f3ce231d5c16f76a41271e65c3fafb7a6e5d572abcb83f2830c",
+  "independent_execution_review_scope": "Exact actual source/native/capture/root-terminal audit only. Postcapture guidance and candidate citation-date metadata carry separate source review and do not alter the 191/291 native owners or 73 native input artifacts.",
+  "kind": "public-fresh-Q7-source-pair-capture-observation",
+  "new_native_evidence": {
+    "compiler": "Lean 4.34.1",
+    "exact_statement_roster": [
+      "FEPProbe.Q7ContinuousOU.selected_decay",
+      "FEPProbe.Q7ContinuousOU.selected_transitionVariance",
+      "FEPProbe.Q7ContinuousOU.exact_row_eq_selected",
+      "FEPProbe.Q7ContinuousOU.artifact_exact_parameters",
+      "FEPProbe.Q7ContinuousOU.exact_noise_formula",
+      "FEPProbe.Q7ContinuousOU.artifact_F_bound",
+      "FEPProbe.Q7ContinuousOU.artifact_Q_bound",
+      "FEPProbe.Q7ContinuousOU.artifact_prediction_mean_bound",
+      "FEPProbe.Q7ContinuousOU.artifact_prediction_variance_bound",
+      "FEPProbe.Q7ContinuousOU.artifact_stationary_defect_bound",
+      "FEPProbe.Q7ContinuousOU.nonstationary_prediction_changes_mean",
+      "FEPProbe.Q7ContinuousOU.scalar_joseph_identity"
+    ],
+    "native_claim_ready_in_separately_validated_receipt": true,
+    "receipt_sha256": "5630eef0b58185dfd359f627453e386174d25157ddcf935c928930c2d8eef7f0",
+    "runtime_execution_verified": false
+  },
+  "observational_summary_only": true,
+  "package_acceptance": false,
+  "postcapture_candidate_metadata_delta": {
+    ".aii/config.yaml": {
+      "after_sha256": "40beaac9f1e65b56f67194b4ba1d95aa90e37035b172dc2e47591419cc065621",
+      "before_sha256": "896cebe22ecdb26a1ac6fdf7e41a886948205636421ba53a7438275773f67bc1"
+    },
+    "CITATION.cff": {
+      "after_sha256": "f2286a4fbae94ba2a417e2bd68722c5690f3d41d15334b784819beff1268f7e4",
+      "before_sha256": "e12be2758caf42d2cb82ef5b910299ea80a0bbf22a10876495061dcb83e72d99"
+    }
+  },
+  "postcapture_guidance_current_checks": {
+    "accepted": true,
+    "check_ids": [
+      "check-finite",
+      "check-continuous",
+      "bridge-status",
+      "q7-generation-check",
+      "q7-native-check"
+    ],
+    "native_compilation_reexecuted": false,
+    "receipt_sha256": "dd888819b52a3a03287f5127a90532f42ef180eee7c8cba22b58c09c0df7ee28",
+    "scope": "Five fresh read-only source, generation and native-receipt currency checks after the separately retained guidance and citation-date changes. This does not extend or rewrite the original twelve-stage capture, recompile native statements or establish other evidence planes.",
+    "separate_from_original_capture": true,
+    "source291_bytes_and_ns_unchanged": true
+  },
+  "postcapture_guidance_delta": {
+    "specs/gnn-bridge-q7-continuous-ou-proof/README.md": {
+      "captured_sha256": "f55a7d9da8d6680d7f93c4c3c4134a4dc095090d8e71861964f5f41b6d93e9fc",
+      "historical_label_sha256": "147d82fe4c37efa6f7f1daf8abb4774f17b317b8bc118552c91780387d4c1cf2",
+      "native_owner_overlap": false
+    }
+  },
+  "prior_accepted_prefix_reused": false,
+  "provider_execution": false,
+  "pure_controls": {
+    "errors": 0,
+    "failed": 0,
+    "inventory_controls_passed": 12,
+    "junit_sha256": "a993110ef86477556c5607dbdb134774aae437704f87bb464c537a823b7f0558",
+    "passed": 124,
+    "skipped": 0
+  },
+  "root_terminal_result_sha256": "308861cac1138a190edb79a172f4d26088c8d087b29a27cce2a5ce77f55251a8",
+  "scaffold_portability": {
+    "actual_cpython_versions": [
+      "3.10.20",
+      "3.11.15",
+      "3.12.13",
+      "3.13.16",
+      "3.14.4"
+    ],
+    "all_eleven_controls_true_per_runtime": true,
+    "canonical_bytes": 56968,
+    "canonical_sha256": "b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec"
+  },
+  "schema_version": 1,
+  "source_contract": {
+    "fep_base_commit": "409ee71f82b3353303e6306e87c1b1fedc949088",
+    "fep_candidate_bytes_uncommitted_at_capture": true,
+    "fep_candidate_version": "1.4.0",
+    "fep_owner_count": 191,
+    "gnn_commit": "536d949829f6aed11dc540e5c5dec77578b25016",
+    "gnn_owner_count": 703,
+    "independent_exact_three_input_source_approval_sha256": "f05ac7a94b54bd35c50e2688a28fe14b6e29b17e08fce5533e15e55204759de8",
+    "native_owner_count": 291,
+    "native_source_freeze_sha256": "8fb12f923c5bc4fce94dc4e6abc84341151915e6c657f7034da6d1c16a827d97"
+  },
+  "whole_catalogue_native_acceptance": false
+}

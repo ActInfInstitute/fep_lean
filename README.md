@@ -14,15 +14,29 @@ standalone EFE and geometric-mechanics families.
 
 ## Release
 
-Source metadata is `1.3.0`, and the [existing `v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
-records the earlier 159-topic cut. As checked on 2026-09-30, the latest
+Source metadata is `1.4.0`, dated 2026-10-02. Daniel authorized its minor
+versioned release after final-source acceptance. At the pre-release checkpoint
+on that date, publication remained pending. The
+[existing `v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
+records the earlier 159-topic cut. At that pre-release checkpoint, the latest
 published GitHub release is [v1.2.0](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.2.0);
-the current 168-topic `main` tree has not been published as a GitHub release.
+the 168-topic `main` tree had not been published as a GitHub release. The
+repository's [release history](https://github.com/ActiveInferenceInstitute/fep_formal/releases)
+and open-only backlog own later delivery status.
 The evolving scholarly record is identified by the
 [Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233). The GitHub
-release process must cross-reference the immutable Zenodo version DOI and
-publish the release-bundle checksum; the bundle manifest owns per-file hashes.
+release process must publish the release-bundle checksum and cross-reference
+the immutable Zenodo version DOI after the configured integration creates and
+validates its record. That integration cannot pre-reserve a DOI. Inspect the
+record's concept linkage and file inventory; a source-snapshot DOI does not
+establish archival of the separately attached evidence bundle or manuscript.
+The bundle manifest owns per-file hashes.
 Neither publication surface changes the evidence boundaries below.
+
+The [upcoming improvement scopes](docs/design/fep-research-program/next-improvements.md)
+define minor, medium and major work for the core package and formalizations,
+with named owners, dependencies, acceptance probes and failure boundaries.
+The open-only [backlog](TODO.md) owns the current release obligations.
 
 ## Contract
 
@@ -148,24 +162,31 @@ well. No provider secret is stored in the
 repository, and no execution receipt authorizes publication or proves the FEP
 as a physical theory.
 
-The isolated Q7 recapture now has accepted native coefficient evidence and
-five-runtime scaffold parity; the [Q7 report](specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md)
-identifies the new retained receipt and actual positive/wrong-F/wrong-Q native
-controls. It proves static coefficient statements with
-`runtime_execution_verified: false`. Q5/Q6 native and delivery observations
-remain historical after the W2 source re-pin; Q7 does not refresh them. Daniel's
-active GNN checkout and output remain outside this isolated capture.
+The [fresh Q7 capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+passes all 12 fresh stages, four closing checks, five-runtime scaffold parity
+and 124 pure controls without skips. Its separately validated new native
+receipt proves the exact static coefficient statements with
+`runtime_execution_verified: false`; the public summary is observational.
+Earlier Q7 observations and Q5/Q6 native and delivery receipts retain their
+recorded source pairs. Active GNN work remains preserved.
 
-Local wheel r7 is historical after two guarded Q7 inputs changed and before
-this guidance refresh. It contains five cells, each with one actual installed
-target-runtime case and 32 CPython 3.14 harness cases (165 passes total).
-Wheel r8 and the 15 hosted platform/interpreter cells remain unrun. The
-2,303-pass, 90.66% canonical Python observation remains rejected by its wider
-source guard; the repaired orchestrator has 11 focused passes. A fresh guarded
-canonical Python run, render preparation, production capture, two identical
-accepted archives and the frozen H3 primary remain open. The maintained
-[handoff](HANDOFF.md) and [next acceptance list](specs/comprehensive-science-improvement/NEXT.md)
-own the pending source-currency gates.
+The improvement commit [409ee71](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)
+was published to `main` on 2026-10-02. Its local guarded Python run passed
+2,308 tests with 90.65% coverage, and strict render preparation passed at that
+source epoch. The [same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37035715408)
+failed five Windows distribution jobs, one Python runtime-fixture test and
+two historical H2 custody checks. Ten Ubuntu/macOS distribution cells passed;
+the failed Lean job produced no native or accepted-render artifact.
+
+At the pre-release checkpoint on 2026-10-02, follow-up repairs and guidance
+changes required fresh final-source acceptance.
+Earlier local wheel, native, Q7, H3 export, Python and render receipts retain
+their recorded source epochs. The maintained [handoff](HANDOFF.md) and
+[remaining acceptance](specs/comprehensive-science-improvement/NEXT.md) specify
+custody refresh, package capture, the frozen H3 primary, claim review and
+clean-environment reproduction. The scientific seeds and protocol remain
+unchanged. The primary was unopened at that checkpoint; subsequent measured
+outcomes belong to the reference study's source-bound execution and claim records.
 
 ## Quick start
 

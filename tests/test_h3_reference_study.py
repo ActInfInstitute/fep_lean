@@ -742,22 +742,20 @@ def test_rejected_attempt_retains_completed_setting_and_nonfollowing_issues(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Failure-retention fixture bypasses native gates; no scientific RNG runs."""
-    protocol = copy.deepcopy(protocol)
-    environment = protocol["synthetic_acceptance"]["execution_environment"]
-    environment.update(python=study.platform.python_version(), numpy=np.__version__)
-    monkeypatch.setattr(study, "frozen_protocol", lambda *args: protocol)
+    """Deterministic retention fixture uses the harness runtime, with no study draws."""
+    fixture_protocol = copy.deepcopy(protocol)
+    fixture_protocol["synthetic_acceptance"]["execution_environment"].update(
+        python=study.platform.python_version(), numpy=np.__version__
+    )
+    monkeypatch.setattr(study, "frozen_protocol", lambda _inputs: fixture_protocol)
     monkeypatch.setattr(study, "load_export", lambda *args: toy_export)
     outside = tmp_path / "outside.txt"
     outside.write_text("untouched")
     output = tmp_path.resolve() / "attempt"
 
-    calibration_calls: list[str] = []
-
     def failed_setting(
         setting: dict, sbc: dict, protocol: dict, p: dict, files: object
     ) -> dict:
-        calibration_calls.append(setting["id"])
         if setting["id"] == "A":
             ref = study.save_array(files, "toy_setting_a", np.asarray([0.0]))
             return {
@@ -770,21 +768,14 @@ def test_rejected_attempt_retains_completed_setting_and_nonfollowing_issues(
         raise study.StudyRejection("original second-setting failure")
 
     monkeypatch.setattr(study, "calibrate", failed_setting)
-    for runtime in ("python", "numpy"):
-        actual = environment[runtime]
-        environment[runtime] = "0.0.0"
-        with pytest.raises(
-            study.StudyRejection, match="frozen execution runtime mismatch"
-        ):
-            study.run_study(ROOT, output, "unused", "unused", "unused")
-        assert not output.exists()
-        assert calibration_calls == []
-        environment[runtime] = actual
     with pytest.raises(study.StudyRejection, match="original second-setting failure"):
         study.run_study(ROOT, output, "unused", "unused", "unused")
-    assert calibration_calls == ["A", "B"]
     receipt = json.loads((output / "acceptance.json").read_bytes())
     assert receipt["accepted"] is False
+    assert (
+        receipt["execution_environment"]
+        == fixture_protocol["synthetic_acceptance"]["execution_environment"]
+    )
     assert receipt["failure"]["reason"] == "original second-setting failure"
     assert receipt["calibration"][0]["setting_id"] == "A"
     assert set(receipt["retained_artifact_sha256"]) == {"toy_setting_a.npy"}
@@ -793,6 +784,33 @@ def test_rejected_attempt_retains_completed_setting_and_nonfollowing_issues(
         "unexpected_link",
     }
     assert outside.read_text() == "untouched"
+
+
+@pytest.mark.parametrize("component", ["python", "numpy"])
+def test_runtime_mismatch_rejects_before_output_or_draws(
+    study: ModuleType,
+    protocol: dict,
+    toy_export: dict,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    component: str,
+) -> None:
+    fixture_protocol = copy.deepcopy(protocol)
+    environment = fixture_protocol["synthetic_acceptance"]["execution_environment"]
+    environment.update(python=study.platform.python_version(), numpy=np.__version__)
+    environment[component] = "0.0.0"
+    monkeypatch.setattr(study, "frozen_protocol", lambda _inputs: fixture_protocol)
+    monkeypatch.setattr(study, "load_export", lambda *_args: toy_export)
+
+    def forbid_draws(*_args: object, **_kwargs: object) -> None:
+        pytest.fail("mismatched runtime reached scientific execution")
+
+    for name in ("calibrate", "recover", "control_simulation"):
+        monkeypatch.setattr(study, name, forbid_draws)
+    output = tmp_path.resolve() / "attempt"
+    with pytest.raises(study.StudyRejection, match="frozen execution runtime mismatch"):
+        study.run_study(ROOT, output, "unused", "unused", "unused")
+    assert not output.exists()
 
 
 def test_attempt_descriptor_does_not_write_through_redirected_path(

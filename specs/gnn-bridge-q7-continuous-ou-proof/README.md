@@ -94,10 +94,15 @@ provenance, exact probe regeneration, native compilation with no warnings or
 `sorryAx`, and axiom reports containing only the established standard axioms.
 The implementation is integrated; changes require fresh source-bound evidence.
 
-## Current isolated native evidence and reproduction
+## Earlier isolated native evidence and reproduction
+
+This historical checkpoint retains its exact earlier source pair. The
+[fresh full capture](../comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+supersedes it for the newly checked native inputs; the prose update preserves
+the capture-time preimage and does not change native input bytes.
 
 The [public Q7 observation](../comprehensive-science-improvement/evidence/public-q7-closure-20261002-r1/summary.json)
-records recapture r3 accepted across 12 stages in 644.5096 seconds: seven actual
+records earlier recapture r3 accepted across 12 stages in 644.5096 seconds: seven actual
 accepted substages of failed r2 were freshly revalidated, and stages 8–12
 actually ran in r3. All 124 pure
 controls pass without skips. The isolated GNN pair owns its Git checkout and

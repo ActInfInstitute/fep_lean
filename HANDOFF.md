@@ -3,8 +3,9 @@
 **Date:** 2026-10-02
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
-**Release line:** source metadata/tag `v1.3.0`; latest published GitHub release
-`v1.2.0`; next release open per `FEP-RELEASE-NEXT`
+**Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
+`v1.3.0`; latest published GitHub release `v1.2.0`. Daniel authorized the minor
+release after final-source acceptance, tracked by `FEP-RELEASE-NEXT`.
 
 ## Mission and evidence boundary
 
@@ -103,71 +104,41 @@ summarizing scientific completeness.
 
 ## Current source and evidence state
 
-At the 2026-09-30 baseline check, `main` matched `origin/main` and the remote at
-`cd4a84cd91d884d6952b2b2f1b0289b2bdfd36ed`. The
-[same-commit hosted CI](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/36597774408)
-passed. Downloaded native and declaration/axiom receipts independently validate
-against that source: 168/168 topics at Lean/Mathlib v4.34.1, zero
-warnings or `sorry`, and the audit's 1,411-declaration closure with no errors.
+`main` was published at
+[409ee71f82b3353303e6306e87c1b1fedc949088](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)
+on 2026-10-02, with the local and direct remote commit IDs equal. This is an
+ordinary main-branch publication; no versioned release or DOI was issued.
 
-The [comprehensive scientific improvement program](specs/comprehensive-science-improvement/PROTOCOL.md)
-is now active on `main`. Source edits invalidate dependent baseline receipts
-until actual capture and independent review finish. The pinned local setup
-rebuild has passed 8,995 jobs with all four dependency pins unchanged. Focused
-compiles and Python tests are recorded in its execution ledger; neither closes
-the whole-program or H3 acceptance gates.
+At that source epoch, complete guarded Python acceptance passed 2,308 tests,
+with 12 policy skips and 90.65% coverage above the unchanged 89% gate.
+All 25 declared static checks and strict six-stage real-template render
+preparation passed. Separate Q7 static/native observations, catalogue native
+and H3 export checkpoints retain their exact owner and artifact bindings.
 
-The setup repair removed the baseline cache incompatibility. A retained
-warning-free aggregate build and 1,596-declaration axiom audit cover the
-expanded native surface, including all 146 H3 declarations. Current native r3
-verifies all 168 topics without errors, warnings or `sorry` against 291 unchanged
-owners; the expanded audit has 1,465 evidence records. Local wheel r7 records
-five cells, each with one actual CPython 3.10–3.14 installed target-runtime case
-and 32 CPython 3.14 harness cases, for 165 passes total. Two Q7 inputs in its
-235-file guard subsequently changed: `expected.json` from `79b31…` to `54992…`
-and the JAX fixture from `df224…` to `48f6…`. This guidance refresh also changes
-guarded prose, including README and the development guide. R7 therefore remains
-historical for its recorded source epoch; wheel r8 and the 15 hosted cells are
-unrun. Strict production render preparation r2 passed metadata hydration, fonts
-and normalized PDF/HTML reproducibility at its recorded epoch. Fresh preparation
-r3 and production capture r2 remain unrun.
+The [same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37035715408)
+finished with failures. Ten Ubuntu/macOS distribution cells passed; all five
+Windows cells rejected newline-sensitive metadata assertions and POSIX-only
+staging expectations. The Python lane rejected a retention fixture against a
+different Python microversion. Two Lean-lane H2 custody checks omitted the
+new H3 manifest additions from their historical reconstruction. Native and
+accepted-render artifacts were not produced because that Lean job failed.
 
-The first full Python attempt failed with 64 failures and 88.37% coverage. The
-next canonical run passed 2,303 tests with 12 skips, 537 serial deselections and
-90.66% coverage, but its wider source guard rejected same-byte replacement of
-two generated manuscript files. An overlooked programmatic orchestrator fixture
-still targeted the live project. Its private-project repair passes all 11
-focused tests with unchanged live manuscript bytes and metadata; complete
-guarded acceptance r2 remains unrun. A projected total of 2,318 tests is
-arithmetic, not an observed result. Production capture, two accepted identical
-archives and final hosted evidence remain open. Hosted, native, Python and
-publication evidence remain separate.
+The follow-up repairs preserve strict metadata values, the actual Windows
+custody refusal, the frozen primary runtime and the immutable historical H2
+receipts. Template staging also requires tracked symlink targets and referents
+to remain bound to its pinned Git tree through retention. Fresh independent
+review and actual final-source checks are required; historical passing tests
+are never relabeled as acceptance for repaired source bytes.
 
-The [public Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-closure-20261002-r1/summary.json)
-records isolated recapture r3 accepted in 644.5096 seconds. Its first seven
-stages are actual accepted
-substages of rejected r2, freshly revalidated against their consumed inputs;
-stages 8–12 actually ran in r3. All 124 pure controls pass without skips.
-The private GNN pair owns its Git checkout and runtime, with all 703 owners
-bound to `536d949829f6aed11dc540e5c5dec77578b25016`; its read-only dependency
-base is shared. FEP and native brackets cover 191 and 291 owners respectively.
-The active GNN checkout and output remain untouched by this isolated work.
-
-The exact [new retained native receipt](specs/comprehensive-science-improvement/evidence/q7-accepted-native-retention-20261002-r1/native-receipt.json)
-has SHA-256 `b0ecf640fffa06f019d67c74a2d02e22715120165a98d218d61f49f98366bc3b`,
-`native_claim_ready: true` and `runtime_execution_verified: false`.
-The public observation also records postcapture closure r2 accepted across
-seven actual stages in 1,648.1618 seconds, including all three real
-positive-axiom/wrong-F/wrong-Q native controls. Its outer process exits 0 with
-transport accepted; no closure process remains open. The guidance edit still
-requires independent review and fresh bridge/generation/native read-only checks
-before the portability backlog row closes. Q5/Q6 observations and the original
-Q7 native JSON remain historical and unchanged; Q7 supplies no new Q5/Q6 claim.
-Full operator-custody records remain local. The public summary is observational;
-only the separately validated official native receipt supplies the native claim.
-
-The [dated status and scope](SCOPE-2026-09-30.md) retains artifact hashes,
-commands, acceptance boundaries, backlog closure evidence, and proposed work.
+The [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
+owns the current execution order: settle source and guidance, retain the
+accepted isolated Q7 source pair, refresh catalogue native/export custody,
+and run installed-wheel and hosted acceptance,
+complete real production capture and two identical independently validated
+package archives, then execute the frozen H3 study once and complete claims
+and reproduction. The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
+retains all nine criteria. Private operator journals and active GNN registry
+work are preserved; only explicitly reviewed public evidence is published.
 
 H1.0--H1.8 are accepted, including the optional H1.5 lane. The archived
 [Horizon 1 acceptance record](specs/done/horizon-1-finite-synthesis/README.md)
@@ -207,11 +178,11 @@ reviews before continuous G0 acceptance and the immutable
 [H3.0 freeze](specs/h3-reference-study/freeze.json). That prerequisite packet
 remains historical evidence after H3 opens its new source epoch. The
 [reference study](specs/h3-reference-study/README.md) has native model and
-cross-domain proofs. Current export r2, three fresh independent proof-role
-reviews and the actual input-validation consumer pass against their unchanged
-293 source owners. Frozen primary seeds remain unopened pending package
-acceptance; synthetic execution, final claim review and bundle reproduction
-remain open. The empirical branch remains governed no-go without a licensed
+cross-domain proofs at its retained source epochs. Current package repairs
+require a fresh native export and three independent proof-role reviews before
+scientific execution. Frozen primary seeds remain unopened pending package
+acceptance; recovery, controls, final claims and bundle reproduction are open.
+The empirical branch remains governed no-go without a licensed
 named dataset.
 
 Earlier coordinated projection and receipt refreshes, including the
@@ -367,5 +338,9 @@ passes all three read-only checks after independent prose review with unchanged
 custody and native JSON, closing the portability probe. Later acceptance and
 publication progress is recorded in the program's execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized
-committing and pushing reviewed changes to `main`; a versioned release remains
-separately governed.
+committing and pushing reviewed changes to `main` and publishing the next minor
+release, `v1.4.0`, after its acceptance gates. The
+[upcoming scopes](docs/design/fep-research-program/next-improvements.md) define
+future minor, medium and major package/formal work separately from current
+release obligations. Licensed-data access, paid provider fallback and account
+settings still require their own authorized boundaries.

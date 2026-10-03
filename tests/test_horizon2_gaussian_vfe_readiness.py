@@ -700,6 +700,14 @@ def test_h2_7_r0_custody_rejects_tampering(tmp_path: Path, tamper: str) -> None:
         "addendum_downstream",
         "addendum_native",
         "addendum_numeric_native_flag",
+        "release_dependency_drift",
+        "release_lock_dependency_drift",
+        "release_lock_schema_drift",
+        "release_version_drift",
+        "release_duplicate_root",
+        "release_missing_transition",
+        "release_transition_digest",
+        "release_transition_allowance",
     ),
 )
 def test_h2_7_h3_custody_addendum_rejects_tampering(
@@ -763,6 +771,46 @@ def test_h2_7_h3_custody_addendum_rejects_tampering(
     elif tamper == "h3_owner_source":
         path = tmp_path / H3_OWNER_SOURCE_PATHS[0]
         path.write_bytes(path.read_bytes() + b"\n")
+    elif tamper in {
+        "release_dependency_drift",
+        "release_lock_dependency_drift",
+        "release_lock_schema_drift",
+        "release_version_drift",
+        "release_duplicate_root",
+    }:
+        relative = (
+            "uv.lock"
+            if tamper in {"release_lock_dependency_drift", "release_lock_schema_drift"}
+            else "pyproject.toml"
+        )
+        path = tmp_path / relative
+        contents = path.read_text(encoding="utf-8")
+        if tamper == "release_dependency_drift":
+            altered = contents.replace("numpy>=1.24.0", "numpy>=1.25.0", 1)
+        elif tamper == "release_lock_dependency_drift":
+            altered = contents.replace('version = "2.5.1"', 'version = "2.5.2"', 1)
+        elif tamper == "release_lock_schema_drift":
+            altered = contents.replace("revision = 3\n", "revision = 5\n", 1)
+        elif tamper == "release_version_drift":
+            altered = contents.replace('version = "1.4.0"', 'version = "1.5.0"', 1)
+        else:
+            altered = contents + '\n[project]\nname = "fep_lean"\nversion = "1.4.0"\n'
+        assert altered != contents
+        path.write_text(altered, encoding="utf-8")
+        # Coherently rebinding the new bytes never authorizes another delta.
+        digest = _sha256(path)
+        addendum["source_sha256"][relative] = digest
+        addendum["release_metadata_transition"]["sources"][relative][
+            "current_sha256"
+        ] = digest
+    elif tamper == "release_missing_transition":
+        del addendum["release_metadata_transition"]
+    elif tamper == "release_transition_digest":
+        addendum["release_metadata_transition"]["sources"]["pyproject.toml"][
+            "historical_sha256"
+        ] = "0" * 64
+    elif tamper == "release_transition_allowance":
+        addendum["release_metadata_transition"]["sources"]["config/settings.yaml"] = {}
     elif tamper == "addendum_prior":
         addendum["prior_custody"]["sha256"] = "0" * 64
     elif tamper == "addendum_boolean_schema":

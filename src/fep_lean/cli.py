@@ -652,7 +652,7 @@ def bridge_pin_section(root: Path, gnn_root: Path | None = None) -> SectionRepor
             ),
         )
     findings.extend(errors)
-    state = "current" if not errors else "stale"
+    state = "stale" if errors else "current" if gnn_root is not None else "unverified"
     return SectionReport(
         name="bridge_source_pin",
         state=state,
@@ -660,7 +660,8 @@ def bridge_pin_section(root: Path, gnn_root: Path | None = None) -> SectionRepor
         composes=composes,
         boundary=(
             "Custody binds owner bytes, not a perpetually refreshed HEAD. "
-            "Currency here means the pinned working trees still match; it is "
+            "Currency requires comparing both explicitly named working trees. "
+            "Without --gnn-root, the GNN comparison remains unverified. It is "
             "not native proof, not semantic review, and not proof that an "
             "older execution artifact was produced by these sources."
         ),
@@ -856,11 +857,6 @@ def build_status_report(root: Path, gnn_root: Path | None = None) -> StatusRepor
         native_receipt_section(root),
     )
     readiness = list(sections)
-    if gnn_root is None and readiness[2].state == "current":
-        bridge = readiness[2]
-        readiness[2] = SectionReport(
-            bridge.name, "unverified", bridge.findings, bridge.composes, bridge.boundary
-        )
     readiness.extend(
         (
             _stored_readiness_section(

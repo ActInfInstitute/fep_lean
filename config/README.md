@@ -1,6 +1,6 @@
 # fep_lean/config — Configuration Reference
 
-**Version**: v1.3.0 | **Status**: Active | **Last Updated**: September 2026
+**Version**: v1.4.0 | **Status**: Active | **Last Updated**: October 2026
 
 ## Files
 

@@ -1,6 +1,6 @@
 # fep_lean/src/
 
-**Version**: v1.3.0 | **Status**: Active | **Last Updated**: September 2026
+**Version**: v1.4.0 | **Status**: Active | **Last Updated**: October 2026
 
 This directory contains the installable `fep_lean` package. Its ten domain subpackages drive the FEP Lean
 pipeline. The layer runs end-to-end per-topic formalization sessions (LLM

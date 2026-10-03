@@ -189,14 +189,14 @@ FEP_DISTRIBUTION_PYTHON=3.10 \
 The target interpreter must be available to uv; runtime dependencies may be
 acquired from the package index. No Lean compile or provider call occurs.
 
-The retained local wheel r7 observation comprises five cells: one actual
-installed target-runtime case plus 32 CPython 3.14 harness cases per cell,
-165 passes total. It does not report 33 target-runtime cases per interpreter.
-Its 235-file guarded epoch is historical after Q7 `expected.json` and the JAX
-fixture changed, and this README/development guidance refresh introduces further
-guarded changes. Local wheel r8 and the 15 hosted platform/interpreter cells
-remain unrun. Rebuild and rerun against final guidance and inputs before making
-current package acceptance claims.
+Local installed-wheel observations retain their exact guarded source epochs.
+Each historical cell reports one actual installed target-runtime case and
+separate CPython 3.14 harness cases. The exact `409ee71` hosted run passed
+all ten Ubuntu/macOS Python 3.10–3.14 cells and failed all five Windows cells.
+Follow-up metadata and platform-boundary repairs require a new exact-SHA
+15-cell run; local POSIX controls do not establish Windows acceptance.
+The [remaining acceptance](../specs/comprehensive-science-improvement/NEXT.md)
+owns current source freezes, actual collection, and package/render gates.
 
 ## Documentation PRs and retained renders
 
@@ -299,15 +299,19 @@ gate or fail-closed check refused (JSON `{"status": "error", ...}`).
 
 `fep-lean publication-capture` is an explicit local capture action. Planning
 reads the checkout and an explicitly selected rendering template without
-starting tools or writing a journal:
+starting tools or writing a journal. Run `fep-lean catalogue` first so the
+paired generated manuscript members exist; capture refreshes their values
+after native acceptance:
 
 ```bash
 uv run fep-lean publication-capture --template /path/to/template --plan
 ```
 
-Capture composes the existing native, formalism-audit, Python, render,
-numerical, browser and release-bundle owners. The render stage waits for
-native/audit/Python acceptance, browser waits for render/numerical acceptance,
+Capture runs native verification, formalism audit, render, Python, numerical,
+browser and release-bundle owners. Accepted native verification refreshes the
+paired manuscript variables and appendix plus the collection cache. Rendering
+binds those projections; Python waits for the accepted render and binds the
+final variable bytes. Browser waits for render/numerical acceptance,
 and the final stage requires all six. It builds two independent archives,
 strictly validates each against live inputs and requires byte equality.
 

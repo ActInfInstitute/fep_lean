@@ -39,10 +39,11 @@ This assessment covers the standalone repository boundary:
   manuscript artifacts.
 - Documentation links, cross-references, pinned dependency claims, and this
   repository's operator contracts.
+- The authorized `v1.4.0` minor release after final-source acceptance, including
+  intentional main publication and verified tag, release and artifact identity.
 
 ## Out of scope
 
-- Publishing, pushing, or merging changes to GitHub.
 - Changing the parent repository or any sibling repository.
 - Treating catalogue mode, a cached response, or a generated manuscript value
   as proof that a theorem was verified.
@@ -156,49 +157,37 @@ maturity split is 149 formalized, 13 conditional proxies, and six structural
 proxies. Satisfied capability nodes refer to their narrowed statements;
 compilation cannot erase those boundaries.
 
-At the 2026-09-30 baseline, the same-commit hosted CI native and declaration/axiom artifacts
-independently validated against `main` at `cd4a84c`: 168/168 topics at the
-v4.34.1 pin with zero warnings or `sorry`, and no audit validation errors.
-This supports those exact baseline evidence planes. The pinned setup repair
-and subsequent warning-free aggregate build resolved the observed cache
-incompatibility. The expanded native audit covers 1,596 declarations and all
-146 H3 declarations with 1,465 evidence records. Native r3 verifies all 168
-topics without warnings or `sorry` against 291 unchanged owners. Strict
-production render preparation r2 passed at its recorded source epoch; fresh
-preparation r3 and production capture r2 remain unrun. Local wheel r7 has five
-cells, each with one actual installed target-runtime case and 32 CPython 3.14
-harness cases (165 total). It remains historical after the two guarded Q7 input
-changes and this guidance refresh; local wheel r8 and the 15 hosted cells are
-unrun. Complete guarded Python acceptance and production capture/two archives
-remain open. The canonical Python run reached
-2,303 passes and 90.66% coverage, but its wider guard rejected replacement of
-two unchanged generated manuscript files. The repaired programmatic fixture has
-11 passing focused tests with unchanged live bytes and metadata. See
-[the dated assessment](SCOPE-2026-09-30.md) for the baseline probes and hashes.
+The 2026-09-30 baseline at `cd4a84c` has independently validated hosted
+native and declaration/axiom evidence at the v4.34.1 pin. Expanded local
+native and H3 export checkpoints retain their exact source epochs. Receipt
+currency must be checked against the live source; none of these observations
+substitutes for final package or scientific acceptance.
 
-Isolated Q7 recapture r3 and seven-stage postcapture closure r2 are accepted,
-including current five-runtime scaffold parity and all three actual native
-positive/wrong-F/wrong-Q controls. The separately retained new native receipt
-is claim-ready for its exact static coefficient proof, with runtime execution
-unverified. The first seven recapture stages reuse freshly revalidated accepted
-substages of failed r2; that parent remains failed. Q5/Q6 native and delivery
-records remain historical after W2 re-pinning. Independent guidance review and
-fresh bridge/generation/native read-only checks remain required before backlog
-closure; [the Q7 report](specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md) and
-[execution ledger](specs/comprehensive-science-improvement/EXECUTION.md) own the
-receipt identities and scope.
+The 2026-10-02 publication at `409ee71` has local guarded Python acceptance
+(2,308 passes, 90.65% coverage) and strict render preparation. Its exact-SHA
+hosted run passed ten Ubuntu/macOS distribution cells but failed all five
+Windows cells, one Python runtime-fixture test and two H2 custody checks.
+No native or accepted-render artifact was produced by that run. Follow-up
+source repairs reopen dependent source-currency gates; the
+[remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
+contains only open steps. Earlier failed probes remain retained history.
 
-The H2.7 terminal validator passed at that baseline, closing the old
-reseal backlog item. The active [comprehensive implementation](specs/comprehensive-science-improvement/PROTOCOL.md)
-has since changed source owners; dependent receipts require fresh capture and
-review. The pinned setup rebuild now passes 8,995 jobs with unchanged pins.
-Fresh H2 custody and independent continuous G0 acceptance preceded the immutable
-H3.0 protocol freeze. The native H3 model/composition, current r2 export and
-three fresh proof-role reviews pass; the consumer input check opens no random
-generator. Actual package acceptance still precedes scientific draws. Frozen synthetic execution,
-claim review and bundle reproduction remain open, with a governed empirical
-no-go without licensed data. Historical Horizon and release checkpoints below
-retain their original evidence scope.
+The [fresh Q7 source-pair capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+passes all 12 fresh stages and four closing checks, five-runtime scaffold parity
+and 124 pure controls. Its exact new native receipt is separately validated;
+runner execution remains unverified. Native-input changes require a new source
+pin and receipt validation. Capture-time guidance bytes remain recorded, and
+postcapture prose changes carry their own reviewed delta. Q5/Q6 remain
+historical and active GNN work is preserved. Catalogue-native and package
+publication acceptance remain separate.
+
+Fresh H2 custody and continuous G0 acceptance preceded the immutable H3.0
+freeze. H3 model/composition proofs, exports and independent proof-role reviews
+retain their recorded epochs. The frozen primary remains unopened until
+current package and source-bound proof/export gates pass. Complete recovery,
+negative controls, independent final claim review and clean-environment study
+reproduction are mandatory; the empirical branch is governed no-go without
+licensed data. The original nine program criteria remain binding.
 
 The 2026-08-20 provider reports remain historical for their earlier source
 snapshots. They cannot close ISA-06 or the provider-backed portion of ISA-07
@@ -207,11 +196,13 @@ credential/spend authorization and independent live-source validation.
 
 ## Release boundary
 
-Source metadata is 1.3.0; the existing v1.3.0 tag records the earlier 159-topic
-cut. As checked on 2026-09-30, the latest published GitHub release is v1.2.0.
+Source metadata is the 1.4.0 candidate dated 2026-10-02; the existing v1.3.0
+tag records the earlier 159-topic cut. As checked on 2026-10-02, the latest
+published GitHub release is v1.2.0. Daniel authorized the next minor release
+after final-source acceptance.
 The current 168-topic tree is not a published GitHub release. Publication
 readiness requires all applicable final-source receipts, deterministic bundle
-parity, version/DOI agreement, and separately authorized publication with remote
+parity, version/DOI agreement, and publication with remote
 commit and artifact-hash verification. Historical receipts do not cross this
 boundary. Neither compilation nor provider execution establishes the FEP as a
 physical theory.
