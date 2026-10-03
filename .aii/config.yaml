@@ -1,6 +1,6 @@
 # AII sidecar — InstituteOS metadata. Schema: instituteos.platform.aii_sidecar
 meta:
-  updated: '2026-10-03'
+  updated: '2026-10-02'
 repo:
   name: fep_lean
   slug: fep-lean

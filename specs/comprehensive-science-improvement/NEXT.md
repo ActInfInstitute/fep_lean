@@ -2,8 +2,10 @@
 
 The original [protocol](PROTOCOL.md) and all nine acceptance criteria remain
 binding. Dated checkpoints and failures are retained in [EXECUTION.md](EXECUTION.md).
-The first improvement publication is `409ee71`; its hosted run failed and
-requires the following source-bound successor work.
+The first improvement publication is `409ee71`, followed by the reviewed
+v1.4.0 candidate at `9aaa30e`. The latter's hosted distribution matrix passed
+all 15 cells; its Python job found custody-fixture and release-date regressions.
+These source publications leave the following full acceptance work open.
 
 Daniel has authorized the `v1.4.0` minor release. Its coordinated metadata
 remains a candidate; no new tag or release is claimed before acceptance. The [upcoming roadmap](../../docs/design/fep-research-program/next-improvements.md)
