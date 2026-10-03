@@ -648,6 +648,17 @@ def test_documentation_classifier_rejects_source_rename_into_prose(
         "retained_pdf_drift",
         "retained_read_source_drift",
         "retained_read_pdf_drift",
+        "template_symlink_replaced",
+        "template_symlink_retargeted",
+        "template_gitlink_populated",
+        "template_gitlink_replaced",
+        "during_template_symlink_drift",
+        "while_staging_template_symlink_drift",
+        "while_staging_template_gitlink_drift",
+        "template_gitlink_missing",
+        "template_gitlink_retargeted",
+        "during_template_link_read",
+        "during_template_mode_drift",
     ],
 )
 def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
@@ -723,7 +734,26 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
     template.mkdir()
     subprocess.run(["git", "init", "-q"], cwd=template, check=True)
     (template / "README.md").write_text("Pinned template source.\n")
+    template_link = template / "pointer.py"
+    external_target = tmp_path.parent / f"{tmp_path.name}-private-target.py"
+    external_target.write_bytes(b"private target bytes are not renderer inputs\n")
+    link_target = os.path.relpath(external_target, template)
+    if os.name == "posix":
+        template_link.symlink_to(link_target)
+    gitlink = template / "unused-submodule"
+    gitlink.mkdir()
     subprocess.run(["git", "add", "."], cwd=template, check=True)
+    subprocess.run(
+        [
+            "git",
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            f"160000,{sha},unused-submodule",
+        ],
+        cwd=template,
+        check=True,
+    )
     subprocess.run(
         [
             "git",
@@ -738,7 +768,24 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         env=git_env,
         check=True,
     )
-    if failure == "stale_receipt":
+    if failure == "template_gitlink_missing":
+        gitlink.rmdir()
+    elif failure == "template_gitlink_retargeted":
+        subprocess.run(
+            [
+                "git",
+                "update-index",
+                "--cacheinfo",
+                f"160000,{'1' * 40},unused-submodule",
+            ],
+            cwd=template,
+            check=True,
+        )
+    elif failure == "during_template_mode_drift":
+        subprocess.run(
+            ["git", "config", "core.filemode", "false"], cwd=template, check=True
+        )
+    elif failure == "stale_receipt":
         (manuscript / "01_abstract.md").write_text("Unaccepted change.\n")
     elif failure == "missing_pdf":
         (pdf / "fep_lean_combined.pdf").unlink()
@@ -746,6 +793,17 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         (pdf / "fep_lean_combined.pdf").rename(pdf / "_combined_manuscript.pdf")
     elif failure == "source_drift":
         font.write_bytes(b"changed tracked input")
+    elif failure == "template_symlink_replaced" and os.name == "posix":
+        template_link.unlink()
+        template_link.write_text(link_target)
+    elif failure == "template_symlink_retargeted" and os.name == "posix":
+        template_link.unlink()
+        template_link.symlink_to("unaccepted-target")
+    elif failure == "template_gitlink_populated":
+        (gitlink / "unbound-owner.py").write_text("unbound source\n")
+    elif failure == "template_gitlink_replaced":
+        gitlink.rmdir()
+        gitlink.write_text("unbound replacement\n")
     elif failure == "untracked_chapter":
         (manuscript / "02_extra.md").write_text("An uncommitted accepted chapter.\n")
         receipt = build_acceptance_receipt(manuscript, pdf, counts=receipt["checks"])
@@ -758,19 +816,32 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         "during_chapter_addition": "Path('manuscript/02_extra.md').write_text('Added during provenance discovery.\\n')",
         "during_pdf_drift": "Path('output/pdf/fep_lean_combined.pdf').write_bytes(b'%PDF-unaccepted replacement')",
         "during_template_drift": "Path('render-template/README.md').write_text('Uncommitted template mutation.\\n')",
+        "during_template_symlink_drift": "Path('render-template/pointer.py').unlink(); Path('render-template/pointer.py').symlink_to('unaccepted-target')",
+        "during_template_mode_drift": "Path('render-template/README.md').chmod(0o755)",
     }.get(failure, "pass")
     staged_mutation = {
         "while_staging_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed while retaining evidence.\\n')",
         "while_staging_pdf_drift": "_real_write_bytes(Path('output/pdf/fep_lean_combined.pdf'), b'%PDF-changed while retaining evidence')",
         "retained_pdf_drift": "_real_write_bytes(path, b'%PDF-corrupted retained artifact')",
+        "while_staging_template_symlink_drift": "Path('render-template/pointer.py').unlink(); Path('render-template/pointer.py').symlink_to('unaccepted-target')",
+        "while_staging_template_gitlink_drift": "Path('render-template/unused-submodule/unbound-owner.py').write_text('unbound source\\n')",
     }.get(failure, "pass")
     retained_read_mutation = {
         "retained_read_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed while verifying retained bytes.\\n')",
         "retained_read_pdf_drift": "_real_write_bytes(Path('output/pdf/fep_lean_combined.pdf'), b'%PDF-changed during retained read')",
     }.get(failure, "pass")
     script = (
+        "import os\n"
         "import subprocess\n"
         "from pathlib import Path\n"
+        "_real_readlink = os.readlink\n"
+        "def _pointer_read(path, **kwargs):\n"
+        "    data = _real_readlink(path, **kwargs)\n"
+        f"    if {failure == 'during_template_link_read'!r} and path == b'pointer.py':\n"
+        "        Path('render-template/pointer.py').unlink()\n"
+        "        Path('render-template/pointer.py').symlink_to('unaccepted-target')\n"
+        "    return data\n"
+        "os.readlink = _pointer_read\n"
         "import fep_lean.output.evidence as _native\n"
         "import fep_lean.verification.formalism_audit as _audit\n"
         f"_native.validate_native_lean_receipt = lambda *args, **kwargs: {{'native_claim_ready': {failure != 'native_stale'!r}}}\n"
@@ -797,6 +868,8 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
         "import fep_lean.output.release_bundle._core as _capture_owner\n"
         "_real_regular_read = _capture_owner._capture_regular_file\n"
         "def _retained_read(path):\n"
+        f"    if path == Path({str(external_target)!r}):\n"
+        "        raise AssertionError('template symlink target must never be read')\n"
         "    data = _real_regular_read(path)\n"
         "    if 'render-evidence' in path.parts and path.name == 'fep_lean_combined.pdf':\n"
         f"        {retained_read_mutation}\n"
@@ -852,6 +925,17 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
             "retained_pdf_drift": "changed during evidence staging",
             "retained_read_source_drift": "changed during evidence staging",
             "retained_read_pdf_drift": "changed during evidence staging",
+            "template_symlink_replaced": "template authored inputs differ",
+            "template_symlink_retargeted": "template authored inputs differ",
+            "template_gitlink_populated": "gitlink has unbound checkout content",
+            "template_gitlink_replaced": "template authored inputs differ",
+            "during_template_symlink_drift": "changed during evidence staging",
+            "while_staging_template_symlink_drift": "changed during evidence staging",
+            "while_staging_template_gitlink_drift": "changed during evidence staging",
+            "template_gitlink_retargeted": "template authored inputs differ",
+            "template_gitlink_missing": "template authored inputs differ",
+            "during_template_link_read": "symlink changed while reading",
+            "during_template_mode_drift": "changed during evidence staging",
         }[failure]
         assert expected_error in result.stderr
     else:
@@ -866,6 +950,40 @@ def test_render_artifact_staging_refuses_unaccepted_or_unbound_inputs(
             )
         sources = json.loads((staged / "source-manifest.json").read_text())
         assert sources["commit"] == sha
+        provenance = json.loads((staged / "renderer-provenance.json").read_text())
+        template_tree = provenance["template_tree"]
+        assert template_tree["README.md"]["mode"] == "100644"
+        assert template_tree["README.md"]["type"] == "blob"
+        assert template_tree["unused-submodule"] == {
+            "mode": "160000",
+            "type": "commit",
+            "git_oid": sha,
+            "checkout_state": "uninitialized-empty",
+        }
+        if os.name == "posix":
+            pointer = template_tree["pointer.py"]
+            assert pointer["mode"] == "120000"
+            assert pointer["type"] == "blob"
+            assert bytes.fromhex(pointer["target_hex"]) == os.fsencode(link_target)
+            assert (
+                pointer["git_oid"]
+                == subprocess.check_output(
+                    ["git", "hash-object", "--stdin"],
+                    cwd=template,
+                    input=os.fsencode(link_target),
+                )
+                .decode()
+                .strip()
+            )
+            assert "pointer.py" not in provenance["template_sources"]
+        assert (
+            external_target.read_bytes()
+            == b"private target bytes are not renderer inputs\n"
+        )
+        assert (
+            b"private target bytes are not renderer inputs"
+            not in (staged / "renderer-provenance.json").read_bytes()
+        )
         assert (
             sources["sources"]["manuscript/01_abstract.md"]
             == hashlib.sha256((manuscript / "01_abstract.md").read_bytes()).hexdigest()
