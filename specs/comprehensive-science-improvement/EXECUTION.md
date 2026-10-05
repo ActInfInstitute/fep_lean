@@ -589,3 +589,18 @@ links, Markdown hygiene, cross-references and whitespace checks while all
 37 guarded paths held their bytes and metadata. Lock/dependency checks and
 Mypy passed in the preceding supervised run. Publication still requires the
 final exact source packet review; no native, package or H3 result is implied.
+
+
+## 2026-10-05 — Independently accepted current Q7 source pair
+
+The [current public observation](evidence/public-q7-current-source-20261005-r1/summary.json)
+records a fresh full twelve-stage capture and four read-only closing checks,
+independently accepted against the current 291-input native roster and isolated
+703-owner GNN pair. The actual root process closed exit 0 in 1,199.3769 seconds
+under the original 7,200/7,260-second limits. All 124 pure cases passed without
+skips, including twelve inventory controls. Five fresh parser/serializer probes
+returned the reviewed 56,968-byte digest. The separate native receipt records
+twelve static theorem reports with standard axioms only; generated-runner
+execution remains unverified. Historical receipts and rejected attempts remain
+unchanged. Current-guidance closure is checked before publication. Whole-package,
+installed-wheel, final-SHA hosted, provider, H3 and release gates remain separate.

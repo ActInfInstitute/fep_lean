@@ -9,21 +9,22 @@ The configuration repairs are published at `c99e933`. Its
 passed all 15 distribution cells, Python, Lean and render. Nonserial Python
 passed 2,404 tests with 15 skipped tests and 91.31% coverage on Linux CPython
 3.14.8; local validation remains separate CPython 3.14.4. These results do not
-validate later existing-owner changes. The subsequent Q7 capture was rejected
-when final custody exceeded its stage deadline, despite successful preceding
-stages and the native-check child. No prefix or native file is promoted.
+validate later existing-owner changes. Reviewed maintenance is published at
+`f37769a`; its final-source hosted acceptance remains separate. The independently
+reviewed [current Q7 capture](evidence/public-q7-current-source-20261005-r1/summary.json)
+passed all twelve stages and four closing checks within the original limits.
+Its native receipt binds the current 291 inputs and leaves runner execution
+unverified. Earlier failed captures and historical receipts remain unchanged.
 
 Daniel authorized `v1.4.0` after comprehensive acceptance. Metadata remains a
 candidate with canonical authored date 2026-10-02; no tag or release is claimed.
 The [roadmap](../../docs/design/fep-research-program/next-improvements.md) scopes
 future minor, medium and major work independently.
 
-1. Settle and independently review the connected existing-owner render and
-   supervision refinements, run proportionate focused checks, and publish the
-   reviewed source and current guidance. Bind the final native-input roster and
-   explicit isolated source pair, then run a fresh full Q7 capture with every
-   closing check under the original limits. Preserve all historical receipts,
-   journals and failed attempts unchanged; active GNN work remains untouched.
+1. Bind the final published package source and current Q7 acceptance to the
+   independently reviewed production and wheel controllers. Preserve historical
+   receipts, journals and failed attempts unchanged; active GNN work remains
+   untouched.
 2. Run the real seven-stage production capture: native, formalism audit, render,
    Python, numerical, browser and bundle. Native acceptance prepares the paired
    manuscript projections and actual test census; render consumes those values,

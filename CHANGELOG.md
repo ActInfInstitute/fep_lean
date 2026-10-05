@@ -28,6 +28,25 @@ The canonical backlog contains open work only. The
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
 
+## 2026-10-05 — Current Q7 source-pair acceptance
+
+The independently reviewed [current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records all twelve stages and four closing checks passing under the original
+limits. The actual root terminal closed exit 0 in 1,199.3769 seconds, and its
+separate native receipt is claim-ready for the current 291-input roster,
+selected isolated source pair and twelve static coefficient theorem reports.
+All 124 pure cases, including twelve inventory controls, passed without skips.
+Five fresh CPython parser/serializer probes returned the same 56,968-byte
+canonical digest with all semantic/schema controls passing. These probes are
+separate from native proof and generated-runner execution. Runner execution remains
+unverified; Q5/Q6 observations and all failed/historical receipts keep their
+original scope and bytes. Active GNN work remains untouched.
+
+After current-guidance read-only closure, `FEP-Q7-CURRENT` leaves the open-only
+backlog. The seven-stage package capture, two identical independently validated
+archives, local installed-wheel matrix, final-SHA hosted acceptance and complete
+frozen H3 chain remain open. The 1.4.0 candidate remains unreleased.
+
 ## 2026-10-05 — Render deadlines, process ownership and current guidance
 
 Renderer preparation, execution, normalization, artifact capture and cleanup

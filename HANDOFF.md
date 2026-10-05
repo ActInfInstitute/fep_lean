@@ -117,20 +117,21 @@ source changes require their own acceptance.
 That checkpoint publishes the output-root, empty-filter, read-only Hermes
 configuration and paired manuscript-writer repairs. Focused local results,
 independent infrastructure review and historical failures retain their exact
-source epochs. Existing-owner render deadline and output-custody improvements
-are being reviewed separately before the next source freeze.
+source epochs. The later render deadline, output-custody and process-ownership repairs
+are independently reviewed and published at `f37769a`; focused local validation
+passed all 413 cases without skips. Their full-source acceptance remains separate.
 
-The fresh Q7 capture after the configuration repairs reached native compilation
-and its successful native-check child, but its final custody snapshot exceeded
-the unchanged stage deadline. The complete capture was rejected. Accepted
-prefixes and the new native file do not close `FEP-Q7-CURRENT`; a fresh full
-capture and its closing checks remain required. Historical Q5/Q6/Q7 receipts
-stay unchanged. Static coefficient statements leave runner execution unverified.
+The independently reviewed
+[current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records all twelve stages and four closing checks passing in 1,199.3769 seconds.
+Its native receipt binds the current 291-input roster. The earlier capture's
+custody timeout remains a rejected attempt without promoted prefixes.
+Historical Q5/Q6/Q7 receipts stay unchanged. Static coefficient statements
+leave generated-runner execution unverified.
 
 The [open backlog](TODO.md) and
 [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md) own
-current delivery and execution order. Remaining work includes final-source Q7
-currency, real seven-stage production capture, two identical independently
+current delivery and execution order. Remaining work includes real seven-stage production capture, two identical independently
 validated package archives, five actual local installed-wheel runtimes and
 same-SHA hosted acceptance. Check the unchanged 15 GiB free-space prerequisite
 before the local matrix and every cell; a past space shortage is not a current
@@ -292,8 +293,9 @@ authorize publication or establish the FEP as a physical theory.
 
 The 2026-10-02 [Q7 post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
 passed all three read-only checks after independent prose review with unchanged
-custody and native JSON, closing portability for those recorded inputs. Current
-native-owner edits reopen `FEP-Q7-CURRENT`; that observation remains historical.
+custody and native JSON, closing portability for those recorded inputs. That
+observation remains historical. The 2026-10-05 current source-pair capture
+closes the later Q7 currency requirement without promoting earlier receipts.
 Later acceptance and publication progress is recorded in the program's
 execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized

@@ -2,18 +2,18 @@
 
 This slice connects a canonical GNN JAX render of the P4b scalar OU document
 to exact real one-step coefficients and bounds the error of its six embedded
-binary64 parameters. Accepted isolated captures and the separately validated
-native receipt retain their recorded 2026-10-02 source epochs, as described in
-the [proof report](REPORT.md). Native evidence covers static statements and
-leaves runner execution unverified; the original [native JSON](native_receipt.json)
-remains historical and unchanged.
+binary64 parameters. The independently reviewed
+[current source-pair capture](../comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+passed all twelve stages and four closing checks on 2026-10-05. Its separate
+native receipt binds the current 291-input roster and covers static coefficient
+statements; generated-runner execution remains unverified.
 
-Existing-owner repairs reopen `FEP-Q7-CURRENT` in [TODO.md](../../TODO.md).
-The mutable render/proof files are not current accepted evidence until the
-[remaining acceptance](../comprehensive-science-improvement/NEXT.md) passes
-against the final source pair. A later incomplete capture does not promote its
-successful prefixes or native output. Active GNN work and all historical
-receipts remain preserved.
+The [proof report](REPORT.md) distinguishes this capture from the retained
+2026-10-02 observations and the original [native JSON](native_receipt.json).
+Historical receipts and failed attempts remain unchanged, with no promotion
+of failed prefixes. Active GNN work is preserved. Package, hosted and H3
+acceptance remain separately tracked in
+[remaining acceptance](../comprehensive-science-improvement/NEXT.md).
 
 The exact source model is `FEPComposed.SmoothReferenceKernel.selectedDynamics`
 (rate 1, center 0, diffusion variance rate 2), its unit-duration `selectedFilter`,
@@ -80,8 +80,8 @@ before its NumPyro-only branch was removed from the canonical JAX output.
 
 The working [parity projection](generated/scaffold-runtime-parity.json) and
 [canonical bytes](generated/scaffold-canonical.json) are mutable projections.
-Their current files are not the retained accepted capture and require fresh
-source-pair acceptance. Reproduce static projections with installed runtimes,
+Their current bytes are bound by the 2026-10-05 source-pair capture. A later
+source change requires fresh acceptance. Reproduce static projections with installed runtimes,
 without network access:
 
 ```bash
