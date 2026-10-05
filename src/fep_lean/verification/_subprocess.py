@@ -64,6 +64,24 @@ channel.recv(1)
 """
 
 
+def _valid_timeout(timeout: object) -> bool:
+    """Keep None unbounded; refuse malformed budgets before any allocation."""
+    if timeout is None:
+        return True
+    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)):
+        return False
+    try:
+        # The remote capture channel adds the existing drain allowance before
+        # socket.settimeout. Stay within Python's exposed wait representation.
+        return (
+            timeout > 0
+            and math.isfinite(timeout)
+            and timeout + 2 * _REAP_TIMEOUT_S <= threading.TIMEOUT_MAX
+        )
+    except OverflowError:
+        return False
+
+
 def _frame_bytes(value: Any) -> bytes:
     data = json.dumps(value, allow_nan=False).encode("utf-8")
     if not 0 < len(data) <= _MAX_FRAME_BYTES:
@@ -103,9 +121,19 @@ def _text(data: bytes) -> str:
 
 
 class _Group:
-    def __init__(self, process: subprocess.Popen[bytes], channel: socket.socket):
+    def __init__(
+        self,
+        process: subprocess.Popen[bytes],
+        channel: socket.socket,
+        *,
+        scope_token: str,
+        parent: _Group | None,
+    ):
         self.process = process
         self.channel = channel
+        self.scope_token = scope_token
+        self.parent = parent
+        self.children: set[_Group] = set()
         self.finished = threading.Event()
         self.expired = threading.Event()
         self.cancel = threading.Event()
@@ -117,9 +145,12 @@ class _Broker:
     def __init__(self) -> None:
         self.directory = tempfile.TemporaryDirectory(prefix="fep-pg-", dir="/tmp")
         self.address = str(Path(self.directory.name) / "owner.sock")
+        # Retained for compatibility with rejection controls, never allocation.
         self.token = secrets.token_hex(32)
         self.lock = threading.RLock()
         self.groups: set[_Group] = set()
+        self.scopes: dict[str, _Group] = {}
+        self.issued_tokens = {self.token}
         self.connections: set[socket.socket] = set()
         self.workers: set[threading.Thread] = set()
         self.closed = False
@@ -134,17 +165,38 @@ class _Broker:
         with self.lock:
             if group not in self.groups:
                 return
-            if cancelled:
-                group.expired.set()
-            # The unreaped guard reserves this fresh group identity. Do not poll
-            # or derive authority from a client's PID or a later process census.
-            with contextlib.suppress(ProcessLookupError):
-                os.killpg(group.process.pid, signal.SIGKILL)
-            self.groups.remove(group)
-            group.cancel.set()
-            with contextlib.suppress(OSError):
-                group.channel.shutdown(socket.SHUT_RDWR)
-            group.channel.close()
+            pending, subtree = [group], []
+            while pending:
+                current = pending.pop()
+                if current in self.groups:
+                    subtree.append(current)
+                    pending.extend(current.children)
+            # Revoke the entire registered subtree before another request can
+            # acquire the lock. Only fresh groups created here grant authority.
+            for current in subtree:
+                self.groups.remove(current)
+                self.scopes.pop(current.scope_token)
+            for current in reversed(subtree):
+                if cancelled or current is not group:
+                    current.expired.set()
+                if current.parent is not None:
+                    current.parent.children.discard(current)
+                current.children.clear()
+                # The unreaped guard reserves its original group identity;
+                # neither a supplied PID nor a process census grants authority.
+                with contextlib.suppress(ProcessLookupError):
+                    os.killpg(current.process.pid, signal.SIGKILL)
+                current.cancel.set()
+                with contextlib.suppress(OSError):
+                    current.channel.shutdown(socket.SHUT_RDWR)
+                current.channel.close()
+
+    def _scope(self, token: str) -> _Group:
+        with self.lock:
+            group = self.scopes.get(token)
+            if self.closed or group is None or group not in self.groups:
+                raise ValueError("inactive process supervision scope")
+            return group
 
     def abort(self) -> None:
         with self.lock:
@@ -205,7 +257,6 @@ class _Broker:
                 or set(request)
                 != {"token", "command", "cwd", "env", "timeout", "capture"}
                 or not isinstance(request["token"], str)
-                or not secrets.compare_digest(request["token"], self.token)
                 or not isinstance(request["command"], list)
                 or not request["command"]
                 or any(type(v) is not str for v in request["command"])
@@ -216,17 +267,12 @@ class _Broker:
                     for k, v in request["env"].items()
                 )
                 or type(request["capture"]) is not bool
-                or (
-                    request["timeout"] is not None
-                    and (
-                        type(request["timeout"]) not in {int, float}
-                        or not math.isfinite(request["timeout"])
-                    )
-                )
+                or not _valid_timeout(request["timeout"])
             ):
                 raise ValueError("invalid process supervision request")
             if len(descriptors) != (1 if request["capture"] else 3):
                 raise ValueError("invalid process supervision descriptors")
+            parent = self._scope(request["token"])
             connection.settimeout(_REAP_TIMEOUT_S)
 
             def forward(name: str, data: bytes) -> None:
@@ -248,6 +294,7 @@ class _Broker:
                 timeout=request["timeout"],
                 capture=request["capture"],
                 root=False,
+                parent=parent,
                 forward=forward if request["capture"] else None,
                 stdin=descriptors[0],
                 output_fds=None
@@ -292,20 +339,38 @@ class _Broker:
         timeout: float | None,
         capture: bool,
         root: bool,
+        parent: _Group | None = None,
         forward: Callable[[str, bytes], None] | None = None,
         stdin: int | None = None,
         output_fds: tuple[int, int] | None = None,
     ) -> subprocess.CompletedProcess[Any]:
         deadline = None if timeout is None else time.monotonic() + timeout
-        local, child = socket.socketpair()
-        child_environment = {**env, _SOCKET_ENV: self.address, _TOKEN_ENV: self.token}
-        try:
-            with self.lock:
-                if self.closed:
-                    raise subprocess.TimeoutExpired(
-                        list(command),
-                        timeout if timeout is not None else _REAP_TIMEOUT_S,
-                    )
+        with self.lock:
+            if self.closed:
+                raise subprocess.TimeoutExpired(
+                    list(command),
+                    timeout if timeout is not None else _REAP_TIMEOUT_S,
+                )
+            if (root and parent is not None) or (
+                not root
+                and (
+                    parent is None
+                    or parent not in self.groups
+                    or self.scopes.get(parent.scope_token) is not parent
+                )
+            ):
+                raise ValueError("inactive process supervision scope")
+            scope_token = secrets.token_hex(32)
+            if scope_token in self.issued_tokens:
+                raise OSError("process supervision scope capability collision")
+            self.issued_tokens.add(scope_token)
+            local, child = socket.socketpair()
+            child_environment = {
+                **env,
+                _SOCKET_ENV: self.address,
+                _TOKEN_ENV: scope_token,
+            }
+            try:
                 process = subprocess.Popen(
                     [
                         sys.executable,
@@ -327,12 +392,15 @@ class _Broker:
                     start_new_session=True,
                     pass_fds=(child.fileno(),),
                 )
-                group = _Group(process, local)
+                group = _Group(process, local, scope_token=scope_token, parent=parent)
                 self.groups.add(group)
-        except BaseException:
-            local.close()
-            child.close()
-            raise
+                self.scopes[scope_token] = group
+                if parent is not None:
+                    parent.children.add(group)
+            except BaseException:
+                local.close()
+                child.close()
+                raise
         child.close()
 
         def outcome() -> None:
@@ -589,6 +657,8 @@ def run_process_group(
     Cooperative nested helpers and same-group descendants are cleaned up.
     Unregistered detached sessions and non-POSIX descendants are not claimed.
     """
+    if not _valid_timeout(timeout):
+        raise ValueError("process timeout must be None or finite and positive")
     environment = dict(os.environ if env is None else env)
     lease = (_SOCKET_ENV in os.environ, _TOKEN_ENV in os.environ)
     if any(lease):

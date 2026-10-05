@@ -562,3 +562,45 @@ records three actual passing read-only bridge/generation/native checks in
 stable and the native JSON is unchanged. The portability row leaves TODO;
 full Python, wheel/hosted, render/package and primary H3 gates remain open.
 The earlier pending checkpoints above retain their dated scope.
+
+2026-10-05 current maintenance checkpoint: independent source review accepted
+the existing-owner renderer deadline, bounded artifact capture, CI physical
+mode/gitlink checks and hierarchical cooperative lease repair. The first
+supervised run retained two real nested-ownership failures (397 passes); the
+repaired run passed all 413 cases without skips in 562.38 seconds on CPython
+3.14.4, and Mypy passed. Its separate Ruff failure concerned two repository-
+owned AST execution sites in tests; the narrow documented exceptions preserve
+the tested source and do not relax the runtime security policy. No failed
+attempt is promoted into full acceptance.
+
+Current guidance cleanup covers maintained root/specification/navigation,
+development, bridge and research handoff pages. Obsolete planning links and
+completed live checklists were removed after dependency review; historical
+scientific records and immutable evidence retain their dated scope. The
+open-only backlog and minor/medium/major scopes retain current Q7, package,
+hosted, H3, provider and release requirements. The successful `c99e933` hosted
+run is historical after a later source publication. The original nine-criterion
+protocol remains binding, including the sole frozen primary study and its
+independent claim and clean installed reproduction gates.
+
+The independently reviewed two line-local lint exceptions preserve the full
+test AST. The separate remaining-check run passed Ruff lint/format, strict
+links, Markdown hygiene, cross-references and whitespace checks while all
+37 guarded paths held their bytes and metadata. Lock/dependency checks and
+Mypy passed in the preceding supervised run. Publication still requires the
+final exact source packet review; no native, package or H3 result is implied.
+
+
+## 2026-10-05 — Independently accepted current Q7 source pair
+
+The [current public observation](evidence/public-q7-current-source-20261005-r1/summary.json)
+records a fresh full twelve-stage capture and four read-only closing checks,
+independently accepted against the current 291-input native roster and isolated
+703-owner GNN pair. The actual root process closed exit 0 in 1,199.3769 seconds
+under the original 7,200/7,260-second limits. All 124 pure cases passed without
+skips, including twelve inventory controls. Five fresh parser/serializer probes
+returned the reviewed 56,968-byte digest. The separate native receipt records
+twelve static theorem reports with standard axioms only; generated-runner
+execution remains unverified. Historical receipts and rejected attempts remain
+unchanged. Current-guidance closure is checked before publication. Whole-package,
+installed-wheel, final-SHA hosted, provider, H3 and release gates remain separate.

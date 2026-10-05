@@ -1,15 +1,21 @@
 # fep_lean functional specification
 
-**Version:** 1.1.0
-
 ## Scope
 
-The project validates the schema-2 155-topic YAML catalogue against a pinned
-Lean 4.34.1 and Mathlib 4.34.1 workspace. Exact pins track the newest stable
-Lean/Mathlib release pair; release candidates and nightlies remain opt-in and
-cannot silently replace the evidence compiler. It can also call the configured Hermes
-service, persist each session in SQLite, and generate deterministic manuscript
-and report artifacts.
+The project validates the schema-2 168-topic catalogue sealed in
+[`config/catalogue_metadata.yaml`](config/catalogue_metadata.yaml) against its
+pinned Lean and Mathlib workspace. The evidence compiler and dependency revision
+are defined by [`lean/lean-toolchain`](lean/lean-toolchain),
+[`lean/lakefile.lean`](lean/lakefile.lean), and
+[`lean/lake-manifest.json`](lean/lake-manifest.json). Pin and lock changes require
+an explicit reviewed upgrade; a newer upstream release never replaces the
+evidence compiler automatically. Package version metadata lives in
+[`pyproject.toml`](pyproject.toml); publication and evidence status live in
+[`TODO.md`](TODO.md) and [`HANDOFF.md`](HANDOFF.md).
+
+The pipeline can call configured Hermes, persist each session in SQLite, and
+generate deterministic manuscript and report artifacts. Its operating contract
+and required checks are maintained in [`AGENTS.md`](AGENTS.md).
 
 ## Execution modes
 
@@ -23,7 +29,8 @@ records `verified_topics: 0` and `capabilities.verification: false`.
 
 This is the default for the programmatic API and requires every configured
 capability: `gauss doctor`, the exact Lean/Lake pins, a complete Mathlib build,
-writable GAUSS_HOME, and Hermes credentials. It executes one Hermes + Lean +
+writable configured output and persistence destinations, and Hermes credentials
+as defined in [Configuration](docs/configuration.md). It executes one Hermes + Lean +
 SQLite session per selected topic. A topic succeeds only when the Hermes-derived
 sketch compiles without proof holes. Any failed capability or topic makes the
 pipeline incomplete and prevents a successful report.
@@ -70,6 +77,15 @@ result = run_single_topic("fep-001", mode="full")
 `verification_source`; no result is silently substituted or relabeled.
 
 ## Validation
+
+Python 3.14 is the evidence-validator runtime selected by
+[`.python-version`](.python-version). The `requires-python >=3.10` declaration
+in [`pyproject.toml`](pyproject.toml) is the packaging floor; it does not broaden
+the validator contract. The declared test gate requires at least 89% line
+coverage, alongside blocking Ruff lint and formatting and the other
+[required checks](AGENTS.md#required-checks). Branch coverage, hosted wheel
+compatibility, native compilation, and full-mode acceptance need their own
+scoped evidence.
 
 `run_validation_checks(project_root, mode=...)` is read-only. It never downloads
 Mathlib, invokes a build, creates a database, or writes a report. The explicit

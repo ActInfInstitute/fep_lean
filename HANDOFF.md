@@ -104,143 +104,59 @@ summarizing scientific completeness.
 
 ## Current source and evidence state
 
-The candidate source was published to `main` at
-[fa3c88e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/fa3c88e)
-on 2026-10-03. Its
-[same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37150440750)
-completed successfully: all 15 Ubuntu/macOS/Windows distribution cells on
-Python 3.10–3.14 and the Python, Lean and render jobs passed. Hosted nonserial
-Python passed 2,371 tests with 15 policy skips in 829.74 seconds and 91.28%
-coverage against the unchanged 89% gate. That job used Linux CPython 3.14.8;
-the separate local validator environment is CPython 3.14.4. Neither changes the
-frozen study's runtime contract. No v1.4.0 tag or release has been issued; the
-candidate's canonical authored date remains 2026-10-02.
+The latest retained hosted checkpoint is
+[c99e933](https://github.com/ActiveInferenceInstitute/fep_formal/commit/c99e9330dc98caf0f78bd50da2146fee25ae96ce),
+published on 2026-10-05. Its
+[same-SHA run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37334643019)
+passed all 15 Ubuntu/macOS/Windows distribution cells on Python 3.10–3.14,
+and the Python, Lean and render jobs. Hosted nonserial Python passed 2,404 tests
+with 15 skipped tests and 91.31% coverage on Linux CPython 3.14.8. The separate
+local validator remains CPython 3.14.4. These results bind that commit; later
+source changes require their own acceptance.
 
-Subsequent repairs change four existing source owners: `_paths.py`, pipeline
-`core.py`, environment validation and Hermes configuration. They
-address output-root precedence and checks of the selected output, empty
-validation filters, read-only canonical credential validation, and a duplicate
-appendix writer. Focused validation passed 298 cases with one live-provider
-skip; after a test-parameter correction, the whole pipeline module passed
-37 cases without skips. Mypy, Ruff, strict documentation, lock and environment
-checks passed, and fresh independent infrastructure review approved final
-source. These scoped results do not replace full acceptance. The edits reopen
-the 291-input native receipt, Q7 source-pair
-currency and dependent export/package gates. The successful hosted run and
-accepted Q7 captures remain evidence for their recorded source epochs;
-their receipts are preserved, never rewritten to bind the changed owners.
+That checkpoint publishes the output-root, empty-filter, read-only Hermes
+configuration and paired manuscript-writer repairs. Focused local results,
+independent infrastructure review and historical failures retain their exact
+source epochs. The later render deadline, output-custody and process-ownership repairs
+are independently reviewed and published at `f37769a`; focused local validation
+passed all 413 cases without skips. Their full-source acceptance remains separate.
 
-Current local wheel acceptance retains its 15 GiB free-space requirement.
-Insufficient scratch space blocks that matrix; neither a hosted distribution
-pass nor a private source-only wrapper review waives the local gate. Full
-production capture, H3 outcomes, study reproduction and versioned publication
-remain open under the locked protocol.
+The independently reviewed
+[current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records all twelve stages and four closing checks passing in 1,199.3769 seconds.
+Its native receipt binds the current 291-input roster. The earlier capture's
+custody timeout remains a rejected attempt without promoted prefixes.
+Historical Q5/Q6/Q7 receipts stay unchanged. Static coefficient statements
+leave generated-runner execution unverified.
 
-Earlier source epochs retain their own evidence:
+The [open backlog](TODO.md) and
+[remaining acceptance](specs/comprehensive-science-improvement/NEXT.md) own
+current delivery and execution order. Remaining work includes real seven-stage production capture, two identical independently
+validated package archives, five actual local installed-wheel runtimes and
+same-SHA hosted acceptance. Check the unchanged 15 GiB free-space prerequisite
+before the local matrix and every cell; a past space shortage is not a current
+measurement or a waiver.
 
-[9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
-was published on 2026-10-03. Its
-[hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37147070367)
-passed all 15 distribution cells but failed Python with 34 failed, 2,337 passed,
-15 skipped tests and 90.86% coverage. Custody-fixture and candidate-date repairs
-preceded the later successful `fa3c88e` run; the failed attempt remains historical.
+The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
+retains all nine criteria. The
+[H3 reference study](specs/h3-reference-study/README.md) requires current
+package acceptance, a native export and three independent proof-role reviews
+before opening the primary seeds. The frozen primary run once, recovery and
+controls, pure replay, outcome-bound claim reviews and clean installed study
+reproduction remain subsequent requirements. Primary seeds remain unopened
+pending the package and proof/export gates. Without licensed data, the empirical branch remains governed
+no-go. The v1.4.0 candidate remains unreleased, with canonical authored date
+2026-10-02.
 
-`main` was published at
-[409ee71f82b3353303e6306e87c1b1fedc949088](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)
-on 2026-10-02, with the local and direct remote commit IDs equal. This is an
-ordinary main-branch publication; no versioned release or DOI was issued.
-
-At that source epoch, complete guarded Python acceptance passed 2,308 tests,
-with 12 policy skips and 90.65% coverage above the unchanged 89% gate.
-All 25 declared static checks and strict six-stage real-template render
-preparation passed. Separate Q7 static/native observations, catalogue native
-and H3 export checkpoints retain their exact owner and artifact bindings.
-
-The [same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37035715408)
-finished with failures. Ten Ubuntu/macOS distribution cells passed; all five
-Windows cells rejected newline-sensitive metadata assertions and POSIX-only
-staging expectations. The Python lane rejected a retention fixture against a
-different Python microversion. Two Lean-lane H2 custody checks omitted the
-new H3 manifest additions from their historical reconstruction. Native and
-accepted-render artifacts were not produced because that Lean job failed.
-
-The follow-up repairs preserve strict metadata values, the actual Windows
-custody refusal, the frozen primary runtime and the immutable historical H2
-receipts. Template staging also requires tracked symlink targets and referents
-to remain bound to its pinned Git tree through retention. Fresh independent
-review and actual final-source checks are required; historical passing tests
-are never relabeled as acceptance for repaired source bytes.
-
-The [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
-owns the current execution order: settle source, focused validation, independent
-review and guidance; refresh catalogue native and Q7 source-pair custody without
-duplicating the full native sweep; and obtain dependent export evidence and
-final-source installed-wheel and hosted acceptance. Complete real production
-capture and two identical independently validated package archives, then
-execute the frozen H3 study once and complete claims and reproduction. The
-[locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
-retains all nine criteria. Private operator journals and active GNN registry
-work are preserved; only explicitly reviewed public evidence is published.
-
-H1.0--H1.8 are accepted, including the optional H1.5 lane. The archived
-[Horizon 1 acceptance record](specs/done/horizon-1-finite-synthesis/README.md)
-owns the implementation and review evidence. Its terminal theorem repairs the
-first recorded H1.8 carrier-merge no-go with one finite, synthetic, one-step
-posterior--decision--action certificate on a shared 16-state Boolean carrier.
-The posterior update, emitted action, selected sampled kernel, genuine
-sensory--active blanket factorization, and strict real/native KL decrease use
-that same carrier and kernel. This is not transition-aware planning,
-EFE-optimal control, physical thermodynamics, causal identification, empirical
-validation, or a universal FEP theorem.
-
-The archived [Horizon 2 spec](specs/done/horizon-2-smooth-stochastic/README.md) has
-separately accepted H2.0--H2.3b, H2.4a/b, H2.5a/b/c/d, H2.5b-R0,
-H2.5d-R0, H2.6a/b/c, and H2.6a-R0. The maintained surface now includes scalar
-Gaussian/native-KL and coordinate owners, a same-joint native posterior
-martingale and limiting-observation endpoint, selected-model identification,
-joint-law and fixed-truth consistency, weak Dirac and bounded-risk
-consequences, the native semigroup/H1 lift, exact scalar and finite-axis
-symmetric-precision transition families, the
-exact four-axis specialization, an evidence-a.e. native scalar filter with
-chronological finite recursion, one-step transition-consuming quadratic
-decision risk, and monotone finite-grid path laws with coordinate reversal
-plus explicit absolute-continuity/integrability failure boundaries. The
-accepted generic H2.5b-R0 transition-covariance and H2.6a-R0 native-posterior
-repairs remain append-only evidence alongside their accepted maintained owners.
-The accepted H2.5d-R0 repair proves the centered native stationary-joint
-factorization. Maintained H2.5d now proves the arbitrary-center native joint,
-blanket-a.e. pair/scalar Gaussian conditionals, endpoint `CondIndepFun`, actual
-stationary covariance `1 / 24`, and a bounded bivariate precision perturbation
-with actual covariance `-1 / 15` and native non-independence. H2.7-R0 accepted
-the density-relative VFE and local natural-gradient proof gate. The baseline
-terminal certificate validated 328 mandatory cases, the enabled Fin4 supplement
-and three source-bound reviews.
-Fresh H2 custody passed 329 mandatory cases and three independent source-bound
-reviews before continuous G0 acceptance and the immutable
-[H3.0 freeze](specs/h3-reference-study/freeze.json). That prerequisite packet
-remains historical evidence after H3 opens its new source epoch. The
-[reference study](specs/h3-reference-study/README.md) has native model and
-cross-domain proofs at its retained source epochs. Current package repairs
-require a fresh native export and three independent proof-role reviews before
-scientific execution. Frozen primary seeds remain unopened pending package
-acceptance; recovery, controls, final claims and bundle reproduction are open.
-The empirical branch remains governed no-go without a licensed
-named dataset.
-
-Earlier coordinated projection and receipt refreshes, including the
-2026-09-12 snapshot, remain recorded in [CHANGELOG.md](CHANGELOG.md).
-Their historical completion does not determine today's receipt currency.
-Keep native, declaration, Python, browser, numerical, manuscript, and provider
-evidence planes separate.
-The 2026-08-20 Hermes/OpenGauss report likewise remains historical for its
-exact 50-topic source digest; current provider claims require a new,
-independently validated source-bound full report.
-
-The earlier evidence layer — Q5/Q6/Q7 artifact proofs, W2 source custody, the
-v0.6 bridge contract (the W2 report records the v0.4 snapshot; contracts v0.5
-and v0.6 added verify-document and the extraction-package render route), and
-schema-2 receipts — is summarized in
-[specs/gnn-bridge-w2-source-custody/WAVE2-REPORT.md](specs/gnn-bridge-w2-source-custody/WAVE2-REPORT.md).
+Completed implementation and dated source epochs belong in
+[CHANGELOG.md](CHANGELOG.md), the archived
+[Horizon 1](specs/done/horizon-1-finite-synthesis/README.md) and
+[Horizon 2](specs/done/horizon-2-smooth-stochastic/README.md) acceptance records,
+and Git history. They remain scientific provenance, not current-source
+acceptance. Private operator journals and concurrent GNN work are preserved.
+Only reviewed public source and evidence are published. Native, declaration,
+Python, browser, numerical, manuscript and provider evidence remain separate;
+current Hermes/OpenGauss claims require a fresh independently validated report.
 
 ## Reproduction commands
 
@@ -377,8 +293,9 @@ authorize publication or establish the FEP as a physical theory.
 
 The 2026-10-02 [Q7 post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
 passed all three read-only checks after independent prose review with unchanged
-custody and native JSON, closing portability for those recorded inputs. Current
-native-owner edits reopen `FEP-Q7-CURRENT`; that observation remains historical.
+custody and native JSON, closing portability for those recorded inputs. That
+observation remains historical. The 2026-10-05 current source-pair capture
+closes the later Q7 currency requirement without promoting earlier receipts.
 Later acceptance and publication progress is recorded in the program's
 execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized

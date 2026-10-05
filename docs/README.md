@@ -4,9 +4,9 @@
 - [FEP background](fep-background.md) — conceptual orientation with explicit formalization boundaries.
 - [Formal-kernel methods](formal-kernel-methods.md) — shared carriers, theorem scope, validation ladder, and visualization contract.
 - [Design programs](design/README.md) — prospective architecture and research goals, kept separate from current catalogue and evidence claims.
-- [GNN bridge](design/gnn-bridge/README.md) — cross-repo articulation with the GeneralizedNotationNotation pipeline (bridge CLI, Lean AST, source custody, v0.6).
+- [GNN bridge](design/gnn-bridge/README.md) — cross-repo articulation with the GeneralizedNotationNotation pipeline (bridge CLI, Lean AST, and source custody).
 - [FEP research horizons](design/fep-research-program/README.md) — dependency-ordered finite synthesis, smooth/stochastic lifting, and an end-to-end scientific case study.
-- [155-topic expansion chapter](../manuscript/04i_formalism_catalogue_155.md) — finite risk, policy trees, native blankets, exponential-family duality, continuous time, and evidence boundaries.
+- [Finite formalism expansion chapter](../manuscript/04i_formalism_catalogue_155.md) — finite risk, policy trees, native blankets, exponential-family duality, continuous time, and evidence boundaries.
 - [Horizon-2 smooth/stochastic kernel chapter](../manuscript/04j_horizon2_smooth_stochastic_kernel.md) — posterior convergence, native semigroups, precision conditioning, and smooth information geometry.
 - [Topic reference](topics-reference.md) — canonical owners, inspection, and receipt semantics.
 - [Pipeline](pipeline.md) — stages, modes, and result contract.
@@ -28,11 +28,15 @@
 - [Static formalism atlas](formalism-atlas.svg) — deterministic publication-safe projection of the same graph.
 - [Interactive formal-kernel dashboard](formal-kernel-dashboard.html) — deterministic numerical witnesses for selected checked laws.
 - [Static formal-kernel dashboard](formal-kernel-dashboard.svg) — publication-safe projection of the numerical witness view.
-- [Quality-gate decision](quality.md) — Ruff baseline, ownership, and staged policy.
-- [Test suite review](test-suite-review.md) — dated historical snapshot, retained as review provenance.
-- [Mahakala adversarial review](mahakala-review.md) — dated historical adversarial-review snapshot.
+- [Quality-gate decision](quality.md) — blocking Ruff lint and formatting policy.
 - [Publication](development.md) — documentation, rendered-artifact, and projection-freshness gates (release-bundle and receipt validation live in `../HANDOFF.md`).
 
 All paths in this directory resolve within this repository. Catalogue-derived
 manuscript inputs are created by `uv run fep-lean catalogue`; coverage, atlas,
 dashboard, and manuscript-render checks each retain a separate freshness gate.
+
+The [repository execution contract](../AGENTS.md) owns the required checks.
+[`.python-version`](../.python-version) selects Python 3.14 for validation;
+[`pyproject.toml`](../pyproject.toml) defines the packaging floor and the 89%
+line-coverage gate. The package floor does not expand validator acceptance.
+Current open acceptance work is recorded in [`TODO.md`](../TODO.md).

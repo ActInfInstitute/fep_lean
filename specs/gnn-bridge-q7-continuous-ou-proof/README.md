@@ -1,14 +1,19 @@
 # Q7: fixed scalar OU artifact and coefficient-error certificate
 
-This slice connects a current canonical GNN JAX render of the P4b scalar OU
-document to exact real one-step coefficients and bounds the error of its six
-embedded binary64 parameters. The retained [native receipt](native_receipt.json)
-is historical and remains unchanged. The [updated proof report](REPORT.md)
-separates that earlier record from the accepted isolated recapture r3 and
-seven-stage postcapture closure r2. The exact new native receipt is retained
-under the scientific improvement evidence directory, with native claim ready
-and runtime execution unverified. Guidance/source currency still requires fresh
-read-only checks after this prose edit.
+This slice connects a canonical GNN JAX render of the P4b scalar OU document
+to exact real one-step coefficients and bounds the error of its six embedded
+binary64 parameters. The independently reviewed
+[current source-pair capture](../comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+passed all twelve stages and four closing checks on 2026-10-05. Its separate
+native receipt binds the current 291-input roster and covers static coefficient
+statements; generated-runner execution remains unverified.
+
+The [proof report](REPORT.md) distinguishes this capture from the retained
+2026-10-02 observations and the original [native JSON](native_receipt.json).
+Historical receipts and failed attempts remain unchanged, with no promotion
+of failed prefixes. Active GNN work is preserved. Package, hosted and H3
+acceptance remain separately tracked in
+[remaining acceptance](../comprehensive-science-improvement/NEXT.md).
 
 The exact source model is `FEPComposed.SmoothReferenceKernel.selectedDynamics`
 (rate 1, center 0, diffusion variance rate 2), its unit-duration `selectedFilter`,
@@ -65,14 +70,19 @@ excluded; type comments are retained. Unknown grammar, fields and nonempty
 type parameters fail closed. The schema-2 expected contract explicitly binds
 this serialization and the independently reviewed new scaffold digest.
 
-The [runtime parity record](generated/scaffold-runtime-parity.json) observes
-56,968 identical candidate bytes on real CPython 3.10.20, 3.11.15, 3.12.13,
-3.13.15 and 3.14.4, with all 11 semantic/schema controls on each runtime.
-The [canonical bytes](generated/scaffold-canonical.json) hash to
+The [dated 2026-10-02 capture](../comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+recorded 56,968 identical candidate bytes on real CPython 3.10.20, 3.11.15,
+3.12.13, 3.13.16 and 3.14.4, with all 11 semantic/schema controls per runtime,
+at SHA-256
 `b34a350a0c66bd611c19cd87e2343592c6ee7d15ed2fd6e422b1f891597febec`.
 The earlier 62,013-byte `f8dfe844…` observation is historical for the fixture
 before its NumPyro-only branch was removed from the canonical JAX output.
-Reproduce those observations with installed runtimes, without network access:
+
+The working [parity projection](generated/scaffold-runtime-parity.json) and
+[canonical bytes](generated/scaffold-canonical.json) are mutable projections.
+Their current bytes are bound by the 2026-10-05 source-pair capture. A later
+source change requires fresh acceptance. Reproduce static projections with installed runtimes,
+without network access:
 
 ```bash
 uv run --locked python specs/gnn-bridge-q7-continuous-ou-proof/generate_probe.py \

@@ -145,48 +145,30 @@ review before opening the frozen synthetic seeds. Final claim review and
 bundle reproduction remain open; empirical execution is governed no-go without
 a licensed named dataset.
 
-The 2026-09-30 [status review](SCOPE-2026-09-30.md) independently validated
-the baseline CI native receipt at `cd4a84c` (168/168 topics, zero warnings or
-`sorry`) and its 1,411-declaration axiom receipt against that source epoch.
-The expanded local native r3 checkpoint separately verifies 168 topics against
-291 unchanged owners; its audit covers 1,596 declarations with 1,465 evidence
-records. These are distinct from hosted acceptance for the changed source and
-from publication evidence. The local
-full-report
-path `output/reports/run_20260820_183143_709998/` was historical evidence
-for the earlier 50-topic source snapshot and does not bind the current
-source; that retained copy is no longer present under `output/reports/`, and
-ignored provider reports are deliberately not shipped in a release.
-The earlier Kimi and Gemini one-topic runs are historical smoke evidence as
-well. No provider secret is stored in the
-repository, and no execution receipt authorizes publication or proves the FEP
-as a physical theory.
+The published output/configuration checkpoint at `c99e933` has a successful
+[exact-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37334643019):
+all 15 distribution cells and Python, Lean and render jobs passed. Nonserial
+Python passed 2,404 tests with 15 skips and 91.31% coverage on Linux CPython
+3.14.8. Local validation uses CPython 3.14.4. Later owner changes require fresh
+source-bound acceptance; the [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
+owns the current sequence.
 
-The [fresh Q7 capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
-passes all 12 fresh stages, four closing checks, five-runtime scaffold parity
-and 124 pure controls without skips. Its separately validated new native
-receipt proves the exact static coefficient statements with
-`runtime_execution_verified: false`; the public summary is observational.
-Earlier Q7 observations and Q5/Q6 native and delivery receipts retain their
-recorded source pairs. Active GNN work remains preserved.
+The expanded local catalogue-native checkpoint and
+[Q7 capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+retain their respective recorded source epochs. The 2026-10-02 Q7 capture
+passed all 12
+stages, four closing checks, five-runtime scaffold parity and 124 pure controls
+without skips. Its native receipt proves the exact static coefficient
+statements and leaves runner execution unverified. Existing-owner repairs
+reopen `FEP-Q7-CURRENT`; a later incomplete capture does not promote any
+successful prefix or native output. Historical Q5/Q6/Q7 and provider reports
+remain evidence for their own checked sources. Ignored provider reports are
+not shipped in a release. Active GNN work remains preserved.
 
-The improvement commit [409ee71](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)
-was published to `main` on 2026-10-02. Its local guarded Python run passed
-2,308 tests with 90.65% coverage, and strict render preparation passed at that
-source epoch. The [same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37035715408)
-failed five Windows distribution jobs, one Python runtime-fixture test and
-two historical H2 custody checks. Ten Ubuntu/macOS distribution cells passed;
-the failed Lean job produced no native or accepted-render artifact.
-
-At the pre-release checkpoint on 2026-10-02, follow-up repairs and guidance
-changes required fresh final-source acceptance.
-Earlier local wheel, native, Q7, H3 export, Python and render receipts retain
-their recorded source epochs. The maintained [handoff](HANDOFF.md) and
-[remaining acceptance](specs/comprehensive-science-improvement/NEXT.md) specify
-custody refresh, package capture, the frozen H3 primary, claim review and
-clean-environment reproduction. The scientific seeds and protocol remain
-unchanged. The primary was unopened at that checkpoint; subsequent measured
-outcomes belong to the reference study's source-bound execution and claim records.
+The H3 primary remains unopened pending current package and source-bound
+proof/export review. Frozen execution and replay, claim review and clean study
+reproduction are subsequent obligations. The scientific protocol, seeds,
+counts and licensed-data no-go remain unchanged.
 
 ## Quick start
 

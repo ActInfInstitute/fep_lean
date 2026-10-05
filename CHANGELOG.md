@@ -28,6 +28,60 @@ The canonical backlog contains open work only. The
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
 
+## 2026-10-05 — Current Q7 source-pair acceptance
+
+The independently reviewed [current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records all twelve stages and four closing checks passing under the original
+limits. The actual root terminal closed exit 0 in 1,199.3769 seconds, and its
+separate native receipt is claim-ready for the current 291-input roster,
+selected isolated source pair and twelve static coefficient theorem reports.
+All 124 pure cases, including twelve inventory controls, passed without skips.
+Five fresh CPython parser/serializer probes returned the same 56,968-byte
+canonical digest with all semantic/schema controls passing. These probes are
+separate from native proof and generated-runner execution. Runner execution remains
+unverified; Q5/Q6 observations and all failed/historical receipts keep their
+original scope and bytes. Active GNN work remains untouched.
+
+After current-guidance read-only closure, `FEP-Q7-CURRENT` leaves the open-only
+backlog. The seven-stage package capture, two identical independently validated
+archives, local installed-wheel matrix, final-SHA hosted acceptance and complete
+frozen H3 chain remain open. The 1.4.0 candidate remains unreleased.
+
+## 2026-10-05 — Render deadlines, process ownership and current guidance
+
+Renderer preparation, execution, normalization, artifact capture and cleanup
+now share one monotonic deadline. Finite timeout validation and bounded regular
+file capture reject malformed budgets, aliases and nonregular producer output.
+Cooperative subprocess leases use distinct capabilities and explicit ownership
+trees; closing a nested lease revokes and terminates its descendants while
+preserving its caller and sibling groups. CI custody checks bind the physical
+executable mode and descriptor-relative empty gitlink entry to the Git record.
+Fresh independent infrastructure review approved these existing-owner changes.
+
+Actual supervised local validation passed all 413 cases across the release
+bundle, subprocess watchdog and distribution modules without skips on CPython
+3.14.4. Mypy passed. The earlier two nested-ownership failures and subsequent
+lint findings remain retained as failed attempts; the tests were preserved and
+the ownership defect was repaired. Ruff lint/format, strict links, Markdown
+hygiene, cross-references, lock and dependency compatibility checks passed.
+These focused results do not establish
+whole-suite, native, provider, package-bundle or scientific acceptance.
+
+Maintained navigation now identifies current source and historical evidence
+separately, removes obsolete planning references and completed checklists, and
+uses the canonical open-only backlog. The active-guidance cleanup leaves that
+backlog after strict link, Markdown and cross-reference checks. Minor, medium
+and major follow-on scopes retain their dependencies and measurable probes.
+The successful hosted checkpoint at `c99e933` remains evidence for that source
+epoch; later source changes require fresh same-SHA hosted acceptance.
+
+The local wheel matrix retains its 15 GiB prerequisite before launch and every
+cell. Current Q7/native capture, production capture, two independently accepted
+identical archives and the frozen H3 export/review/outcome/reproduction chain
+remain open. The later incomplete Q7 capture supplies no accepted prefix.
+Licensed empirical data remain governed by the recorded no-go. Candidate
+`1.4.0` remains unreleased and retains its 2026-10-02 authored snapshot date.
+
 ## 2026-10-05 — Output/configuration repairs and reopened currency
 
 The published `main` checkpoint

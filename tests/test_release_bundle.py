@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ast
+import errno
 import gzip
 import hashlib
 import io
@@ -11,6 +13,7 @@ import re
 import runpy
 import shlex
 import shutil
+import stat
 import struct
 import subprocess
 import sys
@@ -18,7 +21,6 @@ import tarfile
 import time
 import zlib
 from collections.abc import Mapping
-from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -36,6 +38,409 @@ from fep_lean.output.release_bundle import (
 )
 
 PROJ = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.parametrize("phase", ["initial", "fallback", "final"])
+def test_renderer_identity_cannot_dispatch_or_accept_after_shared_deadline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str
+) -> None:
+    from fep_lean.output.release_bundle import _manuscript
+    from fep_lean.verification import _subprocess
+
+    clock = [100.0]
+    reads: list[str] = []
+    calls: list[float] = []
+    monkeypatch.setattr(
+        _manuscript, "time", SimpleNamespace(monotonic=lambda: clock[0])
+    )
+
+    def binary(executable: str) -> tuple[Path, str]:
+        reads.append(executable)
+        if (
+            phase == "initial"
+            and len(reads) == 1
+            or phase == "final"
+            and len(reads) == 2
+        ):
+            clock[0] += 2.0
+        return tmp_path / "tool", "1" * 64
+
+    def probe(command: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(float(kwargs["timeout"]))
+        if phase == "fallback":
+            clock[0] += 1.0
+            return subprocess.CompletedProcess(command, 1, "", "")
+        return subprocess.CompletedProcess(command, 0, "fixture tool\n", "")
+
+    monkeypatch.setattr(_manuscript, "_renderer_binary_state", binary)
+    monkeypatch.setattr(_subprocess, "run_process_group", probe)
+    with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
+        _manuscript._tool_identity(str(tmp_path / "tool"), timeout=1)
+    assert len(calls) == (0 if phase == "initial" else 1)
+    assert len(reads) == (2 if phase == "final" else 1)
+
+
+def test_renderer_identity_fallback_receives_only_remaining_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from fep_lean.output.release_bundle import _manuscript
+    from fep_lean.verification import _subprocess
+
+    clock = [100.0]
+    calls: list[float] = []
+    monkeypatch.setattr(
+        _manuscript, "time", SimpleNamespace(monotonic=lambda: clock[0])
+    )
+    monkeypatch.setattr(
+        _manuscript, "_renderer_binary_state", lambda _: (tmp_path / "tool", "1" * 64)
+    )
+
+    def probe(command: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        calls.append(float(kwargs["timeout"]))
+        clock[0] += 0.4
+        return subprocess.CompletedProcess(
+            command,
+            1 if len(calls) == 1 else 0,
+            "" if len(calls) == 1 else "fixture tool\n",
+            "",
+        )
+
+    monkeypatch.setattr(_subprocess, "run_process_group", probe)
+    assert (
+        _manuscript._tool_identity(str(tmp_path / "tool"), timeout=1)["version"]
+        == "fixture tool"
+    )
+    assert calls == pytest.approx([1.0, 0.6])
+
+
+def test_renderer_preparation_cannot_launch_after_consuming_budget(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from fep_lean.output.release_bundle import _manuscript
+    from fep_lean.verification import _subprocess
+
+    clock = [100.0]
+    monkeypatch.setattr(
+        _manuscript, "time", SimpleNamespace(monotonic=lambda: clock[0])
+    )
+
+    def environment(*args: object, **kwargs: object) -> dict[str, str]:
+        clock[0] += 1.0
+        return {}
+
+    def unexpected(*args: object, **kwargs: object) -> None:
+        pytest.fail("expired preparation launched a child")
+
+    monkeypatch.setattr(_manuscript, "_renderer_environment", environment)
+    monkeypatch.setattr(_subprocess, "run_process_group", unexpected)
+    with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
+        _manuscript._run_renderer(
+            ["unused"],
+            project_root=tmp_path,
+            environment_root=tmp_path,
+            epoch=0,
+            timeout=1,
+        )
+
+
+def test_standalone_renderer_refuses_late_supervised_completion(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from fep_lean.output.release_bundle import _manuscript
+    from fep_lean.verification import _subprocess
+
+    clock = [100.0]
+    monkeypatch.setattr(
+        _manuscript, "time", SimpleNamespace(monotonic=lambda: clock[0])
+    )
+    monkeypatch.setattr(
+        _manuscript, "_renderer_environment", lambda *args, **kwargs: {}
+    )
+
+    def late_completion(
+        command: object, **kwargs: object
+    ) -> subprocess.CompletedProcess[str]:
+        clock[0] += 2.0
+        return subprocess.CompletedProcess(command, 0, "complete", "")
+
+    monkeypatch.setattr(_subprocess, "run_process_group", late_completion)
+    with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
+        _manuscript._run_renderer(
+            ["unused"],
+            project_root=tmp_path,
+            environment_root=tmp_path,
+            epoch=0,
+            timeout=1,
+        )
+
+
+@pytest.mark.parametrize("replace_parent", [False, True])
+def test_template_gitlink_brackets_the_descriptor_relative_leaf(
+    tmp_path: Path, replace_parent: bool
+) -> None:
+    from fep_lean.output.release_bundle import _core
+    from tests.test_distribution import _workflow_python
+
+    template = tmp_path.resolve() / "render-template"
+    name = "infrastructure/steganography/kmyth"
+    commit = "cb23c6d94423cbe4f5ef0caf23594d1095ddde79"
+    path = template / name
+    path.mkdir(parents=True)
+    script = _workflow_python(
+        "Stage accepted render evidence with exact source and tool provenance", "render"
+    )
+    wanted = {"uninitialized_gitlink", "template_identity"}
+    nodes = [
+        node
+        for node in ast.parse(script).body
+        if isinstance(node, ast.FunctionDef) and node.name in wanted
+    ]
+    assert {node.name for node in nodes} == wanted
+    captured: list[int] = []
+
+    def parent_fd(leaf: Path) -> int:
+        fd = _core._capture_parent_fd(leaf)
+        captured.append(fd)
+        if replace_parent:
+            leaf.parent.rename(leaf.parent.with_name("retained-original-parent"))
+            leaf.mkdir(parents=True)
+        return fd
+
+    scope: dict[str, object] = {
+        "template": template,
+        "allowed_gitlink": (name, commit),
+        "os": os,
+        "stat": stat,
+        "_capture_parent_fd": parent_fd,
+    }
+    # Execute only allowlisted functions from the held local workflow AST.
+    exec(  # noqa: S102
+        compile(
+            ast.Module(body=nodes, type_ignores=[]),
+            "actual held workflow gitlink",
+            "exec",
+        ),
+        scope,
+    )
+    if os.name != "posix":
+        with pytest.raises(bundle_module.ReleaseBundleError, match="POSIX descriptor"):
+            scope["uninitialized_gitlink"](name, "160000", commit)
+    elif replace_parent:
+        with pytest.raises(SystemExit, match="canonical empty directory"):
+            scope["uninitialized_gitlink"](name, "160000", commit)
+    else:
+        result = scope["uninitialized_gitlink"](name, "160000", commit)
+        assert result["mode"] == "160000" and result["git_commit"] == commit
+        assert result["empty"] is True and len(result["identity"]) == 6
+    assert len(captured) == (1 if os.name == "posix" else 0)
+    for fd in captured:
+        with pytest.raises(OSError) as failure:
+            os.fstat(fd)
+        assert failure.value.errno == errno.EBADF
+
+
+@pytest.mark.parametrize("phase", ["artifact", "normalized"])
+@pytest.mark.parametrize("mutation", ["symlink", "fifo"])
+def test_renderer_artifact_replacement_after_regular_check_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, mutation: str
+) -> None:
+    from fep_lean.output.release_bundle import _manuscript
+
+    changed: list[Path] = []
+    original_is_file = Path.is_file
+    pdf = b"%PDF-1.4\n<< /ID [<" + b"0" * 32 + b"> <" + b"F" * 32 + b">] >>\n"
+
+    def complete(command: tuple[str, ...], **kwargs: object) -> object:
+        output = (
+            command[-1]
+            if command[0] == "mutool"
+            else next(
+                item.split("=", 1)[1]
+                for item in command
+                if item.startswith("--output=")
+            )
+        )
+        Path(output).write_bytes(pdf)
+        return SimpleNamespace(returncode=0)
+
+    def replace_after_check(path: Path) -> bool:
+        regular = original_is_file(path)
+        wanted = path.name == (
+            "render-0.pdf" if phase == "artifact" else "normalized.pdf"
+        )
+        if os.name == "posix" and regular and wanted and not changed:
+            path.unlink()
+            if mutation == "fifo":
+                os.mkfifo(path)
+            else:
+                target = path.parent / "forbidden.pdf"
+                target.write_bytes(pdf)
+                path.symlink_to(target.name)
+            changed.append(path)
+        return regular
+
+    monkeypatch.setattr(bundle_module, "_run_renderer", complete)
+    monkeypatch.setattr(Path, "is_file", replace_after_check)
+    started = time.monotonic()
+    with pytest.raises((bundle_module.ReleaseBundleError, OSError)) as failure:
+        _manuscript._render_twice(
+            ("pandoc",),
+            project_root=tmp_path,
+            epoch=0,
+            suffix=".pdf",
+            extra_args=(),
+            timeout=5,
+            pdf_normalizer="mutool" if phase == "normalized" else None,
+        )
+    assert time.monotonic() - started < 3
+    if os.name == "posix":
+        assert len(changed) == 1
+        if isinstance(failure.value, OSError):
+            assert failure.value.errno == errno.ELOOP
+        else:
+            assert "capture" in str(failure.value)
+    else:
+        assert "POSIX descriptor" in str(failure.value)
+
+
+@pytest.mark.parametrize(
+    "control", ["regular", "executable", "hidden_mode", "read_mode", "read_replacement"]
+)
+def test_template_manifest_checks_physical_mode_and_read_identity(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, control: str
+) -> None:
+    from fep_lean.output.release_bundle import _core
+    from tests.test_distribution import _workflow_python
+
+    root = tmp_path.resolve()
+    template = root / "render-template"
+    template.mkdir()
+    owner = template / "owner.txt"
+    owner.write_bytes(b"tracked template bytes\n")
+    (template / ".gitignore").write_text("projects/active/fep_lean\n")
+    if control == "executable":
+        owner.chmod(0o755)
+    for args in (
+        ["init", "-q"],
+        ["config", "core.fsmonitor", "false"],
+        ["config", "user.name", "Fixture"],
+        ["config", "user.email", "fixture@example.invalid"],
+        ["add", "."],
+        ["commit", "-qm", "fixture"],
+        ["config", "core.filemode", "false"],
+    ):
+        subprocess.run(
+            ["git", "-c", "core.fsmonitor=false", *args],
+            cwd=template,
+            check=True,
+            capture_output=True,
+            timeout=5,
+        )
+    if os.name == "posix":
+        registration = template / "projects/active/fep_lean"
+        registration.parent.mkdir(parents=True)
+        registration.symlink_to(str(root), target_is_directory=True)
+    if control == "hidden_mode":
+        owner.chmod(0o755)
+    script = _workflow_python(
+        "Stage accepted render evidence with exact source and tool provenance", "render"
+    )
+    wanted = {
+        "require_clean_template",
+        "template_blob",
+        "uninitialized_gitlink",
+        "template_identity",
+        "template_manifest",
+    }
+    nodes = [
+        node
+        for node in ast.parse(script).body
+        if isinstance(node, ast.FunctionDef) and node.name in wanted
+    ]
+    assert {node.name for node in nodes} == wanted
+    scope: dict[str, object] = {
+        "root": root,
+        "template": template,
+        "Path": Path,
+        "hashlib": hashlib,
+        "os": os,
+        "stat": stat,
+        "subprocess": subprocess,
+        "allowed_gitlink": (
+            "infrastructure/steganography/kmyth",
+            "cb23c6d94423cbe4f5ef0caf23594d1095ddde79",
+        ),
+    }
+    scope["template_sha"] = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=template, text=True, timeout=5
+    ).strip()
+    scope["template_object_format"] = subprocess.check_output(
+        ["git", "rev-parse", "--show-object-format"], cwd=template, text=True, timeout=5
+    ).strip()
+    for name in (
+        "_capture_directory_paths",
+        "_capture_link_bytes",
+        "_capture_parent_fd",
+        "_capture_regular_file",
+        "_capture_resource_link_target",
+        "_capture_template_links",
+    ):
+        scope[name] = getattr(_core, name)
+    # Execute only allowlisted functions from the held local workflow AST.
+    exec(  # noqa: S102
+        compile(
+            ast.Module(body=nodes, type_ignores=[]),
+            "actual held workflow manifest",
+            "exec",
+        ),
+        scope,
+    )
+    changed: list[Path] = []
+
+    def capture(path: Path) -> bytes:
+        data = _core._capture_regular_file(path)
+        if (
+            path == owner
+            and control in {"read_mode", "read_replacement"}
+            and not changed
+        ):
+            if control == "read_mode":
+                path.chmod(0o755)
+            else:
+                replacement = path.with_name("replacement")
+                replacement.write_bytes(data)
+                replacement.replace(path)
+            changed.append(path)
+        return data
+
+    scope["_capture_regular_file"] = capture
+    if os.name != "posix":
+        with pytest.raises(bundle_module.ReleaseBundleError, match="POSIX descriptor"):
+            scope["template_manifest"]()
+    elif control in {"hidden_mode", "read_mode", "read_replacement"}:
+        message = (
+            "physical mode differs"
+            if control == "hidden_mode"
+            else "changed while reading"
+        )
+        with pytest.raises(SystemExit, match=message):
+            scope["template_manifest"]()
+        assert (
+            subprocess.check_output(
+                ["git", "diff", "--name-only", "HEAD", "-z"], cwd=template, timeout=5
+            )
+            == b""
+        )
+    else:
+        result = scope["template_manifest"]()
+        assert result["sources"]["owner.txt"]["mode"] == (
+            "100755" if control == "executable" else "100644"
+        )
+        assert (
+            result["sources"]["owner.txt"]["sha256"]
+            == hashlib.sha256(owner.read_bytes()).hexdigest()
+        )
+    assert not (root / "output/render-evidence").exists()
 
 
 def _fixture_renderer_tools(
@@ -1757,7 +2162,9 @@ def test_completed_renderer_cannot_publish_after_artifact_or_cleanup_deadline(
         Path(output).write_bytes(pdf)
         return SimpleNamespace(returncode=0)
 
-    original_read = Path.read_bytes
+    from fep_lean.output.release_bundle import _manuscript
+
+    original_read = _manuscript._capture_regular_file
 
     def delayed_artifact_read(path: Path) -> bytes:
         data = original_read(path)
@@ -1783,7 +2190,7 @@ def test_completed_renderer_cannot_publish_after_artifact_or_cleanup_deadline(
         "fep_lean.output.release_bundle._manuscript.tempfile",
         SimpleNamespace(TemporaryDirectory=BudgetedDirectory),
     )
-    monkeypatch.setattr(Path, "read_bytes", delayed_artifact_read)
+    monkeypatch.setattr(_manuscript, "_capture_regular_file", delayed_artifact_read)
     monkeypatch.setattr(bundle_module, "_run_renderer", complete_renderer)
     with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
         bundle_module._render_twice(
