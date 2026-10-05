@@ -163,23 +163,21 @@ native and H3 export checkpoints retain their exact source epochs. Receipt
 currency must be checked against the live source; none of these observations
 substitutes for final package or scientific acceptance.
 
-The 2026-10-02 publication at `409ee71` has local guarded Python acceptance
-(2,308 passes, 90.65% coverage) and strict render preparation. Its exact-SHA
-hosted run passed ten Ubuntu/macOS distribution cells but failed all five
-Windows cells, one Python runtime-fixture test and two H2 custody checks.
-No native or accepted-render artifact was produced by that run. Follow-up
-source repairs reopen dependent source-currency gates; the
+The output/configuration checkpoint at `c99e933` has a successful
+[exact-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37334643019):
+all 15 distribution cells and Python, Lean and render jobs passed. Later owner
+changes reopen dependent source-currency gates. The
 [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
-contains only open steps. Earlier failed probes remain retained history.
+owns current execution; failed probes and historical receipts retain their epochs.
 
-The [fresh Q7 source-pair capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
-passes all 12 fresh stages and four closing checks, five-runtime scaffold parity
-and 124 pure controls. Its exact new native receipt is separately validated;
-runner execution remains unverified. Native-input changes require a new source
-pin and receipt validation. Capture-time guidance bytes remain recorded, and
-postcapture prose changes carry their own reviewed delta. Q5/Q6 remain
-historical and active GNN work is preserved. Catalogue-native and package
-publication acceptance remain separate.
+The [Q7 source-pair capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+passed all 12 stages and four closing checks, five-runtime scaffold parity and
+124 pure controls at its recorded 2026-10-02 source epoch. Its exact native
+receipt is separately validated for that epoch; runner execution remains
+unverified. Existing-owner changes reopen `FEP-Q7-CURRENT`, and a later
+incomplete capture supplies no current acceptance. Historical Q5/Q6/Q7 receipts
+and active GNN work remain preserved. Catalogue-native and package publication
+acceptance remain separate.
 
 Fresh H2 custody and continuous G0 acceptance preceded the immutable H3.0
 freeze. H3 model/composition proofs, exports and independent proof-role reviews

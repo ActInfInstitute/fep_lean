@@ -442,6 +442,7 @@ jobs:
           from fep_lean.output.release_bundle._core import (
               _capture_directory_paths,
               _capture_link_bytes,
+              _capture_parent_fd,
               _capture_regular_file,
               _capture_resource_link_target,
               _capture_template_links,
@@ -552,20 +553,26 @@ jobs:
                   before = path.lstat()
                   if not stat.S_ISDIR(before.st_mode) or path.resolve(strict=True) != path or any(parent.is_symlink() for parent in path.parents):
                       raise SystemExit("template allowed gitlink is not a canonical empty directory")
-                  fd = os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+                  parent_fd = _capture_parent_fd(path)
                   try:
-                      opened = os.fstat(fd)
-                      members = os.listdir(fd)
-                      after = os.fstat(fd)
-                      def identity(item):
-                          return [item.st_dev, item.st_ino, item.st_mode, item.st_size, item.st_mtime_ns, item.st_ctime_ns]
-                      if members or identity(before) != identity(opened) or identity(opened) != identity(after) or identity(after) != identity(path.lstat()):
-                          raise SystemExit("template allowed gitlink is not a canonical empty directory")
-                      return {"mode": mode, "git_commit": oid, "empty": True, "identity": identity(after)}
+                      fd = os.open(path.name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=parent_fd)
+                      try:
+                          opened = os.fstat(fd)
+                          members = os.listdir(fd)
+                          after = os.fstat(fd)
+                          leaf = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
+                          if members or any(template_identity(item) != template_identity(before) for item in (opened, after, leaf, path.lstat())):
+                              raise SystemExit("template allowed gitlink is not a canonical empty directory")
+                          return {"mode": mode, "git_commit": oid, "empty": True, "identity": template_identity(after)}
+                      finally:
+                          os.close(fd)
                   finally:
-                      os.close(fd)
+                      os.close(parent_fd)
               except OSError as error:
                   raise SystemExit("template allowed gitlink is not a canonical empty directory") from error
+
+          def template_identity(item):
+              return [item.st_dev, item.st_ino, item.st_mode, item.st_size, item.st_mtime_ns, item.st_ctime_ns]
 
           def template_manifest():
               tree = subprocess.check_output(["git", "-C", str(template), "ls-tree", "-r", "-z", template_sha])
@@ -593,7 +600,20 @@ jobs:
               captured = {}
               for name, (mode, oid) in sorted(entries.items()):
                   path = template / name
-                  data = os.fsencode(dict(declared_links)[str(path)]) if mode == "120000" else _capture_regular_file(path)
+                  if mode == "120000":
+                      data = os.fsencode(dict(declared_links)[str(path)])
+                  else:
+                      parent_fd = _capture_parent_fd(path)
+                      try:
+                          before = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
+                          if not stat.S_ISREG(before.st_mode) or bool(before.st_mode & stat.S_IXUSR) != (mode == "100755"):
+                              raise SystemExit("template tracked resource physical mode differs from its recorded mode")
+                          data = _capture_regular_file(path)
+                          after = os.stat(path.name, dir_fd=parent_fd, follow_symlinks=False)
+                          if template_identity(before) != template_identity(after) or template_identity(after) != template_identity(path.lstat()):
+                              raise SystemExit("template tracked resource changed while reading")
+                      finally:
+                          os.close(parent_fd)
                   if template_blob(data) != oid:
                       raise SystemExit("template tracked resource differs from its recorded blob")
                   captured[name] = {"mode": mode, "git_blob": oid, "sha256": hashlib.sha256(data).hexdigest()}

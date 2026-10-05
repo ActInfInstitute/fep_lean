@@ -8,7 +8,9 @@ import shutil
 import stat
 import subprocess
 import tempfile
+import time
 from collections.abc import (
+    Callable,
     Mapping,
     Sequence,
 )
@@ -91,9 +93,29 @@ def _renderer_binary_state(executable: str) -> tuple[Path, str]:
         raise ReleaseBundleError("cannot read renderer binary") from error
 
 
-def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
+def _renderer_remaining(timeout: float) -> Callable[[], float]:
+    """One finite budget includes preparation, children, reads and cleanup."""
+    from fep_lean.verification._subprocess import _valid_timeout
+
+    if timeout is None or not _valid_timeout(timeout):
+        raise ReleaseBundleError("renderer timeout must be finite and positive")
+    deadline = time.monotonic() + timeout
+
+    def remaining() -> float:
+        value = deadline - time.monotonic()
+        if value <= 0:
+            raise ReleaseBundleError(
+                f"renderer exceeded its {timeout}-second deterministic budget"
+            )
+        return value
+
+    return remaining
+
+
+def _tool_identity(executable: str, *, timeout: float = 30) -> dict[str, str]:
     from fep_lean.verification._subprocess import run_process_group
 
+    remaining = _renderer_remaining(timeout)
     try:
         initial = _renderer_binary_state(executable)
     except ReleaseBundleError as exc:
@@ -108,12 +130,13 @@ def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
                 cwd=Path.cwd(),
                 check=False,
                 capture=True,
-                timeout=timeout,
+                timeout=remaining(),
             )
         except (OSError, subprocess.SubprocessError) as exc:
             raise ReleaseBundleError(
                 f"cannot identify renderer {executable}: {exc}"
             ) from exc
+        remaining()
         first_line = (completed.stdout or completed.stderr).splitlines()
         if completed.returncode == 0 and first_line:
             break
@@ -125,6 +148,7 @@ def _tool_identity(executable: str, *, timeout: int = 30) -> dict[str, str]:
         raise ReleaseBundleError(
             f"renderer binary changed during identification: {executable}"
         ) from exc
+    remaining()
     if not stable:
         raise ReleaseBundleError(
             f"renderer binary changed during identification: {executable}"
@@ -423,7 +447,7 @@ def _run_renderer(
     project_root: Path,
     environment_root: Path,
     epoch: int,
-    timeout: int,
+    timeout: float,
     auxiliary_executables: Sequence[str] = (),
 ) -> subprocess.CompletedProcess[str]:
     # Keep imports lazy: the verification package also imports output owners.
@@ -431,19 +455,21 @@ def _run_renderer(
     # semantic render input and must never be serialized in provenance.
     from fep_lean.verification._subprocess import run_process_group
 
+    remaining = _renderer_remaining(timeout)
+    environment = _renderer_environment(
+        epoch,
+        environment_root,
+        command,
+        auxiliary_executables=auxiliary_executables,
+    )
     try:
-        return run_process_group(
+        completed = run_process_group(
             list(command),
             cwd=project_root,
-            env=_renderer_environment(
-                epoch,
-                environment_root,
-                command,
-                auxiliary_executables=auxiliary_executables,
-            ),
+            env=environment,
             check=False,
             capture=True,
-            timeout=timeout,
+            timeout=remaining(),
         )
     except subprocess.TimeoutExpired as exc:
         raise ReleaseBundleError(
@@ -451,6 +477,8 @@ def _run_renderer(
         ) from exc
     except OSError as exc:
         raise ReleaseBundleError(f"cannot execute manuscript renderer: {exc}") from exc
+    remaining()
+    return completed
 
 
 def _canonical_pdf_identifier(data: bytes) -> bytes:
@@ -481,94 +509,119 @@ def _render_twice(
     suffix: str,
     extra_args: Sequence[str],
     include_header: bytes | None = None,
-    timeout: int,
+    timeout: float,
     auxiliary_executables: Sequence[str] = (),
     pdf_normalizer: str | None = None,
     pdf_engine: str | None = None,
     pdf_driver: str | None = None,
 ) -> tuple[bytes | None, str]:
+    remaining = _renderer_remaining(timeout)
     outputs: list[bytes] = []
-    with tempfile.TemporaryDirectory(prefix="fep-lean-render-") as raw_directory:
-        directory = Path(raw_directory)
-        for index in range(2):
-            run_root = directory / f"environment-{index}"
-            run_root.mkdir()
-            output = directory / f"render-{index}{suffix}"
-            command = [*base_command, *extra_args]
-            if pdf_engine is not None:
-                wrapper_directory = run_root / "bin"
-                wrapper_directory.mkdir()
-                wrapper = wrapper_directory / "xelatex"
-                quoted_engine = shlex.quote(pdf_engine)
-                driver_option = ""
-                if pdf_driver is not None:
-                    driver = wrapper_directory / "xdvipdfmx-stdout"
-                    # TeX Live 2025+ derives subset font tags from the driver's
-                    # input/output filenames. XeTeX supplies XDV on stdin, so
-                    # a documented stdout PDF target removes temporary-path
-                    # identity without rewriting fonts, CMaps or page content.
-                    # Preserve XeTeX's cwd for relative image/font resources.
-                    driver.write_text(
+    try:
+        with tempfile.TemporaryDirectory(prefix="fep-lean-render-") as raw_directory:
+            # Canonicalize our trusted private directory before producer execution;
+            # never resolve a producer-controlled artifact link.
+            directory = Path(raw_directory).resolve(strict=True)
+            for index in range(2):
+                run_root = directory / f"environment-{index}"
+                run_root.mkdir()
+                output = directory / f"render-{index}{suffix}"
+                command = [*base_command, *extra_args]
+                if pdf_engine is not None:
+                    wrapper_directory = run_root / "bin"
+                    wrapper_directory.mkdir()
+                    wrapper = wrapper_directory / "xelatex"
+                    quoted_engine = shlex.quote(pdf_engine)
+                    driver_option = ""
+                    if pdf_driver is not None:
+                        driver = wrapper_directory / "xdvipdfmx-stdout"
+                        # TeX Live 2025+ derives subset font tags from the driver's
+                        # input/output filenames. XeTeX supplies XDV on stdin, so
+                        # a documented stdout PDF target removes temporary-path
+                        # identity without rewriting fonts, CMaps or page content.
+                        # Preserve XeTeX's cwd for relative image/font resources.
+                        driver.write_text(
+                            "#!/bin/sh\n"
+                            "set -eu\n"
+                            '[ "$#" = 2 ] && [ "$1" = "-o" ] || exit 64\n'
+                            f'exec {shlex.quote(pdf_driver)} -q -E -o - > "$2"\n',
+                            encoding="utf-8",
+                        )
+                        driver.chmod(0o700)
+                        # XeTeX prefixes its bin directory when the command's
+                        # first character is not '/'. An initially quoted path
+                        # therefore breaks when the render directory has spaces.
+                        driver_option = shlex.quote(
+                            f"-output-driver=/bin/sh {shlex.quote(str(driver))}"
+                        )
+                    wrapper.write_text(
                         "#!/bin/sh\n"
                         "set -eu\n"
-                        '[ "$#" = 2 ] && [ "$1" = "-o" ] || exit 64\n'
-                        f'exec {shlex.quote(pdf_driver)} -q -E -o - > "$2"\n',
+                        f'{quoted_engine} {driver_option} "$@"\n'
+                        f'exec {quoted_engine} {driver_option} "$@"\n',
                         encoding="utf-8",
                     )
-                    driver.chmod(0o700)
-                    # XeTeX prefixes its bin directory when the command's
-                    # first character is not '/'. An initially quoted path
-                    # therefore breaks when the render directory has spaces.
-                    driver_option = shlex.quote(
-                        f"-output-driver=/bin/sh {shlex.quote(str(driver))}"
-                    )
-                wrapper.write_text(
-                    "#!/bin/sh\n"
-                    "set -eu\n"
-                    f'{quoted_engine} {driver_option} "$@"\n'
-                    f'exec {quoted_engine} {driver_option} "$@"\n',
-                    encoding="utf-8",
-                )
-                wrapper.chmod(0o755)
-                command.append(f"--pdf-engine={wrapper}")
-            if include_header is not None:
-                header = run_root / "preamble.tex"
-                header.write_bytes(include_header)
-                command.append(f"--include-in-header={header}")
-            completed = bundle._run_renderer(
-                [*command, f"--output={output}"],
-                project_root=project_root,
-                environment_root=run_root,
-                epoch=epoch,
-                timeout=timeout,
-                auxiliary_executables=auxiliary_executables,
-            )
-            if completed.returncode != 0 or not output.is_file():
-                return None, f"renderer_failed_returncode_{completed.returncode}"
-            rendered_bytes = output.read_bytes()
-            if pdf_normalizer is not None:
-                normalized = run_root / "normalized.pdf"
-                normalizer_result = bundle._run_renderer(
-                    [pdf_normalizer, "clean", str(output), str(normalized)],
+                    wrapper.chmod(0o755)
+                    command.append(f"--pdf-engine={wrapper}")
+                if include_header is not None:
+                    header = run_root / "preamble.tex"
+                    header.write_bytes(include_header)
+                    command.append(f"--include-in-header={header}")
+                completed = bundle._run_renderer(
+                    [*command, f"--output={output}"],
                     project_root=project_root,
                     environment_root=run_root,
                     epoch=epoch,
-                    timeout=timeout,
+                    timeout=remaining(),
                     auxiliary_executables=auxiliary_executables,
                 )
-                if normalizer_result.returncode != 0 or not normalized.is_file():
-                    return (
-                        None,
-                        f"pdf_normalizer_failed_returncode_{normalizer_result.returncode}",
-                    )
+                if completed.returncode != 0:
+                    return None, f"renderer_failed_returncode_{completed.returncode}"
                 try:
-                    rendered_bytes = _canonical_pdf_identifier(normalized.read_bytes())
-                except ReleaseBundleError:
-                    return None, "pdf_identifier_not_canonicalizable"
-            outputs.append(rendered_bytes)
-    if outputs[0] != outputs[1]:
-        return None, "renderer_output_not_reproducible"
-    return outputs[0], "reproducible"
+                    output.lstat()
+                except FileNotFoundError:
+                    return None, f"renderer_failed_returncode_{completed.returncode}"
+                remaining()
+                rendered_bytes = _capture_regular_file(output)
+                remaining()
+                if pdf_normalizer is not None:
+                    normalized = run_root / "normalized.pdf"
+                    normalizer_result = bundle._run_renderer(
+                        [pdf_normalizer, "clean", str(output), str(normalized)],
+                        project_root=project_root,
+                        environment_root=run_root,
+                        epoch=epoch,
+                        timeout=remaining(),
+                        auxiliary_executables=auxiliary_executables,
+                    )
+                    if normalizer_result.returncode != 0:
+                        return (
+                            None,
+                            f"pdf_normalizer_failed_returncode_{normalizer_result.returncode}",
+                        )
+                    try:
+                        normalized.lstat()
+                    except FileNotFoundError:
+                        return (
+                            None,
+                            f"pdf_normalizer_failed_returncode_{normalizer_result.returncode}",
+                        )
+                    remaining()
+                    normalized_bytes = _capture_regular_file(normalized)
+                    remaining()
+                    try:
+                        rendered_bytes = _canonical_pdf_identifier(normalized_bytes)
+                    except ReleaseBundleError:
+                        return None, "pdf_identifier_not_canonicalizable"
+                outputs.append(rendered_bytes)
+        if outputs[0] != outputs[1]:
+            return None, "renderer_output_not_reproducible"
+        return outputs[0], "reproducible"
+
+    finally:
+        # Late artifact reads, comparisons, failure returns and private cleanup
+        # consume the same budget. No late result is publication evidence.
+        remaining()
 
 
 def _rendered_manuscript_errors(project_root: Path) -> tuple[str, ...]:

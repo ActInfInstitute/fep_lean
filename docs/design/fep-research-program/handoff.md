@@ -29,37 +29,24 @@ their own epochs; they do not certify later H3/package bytes.
 
 ## First useful actions
 
-1. Read the current H3 guide, frozen protocol and implementation contract.
-   Preserve the accepted branch, axis order, units, carrier, seeds, counts,
-   thresholds and empirical no-go. Do not repeat H3.G0 or H3.0.
-2. Settle reviewed package/CI/guidance repairs before freezing new evidence
-   inputs. Retain the accepted fresh isolated Q7 source pair and its distinct
-   native receipt; native-input changes reopen its source-currency gate.
-   Preserve active GNN work and every historical Q5/Q6/Q7 receipt.
-3. Refresh whole-catalogue native and declaration/axiom acceptance, actual H3
-   export and three independent proof-role reviews against the same current
-   source. A source change invalidates dependent evidence; historical success
-   cannot be relabeled current.
-4. Complete actual installed target-runtime/hosted distribution cells,
-   canonical Python and declared checks, exact-SHA accepted render artifacts,
-   real seven-stage package capture and independently accepted identical
-   package archives. Keep each evidence plane separate.
-5. Only after current package and proof/export acceptance, execute the unchanged
-   primary once and retain all arrays, gates, negative controls and failures.
-   Pure replay must reconstruct the complete result; a measured failure remains
-   failed and narrows its claims without shrinking the original program.
-6. Obtain outcome-bound independent claim reviews, clean installed study
-   reproduction and two identical study archives. Retain the governed empirical
-   no-go unless its separate licensed-data gate is satisfied.
-7. Audit all original requirements and candidate metadata, publish the reviewed
-   minor release and verify final remote commit/tag and artifact hashes. Remove
-   only actually closed TODO rows; record delivery in changelog/release notes.
-   Provider configuration/spend and immutable DOI identity retain their actual
-   external boundaries.
+Use [remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
+for the single current execution sequence. It owns source settlement, fresh
+Q7 validation, the real seven-stage native/audit/package capture, installed
+runtime cells, current H3 export/reviews, once-only primary execution, replay,
+claim review, study reproduction and release. Do not add a duplicate native
+or axiom producer from this handoff.
 
-These are dependency steps, not evidence that the commands already succeeded.
-The [execution record](../../../specs/comprehensive-science-improvement/EXECUTION.md)
-retains actual checkpoints and failures.
+Read the H3 guide, frozen protocol and implementation contract first. Preserve
+the accepted branch, axis order, units, carrier, seeds, counts, thresholds and
+licensed-data no-go. Do not repeat H3.G0 or H3.0 or open the primary before its
+current package and proof/export gates. Retain every historical receipt and
+failed probe; source changes invalidate dependent currency. A measured failure
+narrows claims without shrinking the original nine-criterion program.
+
+Remove only actually closed TODO rows and record delivery in changelog/release
+notes. Provider spend and immutable DOI identity retain their actual external
+boundaries. The [execution record](../../../specs/comprehensive-science-improvement/EXECUTION.md)
+owns dated observations and failures.
 
 ## Scientific firewalls that survive the cleanup
 

@@ -1,40 +1,28 @@
 # GNN bridge program
 
-Status: **implementation slices accepted — Direction 1 P1+P2
-([P1 report](../../../specs/gnn-bridge-p1-finite-spike/REPORT.md)) and P3
-([P3 report](../../../specs/gnn-bridge-p3-certificates/REPORT.md)); P4
-closed at its documented extraction boundary
-([P4 report](../../../specs/gnn-bridge-p4-continuous-spike/REPORT.md));
-Direction 2 Q1 accepted
-([Q1 report](../../../specs/gnn-bridge-q1-syntax-ast/REPORT.md)); Q2
-([Q2 report](../../../specs/gnn-bridge-q2-discrete-denotation/REPORT.md)),
-Q3 ([Q3 report](../../../specs/gnn-bridge-q3-continuous-denotation/REPORT.md)),
-and Q4
-([Q4 report](../../../specs/gnn-bridge-q4-renderer-execution-statements/REPORT.md))
-accepted; Q6 Julia embedded-input proof
-([Q6 report](../../../specs/gnn-bridge-q6-activeinference-artifact/REPORT.md)),
-Q7 scalar-OU coefficient bounds
-([Q7 report](../../../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md)),
-Q5 concrete artifact proof
-([Q5 report](../../../specs/gnn-bridge-q5-artifact-proof/REPORT.md)) and W2
-source custody ([W2 report](../../../specs/gnn-bridge-w2-source-custody/REPORT.md))
-verified**. This document is the design goal;
-implementation status lives in the spec slices per the
-[design lifecycle](../README.md). The active catalogue program lives in
-[FEP research horizons](../fep-research-program/README.md); this program is an
-independent articulation with the sibling repository
-`GeneralizedNotationNotation` (GNN). No topics, formalism relations, atlas
-edges, or `fep-NNN` identifiers are claimed or reserved; the registered
-implementation artifacts are the Q1–Q4 foundation modules, Q5–Q7's slice-local
-proof probes, and W2's `src/fep_lean/bridge/` operations, owned by their
-spec slices.
+This document defines the design and operation of the bridge with
+`GeneralizedNotationNotation` (GNN). The package command surface is maintained
+in [`src/fep_lean/bridge/cli.py`](../../../src/fep_lean/bridge/cli.py); owner
+selection, emission, and receipt checks are maintained in
+[`src/fep_lean/bridge/operations.py`](../../../src/fep_lean/bridge/operations.py).
+The [bridge contract](bridge-contract.md) owns the shared scientific and custody
+boundaries. Current open acceptance work belongs in
+[`TODO.md`](../../../TODO.md), not a completed-stage checklist.
+
+The [design lifecycle](../README.md) governs bounded implementation slices. The
+active catalogue program lives in
+[FEP research horizons](../fep-research-program/README.md); this bridge adds no
+topics, formalism relations, atlas edges, or reserved `fep-NNN` identifiers.
+Implemented artifacts include Q1–Q4 foundation modules, Q5–Q7 slice-local proof
+probes, and the package bridge operations. Their existence is not a claim that
+their retained receipts are current for a changed source pair.
 
 ## Why this program exists
 
-GNN is a text-based notation for Active Inference generative models with a
-25-step processing pipeline that validates, renders, and executes model
-documents. fep_lean states and proves invariants about the same objects in
-Lean 4. The released manuscript already names the gap:
+GNN is a text-based notation for Active Inference generative models. Its
+`docs/gnn/gnn_syntax.md` and `src/gnn/pipeline/step_registry.py` define its
+syntax and processing surface. fep_lean states and proves invariants about
+the same objects in Lean 4. The comparative manuscript chapter names the gap:
 
 > Executable Active-Inference tools and notations such as pymdp or GNN
 > occupy a different layer. They specify and run model instances; Lean
@@ -142,85 +130,25 @@ Blanket structure and the ontology bindings `s=HiddenState`, `o=Observation`,
     code: no projection module, emitter, or Lean AST lands without an opened
     slice, and the slice's acceptance record owns implementation status.
 
-## Current stage and checklist
+## Evidence and acceptance
 
-- [x] P0 — inventory and bridge contract (this directory).
-- [x] P1 — single-model spike: the finite
-      `symmetricBoolModel trueBiasedPolicyPrior` instance projected to
-      `FepLeanSymmetricBool.md`; strict validation exit 0; 9/9 render
-      targets; step 12 executed 9 scripts — 7 rc=0, rxinfer rc=1 (finding
-      F1), bnlearn skipped (rendered, not executed)
-      ([report](../../../specs/gnn-bridge-p1-finite-spike/REPORT.md)).
-- [x] P2 — deterministic projection with a `--check` freshness gate;
-      byte-identical regeneration; ruff+mypy clean
-      ([report](../../../specs/gnn-bridge-p1-finite-spike/REPORT.md)).
-- [x] P3 — certificate protocol run on the P1 instance: C1
-      (policy posterior, |Δtrue| = 5.96e-08) and C2 (VFE vs `log 2`,
-      |Δ| = 1.91e-09) pass within 1e-6, each with both evidence planes
-      labeled; C3 recorded as a conditional boundary; O1 cross-convention
-      EFE divergence (pymdp 0.5 vs Lean `log 2`) filed as a finding with
-      exact numbers
-      ([report](../../../specs/gnn-bridge-p3-certificates/REPORT.md)).
-- [x] P4 — closed at the extraction boundary: `F = e^{-1}`,
-      `Q = 1 − e^{-2}` are transcendental and the contract's fixed
-      rounding policy admits terminating decimals only; documented no-go
-      with a recorded unblock path (owner-level rounding extension)
-      ([report](../../../specs/gnn-bridge-p4-continuous-spike/REPORT.md));
-      **superseded by P4b** — contract v0.2 reopened the phase; scalar-OU
-      instance emitted, strict-validated, rendered on all five
-      continuous-capable backends, executed on four (pytorch skipped:
-      torch absent), discrete-only backends reported `unsupported`
-      ([P4b report](../../../specs/gnn-bridge-p4b-continuous-emission/REPORT.md)).
-- [x] Q1 — GNN document AST and decidable well-formedness:
-      `src/fep_lean/formal/gnn_document.lean` (`FEP.GnnDocument`),
-      warning-free, no `sorry`, Init-only, manifest-registered; both
-      regeneration gates green
-      ([report](../../../specs/gnn-bridge-q1-syntax-ast/REPORT.md)).
-- [x] Q2 — discrete-family denotation over `FiniteLaw`/`FiniteKernel`/
-      `FiniteHMM`: module `src/fep_lean/formal/gnn_denotation.lean`
-      (`FEP.GnnDenotation`), exemplar isomorphism-class statement proved
-      warning-free, no `sorry`, no new axioms
-      ([report](../../../specs/gnn-bridge-q2-discrete-denotation/REPORT.md)).
-- [x] Q3 — continuous-family denotation over `LinearGaussianParameters`:
-      module `src/fep_lean/formal/gnn_denotation_continuous.lean`
-      (`FEP.GnnContinuous`), prior-gauge convention frozen, exemplar
-      statement proved warning-free
-      ([report](../../../specs/gnn-bridge-q3-continuous-denotation/REPORT.md)).
-- [x] Q4 — renderer and execution statements: module
-      `src/fep_lean/formal/gnn_render_statements.lean`
-      (`FEP.GnnRenderStatements`), matrix-fragment statements proved per
-      statable target, execution semantics proved against `kernelPower`,
-      documented no-go rows for the rest
-      ([report](../../../specs/gnn-bridge-q4-renderer-execution-statements/REPORT.md)).
-- [x] W1 — bridge operations status command (historical):
-      `bridge_status.py` composed the accepted slice gates into one surface;
-      superseded for operations by W2, whose package implementation it now
-      delegates to
-      ([report](../../../specs/gnn-bridge-w1-bridge-operations/REPORT.md)).
-- [x] W2 — source custody and read-only bridge operations: explicit owner
-      snapshot via `fep-lean bridge pin`; emission, status, and certificate
-      comparison never repair content drift
-      ([report](../../../specs/gnn-bridge-w2-source-custody/REPORT.md)).
-- [x] Q5 — concrete PyMDP artifact proof: the five extracted literal tables
-      of the retained symmetric runner equal the accepted Q2 payload and its
-      carrier masses, with a handcrafted asymmetric control; slice-local
-      native probes compiled warning-free with standard axioms only
-      ([report](../../../specs/gnn-bridge-q5-artifact-proof/REPORT.md)).
+Source pinning binds reviewed owner bytes on the explicitly selected pair. It
+does not establish renderer correctness or refresh an older native or execution
+receipt. Generated probes are static artifacts; native compilation establishes
+their exact Lean statements under the pinned compiler and assumptions. Numerical
+agreement and runner execution remain separate evidence planes.
 
-- [x] Q6 — two canonical Julia runners' embedded Boolean tables agree with
-      independent symmetric/asymmetric payloads; both positive probes and a
-      normalized wrong-axis rejection pass, with a current schema-2 receipt
-      ([report](../../../specs/gnn-bridge-q6-activeinference-artifact/REPORT.md)).
-- [x] Q7 — decoded scalar-OU coefficients have exact-real approximation and
-      prediction bounds; the complete positive axiom census and both coefficient
-      negatives pass, with a current schema-2 receipt
-      ([report](../../../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md)).
-- [x] v0.6 — extraction-package migration slice closed: the pinned render
-      route is `gnn.extract.pomdp_extractor.extract_pomdp_from_file` and
-      `python -m gnn.extract` is preserved.
+The [Q5](../../../specs/gnn-bridge-q5-artifact-proof/README.md),
+[Q6](../../../specs/gnn-bridge-q6-activeinference-artifact/README.md), and
+[Q7](../../../specs/gnn-bridge-q7-continuous-ou-proof/README.md) contracts own
+their distinct table, embedded-input, and scalar-OU coefficient claims. Select
+the exact receipt and validate its source pair, manifest, toolchain, and outputs
+before making a current claim. A fresh Q7 capture does not refresh Q5 or Q6.
 
-Opening any unchecked row requires a bounded spec slice per the
-[design lifecycle](../README.md).
+The documented [continuous extraction boundary](../../../specs/gnn-bridge-p4-continuous-spike/REPORT.md)
+and other dated slice reports remain scientific provenance. New model kinds,
+extraction policies, or semantic claims require a bounded slice and explicit
+review under the [design lifecycle](../README.md).
 
 ## Reading order
 
@@ -235,9 +163,8 @@ Opening any unchecked row requires a bounded spec slice per the
 ## Operating the bridge
 
 [W2 source custody](../../../specs/gnn-bridge-w2-source-custody/README.md)
-owns the current operations contract. The previous W1 HEAD-refresh procedure
-is historical: committing a refresh moved HEAD and immediately staled itself.
-For the current canonical re-pin order, see
+describes the package operations contract, whose current implementation is
+defined by the CLI and operations sources linked above. For the re-pin order, see
 [Re-pin runbook (canonical order)](#re-pin-runbook-canonical-order) below.
 
 Run from the fep_lean checkout, replacing `GNN_PATH` with the explicit GNN root:
@@ -249,7 +176,8 @@ uv run fep-lean bridge emit --gnn-root GNN_PATH --model continuous
 uv run fep-lean bridge status --gnn-root GNN_PATH
 uv run fep-lean bridge emit --gnn-root GNN_PATH --model finite --check
 uv run fep-lean bridge emit --gnn-root GNN_PATH --model continuous --check
-uv run fep-lean bridge verify-document --gnn-root GNN_PATH --document PATH --fail-on-warnings
+uv run fep-lean bridge verify-document --gnn-root GNN_PATH --model MODEL \
+  --document PATH --fail-on-warnings
 ```
 
 Pin only after reviewing the settled owner changes — on BOTH sides of the
@@ -268,54 +196,68 @@ Markdown output, then use `bridge verify-certificate --gnn-root GNN_PATH
 --receipt PATH`. Agreement does not establish that the current source produced
 an older execution artifact, and never establishes native Lean proof.
 
-Concrete artifact proofs (Q5–Q7) run from the fep_lean checkout against the
-current render: `refresh_render.py`, `generate_probe.py`, then
-`verify_native.py --compile`, per the
-[Q5 reproduction sequence](../../../specs/gnn-bridge-q5-artifact-proof/README.md).
-A fresh render invalidates probe and native receipts; regenerate and
-recompile in that order.
+Concrete artifact acceptance follows the selected slice's render, probe,
+native, and current-source checks. Use the applicable Q5, Q6, or Q7 contract
+linked above, the explicitly named source pair, and its exact receipt. A fresh
+render invalidates dependent probe and native receipts; reproduce and validate
+that evidence in dependency order.
 
-The old P1/P4b emitter and W1 status script locations remain compatibility
-entry points. P3 `certify.py` is a read-only historical numerical comparator
+P1/P4b emitter and W1 status script locations remain compatibility entry points. P3 `certify.py` is a read-only historical numerical comparator
 unless `--output PATH` is supplied. Its retained reports are not silently
 rewritten by status. Package regression tests run without an adjacent GNN
 checkout; live bridge checks require the explicitly named pair.
 
 ## Re-pin runbook (canonical order)
 
-When the paired GNN surface moves, re-pin in this exact order. The ordering
-carries the invariant: the GNN pair-pin bump is always the final commit.
+Settle and review the relevant owner edits on both sides before re-pinning.
+The CLI performs one pair-wide pin; `--model` selects emission and document
+verification, not a separate source-owner seal.
 
-1. `uv run --project . fep-lean bridge status --gnn-root <gnn>` must be `ok`
-   before you start — or it explains the drift you are about to fix.
-2. On a branch, pin both models:
-
-   ```bash
-   uv run fep-lean bridge pin --model finite --gnn-root <gnn>
-   uv run fep-lean bridge pin --model continuous --gnn-root <gnn>
-   ```
-
-3. For both models, refresh the digests and emit:
+1. Inspect the explicit pair with
+   `uv run fep-lean bridge status --gnn-root GNN_PATH`. A drift result identifies
+   changes requiring review; status never repairs them.
+2. Seal the settled pair once:
 
    ```bash
-   uv run fep-lean bridge emit --refresh-digests --model <m> --gnn-root <gnn> \
-     --results RESULTS.json --receipt RECEIPT.json --document DOCUMENT.md \
-     --fail-on-warnings
+   uv run fep-lean bridge pin --gnn-root GNN_PATH
    ```
 
-4. For both models, repeat step 3 with `--check` in place of
-   `--refresh-digests`; both runs must be `ok`.
-5. Commit the refreshed `specs/` files and the emitted artifacts, open a PR,
-   and merge.
-6. Only then bump `.github/fep-lean-pair.json` in the GNN repo to the merged
-   SHA — the final GNN commit, pushed once.
+3. Emit both reviewed model documents:
+
+   ```bash
+   uv run fep-lean bridge emit --gnn-root GNN_PATH --model finite
+   uv run fep-lean bridge emit --gnn-root GNN_PATH --model continuous
+   ```
+
+   For a provenance-only change, `--refresh-digests` permits only Signature
+   custody updates; it rejects content drift. `certify` consumes `--results`
+   and optionally writes `--receipt`; `verify-certificate` checks `--receipt`.
+   `verify-document` consumes `--document` and supports `--receipt` and
+   `--fail-on-warnings`. Emission does not consume these inputs.
+4. Check both emitted documents and the pair without writes:
+
+   ```bash
+   uv run fep-lean bridge emit --gnn-root GNN_PATH --model finite --check
+   uv run fep-lean bridge emit --gnn-root GNN_PATH --model continuous --check
+   uv run fep-lean bridge status --gnn-root GNN_PATH
+   ```
+
+5. Complete any required fresh artifact/native acceptance under its selected
+   slice contract. Publish the reviewed source and evidence changes through the
+   repository's normal process; owner hashes and descriptive commit references
+   remain distinct.
+6. Update `.github/fep-lean-pair.json` in the GNN repository only after the
+   intended fep_lean publication SHA is settled. Its pair reference is the final
+   GNN publication change; it does not promote old evidence.
 
 Any GNN owner-file edit (`src/gnn/**/*.py`, `pyproject.toml`, `uv.lock`,
 `src/gnn/main.py`, the contract mirror, `docs/gnn/gnn_syntax.md`,
-`src/gnn/pipeline/step_registry.py`) after step 5 re-drifts the pair — land
+`src/gnn/pipeline/step_registry.py`) after sealing re-drifts the pair — land
 all GNN content edits BEFORE re-pinning.
 
 Mirror rule: `GeneralizedNotationNotation/docs/other/fep_lean/bridge-contract.md`
-(the GNN side) must stay byte-identical to
-`docs/design/gnn-bridge/bridge-contract.md` on this side; the bridge rejects
-divergence.
+(the GNN side) and `docs/design/gnn-bridge/bridge-contract.md` on this side
+must have matching normalized contract bodies. The status comparison splits
+lines and excludes only rows starting with `| Canonical copy |` or
+`| Mirror copy |`, which describe the two locations. Other body divergence
+rejects; matching bodies do not waive either file's pinned source-byte checks.

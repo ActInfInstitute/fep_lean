@@ -158,7 +158,7 @@ A direct `--wheel` build can retain deleted modules or Lean resources in an
 existing setuptools `build/lib` tree. Acceptance compares the exact Python,
 Lean and YAML member roster and bytes in both the archive and installed
 namespace; merely finding the expected resources is insufficient. The private
-legacy-cache regression retains orphan files and checks both build routes.
+cache regression retains orphan files and checks both build routes.
 See the [uv build contract](https://docs.astral.sh/uv/concepts/projects/build/).
 
 The development and evidence harness remains pinned to CPython 3.14 by
@@ -172,12 +172,14 @@ refusal on 3.10--3.13, alongside the canonical serializer's actual byte parity
 across 3.10--3.14. See the
 [serialization protocol](../specs/gnn-bridge-q7-continuous-ou-proof/scaffold-serialization.md).
 That static parity does not extend validator acceptance or replace the new
-source-bound native/custody capture required by a serializer change. The current
-56,968-byte scaffold has accepted five-runtime parity and a separate accepted
-isolated Q7 native recapture; see the [Q7 report](../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md).
-The new native receipt covers static coefficient statements and explicitly
-leaves runner execution unverified. The original Q7 JSON and all Q5/Q6 native
-and delivery observations remain historical after the W2 re-pin.
+source-bound native/custody capture required by a serializer change. The retained
+2026-10-02 isolated Q7 capture established five-runtime parity for the
+56,968-byte scaffold and native acceptance at that source epoch; see the
+[Q7 report](../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md).
+Its native receipt covers static coefficient statements and leaves runner
+execution unverified. Later owner changes and an incomplete capture keep
+`FEP-Q7-CURRENT` open in [TODO.md](../TODO.md). Historical Q7 JSON and Q5/Q6
+native and delivery observations retain their original epochs after a re-pin.
 
 To exercise a target runtime locally while keeping the harness pinned:
 
@@ -189,13 +191,12 @@ FEP_DISTRIBUTION_PYTHON=3.10 \
 The target interpreter must be available to uv; runtime dependencies may be
 acquired from the package index. No Lean compile or provider call occurs.
 
-Local installed-wheel observations retain their exact guarded source epochs.
-Each historical cell reports one actual installed target-runtime case and
-separate CPython 3.14 harness cases. The exact `409ee71` hosted run passed
-all ten Ubuntu/macOS Python 3.10–3.14 cells and failed all five Windows cells.
-Follow-up metadata and platform-boundary repairs require a new exact-SHA
-15-cell run; local POSIX controls do not establish Windows acceptance.
-The [remaining acceptance](../specs/comprehensive-science-improvement/NEXT.md)
+Installed-wheel observations retain their exact guarded source epochs. Each
+local cell reports an actual installed target-runtime case separately from the
+CPython 3.14 harness cases. The hosted run at `c99e933` passed all 15
+Ubuntu/macOS/Windows Python 3.10–3.14 cells. Later source changes require fresh
+acceptance; POSIX controls alone do not establish Windows behavior. The
+[remaining acceptance](../specs/comprehensive-science-improvement/NEXT.md)
 owns current source freezes, actual collection, and package/render gates.
 
 ## Documentation PRs and retained renders

@@ -562,3 +562,30 @@ records three actual passing read-only bridge/generation/native checks in
 stable and the native JSON is unchanged. The portability row leaves TODO;
 full Python, wheel/hosted, render/package and primary H3 gates remain open.
 The earlier pending checkpoints above retain their dated scope.
+
+2026-10-05 current maintenance checkpoint: independent source review accepted
+the existing-owner renderer deadline, bounded artifact capture, CI physical
+mode/gitlink checks and hierarchical cooperative lease repair. The first
+supervised run retained two real nested-ownership failures (397 passes); the
+repaired run passed all 413 cases without skips in 562.38 seconds on CPython
+3.14.4, and Mypy passed. Its separate Ruff failure concerned two repository-
+owned AST execution sites in tests; the narrow documented exceptions preserve
+the tested source and do not relax the runtime security policy. No failed
+attempt is promoted into full acceptance.
+
+Current guidance cleanup covers maintained root/specification/navigation,
+development, bridge and research handoff pages. Obsolete planning links and
+completed live checklists were removed after dependency review; historical
+scientific records and immutable evidence retain their dated scope. The
+open-only backlog and minor/medium/major scopes retain current Q7, package,
+hosted, H3, provider and release requirements. The successful `c99e933` hosted
+run is historical after a later source publication. The original nine-criterion
+protocol remains binding, including the sole frozen primary study and its
+independent claim and clean installed reproduction gates.
+
+The independently reviewed two line-local lint exceptions preserve the full
+test AST. The separate remaining-check run passed Ruff lint/format, strict
+links, Markdown hygiene, cross-references and whitespace checks while all
+37 guarded paths held their bytes and metadata. Lock/dependency checks and
+Mypy passed in the preceding supervised run. Publication still requires the
+final exact source packet review; no native, package or H3 result is implied.
