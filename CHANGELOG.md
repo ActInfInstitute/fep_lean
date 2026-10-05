@@ -3,8 +3,9 @@
 The next minor release is authorized for the comprehensive package and
 formalization improvements. Coordinated source, runtime, citation, manuscript,
 configuration, sidecar and strict bundle metadata identify the `1.4.0` candidate
-prepared on 2026-10-02. The candidate citation targets release on 2026-10-03;
-the manuscript retains its authored snapshot date of 2026-10-02. The citation describes 168 canonical topic bodies and separates
+prepared on 2026-10-02. Citation and InstituteOS metadata retain that canonical
+authored snapshot date; actual publication timestamps are recorded separately.
+The citation describes 168 canonical topic bodies and separates
 compiled statements from semantic adequacy and empirical validity. Dependency
 pins and historical releases/receipts retain their identities. Publication
 awaits current acceptance, same-SHA hosted evidence and artifact validation.
@@ -26,6 +27,23 @@ The canonical backlog contains open work only. The
 [upcoming scope](docs/design/fep-research-program/next-improvements.md) defines
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
+
+## 2026-10-03 — Candidate publication and custody fixture repair
+
+Published the reviewed candidate source to `main` at
+[9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
+with exact remote parity. All 15 hosted distribution cells passed. The wider
+Python job's failed custody/date checks remain recorded at that source epoch.
+
+Disposable census fixtures now rebind all predecessor maps before testing
+deliberate drift. Refresh composition tests use a fixture-root-scoped adapter
+that validates rebased bindings and reports native execution as `not_executed`;
+the real H2/H3 validators and historical receipts retain their exact bytes.
+Malformed, missing, misbound and incorrectly typed inputs still reject.
+All 224 cases across the four affected modules pass without skips; the release
+metadata regression passes separately. Citation and sidecar dates agree with
+the canonical authored candidate date. Full production and H3 acceptance and
+the v1.4.0 release remain open.
 
 ## 2026-10-02 — Fresh Q7 source-pair closure
 

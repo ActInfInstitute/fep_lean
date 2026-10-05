@@ -1,12 +1,13 @@
 """Evidence-fixture census tests: isolated trees, never the live specs/ tree.
 
 Every test builds a self-contained project fixture (the
-``tests/test_horizon_acceptance.py`` evidence-fixture pattern: accepted
-inputs copied byte-identical, the terminal receipt's native capture re-bound
-to the fixture's own live digests, then deliberate mutations), runs the
+``tests/test_horizon_acceptance.py`` evidence-fixture pattern: inputs copied,
+all predecessor maps and terminal capture re-bound to a synthetic current
+source epoch, then deliberate mutations), runs the
 read-only census over it, and checks the FEP-H27-RESEAL reference
 classification. Validation constants are imported from
 ``fep_lean.verification.horizon_acceptance`` — never hardcoded.
+These disposable rebindings are not actual native runs or historical reacceptance.
 """
 
 from __future__ import annotations
@@ -35,6 +36,8 @@ from fep_lean.custody import (
     census,
     verify,
 )
+from fep_lean.custody import apply as apply_module
+from fep_lean.custody import refresh as refresh_module
 from fep_lean.custody.census import _receipt_disk_path
 from fep_lean.verification import horizon_acceptance as acceptance
 from fep_lean.verification.horizon_acceptance import (
@@ -45,6 +48,7 @@ from fep_lean.verification.horizon_acceptance import (
     native_source_paths,
     source_snapshot,
 )
+from tests._support.custody_fixture_knobs import fixture_root
 
 REFERENCE_ROOT = Path(
     os.environ.get("FEP_ACCEPTANCE_REFERENCE_ROOT", Path(__file__).resolve().parents[1])
@@ -109,6 +113,7 @@ def _self_consistent_receipts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     """
     root, _ = _evidence_tree(tmp_path)
     _rebind_capture(root)
+    _rebind_predecessors(root)
     _rebind_successor(root)
     pins = {
         name: hashlib.sha256((root / name).read_bytes()).hexdigest()
@@ -116,6 +121,22 @@ def _self_consistent_receipts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -
     }
     _edit_receipt(root, TERMINAL_RECEIPT, lambda r: r.update(predecessors=pins))
     monkeypatch.setattr(acceptance, "PREDECESSORS", pins)
+
+
+def _rebind_predecessors(root: Path) -> None:
+    """Normalize every copied predecessor map, retaining the prior's two exceptions."""
+    for name in PREDECESSORS:
+        receipt = json.loads((root / name).read_bytes())
+        sources = receipt.get("source_sha256", {})
+        allowed = (
+            set(custody.AUTHORIZED_PRIOR_DRIFT)
+            if name.endswith("/07-gaussian-vfe-natural-gradient.json")
+            else set()
+        )
+        sources.update(source_snapshot(root, sorted(set(sources) - allowed)))
+        (root / name).write_bytes(
+            (json.dumps(receipt, sort_keys=True, indent=2) + "\n").encode()
+        )
 
 
 def _rebind_successor(root: Path) -> None:
@@ -169,7 +190,9 @@ def test_reference_stale_files_are_captured_surfaces() -> None:
     assert set(FOUR_STALE_FILES) <= set(MANDATORY_TEST_FILES)
 
 
-def test_all_intact_census_verifies_clean(tmp_path: Path) -> None:
+def test_all_intact_census_verifies_clean(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """(a) A re-bound all-intact tree classifies intact and verifies ok."""
     root, specs_dir = _evidence_tree(tmp_path)
     _rebind_capture(root)
@@ -182,6 +205,62 @@ def test_all_intact_census_verifies_clean(tmp_path: Path) -> None:
     assert not tree.is_gated()
     assert tree.live_red() == ()
     assert verify(tree, GATE_EXPECTATIONS) == (True, [])
+    acceptance._predecessors(root, acceptance.PREDECESSORS)
+
+    # The composition adapter is confined to a separate synthetic epoch.
+    # Exercise its positive and adversarial boundaries in this existing node.
+    with monkeypatch.context() as patch:
+        patch.setattr(acceptance, "PREDECESSORS", PREDECESSORS)
+        synthetic = fixture_root(tmp_path / "composition", patch)
+        adapter = refresh_module._load_module(
+            synthetic, apply_module.H2_R0_CUSTODY, "synthetic_h2_control"
+        )
+        validated = adapter.validate_h2_r0_custody(synthetic)
+        assert validated["kind"] == "SYNTHETIC-UNIT-FIXTURE"
+        assert validated["native_evidence"] == {
+            "status": "not_executed",
+            "historical_evidence_reused": False,
+            "probes": [],
+        }
+        malformed = (
+            lambda r: r.update(unexpected=True),
+            lambda r: r.update(schema_version=True),
+            lambda r: r.update(source_sha256=None),
+            lambda r: r["source_sha256"].update({"pyproject.toml": "0" * 64}),
+            lambda r: r["prior"].update(sha256="0" * 64),
+            lambda r: r["native_evidence"]["probes"][0].update(pytest_exit_code=False),
+            lambda r: r["native_evidence"].update(historical_evidence_reused=0),
+        )
+        path = synthetic / apply_module.SUCCESSOR_07
+        original = path.read_bytes()
+        for mutate in malformed:
+            try:
+                _edit_receipt(synthetic, apply_module.SUCCESSOR_07, mutate)
+                with pytest.raises(ValueError, match="synthetic H2 composition"):
+                    adapter.validate_h2_r0_custody(synthetic)
+            finally:
+                path.write_bytes(original)
+        path = synthetic / apply_module.PRIOR_07
+        original = path.read_bytes()
+        try:
+            _edit_receipt(
+                synthetic,
+                apply_module.PRIOR_07,
+                lambda r: r.update(schema_version=True),
+            )
+            with pytest.raises(ValueError, match="synthetic H2 composition"):
+                adapter.validate_h2_r0_custody(synthetic)
+        finally:
+            path.write_bytes(original)
+        for relative in (apply_module.PRIOR_07, apply_module.H2_R0_CUSTODY):
+            path = synthetic / relative
+            original = path.read_bytes()
+            try:
+                path.unlink()
+                with pytest.raises(OSError):
+                    adapter.validate_h2_r0_custody(synthetic)
+            finally:
+                path.write_bytes(original)
 
 
 def test_four_file_staleness_is_flagged_with_precise_paths(tmp_path: Path) -> None:

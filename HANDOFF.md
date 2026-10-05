@@ -1,6 +1,6 @@
 # fep_lean formalism and publication handoff
 
-**Date:** 2026-10-02
+**Date:** 2026-10-03
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
 **Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
@@ -103,6 +103,28 @@ Compilation is not a proof of the FEP as a physical theory. Read
 summarizing scientific completeness.
 
 ## Current source and evidence state
+
+The reviewed v1.4.0 candidate changes were subsequently published to `main` at
+[9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
+on 2026-10-03, with equal local, tracking and direct-remote commit IDs and a
+clean Git worktree at publication. No v1.4.0 tag or release has been issued.
+
+All 15 distribution cells in its
+[same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37147070367)
+passed across Ubuntu, macOS and Windows on Python 3.10–3.14. The Python job
+failed with 34 failed, 2,337 passed and 15 skipped tests; coverage reached
+90.86% against the unchanged 89% gate. The failures identify stale synthetic
+custody-fixture bindings and inconsistent candidate dates. These are follow-up
+repairs; this run does not establish whole-package or release acceptance.
+Lean and render acceptance must be checked separately at the final source SHA.
+
+Current local wheel acceptance retains its 15 GiB free-space requirement.
+Insufficient scratch space blocks that matrix; neither a hosted distribution
+pass nor a private source-only wrapper review waives the local gate. Full
+production capture, H3 outcomes, study reproduction and versioned publication
+remain open under the locked protocol.
+
+The earlier source epoch retains its own evidence:
 
 `main` was published at
 [409ee71f82b3353303e6306e87c1b1fedc949088](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)

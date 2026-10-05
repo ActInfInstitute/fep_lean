@@ -18,12 +18,13 @@ import re
 import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from types import ModuleType
+from types import ModuleType, SimpleNamespace
 from typing import Any
 
 import pytest
 
 from fep_lean.custody import apply as apply_module
+from fep_lean.custody import refresh as refresh_module
 from fep_lean.output.provenance import CONFIG_OWNER_FILES, SOURCE_OWNER_FILES
 from fep_lean.verification import horizon_acceptance as acceptance
 from fep_lean.verification.horizon_acceptance import (
@@ -243,6 +244,94 @@ def _synthetic_prior_manifest(manifest: str, r0: ModuleType) -> str:
     )
 
 
+def _synthetic_h2_composition_seam(
+    root: Path, monkeypatch: pytest.MonkeyPatch, r0: ModuleType
+) -> None:
+    """Keep current-epoch composition separate from immutable H2/H3 custody.
+
+    The real H3 validator reconstructs historical 1.3 metadata and a pre-H3
+    manifest. Terminal acceptance instead requires current source maps. These
+    unit inputs exercise rebased bindings in a disposable pre-H3 epoch; they
+    cannot be a new historical certificate. Check their complete bindings
+    without changing or invoking the real H2 validator, which has its own
+    strict pure tests.
+    """
+    load_module = refresh_module._load_module
+    prior_template = _json(root, apply_module.PRIOR_07)
+    successor_template = _json(root, apply_module.SUCCESSOR_07)
+    validator_template = (root / apply_module.H2_R0_CUSTODY).read_text()
+    prior_pin = re.compile(r'(?m)^PRIOR_SHA256 = "([0-9a-f]{64})"$')
+    assert len(prior_pin.findall(validator_template)) == 1
+
+    def validate(project_root: Path) -> dict[str, Any]:
+        def require(condition: bool, message: str) -> None:
+            if not condition:
+                raise ValueError("synthetic H2 composition: " + message)
+
+        require(project_root.resolve() == root.resolve(), "wrong fixture root")
+        marker = _json(root, "output/custody-unit-fixture.json")
+        require(
+            marker.get("kind") == "SYNTHETIC-UNIT-FIXTURE"
+            and marker.get("real_native_or_scientific_acceptance") is False,
+            "missing nonexecution boundary",
+        )
+        prior_bytes = (root / apply_module.PRIOR_07).read_bytes()
+        prior = _json(root, apply_module.PRIOR_07)
+        expected_prior = json.loads(json.dumps(prior_template))
+        expected_prior["source_sha256"].update(
+            acceptance.source_snapshot(
+                root,
+                sorted(
+                    set(expected_prior["source_sha256"]) - set(r0.ALLOWED_PRIOR_CHANGES)
+                ),
+            )
+        )
+        require(prior == expected_prior, "prior fields or source bindings changed")
+        require(type(prior["schema_version"]) is int, "prior schema must be an integer")
+        validator = (root / apply_module.H2_R0_CUSTODY).read_text()
+        expected_validator = prior_pin.sub(
+            f'PRIOR_SHA256 = "{_sha(prior_bytes)}"', validator_template
+        )
+        require(validator == expected_validator, "validator or prior pin changed")
+        successor = _json(root, apply_module.SUCCESSOR_07)
+        expected = json.loads(json.dumps(successor_template))
+        sources = acceptance.source_snapshot(root, sorted(expected["source_sha256"]))
+        expected["source_sha256"] = sources
+        expected["prior"]["sha256"] = _sha(prior_bytes)
+        expected["manifest_transition"]["current_sha256"] = sources[r0.MANIFEST_PATH]
+        for probe in expected["native_evidence"]["probes"]:
+            probe["source_sha256"] = sources
+        require(successor == expected, "successor fields or source bindings changed")
+        require(type(successor["schema_version"]) is int, "schema must be an integer")
+        require(
+            successor["native_evidence"]["historical_evidence_reused"] is False,
+            "historical execution must not be reused",
+        )
+        for probe in successor["native_evidence"]["probes"]:
+            require(
+                type(probe["pytest_exit_code"]) is int, "probe exit must be an integer"
+            )
+        return {
+            "kind": "SYNTHETIC-UNIT-FIXTURE",
+            "scope": "current-source composition only; no historical reacceptance",
+            "native_evidence": {
+                "status": "not_executed",
+                "historical_evidence_reused": False,
+                "probes": [],
+            },
+        }
+
+    def load(project_root: Path, relative: str, name: str) -> Any:
+        if (
+            project_root.resolve() == root.resolve()
+            and relative == apply_module.H2_R0_CUSTODY
+        ):
+            return SimpleNamespace(validate_h2_r0_custody=validate)
+        return load_module(project_root, relative, name)
+
+    monkeypatch.setattr(refresh_module, "_load_module", load)
+
+
 def _synthetic_epoch(root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Fabricate mutually bound unit inputs without asserting any real outcome."""
     r0 = _historical_r0_validator(root)
@@ -457,6 +546,7 @@ def _synthetic_epoch(root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
             "boundary": "Rebound disposable source/receipt epoch. Reviews and JUnit outcomes fabricated solely to test fail-closed custody contracts.",
         },
     )
+    _synthetic_h2_composition_seam(root, monkeypatch, r0)
 
 
 def fixture_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch | None = None) -> Path:
