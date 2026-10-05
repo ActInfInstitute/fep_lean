@@ -256,6 +256,55 @@ class TestLoadGaussDotenv:
         HermesConfig._load_gauss_dotenv()  # should not raise
         dotenv.chmod(0o644)
 
+    @pytest.mark.parametrize("process_key", [None, "sk-synthetic-process", ""])
+    def test_readonly_configuration_matches_hydration_without_environment_mutation(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+        process_key: str | None,
+    ) -> None:
+        for name in (
+            "OPENROUTER_API_KEY",
+            "ANTHROPIC_API_KEY",
+            "OPENAI_API_KEY",
+            "OPENAI_BASE_URL",
+            "GAUSS_DEFAULT_MODEL",
+            "HERMES_MODEL",
+            "HERMES_API_BASE",
+            "HERMES_FALLBACK_MODELS",
+        ):
+            # Register absent keys too: default hydration writes them directly,
+            # and teardown must restore the caller's original environment.
+            monkeypatch.setenv(name, "")
+            monkeypatch.delenv(name)
+        monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+        if process_key is not None:
+            monkeypatch.setenv("OPENAI_API_KEY", process_key)
+        dotenv = tmp_path / ".env"
+        dotenv.write_text(
+            "OPENAI_API_KEY=sk-synthetic-dotenv\n"
+            "OPENAI_API_KEY=sk-synthetic-later-duplicate\n"
+            "OPENAI_BASE_URL=https://api.example.test/v1\n"
+            "GAUSS_DEFAULT_MODEL=synthetic/model\n"
+            "UNALLOWLISTED=ignored\n"
+        )
+        before = dict(os.environ)
+        before_bytes = dotenv.read_bytes()
+        before_mtime = dotenv.stat().st_mtime_ns
+        readonly = HermesConfig.from_settings(tmp_path, hydrate_environment=False)
+        assert dict(os.environ) == before
+        assert readonly.api_key == (
+            "sk-synthetic-dotenv" if process_key is None else process_key
+        )
+        assert readonly.base_url == "https://api.example.test/v1"
+        assert readonly.model == "synthetic/model"
+        hydrated = HermesConfig.from_settings(tmp_path)
+        assert hydrated.api_key == readonly.api_key
+        assert hydrated.runtime_policy() == readonly.runtime_policy()
+        assert "UNALLOWLISTED" not in os.environ
+        assert dotenv.read_bytes() == before_bytes
+        assert dotenv.stat().st_mtime_ns == before_mtime
+
 
 class TestFallbackEnvironmentPolicy:
     @pytest.mark.parametrize(

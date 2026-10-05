@@ -303,22 +303,13 @@ class HermesConfig:
         }
 
     @classmethod
-    def _load_gauss_dotenv(cls) -> None:
-        """Load ``~/.gauss/.env`` into ``os.environ`` if it exists.
-
-        The OpenGauss CLI stores API keys in ``~/.gauss/.env`` (or ``$GAUSS_HOME/.env``).
-        Standard Python ``os.environ`` does NOT automatically source shell dotenv
-        files, so this method reads the file and injects any ``KEY=VALUE`` pairs
-        that are not already present in the environment and belong to a restricted
-        allowlist (``_ALLOWED_DOTENV_KEYS``).
-
-        Parsing is intentionally simple (no shell expansion, no multiline values)
-        because the file format is ``KEY=VALUE`` with optional quoting.
-        """
+    def _gauss_dotenv_values(cls) -> dict[str, str]:
+        """Read allowlisted literal dotenv values without changing the environment."""
         gauss_home = os.environ.get("GAUSS_HOME", str(Path.home() / ".gauss"))
         dotenv_path = Path(gauss_home).expanduser() / ".env"
         if not dotenv_path.is_file():
-            return
+            return {}
+        values: dict[str, str] = {}
         try:
             for line in dotenv_path.read_text(encoding="utf-8").splitlines():
                 line = line.strip()
@@ -327,11 +318,23 @@ class HermesConfig:
                 key, _, value = line.partition("=")
                 key = key.strip()
                 value = value.strip().strip("'\"")
-                if key and key not in os.environ and key in cls._ALLOWED_DOTENV_KEYS:
-                    os.environ[key] = value
-                    log.debug("Loaded %s from %s", key, dotenv_path)
-        except OSError as exc:
+                if key in cls._ALLOWED_DOTENV_KEYS:
+                    values.setdefault(key, value)
+        except (OSError, UnicodeError) as exc:
             log.warning("Could not read %s: %s", dotenv_path, exc)
+        return values
+
+    @classmethod
+    def _load_gauss_dotenv(cls) -> None:
+        """Hydrate missing environment keys from allowlisted literal dotenv values.
+
+        Existing keys, including explicit empty values, take precedence. No shell
+        expansion or multiline parsing is performed.
+        """
+        for key, value in cls._gauss_dotenv_values().items():
+            if key not in os.environ:
+                os.environ[key] = value
+                log.debug("Loaded %s from OpenGauss dotenv", key)
 
     @classmethod
     def from_settings(
@@ -339,6 +342,7 @@ class HermesConfig:
         project_root: Path | str | None = None,
         *,
         settings_path: Path | None = None,
+        hydrate_environment: bool = True,
     ) -> HermesConfig:
         """Load config from ``config/settings.yaml``, then apply env overrides.
 
@@ -359,6 +363,10 @@ class HermesConfig:
         sourced from the shell OR ``~/.gauss/.env``. A ``hermes.api_key``
         yaml field is rejected and never used.
 
+        ``hydrate_environment=False`` reads the same allowlisted dotenv values
+        into a private effective mapping without changing ``os.environ``. It is
+        suitable for read-only capability inspection and performs no network IO.
+
         ``HERMES_FALLBACK_MODELS`` must be a bounded nonempty JSON list of exact
         model strings. Include only the primary model to freeze primary-only
         execution; an empty or malformed override fails closed.
@@ -369,7 +377,11 @@ class HermesConfig:
         Anthropic).  A mismatch is logged as an error and Hermes is disabled.
         """
         # ── Step 0: hydrate environment from ~/.gauss/.env ────────────────
-        cls._load_gauss_dotenv()
+        if hydrate_environment:
+            cls._load_gauss_dotenv()
+            environment = dict(os.environ)
+        else:
+            environment = {**cls._gauss_dotenv_values(), **os.environ}
 
         # ── Step 1: load settings.yaml ────────────────────────────────────
         cfg: dict[str, Any] = {}
@@ -413,27 +425,27 @@ class HermesConfig:
         # Explicit HERMES_* vars win over yaml; shared gauss-level fallbacks
         # (GAUSS_DEFAULT_MODEL / OPENAI_BASE_URL) only apply when neither an
         # explicit override nor a yaml value is present.
-        if os.environ.get("HERMES_MODEL"):
-            inst.model = os.environ["HERMES_MODEL"]
-        elif not cfg.get("model") and os.environ.get("GAUSS_DEFAULT_MODEL"):
-            inst.model = os.environ["GAUSS_DEFAULT_MODEL"]
+        if environment.get("HERMES_MODEL"):
+            inst.model = environment["HERMES_MODEL"]
+        elif not cfg.get("model") and environment.get("GAUSS_DEFAULT_MODEL"):
+            inst.model = environment["GAUSS_DEFAULT_MODEL"]
 
-        if os.environ.get("HERMES_API_BASE"):
-            inst.base_url = os.environ["HERMES_API_BASE"]
-        elif not cfg.get("base_url") and os.environ.get("OPENAI_BASE_URL"):
-            inst.base_url = os.environ["OPENAI_BASE_URL"]
+        if environment.get("HERMES_API_BASE"):
+            inst.base_url = environment["HERMES_API_BASE"]
+        elif not cfg.get("base_url") and environment.get("OPENAI_BASE_URL"):
+            inst.base_url = environment["OPENAI_BASE_URL"]
 
         # ── Step 3: resolve API key with provenance logging ───────────────
         key_source = "none"
-        api_key = os.environ.get("OPENROUTER_API_KEY", "")
+        api_key = environment.get("OPENROUTER_API_KEY", "")
         if api_key:
             key_source = "OPENROUTER_API_KEY"
         if not api_key:
-            api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+            api_key = environment.get("ANTHROPIC_API_KEY", "")
             if api_key:
                 key_source = "ANTHROPIC_API_KEY"
         if not api_key:
-            api_key = os.environ.get("OPENAI_API_KEY", "")
+            api_key = environment.get("OPENAI_API_KEY", "")
             if api_key:
                 key_source = "OPENAI_API_KEY"
         # Runtime settings never contain provider credentials

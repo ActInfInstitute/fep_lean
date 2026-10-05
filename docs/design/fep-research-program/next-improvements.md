@@ -1,6 +1,7 @@
 # Upcoming package and formalization improvements
 
-Reviewed against maintained source on 2026-10-02. This document scopes future
+Future scopes were reviewed against maintained source on 2026-10-02; current
+acceptance context was refreshed on 2026-10-05. This document scopes future
 work; it is neither an acceptance receipt nor a second backlog, theorem registry,
 or research protocol. [TODO.md](../../../TODO.md) owns open delivery work,
 [remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
@@ -42,21 +43,31 @@ proposal or as proof that the final source epoch passed every gate.
 | Original scope | Inspected implementation | Remaining obligation |
 | --- | --- | --- |
 | PKG-1: truthful static status | `SectionReport`, `PublicationReadinessReport` and `bridge_pin_section` in [cli.py](../../../src/fep_lean/cli.py); named/omitted GNN and source-race controls in [status tests](../../../tests/test_status_verb.py) | Final-source process-free, byte/mtime-preserving acceptance; unavailable comparisons remain unverified and drift remains stale on both status surfaces. Exit zero means composition succeeded. |
-| PKG-2: distribution support | The declared Python floor in package metadata; isolated installed API/resource/help and parsed wheel-metadata controls in [distribution tests](../../../tests/test_distribution.py) | Real target-runtime cells on the advertised CPython/platform set, including all hosted cells at the final SHA. Validator runtime remains CPython 3.14; package import support does not imply native capture support. |
-| PKG-3: documentation and render gates | Classification and source/template-link retention in [CI](../../../.github/workflows/ci.yml), with positive and adversarial distribution controls | Exact-SHA accepted PDF, render receipt, fonts, renderer and source manifest; fresh independent infrastructure review. Failed or skipped renders supply no accepted artifact. |
+| PKG-2: distribution support | The declared Python floor in package metadata; isolated installed API/resource/help and parsed wheel-metadata controls in [distribution tests](../../../tests/test_distribution.py) | All 15 hosted cells passed at `fa3c88e`. Final-source runtime evidence remains required after subsequent owner edits; the local five-cell matrix retains its unmet 15 GiB free-space gate. Validator runtime remains CPython 3.14; package import support does not imply native capture support. |
+| PKG-3: documentation and render gates | Classification and source/template-link retention in [CI](../../../.github/workflows/ci.yml), with positive and adversarial distribution controls | Hosted Lean/render passed at `fa3c88e`; final-source PDF, render receipt, fonts, renderer and source manifest must still validate after owner edits. Preserve fresh independent infrastructure review; failed or skipped renders supply no accepted artifact. |
 | PKG-4: capture and publication readiness | `PublicationCapturePlan`, `run_publication_capture` and `plan_publication_capture` in [release capture](../../../src/fep_lean/output/release_bundle/_core.py); strict [prerequisite aggregation](../../../src/fep_lean/output/release_bundle/_prerequisites.py) | Actual seven-stage capture, current native/audit/Python/render/numerical/browser acceptance, and two byte-identical archives independently accepted against final source. Static readiness and custom test plans cannot replace production capture. |
 | FORM-1: deterministic information witnesses | `finiteChannel_identity_preservesKL` and `constantChannel_KL_strict` in [variational duality](../../../src/fep_lean/formal/variational_duality.lean) | Current warning-free focused/aggregate native and declaration/axiom evidence; retain the zero-reference convention and current reviewed theorem-proxy disposition. |
 | FORM-2: relative-support information bridge | `weightedDirac_klDiv_eq_finiteKL_of_relativeSupport`, `nativeChannelMutualInformation_eq_finite` and the finite garbling theorems in [decision risk](../../../src/fep_lean/formal/decision_risk.lean) | Current source-bound native/audit and semantic review, including shared-zero, deterministic, asymmetric and singular boundaries. Native infinity is not the totalized finite convention. |
 | FORM-3: actual finite rate-distortion optimization | Compactness-derived `rateDistortion_exists_minimizer`, infimum-derived weak duality and Boolean boundary witnesses in variational duality | Current source-bound acceptance for feasibility, attainment, informative interior, infeasible budget, zero multiplier and nonunique optimizer. The existing primary theorem still assumes component bounds; general strong duality is unproved. |
 | FORM-4: frozen H3 chain | Manifested [reference model](../../../src/fep_lean/formal/h3_reference_model.lean), [composition](../../../src/fep_lean/formal/compositions/h3_case_study.lean), native export, synthetic executor and study bundler | Current native/export and three independent proof-role reviews, unchanged one-attempt synthetic execution and complete replay, outcome-bound claim reviews, and clean installed study reproduction. The licensed empirical branch remains governed no-go without data. |
 
-The [fresh Q7 capture](../../../specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
-closes the source-pair residual for its recorded native inputs. Retain its
-emitter checks, new native receipt and separate postcapture guidance delta;
-native-input changes reopen that gate. Active GNN work and historical Q5/Q6/Q7
-receipts remain preserved; static coefficient proofs leave runner execution
-unverified. Current guidance and all declared checks remain obligations under
-the ninth criterion.
+The [accepted Q7 capture](../../../specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+closed the source-pair residual for its recorded native inputs. Current
+output/configuration repairs change existing native owners and reopen
+`FEP-Q7-CURRENT` and dependent export/package currency. Preserve its emitter
+checks, native receipt and postcapture guidance preimages as historical evidence;
+the old isolated r3 acceptance is not rebound to changed source. Active GNN work
+and historical Q5/Q6/Q7 receipts remain preserved; static coefficient proofs
+leave runner execution unverified. Current guidance and all declared checks
+remain obligations under the ninth criterion.
+
+The output/configuration repairs are minor existing-owner reliability work.
+Focused validation and fresh independent infrastructure review passed; final
+source-bound native, package and scientific acceptance remains open.
+They do not activate the future medium API/information-theory scopes or the
+major Windows capture, control and path-law scopes below. Those proposals retain
+their named predecessors and reviews; none substitutes for current package or
+once-only H3 acceptance, or changes the frozen scientific protocol.
 
 ## Core package: minor scopes
 
@@ -365,9 +376,10 @@ SDE, Itô and physical-entropy claims.
 
 ## Sequence, release acceptance and closure
 
-1. Complete the original nine-criterion current program, retain the accepted
-   Q7 source-pair evidence and reconcile open-only guidance. Obtain final-source evidence in each
-   distinct plane and preserve failed attempts.
+1. Complete the original nine-criterion current program, refresh the reopened
+   native/Q7 source-pair gates and reconcile open-only guidance. Obtain
+   final-source evidence in each distinct plane; preserve prior accepted epochs
+   and failed attempts unchanged.
 2. Reconcile candidate `1.4.0` across package/publication metadata, lockfile,
    documentation, changelog and citation/DOI references. Build fresh wheel,
    source and scientific artifacts after the final metadata change; old source

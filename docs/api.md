@@ -1,7 +1,7 @@
 # Public Python API
 
 **Version:** 1.4.0
-**Last reviewed:** 2026-09-30
+**Last reviewed:** 2026-10-05
 
 The installed distribution exposes one root namespace, `fep_lean`. Generic
 top-level names such as `catalogue`, `pipeline`, and `output` are not packages
@@ -124,6 +124,16 @@ zero. Full mode is incomplete if a required capability or selected topic
 fails, emits a Lean warning, retains `sorry`, or does not complete a requested
 review stage.
 
+Unknown areas, explicit empty topic lists and filters whose intersection is
+empty fail during catalogue loading, before capability checks, provider calls
+or artifact writes. Omitting both filters selects the full catalogue.
+
+The explicit `output_root` argument takes precedence over a nonblank
+`FEP_LEAN_OUTPUT_ROOT`, then `output.root` settings, then `project_root/output`.
+The [configuration guide](configuration.md) defines relative-path semantics.
+Validation, figures, reports and run-bound manuscript evidence use that same
+selected root; the paired authored projections remain under `manuscript/`.
+
 ## Native Lean verification
 
 ```python
@@ -145,7 +155,9 @@ Environment validation is read-only:
 from fep_lean import run_validation_checks
 
 catalogue_checks = run_validation_checks(project_root, mode="catalogue")
-full_checks = run_validation_checks(project_root, mode="full")
+full_checks = run_validation_checks(
+    project_root, mode="full", output_root=chosen_output
+)
 ```
 
 Dependency acquisition belongs to the explicit `fep-lean setup` command, not

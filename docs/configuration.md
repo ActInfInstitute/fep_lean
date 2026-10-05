@@ -8,7 +8,7 @@ Environment variables override secrets and operational limits.
 | `gauss.home` / `GAUSS_HOME` | SQLite state, exported artifacts, and logs |
 | `gauss.default_model` | Not read at runtime: `docs/pin_audit.py` cross-checks it against `hermes.model` |
 | Lean verification | Not settings-driven: a fixed full-mode pipeline stage (`Gauss Sessions`); catalogue mode never verifies. `FEP_LEAN_VERIFY_TIMEOUT` bounds it |
-| `output.root` | Generated figures and reports root |
+| `output.root` / `FEP_LEAN_OUTPUT_ROOT` | Generated figures and reports root; explicit API argument wins, then a nonblank environment override, then settings, then `project_root/output` |
 | `hermes.model` | Primary Hermes model (`HERMES_MODEL` env overrides it; `GAUSS_DEFAULT_MODEL` env is the fallback when the yaml has no `model:` — `HermesConfig.from_settings`, `src/fep_lean/llm/hermes.py:308-311`) |
 | `hermes.fallback_models` | Ordered configured model chain; `HERMES_FALLBACK_MODELS` supplies a strict nonempty JSON list of exact model names |
 | `hermes.timeout_s` | Request deadline |
@@ -19,8 +19,23 @@ Important environment variables include `OPENROUTER_API_KEY`,
 `FEP_LEAN_LAKE_EXE`, `FEP_LEAN_LEAN_EXE`, `FEP_LEAN_VERIFY_TIMEOUT`,
 `FEP_LEAN_MAX_TOPICS`, and `FEP_LEAN_OUTPUT_ROOT`.
 
+Relative `output.root` settings are resolved from the project checkout. Relative
+explicit API paths and `FEP_LEAN_OUTPUT_ROOT` paths retain their caller working
+directory semantics. The selected output directory, or its nearest existing
+ancestor, must be writable and searchable. Capability inspection reads that
+exact target without creating directories; an occupied file or dangling link
+rejects. Authored manuscript projections remain paired under `manuscript/`;
+their run-bound evidence is selected from the resolved output root.
+
 `fep-lean preflight` performs no download, build, database write, or report
 write. Use `fep-lean setup` when dependency acquisition is required.
+
+Full-mode credential inspection uses the same allowlisted OpenGauss dotenv,
+process-environment precedence and endpoint-affinity rules as Hermes execution.
+It also accepts `OPENAI_API_KEY` for a configured compatible endpoint. Inspection
+uses `HermesConfig.from_settings(..., hydrate_environment=False)` and does not
+hydrate process variables or authenticate with a provider. Existing execution
+callers retain the default environment hydration behavior.
 
 For primary-only execution, set `HERMES_FALLBACK_MODELS` to a JSON list
 containing only the primary model. An absent override preserves the configured

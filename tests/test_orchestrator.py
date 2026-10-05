@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -61,6 +62,8 @@ def test_run_pipeline_writes_catalogue_report(catalogue_project: Path) -> None:
     assert result.mode == "catalogue"
     assert result.run_dir
     report = Path(result.run_dir)
+    assert report.is_relative_to(Path(os.environ["FEP_LEAN_OUTPUT_ROOT"]))
+    assert not (catalogue_project / "output/reports").exists()
     assert (report / "summary.json").is_file()
     assert (report / "index.md").is_file()
     assert (catalogue_project / "manuscript/manuscript_vars.yaml").is_file()

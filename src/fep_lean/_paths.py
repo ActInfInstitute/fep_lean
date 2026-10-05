@@ -35,6 +35,48 @@ def project_root() -> Path:
     return _PACKAGE_DIR.parent.parent
 
 
+def resolve_output_root(root: Path, explicit: Path | None = None) -> Path:
+    """Resolve explicit, environment, settings, then default output paths.
+
+    Explicit and environment paths retain their caller-working-directory
+    semantics. A relative settings path belongs to the project checkout.
+    Only the selected configuration is read; this function writes nothing.
+    """
+    if explicit is not None:
+        return Path(explicit)
+    override = os.environ.get("FEP_LEAN_OUTPUT_ROOT", "")
+    if override.strip():
+        return Path(override)
+    root = Path(root)
+    settings_path = root / "config" / "settings.yaml"
+    if not settings_path.is_file():
+        return root / "output"
+
+    import yaml
+
+    try:
+        settings = yaml.safe_load(settings_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, yaml.YAMLError) as exc:
+        raise ValueError(
+            f"unreadable output settings file {settings_path}: {type(exc).__name__}"
+        ) from exc
+    if settings is None:
+        settings = {}
+    if not isinstance(settings, dict):
+        raise ValueError(f"output settings file {settings_path} must be a mapping")  # noqa: TRY004 -- invalid configuration, not an argument type
+    output = settings.get("output")
+    if output is None:
+        output = {}
+    if not isinstance(output, dict):
+        raise ValueError(f"output in {settings_path} must be a mapping")  # noqa: TRY004 -- invalid configuration, not an argument type
+    configured = output.get("root")
+    if configured is None or configured == "":
+        return root / "output"
+    if not isinstance(configured, str) or not configured.strip():
+        raise ValueError(f"output.root in {settings_path} must be a nonblank path")
+    return (root / configured).resolve()
+
+
 def project_root_errors(root: Path) -> tuple[str, ...]:
     """Return missing checkout assets required by substantive CLI workflows.
 

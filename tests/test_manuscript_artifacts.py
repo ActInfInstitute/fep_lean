@@ -507,7 +507,12 @@ def test_latest_verification_manifest_rejects_complete_catalogue_report(
     assert _get_latest_verification_manifest(tmp_path) is None
 
 
-def test_manuscript_vars_honor_explicit_output_root(tmp_path: Path) -> None:
+def test_manuscript_vars_honor_explicit_output_root(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Collection is tested separately; this assertion must not update the
+    # real checkout's collection cache while selecting a temporary report.
+    monkeypatch.setattr("fep_lean.output.manuscript._count_test_cases", lambda _: 0)
     custom = tmp_path / "custom-output" / "reports" / "run_custom"
     custom.mkdir(parents=True)
     (custom / "summary.json").write_text(

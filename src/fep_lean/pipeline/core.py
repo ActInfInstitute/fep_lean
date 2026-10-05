@@ -9,12 +9,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
+from fep_lean._paths import resolve_output_root
 from fep_lean.catalogue.topics import FEPTopicCatalogue
 from fep_lean.gauss.runner import GaussRunner
 from fep_lean.output.figures import write_all_catalogue_figures
 from fep_lean.output.manuscript import (
+    UNIFIED_FORMALISM_CATALOGUE_FILENAME,
     write_manuscript_vars,
-    write_unified_formalism_appendix_markdown,
 )
 from fep_lean.verification.environment import run_validation_checks
 
@@ -134,44 +135,11 @@ class PipelineResult:
         }
 
 
-def _resolve_output_root(project_root: Path, output_root: Path | None) -> Path:
-    if output_root is not None:
-        return Path(output_root)
-    return Path(os.environ.get("FEP_LEAN_OUTPUT_ROOT", project_root / "output"))
-
-
 class FEPPipeline:
     def __init__(self, project_root: Path, *, output_root: Path | None = None) -> None:
         self.project_root = Path(project_root)
         self.topics_file = self.project_root / "config" / "topics.yaml"
-        configured_root: Path | None = None
-        if output_root is None:
-            settings_path = self.project_root / "config" / "settings.yaml"
-            if settings_path.is_file():
-                import yaml
-
-                try:
-                    settings = (
-                        yaml.safe_load(settings_path.read_text(encoding="utf-8")) or {}
-                    )
-                    configured = settings.get("output", {}).get("root")
-                    if configured:
-                        configured_root = (
-                            self.project_root / str(configured)
-                        ).resolve()
-                except (OSError, yaml.YAMLError, AttributeError) as exc:
-                    raise ValueError(
-                        f"unreadable settings file {settings_path}: "
-                        f"{type(exc).__name__}: {exc}"
-                    ) from exc
-            else:
-                log.warning(
-                    "no settings file at %s; falling back to ./output",
-                    settings_path,
-                )
-        self.output_root = _resolve_output_root(
-            self.project_root, output_root or configured_root
-        )
+        self.output_root = resolve_output_root(self.project_root, output_root)
         self._catalogue: FEPTopicCatalogue | None = None
         self._topics_to_run: tuple[Any, ...] = ()
         self._run_topic_results: list[dict[str, Any]] = []
@@ -222,7 +190,9 @@ class FEPPipeline:
 
         validation_stage, validation = stage(
             "Environment Validation",
-            lambda: run_validation_checks(self.project_root, mode=mode),
+            lambda: run_validation_checks(
+                self.project_root, mode=mode, output_root=self.output_root
+            ),
         )
         if validation_stage.status != "ok" or validation.get("status") != "ok":
             reason = (
@@ -328,13 +298,20 @@ class FEPPipeline:
         def action() -> dict[str, Any]:
             self._catalogue = FEPTopicCatalogue.from_yaml(self.topics_file)
             topics = self._catalogue.topics
-            if topic_filter:
+            self._topics_to_run = ()
+            if topic_filter is not None:
+                if not topic_filter:
+                    raise ValueError("topic filter must select at least one topic")
                 unknown = sorted(set(topic_filter) - {topic.id for topic in topics})
                 if unknown:
                     raise ValueError(f"unknown topic ids: {', '.join(unknown)}")
                 topics = tuple(topic for topic in topics if topic.id in topic_filter)
-            if area_filter:
+            if area_filter is not None:
+                if area_filter not in {topic.area for topic in self._catalogue.topics}:
+                    raise ValueError(f"unknown area: {area_filter!r}")
                 topics = tuple(topic for topic in topics if topic.area == area_filter)
+            if not topics:
+                raise ValueError("topic and area filters select no topics")
             maximum = _max_topics_from_env()
             self._topics_to_run = tuple(topics[:maximum] if maximum else topics)
             return {
@@ -370,9 +347,7 @@ class FEPPipeline:
             self._catalogue,
             output_root=self.output_root,
         )
-        appendix_path = write_unified_formalism_appendix_markdown(
-            self.project_root, self._catalogue
-        )
+        appendix_path = vars_path.with_name(UNIFIED_FORMALISM_CATALOGUE_FILENAME)
         figures = write_all_catalogue_figures(
             self._catalogue, self.project_root, output_root=self.output_root
         )
