@@ -21,6 +21,7 @@ import tarfile
 import time
 import zlib
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 
