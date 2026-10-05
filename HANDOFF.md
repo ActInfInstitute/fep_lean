@@ -1,6 +1,6 @@
 # fep_lean formalism and publication handoff
 
-**Date:** 2026-10-03
+**Date:** 2026-10-05
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
 **Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
@@ -104,19 +104,31 @@ summarizing scientific completeness.
 
 ## Current source and evidence state
 
-The reviewed v1.4.0 candidate changes were subsequently published to `main` at
-[9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
-on 2026-10-03, with equal local, tracking and direct-remote commit IDs and a
-clean Git worktree at publication. No v1.4.0 tag or release has been issued.
+The candidate source was published to `main` at
+[fa3c88e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/fa3c88e)
+on 2026-10-03. Its
+[same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37150440750)
+completed successfully: all 15 Ubuntu/macOS/Windows distribution cells on
+Python 3.10–3.14 and the Python, Lean and render jobs passed. Hosted nonserial
+Python passed 2,371 tests with 15 policy skips in 829.74 seconds and 91.28%
+coverage against the unchanged 89% gate. That job used Linux CPython 3.14.8;
+the separate local validator environment is CPython 3.14.4. Neither changes the
+frozen study's runtime contract. No v1.4.0 tag or release has been issued; the
+candidate's canonical authored date remains 2026-10-02.
 
-All 15 distribution cells in its
-[same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37147070367)
-passed across Ubuntu, macOS and Windows on Python 3.10–3.14. The Python job
-failed with 34 failed, 2,337 passed and 15 skipped tests; coverage reached
-90.86% against the unchanged 89% gate. The failures identify stale synthetic
-custody-fixture bindings and inconsistent candidate dates. These are follow-up
-repairs; this run does not establish whole-package or release acceptance.
-Lean and render acceptance must be checked separately at the final source SHA.
+Subsequent repairs change four existing source owners: `_paths.py`, pipeline
+`core.py`, environment validation and Hermes configuration. They
+address output-root precedence and checks of the selected output, empty
+validation filters, read-only canonical credential validation, and a duplicate
+appendix writer. Focused validation passed 298 cases with one live-provider
+skip; after a test-parameter correction, the whole pipeline module passed
+37 cases without skips. Mypy, Ruff, strict documentation, lock and environment
+checks passed, and fresh independent infrastructure review approved final
+source. These scoped results do not replace full acceptance. The edits reopen
+the 291-input native receipt, Q7 source-pair
+currency and dependent export/package gates. The successful hosted run and
+accepted Q7 captures remain evidence for their recorded source epochs;
+their receipts are preserved, never rewritten to bind the changed owners.
 
 Current local wheel acceptance retains its 15 GiB free-space requirement.
 Insufficient scratch space blocks that matrix; neither a hosted distribution
@@ -124,7 +136,14 @@ pass nor a private source-only wrapper review waives the local gate. Full
 production capture, H3 outcomes, study reproduction and versioned publication
 remain open under the locked protocol.
 
-The earlier source epoch retains its own evidence:
+Earlier source epochs retain their own evidence:
+
+[9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
+was published on 2026-10-03. Its
+[hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37147070367)
+passed all 15 distribution cells but failed Python with 34 failed, 2,337 passed,
+15 skipped tests and 90.86% coverage. Custody-fixture and candidate-date repairs
+preceded the later successful `fa3c88e` run; the failed attempt remains historical.
 
 `main` was published at
 [409ee71f82b3353303e6306e87c1b1fedc949088](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088)
@@ -153,12 +172,13 @@ review and actual final-source checks are required; historical passing tests
 are never relabeled as acceptance for repaired source bytes.
 
 The [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
-owns the current execution order: settle source and guidance, retain the
-accepted isolated Q7 source pair, refresh catalogue native/export custody,
-and run installed-wheel and hosted acceptance,
-complete real production capture and two identical independently validated
-package archives, then execute the frozen H3 study once and complete claims
-and reproduction. The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
+owns the current execution order: settle source, focused validation, independent
+review and guidance; refresh catalogue native and Q7 source-pair custody without
+duplicating the full native sweep; and obtain dependent export evidence and
+final-source installed-wheel and hosted acceptance. Complete real production
+capture and two identical independently validated package archives, then
+execute the frozen H3 study once and complete claims and reproduction. The
+[locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
 retains all nine criteria. Private operator journals and active GNN registry
 work are preserved; only explicitly reviewed public evidence is published.
 
@@ -349,16 +369,18 @@ authorize publication or establish the FEP as a physical theory.
 3. Treat semantic-disposition changes as mathematical review, not as an
    automatic consequence of compilation.
 4. Use direct import/declaration searches and relevant consumer tests for
-   impact analysis; use an available repository index when useful. This review
-   used focused tests, local orphan compile probes and independently validated
-   hosted receipts; it did not perform a new native build.
+   impact analysis; use an available repository index when useful. Retained
+   reviews record their own focused tests, local orphan compiles and hosted
+   receipt validation; a guidance refresh does not imply a new native build.
 5. Before any separately authorized publication, inspect the exact diff, run
    all applicable gates, commit intentionally, push, and verify remote parity.
 
 The 2026-10-02 [Q7 post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
-passes all three read-only checks after independent prose review with unchanged
-custody and native JSON, closing the portability probe. Later acceptance and
-publication progress is recorded in the program's execution ledger; the dated
+passed all three read-only checks after independent prose review with unchanged
+custody and native JSON, closing portability for those recorded inputs. Current
+native-owner edits reopen `FEP-Q7-CURRENT`; that observation remains historical.
+Later acceptance and publication progress is recorded in the program's
+execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized
 committing and pushing reviewed changes to `main` and publishing the next minor
 release, `v1.4.0`, after its acceptance gates. The

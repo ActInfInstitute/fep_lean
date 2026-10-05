@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from fep_lean._paths import project_root as default_project_root
+from fep_lean._paths import resolve_output_root
 from fep_lean.gauss.cli import check_gauss_cli
 from fep_lean.gauss.client import resolve_gauss_home
 from fep_lean.verification._subprocess import run_process_group
@@ -221,14 +222,22 @@ def _check_python_stack() -> tuple[bool, str]:
     )
 
 
-def _check_output_writable(project_root: Path) -> tuple[bool, str]:
-    output = project_root / "output"
-    parent = output if output.is_dir() else output.parent
+def _check_output_writable(
+    project_root: Path, output_root: Path | None = None
+) -> tuple[bool, str]:
+    output = resolve_output_root(project_root, output_root)
+    parent = output
+    while not parent.exists():
+        if parent.is_symlink():
+            return False, f"output path has a dangling symlink: {parent}"
+        if parent.parent == parent:
+            return False, f"output path has no existing ancestor: {output}"
+        parent = parent.parent
     if not parent.is_dir():
-        return False, f"output/ parent is missing: {parent}"
-    if not os.access(parent, os.W_OK):
-        return False, "output/ is not writable"
-    return True, "output/ writable"
+        return False, f"output path is blocked by a non-directory: {parent}"
+    if not os.access(parent, os.W_OK | os.X_OK):
+        return False, f"output directory is not writable/searchable: {parent}"
+    return True, f"output directory {output} writable (checked {parent})"
 
 
 def _check_file(project_root: Path, relative: str) -> tuple[bool, str]:
@@ -282,15 +291,25 @@ def _check_references_bib(project_root: Path) -> tuple[bool, str]:
     return True, f"references.bib validated ({len(keys)} unique entries)"
 
 
-def _check_hermes_credentials() -> tuple[bool, str]:
-    if not os.environ.get("OPENROUTER_API_KEY") and not os.environ.get(
-        "ANTHROPIC_API_KEY"
-    ):
+def _check_hermes_credentials(project_root: Path) -> tuple[bool, str]:
+    from fep_lean.llm.hermes import HermesConfig
+
+    config = HermesConfig.from_settings(project_root, hydrate_environment=False)
+    if not config.api_key:
         return (
             False,
-            "OPENROUTER_API_KEY or ANTHROPIC_API_KEY is required for full mode",
+            "Hermes requires a provider key in the environment or OpenGauss dotenv",
         )
-    return True, "Hermes credentials configured"
+    if not config.enabled:
+        return (
+            False,
+            "Hermes is disabled or the credential/endpoint configuration is incompatible",
+        )
+    try:
+        config.runtime_policy()
+    except ValueError:
+        return False, "Hermes endpoint configuration is invalid"
+    return True, "Hermes credentials configured (authentication not checked)"
 
 
 # Focused check functions remain available for direct unit coverage. The
@@ -307,7 +326,9 @@ def _check_manuscript_config(project_root: Path) -> tuple[bool, str]:
     return _check_file(project_root, "manuscript/config.yaml")
 
 
-def run_validation_checks(project_root: Path, *, mode: str = "full") -> dict[str, Any]:
+def run_validation_checks(
+    project_root: Path, *, mode: str = "full", output_root: Path | None = None
+) -> dict[str, Any]:
     """Run bounded, read-only checks for ``full`` or ``catalogue`` mode."""
     if mode not in {"full", "catalogue"}:
         raise ValueError(f"unsupported validation mode: {mode}")
@@ -332,7 +353,10 @@ def run_validation_checks(project_root: Path, *, mode: str = "full") -> dict[str
         ("topics_yaml", lambda: _check_topics_yaml(project_root)),
         ("project_layout", lambda: _check_dirs(project_root)),
         ("python_scientific_stack", _check_python_stack),
-        ("output_writable", lambda: _check_output_writable(project_root)),
+        (
+            "output_writable",
+            lambda: _check_output_writable(project_root, output_root),
+        ),
         (
             "manuscript_config",
             lambda: _check_file(project_root, "manuscript/config.yaml"),
@@ -354,7 +378,7 @@ def run_validation_checks(project_root: Path, *, mode: str = "full") -> dict[str
             ("lake_cli", lambda: _check_lake(project_root)),
             ("lean_workspace", lambda: _check_lean_workspace(project_root)),
             ("mathlib_built", lambda: _check_mathlib_built(project_root)),
-            ("hermes_credentials", _check_hermes_credentials),
+            ("hermes_credentials", lambda: _check_hermes_credentials(project_root)),
         )
         assert (
             tuple(name for name, _ in full_only_checks)

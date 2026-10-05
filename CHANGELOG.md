@@ -8,7 +8,7 @@ authored snapshot date; actual publication timestamps are recorded separately.
 The citation describes 168 canonical topic bodies and separates
 compiled statements from semantic adequacy and empirical validity. Dependency
 pins and historical releases/receipts retain their identities. Publication
-awaits current acceptance, same-SHA hosted evidence and artifact validation.
+awaits final-source acceptance, same-SHA hosted evidence and artifact validation.
 
 Publication capture now refreshes the paired manuscript projections and test
 census only after strict native acceptance, renders those final values, then
@@ -27,6 +27,38 @@ The canonical backlog contains open work only. The
 [upcoming scope](docs/design/fep-research-program/next-improvements.md) defines
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
+
+## 2026-10-05 — Output/configuration repairs and reopened currency
+
+The published `main` checkpoint
+[fa3c88e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/fa3c88e)
+has a successful
+[same-SHA hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37150440750):
+all 15 distribution cells and the Python, Lean and render jobs passed.
+Nonserial Python passed 2,371 tests with 15 policy skips in 829.74 seconds and
+91.28% coverage on Linux CPython 3.14.8. Local validation uses the separate
+CPython 3.14.4 environment.
+
+Four existing owners now resolve selected output-root precedence,
+checks of that output location, empty validation filters, read-only canonical
+Hermes credential validation, and removal of a duplicate appendix writer.
+The local CPython 3.14.4 focused run passed 298 cases with one explicit
+live-provider skip. After correcting the valid-area intersection test,
+the whole pipeline module passed all 37 cases without skips. Mypy, Ruff lint
+and formatting, strict links/hygiene/xrefs, lock and environment checks passed.
+Fresh independent infrastructure review approved the final source. Failed
+attempts remain retained; these focused results are not full-suite, native,
+provider or release acceptance.
+Native-owner changes reopen the 291-input native and Q7 source-pair gates;
+`FEP-Q7-CURRENT` returns to the open-only backlog. The old accepted Q7 captures,
+failed attempts and `fa3c88e` CI results retain their source epochs without
+receipt rewriting.
+
+The local installed-wheel 15 GiB prerequisite remains unmet. Production capture,
+two independently accepted identical package archives, once-only frozen H3
+primary execution, claim review and study reproduction remain open. The empirical
+branch remains governed no-go without licensed data. Candidate `v1.4.0` is
+unreleased and retains its canonical authored date of 2026-10-02.
 
 ## 2026-10-03 — Candidate publication and custody fixture repair
 

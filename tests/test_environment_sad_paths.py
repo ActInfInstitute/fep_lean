@@ -1,11 +1,15 @@
 """Capability failure cases using real temporary files and executables."""
 
+import os
 from pathlib import Path
+
+import pytest
 
 from fep_lean.catalogue.topics import FEPTopicCatalogue
 from fep_lean.verification.environment import (
     _check_catalogue_import,
     _check_dirs,
+    _check_hermes_credentials,
     _check_lake,
     _check_lean_cli,
     _check_lean_workspace,
@@ -115,6 +119,108 @@ def test_output_write_probe(tmp_path: Path) -> None:
     ok, message = _check_output_writable(tmp_path)
     assert ok
     assert "writable" in message
+
+
+@pytest.mark.parametrize(
+    "obstruction", ["target-file", "ancestor-file", "dangling-link"]
+)
+def test_output_probe_rejects_non_directory_paths(
+    tmp_path: Path,
+    obstruction: str,
+) -> None:
+    target = tmp_path / "selected"
+    if obstruction == "dangling-link":
+        target.symlink_to(tmp_path / "absent")
+    else:
+        target.write_text("occupied")
+        if obstruction == "ancestor-file":
+            target = target / "nested"
+    before = {path: path.lstat().st_mtime_ns for path in tmp_path.iterdir()}
+    ok, message = _check_output_writable(tmp_path, target)
+    assert not ok
+    assert "selected" in message
+    assert {path: path.lstat().st_mtime_ns for path in tmp_path.iterdir()} == before
+
+
+def test_output_probe_checks_selected_ancestor_without_creating_directories(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    selected = tmp_path / "selected"
+    selected.mkdir()
+    destination = selected / "missing/nested"
+    checked: list[tuple[Path, int]] = []
+    before = selected.stat().st_mtime_ns
+
+    def access(path: Path, mode: int) -> bool:
+        checked.append((Path(path), mode))
+        return Path(path) == selected
+
+    monkeypatch.setattr("fep_lean.verification.environment.os.access", access)
+    ok, message = _check_output_writable(tmp_path, destination)
+    assert ok
+    assert str(destination) in message
+    assert checked == [(selected, os.W_OK | os.X_OK)]
+    assert not destination.exists()
+    assert selected.stat().st_mtime_ns == before
+    monkeypatch.setattr("fep_lean.verification.environment.os.access", lambda *_: False)
+    assert _check_output_writable(tmp_path, destination)[0] is False
+
+
+@pytest.mark.parametrize(
+    ("key_name", "key", "endpoint", "expected"),
+    [
+        (
+            "OPENROUTER_API_KEY",
+            "sk-or-synthetic-fixture",
+            "https://openrouter.ai/api/v1",
+            True,
+        ),
+        (
+            "ANTHROPIC_API_KEY",
+            "sk-ant-synthetic-fixture",
+            "https://api.anthropic.com/v1",
+            True,
+        ),
+        ("OPENAI_API_KEY", "sk-synthetic-fixture", "https://api.example.test/v1", True),
+        (
+            "OPENROUTER_API_KEY",
+            "sk-or-synthetic-fixture",
+            "https://api.anthropic.com/v1",
+            False,
+        ),
+        (
+            "OPENAI_API_KEY",
+            "sk-synthetic-fixture",
+            "https://user:private@api.example.test/v1",
+            False,
+        ),
+    ],
+)
+def test_credential_probe_reuses_readonly_execution_configuration(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    key_name: str,
+    key: str,
+    endpoint: str,
+    expected: bool,
+) -> None:
+    for name in ("OPENROUTER_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY"):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("GAUSS_HOME", str(tmp_path))
+    monkeypatch.setenv("HERMES_API_BASE", endpoint)
+    dotenv = tmp_path / ".env"
+    dotenv.write_text(f"{key_name}={key}\nUNALLOWLISTED=value\n")
+    before = dict(os.environ)
+    before_bytes = dotenv.read_bytes()
+    before_mtime = dotenv.stat().st_mtime_ns
+    ok, message = _check_hermes_credentials(tmp_path)
+    assert ok is expected
+    assert key not in message
+    assert "private" not in message
+    assert dict(os.environ) == before
+    assert dotenv.read_bytes() == before_bytes
+    assert dotenv.stat().st_mtime_ns == before_mtime
 
 
 def test_scientific_stack_is_present() -> None:
