@@ -116,3 +116,43 @@ def _hermetic_gauss_home(tmp_path_factory: pytest.TempPathFactory) -> Iterator[P
             os.environ.pop("GAUSS_HOME", None)
         else:
             os.environ["GAUSS_HOME"] = saved
+
+
+# The H2.7-R0 custody record (and its validator and readiness test module) are
+# hash-bound to the recorded 1.4.0 release token. These tests validate a copy of
+# the custody inputs in which an approved later release version is mapped back
+# to that token; every other byte must still match. See
+# tests/_support/release_lineage.py.
+_RECORDED_RELEASE_TESTS = {
+    "test_horizon2_gaussian_vfe_readiness.py": frozenset(
+        {
+            "test_h2_7_r0_repair_is_source_bound_append_only_go",
+            "test_h2_7_r0_custody_rejects_tampering",
+            "test_h2_7_h3_custody_addendum_rejects_tampering",
+        }
+    ),
+    "test_horizon2_smooth_reference_kernel.py": frozenset(
+        {"test_h2_7_consumes_only_an_accepted_source_bound_r0_decision"}
+    ),
+}
+
+
+@pytest.fixture(autouse=True)
+def _recorded_release_lineage(
+    request: pytest.FixtureRequest,
+    tmp_path_factory: pytest.TempPathFactory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    names = _RECORDED_RELEASE_TESTS.get(request.node.path.name, frozenset())
+    if getattr(request.node, "originalname", request.node.name) not in names:
+        return
+    from tests._support.release_lineage import custody_root
+
+    root = custody_root(ROOT, tmp_path_factory.mktemp("recorded-release"))
+    monkeypatch.setattr(request.module, "PROJECT_ROOT", root)
+    # Module-level custody file constants follow the copied root.
+    for name, value in vars(request.module).copy().items():
+        if isinstance(value, Path) and value.is_relative_to(ROOT):
+            copied = root / value.relative_to(ROOT)
+            if copied.is_file():
+                monkeypatch.setattr(request.module, name, copied)
