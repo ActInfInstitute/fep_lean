@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the release gate: one version/date, a changelog section, green hosted CI.
 
-The gate is deliberately short (see docs/release.md). Research and evidence
+The gate is deliberately short (see release.md). Research and evidence
 lanes (H3 study, capture custody, installed-wheel matrix, provider runs) are
 reported in release notes; they do not block a versioned release.
 """

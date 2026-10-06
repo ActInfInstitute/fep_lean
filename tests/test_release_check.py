@@ -26,7 +26,7 @@ _SOURCES = (
 
 def _module() -> ModuleType:
     spec = importlib.util.spec_from_file_location(
-        "release_check", PROJECT_ROOT / "scripts" / "release_check.py"
+        "release_check", PROJECT_ROOT / "docs" / "release_check.py"
     )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)

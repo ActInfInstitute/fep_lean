@@ -15,7 +15,7 @@ empirical validity. Lean/Mathlib stays at the v4.34.1 pair.
 A versioned release now requires exactly: one version and date across every
 version-bearing file, a dated `CHANGELOG.md` section, a clean `main` equal to
 `origin/main`, and a successful hosted `ci.yml` run on that exact commit
-(Python, distribution matrix, Lean and render jobs). `scripts/release_check.py`
+(Python, distribution matrix, Lean and render jobs). `docs/release_check.py`
 checks all of it and extracts these notes; [docs/release.md](docs/release.md)
 is the procedure. Research and evidence lanes — the frozen H3 study, full
 seven-stage capture and archive parity, the installed-wheel runtime matrix,

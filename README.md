@@ -20,7 +20,7 @@ It supersedes the [`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep
 (159 topics); the `1.4.0` candidate was never tagged and ships within 1.5.0.
 Releases follow the short [release procedure](docs/release.md): one version
 and date everywhere, a dated changelog section and a green hosted CI run on
-the exact `main` commit, checked by `scripts/release_check.py`.
+the exact `main` commit, checked by `docs/release_check.py`.
 The evolving scholarly record is identified by the
 [Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233); the Zenodo
 integration mints each immutable version DOI from the GitHub release.

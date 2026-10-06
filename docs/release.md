@@ -3,7 +3,7 @@
 A versioned release is a tagged, hosted-CI-green `main` commit with one
 consistent version. The gate is short on purpose: it checks what a release
 actually ships, and it is fully checked by
-[`scripts/release_check.py`](../scripts/release_check.py).
+[`docs/release_check.py`](release_check.py).
 
 ## Release gate
 
@@ -33,11 +33,11 @@ A release changes no scientific claim. Unrun lanes stay described as unrun.
 
 1. Bump the version and date in every file listed above, add the dated
    `CHANGELOG.md` section, and run `uv lock`.
-2. `uv run python scripts/release_check.py` — fix every reported mismatch.
+2. `uv run python docs/release_check.py` — fix every reported mismatch.
 3. Run the local suite and audits (see [development](development.md)), commit
    and push to `main`.
 4. Wait for hosted CI on that commit, then
-   `uv run python scripts/release_check.py --hosted --notes /tmp/notes.md`.
+   `uv run python docs/release_check.py --hosted --notes /tmp/notes.md`.
 5. Build distributions from the same commit: `uv build`.
 6. Tag and publish:
 

@@ -369,7 +369,7 @@ and account settings retain their separate boundaries.
 > Have an independent nonauthor map all nine criteria to exact final-source
 > receipts, including truthful static status and FORM-1–FORM-3 boundary/semantic
 > acceptance. Cut later versioned releases through docs/release.md
-> (`scripts/release_check.py --hosted`); report unrun lanes as unrun. Do not change
+> (`docs/release_check.py --hosted`); report unrun lanes as unrun. Do not change
 > account settings, force-push, erase history or touch active GNN work.
 >
 > Activate future minor/medium/major Issues only after their stated predecessors

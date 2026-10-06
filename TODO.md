@@ -11,7 +11,7 @@ implementation scope, not a version or schedule promise.
 Releases follow the short [release procedure](docs/release.md): one version
 and date across version-bearing files, a dated changelog section, and a
 successful hosted `ci.yml` run on the exact `main` commit, all checked by
-`scripts/release_check.py`. `v1.5.0` (2026-10-06) is the current release; the
+`docs/release_check.py`. `v1.5.0` (2026-10-06) is the current release; the
 untagged `1.4.0` candidate shipped within it. Nothing below blocks a release.
 
 ## Evidence and research lanes

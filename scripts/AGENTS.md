@@ -93,12 +93,6 @@ manifests, and compares stored digests with a live checkout.
 `--require-complete` additionally demands a complete, non-empty, zero-warning
 full-mode receipt. It never reruns the pipeline.
 
-`release_check.py` is the whole release gate: one version/date across every
-version-bearing file, a dated `CHANGELOG.md` section, and (`--hosted`) a clean
-`HEAD` equal to `origin/main` with a successful hosted `ci.yml` run on that
-exact commit. `--notes` writes the changelog section as release notes. See
-[docs/release.md](../docs/release.md).
-
 `capture_browser_acceptance.py` is a thin wrapper over
 `fep_lean.output.browser_capture.capture_browser_acceptance`: it records the
 canonical Chrome/CDP acceptance receipt plus six bound screenshots under

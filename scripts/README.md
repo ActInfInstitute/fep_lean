@@ -139,14 +139,6 @@ non-empty, zero-warning full-mode receipt:
 uv run python scripts/verify_report_receipt.py output/reports/run_... --require-complete
 ```
 
-`release_check.py` checks the [release gate](../docs/release.md) and writes
-release notes from the matching `CHANGELOG.md` section:
-
-```bash
-uv run python scripts/release_check.py
-uv run python scripts/release_check.py --hosted --notes /tmp/notes.md
-```
-
 `capture_browser_acceptance.py` records the canonical Chrome/CDP browser
 acceptance: it drives a local Chrome/Chromium (or `--browser PATH`) through
 the receipt surface and writes `output/browser-acceptance.json` with six
