@@ -6,13 +6,299 @@ import hashlib
 import json
 import os
 import struct
+import subprocess
+import sys
+import tempfile
 import zlib
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
+from typing import BinaryIO
 
 import pytest
 
 from fep_lean.output import browser_capture as capture_module
+
+
+def _startup_stderr_tail(stream: BinaryIO) -> str:
+    """Read at most 8 KiB without a pipe that can block Chrome startup."""
+    size = stream.seek(0, os.SEEK_END)
+    stream.seek(max(0, size - 8192))
+    tail = stream.read(8192).decode("utf-8", errors="replace")
+    return f"stderr_bytes={size}; tail (max 8192 bytes):\n{tail}"
+
+
+@pytest.fixture(autouse=True)
+def _live_chrome_startup_diagnostics(
+    request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Retain per-launch diagnostics for exactly the two live Chrome probes.
+
+    The production context still owns the deadline, errors and process cleanup.
+    Anonymous temporary stderr files avoid pipe backpressure and are closed on
+    both success and failure. Only a bounded tail enters pytest failure reports.
+    """
+    if request.node.name not in {
+        "test_live_chrome_blocks_and_records_a_delayed_outbound_request",
+        "test_live_chrome_replay_terminates_every_profile_writer",
+    }:
+        return
+    original_client = capture_module._chrome_client
+    original_subprocess = capture_module.subprocess
+    launch = 0
+
+    @contextmanager
+    def diagnostic_client(
+        executable: Path,
+    ) -> Iterator[tuple[capture_module._CdpClient, str]]:
+        nonlocal launch
+        launch += 1
+        processes = []
+        with tempfile.TemporaryFile() as stderr:
+
+            def diagnostic_popen(*args, **kwargs):
+                kwargs["stderr"] = stderr
+                process = original_subprocess.Popen(*args, **kwargs)
+                processes.append(process)
+                return process
+
+            # Patch only this owner's module reference, never global Popen.
+            proxy = SimpleNamespace(
+                **{**vars(original_subprocess), "Popen": diagnostic_popen}
+            )
+            with monkeypatch.context() as patch:
+                patch.setattr(capture_module, "subprocess", proxy)
+                try:
+                    with original_client(executable) as client:
+                        yield client
+                finally:
+                    states = [(p.pid, p.poll()) for p in processes]
+                    request.node.add_report_section(
+                        "call",
+                        f"Chrome startup {launch}",
+                        f"worker={os.environ.get('PYTEST_XDIST_WORKER', 'main')}; "
+                        f"pid/returncode_after_cleanup={states!r}\n"
+                        + _startup_stderr_tail(stderr),
+                    )
+
+    monkeypatch.setattr(capture_module, "_chrome_client", diagnostic_client)
+
+
+def test_startup_stderr_diagnostics_bound_and_decode_tail() -> None:
+    with tempfile.TemporaryFile() as stream:
+        stream.write(b"discarded-prefix" + b"x" * 8191 + b"\xff")
+        result = _startup_stderr_tail(stream)
+    assert "discarded-prefix" not in result
+    assert result.endswith("x" * 8191 + "\ufffd")
+    assert "stderr_bytes=8208" in result
+
+
+def test_startup_diagnostics_retain_stderr_without_hiding_launch_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    executable = tmp_path / "exiting-chrome"
+    executable.write_text(
+        "#!/bin/sh\nprintf 'startup failure control' >&2\nexit 17\n",
+        encoding="utf-8",
+    )
+    executable.chmod(0o700)
+    sections = []
+    request = SimpleNamespace(
+        node=SimpleNamespace(
+            name="test_live_chrome_blocks_and_records_a_delayed_outbound_request",
+            add_report_section=lambda *section: sections.append(section),
+        )
+    )
+    original_popen = subprocess.Popen
+    _live_chrome_startup_diagnostics.__wrapped__(request, monkeypatch)
+    with (
+        pytest.raises(
+            capture_module.BrowserCaptureError,
+            match="Chrome exited before CDP became available",
+        ),
+        capture_module._chrome_client(executable),
+    ):
+        pytest.fail("an exited process must not provide a CDP client")
+    assert subprocess.Popen is original_popen
+    assert capture_module._CDP_START_TIMEOUT_SECONDS == 15
+    assert len(sections) == 1
+    when, title, details = sections[0]
+    assert (when, title) == ("call", "Chrome startup 1")
+    assert ", 17)]" in details
+    assert "stderr_bytes=23" in details
+    assert details.endswith("startup failure control")
+
+
+@pytest.mark.parametrize("xdist_present", [False, True])
+def test_live_chrome_grouping_requires_xdist_and_exact_node_ids(
+    tmp_path: Path, xdist_present: bool
+) -> None:
+    """Exercise real collection with strict markers and isolated plugin loading."""
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    (tests / "conftest.py").write_bytes(
+        Path(__file__).with_name("conftest.py").read_bytes()
+    )
+    names = (
+        "test_live_chrome_blocks_and_records_a_delayed_outbound_request",
+        "test_live_chrome_replay_terminates_every_profile_writer",
+    )
+    cases = "import pytest\n" + "\n".join(
+        f"def {name}(): pass\n" for name in (*names, names[0] + "_unrelated")
+    )
+    cases += "\n@pytest.mark.serial_lean\ndef test_lean_probe(): pass\n"
+    (tests / "test_browser_capture.py").write_text(cases, encoding="utf-8")
+    (tests / "test_other.py").write_text(cases, encoding="utf-8")
+    (tmp_path / "pytest.ini").write_text(
+        "[pytest]\nmarkers =\n    serial_lean: shared Lean workspace\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "conftest.py").write_text(
+        "import json\n"
+        "def pytest_collection_finish(session):\n"
+        "    rows = {item.nodeid: [mark.args[0] for mark in "
+        "item.iter_markers('xdist_group')] for item in session.items}\n"
+        "    (session.config.rootpath / 'groups.json').write_text(json.dumps(rows))\n",
+        encoding="utf-8",
+    )
+    command = [sys.executable, "-m", "pytest", "--collect-only", "--strict-markers"]
+    if xdist_present:
+        command += ["-p", "xdist"]
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"PYTEST_ADDOPTS", "PYTEST_PLUGINS"}
+    }
+    environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    result = subprocess.run(
+        command,
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    groups = json.loads((tmp_path / "groups.json").read_text(encoding="utf-8"))
+    expected = {
+        f"tests/{filename}::{name}": (
+            ["lean"]
+            if xdist_present and name == "test_lean_probe"
+            else ["live_chrome"]
+            if xdist_present and filename == "test_browser_capture.py" and name in names
+            else []
+        )
+        for filename in ("test_browser_capture.py", "test_other.py")
+        for name in (*names, names[0] + "_unrelated", "test_lean_probe")
+    }
+    assert groups == expected
+
+
+@pytest.mark.parametrize("remove_tryfirst", [False, True])
+def test_loadgroup_workers_require_grouping_before_xdist_node_ids(
+    tmp_path: Path, remove_tryfirst: bool
+) -> None:
+    """Real workers accept the hook and reject its ordering mutation.
+
+    Collection alone sees marks even when xdist has already consumed them.
+    These controls assert worker node IDs and placement under loadgroup.
+    """
+    tests = tmp_path / "tests"
+    tests.mkdir()
+    hook = Path(__file__).with_name("conftest.py").read_text(encoding="utf-8")
+    if remove_tryfirst:
+        decorator = "@pytest.hookimpl(tryfirst=True)\n"
+        assert hook.count(decorator) == 1
+        hook = hook.replace(decorator, "")
+    (tests / "conftest.py").write_text(hook, encoding="utf-8")
+    names = (
+        "test_live_chrome_blocks_and_records_a_delayed_outbound_request",
+        "test_live_chrome_replay_terminates_every_profile_writer",
+    )
+    expected = {}
+    for filename in ("test_browser_capture.py", "test_other.py"):
+        cases = "import pytest\n"
+        for name in (*names, names[0] + "_unrelated", "test_lean_probe"):
+            group = (
+                "lean"
+                if name == "test_lean_probe"
+                else "live_chrome"
+                if filename == "test_browser_capture.py" and name in names
+                else ""
+            )
+            node_id = f"tests/{filename}::{name}"
+            expected[node_id] = group
+            if group == "lean":
+                cases += "@pytest.mark.serial_lean\n"
+            runtime_id = node_id + (f"@{group}" if group else "")
+            cases += (
+                f"def {name}(request):\n"
+                f"    assert request.node.nodeid == {runtime_id!r}\n"
+            )
+        (tests / filename).write_text(cases, encoding="utf-8")
+    (tmp_path / "pytest.ini").write_text(
+        "[pytest]\nmarkers =\n    serial_lean: shared Lean workspace\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "conftest.py").write_text(
+        "import json\n"
+        "from pathlib import Path\n"
+        "def pytest_runtest_logreport(report):\n"
+        "    if report.when == 'call' and hasattr(report, 'worker_id'):\n"
+        "        with Path('workers.jsonl').open('a') as stream:\n"
+        "            stream.write(json.dumps({'nodeid': report.nodeid, "
+        "'worker': report.worker_id, 'outcome': report.outcome}) + '\\n')\n",
+        encoding="utf-8",
+    )
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"PYTEST_ADDOPTS", "PYTEST_PLUGINS"}
+    }
+    environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-p",
+            "xdist",
+            "-n",
+            "2",
+            "--dist",
+            "loadgroup",
+            "--strict-markers",
+            "-q",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == int(remove_tryfirst), result.stdout + result.stderr
+    rows = [
+        json.loads(line)
+        for line in (tmp_path / "workers.jsonl")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    ]
+    assert len(rows) == len(expected) == 8
+    actual = {row["nodeid"]: row for row in rows}
+    for node_id, group in expected.items():
+        runtime_id = node_id + (f"@{group}" if group and not remove_tryfirst else "")
+        assert actual[runtime_id]["outcome"] == (
+            "failed" if group and remove_tryfirst else "passed"
+        )
+    if not remove_tryfirst:
+        for group in ("live_chrome", "lean"):
+            grouped = [row for row in rows if row["nodeid"].endswith(f"@{group}")]
+            assert len(grouped) == 2
+            assert len({row["worker"] for row in grouped}) == 1
 
 
 def _png_bytes(width: int, height: int, fill: int) -> bytes:
@@ -108,6 +394,60 @@ def _stubbed_capture(
         lambda *_args, **_kwargs: replay,
     )
     return replay
+
+
+def test_canonical_dom_passes_the_interaction_summary() -> None:
+    root = Path(__file__).resolve().parents[1]
+    counts = capture_module._project_counts(root)
+    observations = capture_module.canonical_browser_observations(counts)
+    presentation = capture_module.build_formalism_presentation(root)
+    assert observations["atlas"]["pairingVisible"] == sum(
+        relation.kind == "formal_pairing" for relation in presentation.relations
+    )
+    assert all(capture_module._interactions(observations).values())
+
+
+@pytest.mark.parametrize("pairings", [0, 105, 117, 119, 146])
+def test_interactions_reject_incorrect_pairing_counts(pairings: int) -> None:
+    root = Path(__file__).resolve().parents[1]
+    observations = capture_module.canonical_browser_observations(
+        capture_module._project_counts(root)
+    )
+    observations["atlas"]["pairingVisible"] = pairings
+    assert not capture_module._interactions(observations)["search_and_filter"]
+
+
+@pytest.mark.parametrize(
+    ("section", "field", "value"),
+    [
+        ("atlas", "pairingVisible", 105),
+        ("dashboard_mobile", "compactDefaultHeight", False),
+        ("dashboard_mobile", "recordCollectionInitiallyOpen", True),
+    ],
+)
+def test_capture_rejects_noncanonical_dom_without_replacing_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    section: str,
+    field: str,
+    value: int | bool,
+) -> None:
+    replay = _stubbed_capture(tmp_path, monkeypatch)
+    # Even an all-accepted interaction summary cannot override the exact DOM gate.
+    replay.observations[section][field] = value
+    paths = [
+        tmp_path / capture_module.BROWSER_RECEIPT,
+        *(tmp_path / p for p in capture_module.CANONICAL_BROWSER_SCREENSHOTS.values()),
+    ]
+    for path in paths:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b"historical evidence\n")
+    before = {path: path.read_bytes() for path in paths}
+    with pytest.raises(
+        capture_module.BrowserCaptureError, match="DOM observations are not canonical"
+    ):
+        capture_module.capture_browser_acceptance(tmp_path)
+    assert {path: path.read_bytes() for path in paths} == before
 
 
 def test_capture_command_emits_source_bound_receipt_and_exact_screenshot_bytes(
@@ -442,8 +782,33 @@ def test_live_chrome_blocks_and_records_a_delayed_outbound_request(
         "supported Chrome/Chromium executable on this host"
     ),
 )
-def test_live_chrome_replay_terminates_every_profile_writer() -> None:
+def test_live_chrome_replay_terminates_every_profile_writer(
+    request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch
+) -> None:
     project_root = Path(__file__).resolve().parents[1]
+    original = capture_module._dashboard_observations
+    mobile_layouts = []
+
+    def measured_dashboard(client, session_id, *, mobile):
+        if mobile:
+            layout = capture_module._evaluate(
+                client,
+                session_id,
+                """(() => ({
+                  viewport:[innerWidth,innerHeight],
+                  scrollHeight:document.documentElement.scrollHeight,
+                  summaryHeights:[...document.querySelectorAll(
+                    '.mobile-plot-group>summary')].map(
+                      summary=>summary.getBoundingClientRect().height)
+                }))()""",
+            )
+            mobile_layouts.append(layout)
+            request.node.add_report_section(
+                "call", "Mobile default layout", json.dumps(layout, sort_keys=True)
+            )
+        return original(client, session_id, mobile=mobile)
+
+    monkeypatch.setattr(capture_module, "_dashboard_observations", measured_dashboard)
 
     first = capture_module.replay_browser_acceptance(project_root)
     second = capture_module.replay_browser_acceptance(project_root)
@@ -466,6 +831,21 @@ def test_live_chrome_replay_terminates_every_profile_writer() -> None:
     assert first.render_environment["webgl_renderer"]
     assert first.render_environment["webgl_vendor"]
     assert first.observations == second.observations
+    expected = capture_module.canonical_browser_observations(
+        capture_module._project_counts(project_root)
+    )
+    assert first.observations == expected
+    assert all(first.interactions.values())
+    assert first.interactions == second.interactions
+    # Validate the actual replay without publishing a production capture.
+    assert capture_module.build_browser_receipt(project_root, first)
+    assert capture_module.build_browser_receipt(project_root, second)
+    assert len(mobile_layouts) == 2
+    for layout in mobile_layouts:
+        assert layout["viewport"] == [390, 844]
+        assert layout["scrollHeight"] <= 2 * layout["viewport"][1]
+        assert len(layout["summaryHeights"]) == 6
+        assert min(layout["summaryHeights"]) >= 44
     assert (
         first.observations["dashboard_mobile"]["mobileOverviewInitiallyOpen"] is False
     )

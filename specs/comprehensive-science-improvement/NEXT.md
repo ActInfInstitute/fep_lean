@@ -1,8 +1,8 @@
 # Remaining acceptance and continuation order
 
-The latest instruction on 2026-10-05 is scoping and handoff only. Pending
-implementation and acceptance are stopped. [TODO.md](../../TODO.md) is the
-canonical open inventory with 32 linked GitHub Issues;
+Daniel resumed implementation on 2026-10-05 and authorized verified changes to
+be pushed to main. Dependencies and acceptance gates remain binding.
+[TODO.md](../../TODO.md) is the canonical open inventory with 30 linked GitHub Issues;
 [HANDOFF.md](../../HANDOFF.md) supplies current evidence and a continuation
 prompt. [EXECUTION.md](EXECUTION.md) retains dated checkpoints;
 [PROTOCOL.md](PROTOCOL.md) retains all nine original criteria.
@@ -13,19 +13,24 @@ docs was skipped. The closed local r6 production attempt accepted five stages,
 then failed canonical DOM browser validation; bundle was unattempted. Its local
 Python passed 2,488 tests with 12 skips and 90.84% coverage. Neither result
 establishes whole acceptance. The
-[current selected-pair Q7](evidence/public-q7-current-source-20261005-r1/summary.json)
+[2026-10-05 selected-pair Q7](evidence/public-q7-current-source-20261005-r1/summary.json)
 remains accepted for its recorded static statements and 291 inputs; generated
-runner execution is unverified. All failed/historical evidence is preserved.
+runner execution is unverified. This public observation does not validate the
+current checkout; later source-owner changes require fresh source-pair acceptance.
+All failed/historical evidence is preserved.
 
-When execution is resumed:
+Execution order:
 
-1. Resolve hosted startup (CUR-01) and local canonical DOM rejection (CUR-15)
-   independently. Review the conditional grouping, bounded nine-case PR45 port
-   (CUR-02) and eight guidance corrections (CUR-04) against actual preimages.
+1. Resolve hosted startup (CUR-01) and obtain fresh production browser acceptance
+   (CUR-15) independently. The reviewed browser repairs passed local focused
+   tests; hosted acceptance remains open. The nine-case PR45 port (CUR-02) and
+   guidance corrections (CUR-04) passed their bounded acceptance and leave TODO;
+   their local evidence does not establish package, native or hosted acceptance.
 2. Correct the r7-r1 materializer REVISE finding (CUR-03): explicitly approve the
    tracked 141st tests member and new tests; enforce complete frozen membership
-   before imports/planning/dispatch and at closure. No r7-r2 exists. Preserve
-   all 560 inputs plus approved additions, original caps and no-resume policy.
+   before imports/planning/dispatch and at closure. Successor source or source
+   review does not establish r7-r2 execution. Preserve all 560 inputs plus approved
+   additions, original caps and no-resume policy.
 3. Obtain actual seven-stage final-source capture and two identical independently
    accepted package archives (CUR-05). Finish five actual local installed-wheel
    runtimes and read-only status controls (CUR-06), including the unchanged

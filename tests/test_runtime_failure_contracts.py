@@ -71,6 +71,10 @@ def test_communicate_deadline_kills_group_when_watchdog_is_delayed(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     """The main timeout path must work even if its backstop cannot be scheduled."""
+    # This probe instruments the local broker. An inherited cooperative lease
+    # would route signals to the outer broker, outside these monkeypatches.
+    monkeypatch.delenv(_subprocess._SOCKET_ENV, raising=False)
+    monkeypatch.delenv(_subprocess._TOKEN_ENV, raising=False)
     callbacks: list[Any] = []
     kills: list[int] = []
     kill_group = _subprocess.os.killpg
@@ -85,6 +89,9 @@ def test_communicate_deadline_kills_group_when_watchdog_is_delayed(
         def join(self, timeout: float | None = None) -> None:
             for callback in callbacks:
                 callback()
+
+        def is_alive(self) -> bool:
+            return False
 
     def record_kill(group: int, sig: int) -> None:
         kills.append(group)

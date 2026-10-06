@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 import contextlib
+import hashlib
 import json
 import locale
 import math
@@ -23,7 +24,7 @@ import sys
 import tempfile
 import threading
 import time
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any, Final, Literal, overload
 
@@ -120,6 +121,27 @@ def _text(data: bytes) -> str:
     )
 
 
+def _note(error: BaseException, message: str) -> None:
+    # Validator execution uses 3.14; retain the package's 3.10 exception API.
+    notes = getattr(error, "__notes__", [])
+    error.__notes__ = [*notes, message]
+
+
+@contextlib.contextmanager
+def _remote_channel() -> Iterator[socket.socket]:
+    channel = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    try:
+        yield channel
+    finally:
+        primary = sys.exc_info()[1]
+        try:
+            channel.close()
+        except OSError as error:
+            if primary is None:
+                raise
+            _note(primary, f"remote channel close: {error}")
+
+
 class _Group:
     def __init__(
         self,
@@ -135,10 +157,23 @@ class _Group:
         self.parent = parent
         self.children: set[_Group] = set()
         self.finished = threading.Event()
+        self.cleanup_done = threading.Event()
+        self.cleanup_error: OSError | None = None
+        self.cleanup_errors: list[BaseException] = []
+        self.cleanup_settled = False
+        self.delivery_done = threading.Event()
+        self.request_done = threading.Event()
+        self.request_owned = False
+        self.terminal_receipt: str | None = None
+        self.request_deadline: float | None = None
+        self.stream_sizes = {"stdout_bytes": 0, "stderr_bytes": 0}
+        self.cleanup_deadline: float | None = None
         self.expired = threading.Event()
+        self.ancestor_cancelled = False
         self.cancel = threading.Event()
         self.outcome: dict[str, Any] | None = None
         self.error: BaseException | None = None
+        self.command_error: BaseException | None = None
 
 
 class _Broker:
@@ -154,6 +189,7 @@ class _Broker:
         self.connections: set[socket.socket] = set()
         self.workers: set[threading.Thread] = set()
         self.closed = False
+        self.cleanup_deadline: float | None = None
         self.listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.listener.bind(self.address)
         self.listener.listen()
@@ -163,33 +199,117 @@ class _Broker:
 
     def release(self, group: _Group, *, cancelled: bool = False) -> None:
         with self.lock:
-            if group not in self.groups:
-                return
             pending, subtree = [group], []
+            deadline = group.cleanup_deadline or time.monotonic() + _REAP_TIMEOUT_S
+            if group.parent is None:
+                self.cleanup_deadline = deadline
             while pending:
                 current = pending.pop()
-                if current in self.groups:
-                    subtree.append(current)
-                    pending.extend(current.children)
+                subtree.append(current)
+                pending.extend(current.children)
+                current.cleanup_deadline = min(
+                    current.cleanup_deadline or deadline, deadline
+                )
+            subtree = [current for current in subtree if current in self.groups]
             # Revoke the entire registered subtree before another request can
             # acquire the lock. Only fresh groups created here grant authority.
             for current in subtree:
                 self.groups.remove(current)
                 self.scopes.pop(current.scope_token)
             for current in reversed(subtree):
+                # Only a command still running is cancelled by its ancestor. One
+                # whose guard already reported keeps its delivery obligation,
+                # whichever release wins the lock.
+                if (
+                    current.parent is not None
+                    and (current is not group or self.closed)
+                    and current.outcome is None
+                ):
+                    current.ancestor_cancelled = True
                 if cancelled or current is not group:
                     current.expired.set()
-                if current.parent is not None:
-                    current.parent.children.discard(current)
-                current.children.clear()
+                # Closing children remain linked until their run has completed
+                # drain, reap and thread cleanup. Revocation grants no new authority.
                 # The unreaped guard reserves its original group identity;
                 # neither a supplied PID nor a process census grants authority.
-                with contextlib.suppress(ProcessLookupError):
+                try:
                     os.killpg(current.process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                except OSError as error:
+                    current.cleanup_errors.append(error)
                 current.cancel.set()
                 with contextlib.suppress(OSError):
                     current.channel.shutdown(socket.SHUT_RDWR)
-                current.channel.close()
+                try:
+                    current.channel.close()
+                except OSError as error:
+                    current.cleanup_errors.append(error)
+
+    def _await_children(self, group: _Group) -> None:
+        # Release has atomically denied further allocation in this subtree.
+        # Never hold the broker lock across waits or join shared request workers.
+        with self.lock:
+            children = tuple(group.children)
+        assert group.cleanup_deadline is not None
+        for child in children:
+            if not child.cleanup_done.wait(
+                max(0, group.cleanup_deadline - time.monotonic())
+            ):
+                raise OSError("process supervision subtree cleanup incomplete")
+            if child.request_owned and not child.request_done.wait(
+                max(0, group.cleanup_deadline - time.monotonic())
+            ):
+                raise OSError("process supervision request cleanup incomplete")
+            if not child.cleanup_settled:
+                raise OSError(
+                    "process supervision subtree cleanup incomplete"
+                ) from child.cleanup_error
+            if child.cleanup_error is not None:
+                if child.cleanup_settled:
+                    child.delivery_done.wait(
+                        max(0, group.cleanup_deadline - time.monotonic())
+                    )
+                with self.lock:
+                    if child not in group.children:
+                        continue
+                raise OSError(
+                    "process supervision subtree cleanup failed"
+                ) from child.cleanup_error
+
+    def _complete_cleanup(self, group: _Group) -> None:
+        with self.lock:
+            group.cleanup_done.set()
+            # Retain failures for the ancestor to observe, including failures
+            # that finished before its snapshot. Successful children may detach.
+            if (
+                group.cleanup_settled
+                and group.cleanup_error is None
+                and group.parent is not None
+                and not group.request_owned
+            ):
+                group.parent.children.discard(group)
+
+    def _acknowledge(self, group: _Group, token: str, receipt: str) -> None:
+        # The same authenticated connection carries an exact terminal-frame
+        # digest. This grants no allocation or signal authority. Revocation and
+        # acceptance are ordered under the allocation lock; waits stay outside.
+        with self.lock:
+            parent = group.parent
+            if (
+                parent is not None
+                and not self.closed
+                and parent in self.groups
+                and self.scopes.get(token) is parent
+                and not parent.expired.is_set()
+                and group.terminal_receipt is not None
+                and receipt == group.terminal_receipt
+                and group.cleanup_done.is_set()
+                and group.cleanup_settled
+                and group.request_done.is_set()
+            ):
+                parent.children.discard(group)
+                group.delivery_done.set()
 
     def _scope(self, token: str) -> _Group:
         with self.lock:
@@ -206,21 +326,41 @@ class _Broker:
 
     def close(self) -> None:
         self.abort()
-        self.listener.close()
+        failures: list[BaseException] = []
+        try:
+            self.listener.close()
+        except OSError as error:
+            failures.append(error)
         with self.lock:
             for connection in tuple(self.connections):
                 with contextlib.suppress(OSError):
                     connection.shutdown(socket.SHUT_RDWR)
-                connection.close()
-        self.server.join(timeout=_REAP_TIMEOUT_S)
-        deadline = time.monotonic() + _REAP_TIMEOUT_S
+                try:
+                    connection.close()
+                except OSError as error:
+                    failures.append(error)
+        deadline = self.cleanup_deadline or time.monotonic() + _REAP_TIMEOUT_S
         with self.lock:
             workers = tuple(self.workers)
-        for worker in workers:
-            worker.join(timeout=max(0, deadline - time.monotonic()))
-        if any(worker.is_alive() for worker in workers):
-            raise OSError("process supervision workers did not finish bounded cleanup")
-        self.directory.cleanup()
+        for worker in (self.server, *workers):
+            try:
+                worker.join(timeout=max(0, deadline - time.monotonic()))
+            except (OSError, RuntimeError) as error:
+                failures.append(error)
+        if self.server.is_alive() or any(worker.is_alive() for worker in workers):
+            failures.append(
+                OSError("process supervision workers did not finish bounded cleanup")
+            )
+        else:
+            try:
+                self.directory.cleanup()
+            except OSError as error:
+                failures.append(error)
+        if failures:
+            failure = OSError(str(failures[0]))
+            for diagnostic in failures:
+                _note(failure, f"{type(diagnostic).__name__}: {diagnostic}")
+            raise failure from failures[0]
 
     def _serve(self) -> None:
         while not self.closed:
@@ -244,6 +384,14 @@ class _Broker:
 
     def _request(self, connection: socket.socket) -> None:
         descriptors: list[int] = []
+        group: _Group | None = None
+        acknowledgment: Any = None
+
+        def registered(value: _Group) -> None:
+            nonlocal group
+            group = value
+            group.request_owned = True
+
         try:
             connection.settimeout(_CHANNEL_TIMEOUT_S)
             header, descriptors, flags, _ = socket.recv_fds(connection, 4, 3)
@@ -300,6 +448,7 @@ class _Broker:
                 output_fds=None
                 if request["capture"]
                 else (descriptors[1], descriptors[2]),
+                registered=registered,
             )
             response = {
                 "kind": "completed",
@@ -319,16 +468,87 @@ class _Broker:
         except (ValueError, TypeError, KeyError, RecursionError) as error:
             response = {"kind": "error", "error": str(error)}
         try:
+            # A one-use challenge and digest bind receipt to this connection's
+            # exact request and terminal response, including partial lengths.
+            if group is not None:
+                response.update(group.stream_sizes)
+                response["diagnostics"] = [
+                    f"{type(error).__name__}: {error}" for error in group.cleanup_errors
+                ]
+                response["receipt"] = secrets.token_hex(32)
+                group.terminal_receipt = hashlib.sha256(
+                    _frame_bytes(response)
+                ).hexdigest()
+                ack_parent = group.parent
+                assert ack_parent is not None
+                # An active caller may acknowledge during its operation. There
+                # is no new cleanup allowance: close interrupts this read and
+                # the ancestor barrier uses its original shared deadline.
+                deadline = ack_parent.cleanup_deadline
+                if deadline is None and ack_parent.request_deadline is not None:
+                    deadline = ack_parent.request_deadline + _REAP_TIMEOUT_S
+                connection.settimeout(
+                    None if deadline is None else max(0, deadline - time.monotonic())
+                )
             _send_frame(connection, response)
-        except (OSError, ValueError):
-            pass  # The owning outer worker can exit or be cancelled first.
+            if group is not None:
+                acknowledgment = _read_frame(connection)
+        except (OSError, ValueError, TypeError, RecursionError) as error:
+            if group is not None:
+                group.cleanup_errors.append(error)
         finally:
             for descriptor in descriptors:
-                os.close(descriptor)
+                try:
+                    os.close(descriptor)
+                except OSError as error:
+                    if group is not None:
+                        group.cleanup_settled = False
+                        group.cleanup_errors.append(error)
+                        group.cleanup_error = group.cleanup_error or error
             with self.lock:
+                # Closing a socket is not a wait. Peer EOF and the subsequent
+                # acknowledgment decision share the revocation critical section:
+                # the caller can finish only after request resources finalize,
+                # and its ancestor cannot revoke between close and acceptance.
+                try:
+                    connection.close()
+                except OSError as error:
+                    if group is not None:
+                        group.cleanup_settled = False
+                        group.cleanup_errors.append(error)
+                        group.cleanup_error = group.cleanup_error or error
                 self.connections.discard(connection)
                 self.workers.discard(threading.current_thread())
-            connection.close()
+                if group is not None:
+                    group.request_done.set()
+                    valid_ack = (
+                        isinstance(acknowledgment, dict)
+                        and set(acknowledgment) == {"kind", "token", "receipt"}
+                        and acknowledgment["kind"] == "ack"
+                        and acknowledgment["token"] == request["token"]
+                        and acknowledgment["receipt"] == group.terminal_receipt
+                    )
+                    if valid_ack:
+                        self._acknowledge(
+                            group, request["token"], acknowledgment["receipt"]
+                        )
+                    if not group.delivery_done.is_set() and not (
+                        group.ancestor_cancelled
+                        and group.expired.is_set()
+                        and acknowledgment is None
+                    ):
+                        unacknowledged = OSError(
+                            "process supervision terminal response unacknowledged"
+                        )
+                        group.cleanup_errors.append(unacknowledged)
+                        group.cleanup_error = group.cleanup_error or unacknowledged
+                    # Clean ancestor-induced cancellation needs no command
+                    # acknowledgment from a dead caller. Settled errors always
+                    # remain obligations unless authenticated acceptance won
+                    # the race with revocation above.
+                    if group.cleanup_settled and group.cleanup_error is None:
+                        assert group.parent is not None
+                        group.parent.children.discard(group)
 
     def run(
         self,
@@ -343,6 +563,7 @@ class _Broker:
         forward: Callable[[str, bytes], None] | None = None,
         stdin: int | None = None,
         output_fds: tuple[int, int] | None = None,
+        registered: Callable[[_Group], None] | None = None,
     ) -> subprocess.CompletedProcess[Any]:
         deadline = None if timeout is None else time.monotonic() + timeout
         with self.lock:
@@ -393,10 +614,13 @@ class _Broker:
                     pass_fds=(child.fileno(),),
                 )
                 group = _Group(process, local, scope_token=scope_token, parent=parent)
+                group.request_deadline = deadline
                 self.groups.add(group)
                 self.scopes[scope_token] = group
                 if parent is not None:
                     parent.children.add(group)
+                if registered is not None:
+                    registered(group)
             except BaseException:
                 local.close()
                 child.close()
@@ -437,8 +661,12 @@ class _Broker:
         reader_started = False
         buffers = {"stdout": bytearray(), "stderr": bytearray()}
         streams = [p for p in (process.stdout, process.stderr) if p is not None]
+        forward_error: OSError | None = None
+        capture_complete = not capture
+        timer_started = False
         try:
             timer.start()
+            timer_started = True
             _send_frame(local, list(command))  # Register before actual tool launch.
             guard_reader.start()
             reader_started = True
@@ -450,7 +678,6 @@ class _Broker:
                     if pipe is not None:
                         os.set_blocking(pipe.fileno(), False)
                         selector.register(pipe, selectors.EVENT_READ, name)
-                drain_deadline = None
                 while True:
                     now = time.monotonic()
                     if (
@@ -463,11 +690,13 @@ class _Broker:
                             self.abort()
                         else:
                             self.release(group, cancelled=True)
-                    if group.cancel.is_set() and drain_deadline is None:
-                        drain_deadline = now + _REAP_TIMEOUT_S
                     if group.finished.is_set() and not selector.get_map():
+                        capture_complete = True
                         break
-                    if drain_deadline is not None and now >= drain_deadline:
+                    if (
+                        group.cleanup_deadline is not None
+                        and now >= group.cleanup_deadline
+                    ):
                         group.expired.set()  # Reject incomplete held-pipe capture.
                         break
                     if not selector.get_map():
@@ -478,11 +707,19 @@ class _Broker:
                         if chunk:
                             buffers[key.data].extend(chunk)
                             if forward is not None:
-                                forward(key.data, chunk)
+                                try:
+                                    forward(key.data, chunk)
+                                except OSError as error:
+                                    forward_error = error
+                                    forward = None
+                                    self.release(group)
+                                    # Continue reading broker-owned pipes to EOF;
+                                    # failed caller transport is not drain evidence.
                         else:
                             selector.unregister(key.fileobj)
             self.release(group)
-            process.wait(timeout=_REAP_TIMEOUT_S)
+            if forward_error is not None:
+                raise forward_error
             if group.expired.is_set():
                 raise subprocess.TimeoutExpired(
                     list(command),
@@ -526,15 +763,84 @@ class _Broker:
                 ) from None
             raise
         finally:
+            primary = sys.exc_info()[1]
             self.release(group)
-            for stream in streams:
-                stream.close()
-            with contextlib.suppress(subprocess.TimeoutExpired):
-                process.wait(timeout=_REAP_TIMEOUT_S)
+            assert group.cleanup_deadline is not None
+
+            def remaining() -> float:
+                assert group.cleanup_deadline is not None
+                return max(0, group.cleanup_deadline - time.monotonic())
+
+            failures = group.cleanup_errors
+            try:
+                process.wait(timeout=remaining())
+            except (OSError, subprocess.TimeoutExpired) as error:
+                failures.append(error)
+            settled = process.returncode is not None
+            if not settled:
+                failures.append(OSError("process supervision guard cleanup incomplete"))
+            if local.fileno() != -1:
+                settled = False
+                failures.append(
+                    OSError("process supervision guard channel cleanup incomplete")
+                )
             group.cancel.set()
-            timer.join(timeout=_REAP_TIMEOUT_S)
-            if reader_started:
-                guard_reader.join(timeout=_REAP_TIMEOUT_S)
+            for thread, started, name in (
+                (timer, timer_started, "timer"),
+                (guard_reader, reader_started, "reader"),
+            ):
+                if started:
+                    try:
+                        thread.join(timeout=remaining())
+                    except (OSError, RuntimeError) as error:
+                        failures.append(error)
+                    if thread.is_alive():
+                        settled = False
+                        failures.append(
+                            OSError(f"process supervision {name} cleanup incomplete")
+                        )
+            if not capture_complete:
+                failures.append(
+                    OSError("process supervision capture cleanup incomplete")
+                )
+            if forward_error is not None:
+                failures.append(forward_error)
+            try:
+                self._await_children(group)
+            except OSError as error:
+                settled = False
+                failures.append(error)
+            for stream in streams:
+                try:
+                    stream.close()
+                except OSError as error:
+                    failures.append(error)
+                if not stream.closed:
+                    settled = False
+                    failures.append(
+                        OSError("process supervision stream cleanup incomplete")
+                    )
+            group.cleanup_settled = settled
+            group.stream_sizes = {
+                f"{name}_bytes": len(data) for name, data in buffers.items()
+            }
+            failure = OSError(str(failures[0])) if failures else None
+            if failure is not None:
+                for diagnostic in failures:
+                    _note(failure, f"{type(diagnostic).__name__}: {diagnostic}")
+                failure.__cause__ = failures[0]
+            group.cleanup_error = failure
+            group.command_error = primary or failure
+            self._complete_cleanup(group)
+            if failure is not None:
+                if primary is not None:
+                    for diagnostic in failures:
+                        _note(
+                            primary,
+                            f"cleanup: {type(diagnostic).__name__}: {diagnostic}",
+                        )
+                else:
+                    raise failure
 
 
 def _remote(
@@ -545,7 +851,7 @@ def _remote(
     timeout: float | None,
     capture: bool,
 ) -> subprocess.CompletedProcess[Any]:
-    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as channel:
+    with _remote_channel() as channel:
         channel.settimeout(_CHANNEL_TIMEOUT_S)
         channel.connect(os.environ[_SOCKET_ENV])
         frame = _frame_bytes(
@@ -561,7 +867,8 @@ def _remote(
         # SCM_RIGHTS duplicates only the caller's inherited standard streams;
         # it grants no PID or signal authority to the broker client.
         sent = socket.send_fds(channel, [frame], [0] if capture else [0, 1, 2])
-        channel.sendall(frame[sent:])
+        if sent < len(frame):  # An empty send to a rejecting peer raises EPIPE.
+            channel.sendall(frame[sent:])
         channel.settimeout(
             None if timeout is None else max(0.001, timeout) + 2 * _REAP_TIMEOUT_S
         )
@@ -574,12 +881,18 @@ def _remote(
                 if (
                     not capture
                     or set(result) != {"kind", "pipe", "data"}
+                    or type(result["pipe"]) is not str
                     or result["pipe"] not in buffers
                     or type(result["data"]) is not str
                 ):
                     raise OSError("invalid process supervision stream")
                 name = result["pipe"]
-                buffers[name].extend(base64.b64decode(result["data"], validate=True))
+                try:
+                    buffers[name].extend(
+                        base64.b64decode(result["data"], validate=True)
+                    )
+                except ValueError as error:
+                    raise OSError("invalid process supervision stream bytes") from error
         except TimeoutError:
             raise subprocess.TimeoutExpired(
                 list(command),
@@ -587,27 +900,94 @@ def _remote(
                 output=bytes(buffers["stdout"]) if capture else None,
                 stderr=bytes(buffers["stderr"]) if capture else None,
             ) from None
-    if not isinstance(result, dict):
-        raise OSError("invalid process supervision response")
-    if result.get("kind") == "timeout":
+        if not isinstance(result, dict):
+            raise OSError("invalid process supervision response")
+        kind = result.get("kind")
+        receipt = result.get("receipt")
+        sizes = {"stdout_bytes", "stderr_bytes"}
+        fields = {
+            "completed": {"returncode"},
+            "timeout": {"timeout"},
+            "oserror": {"error"},
+            "error": {"error"},
+        }
+        if type(kind) is not str or kind not in fields:
+            raise OSError("invalid process supervision response")
+        # Rejections before allocation carry no receipt and cannot acknowledge
+        # a child. Every allocated terminal result includes exact stream sizes.
+        if kind == "error" and receipt is None:
+            if set(result) != {"kind", "error"} or type(result["error"]) is not str:
+                raise OSError("invalid process supervision rejection")
+            raise OSError("process supervision request rejected")
+        if (
+            type(receipt) is not str
+            or len(receipt) != 64
+            or any(c not in "0123456789abcdef" for c in receipt)
+            or set(result) != {"kind", "receipt", "diagnostics"} | sizes | fields[kind]
+            or not isinstance(result["diagnostics"], list)
+            or any(type(note) is not str for note in result["diagnostics"])
+        ):
+            raise OSError("invalid process supervision response")
         _check_stream_sizes(result, buffers)
-        raise subprocess.TimeoutExpired(
-            list(command),
-            result["timeout"],
-            output=bytes(buffers["stdout"]) if capture else None,
-            stderr=bytes(buffers["stderr"]) if capture else None,
-        )
-    if result.get("kind") == "oserror":
-        raise OSError(*result["error"])
-    if result.get("kind") != "completed":
-        raise OSError("process supervision request rejected")
-    _check_stream_sizes(result, buffers)
-    return subprocess.CompletedProcess(
-        list(command),
-        result["returncode"],
-        _text(bytes(buffers["stdout"])) if capture else None,
-        _text(bytes(buffers["stderr"])) if capture else None,
-    )
+        if kind == "completed":
+            if type(result["returncode"]) is not int:
+                raise OSError("invalid process supervision return code")
+            # Decode before acknowledging; invalid text is not validated receipt.
+            completed = subprocess.CompletedProcess(
+                list(command),
+                result["returncode"],
+                _text(bytes(buffers["stdout"])) if capture else None,
+                _text(bytes(buffers["stderr"])) if capture else None,
+            )
+            terminal_error: BaseException | None = None
+        elif kind == "timeout":
+            if result["timeout"] is None or not _valid_timeout(result["timeout"]):
+                raise OSError("invalid process supervision timeout")
+            if result["timeout"] != (
+                timeout if timeout is not None else _REAP_TIMEOUT_S
+            ):
+                raise OSError("process supervision timeout does not match request")
+            terminal_error = subprocess.TimeoutExpired(
+                list(command),
+                result["timeout"],
+                output=bytes(buffers["stdout"]) if capture else None,
+                stderr=bytes(buffers["stderr"]) if capture else None,
+            )
+        elif kind == "oserror":
+            remote_error = result["error"]
+            if (
+                not isinstance(remote_error, list)
+                or len(remote_error) != 2
+                or (remote_error[0] is not None and type(remote_error[0]) is not int)
+                or type(remote_error[1]) is not str
+            ):
+                raise OSError("invalid process supervision error")
+            terminal_error = OSError(*remote_error)
+        else:
+            if type(result["error"]) is not str:
+                raise OSError("invalid process supervision error")
+            terminal_error = OSError("process supervision request rejected")
+        if terminal_error is not None:
+            for note in result["diagnostics"]:
+                _note(terminal_error, f"cleanup: {note}")
+        try:
+            _send_frame(
+                channel,
+                {
+                    "kind": "ack",
+                    "token": os.environ[_TOKEN_ENV],
+                    "receipt": hashlib.sha256(_frame_bytes(result)).hexdigest(),
+                },
+            )
+            if channel.recv(1) != b"":
+                raise OSError("invalid process supervision acknowledgment completion")
+        except OSError as error:
+            if terminal_error is None:
+                raise
+            _note(terminal_error, f"terminal acknowledgment: {error}")
+        if terminal_error is not None:
+            raise terminal_error
+        return completed
 
 
 def _check_stream_sizes(
@@ -654,7 +1034,8 @@ def run_process_group(
 ) -> subprocess.CompletedProcess[str] | subprocess.CompletedProcess[None]:
     """Run an owned command and preserve text, check and typed timeout semantics.
 
-    Cooperative nested helpers and same-group descendants are cleaned up.
+    Cooperative nested helpers receive bounded subtree cleanup. Capture EOF
+    and trusted guards do not prove arbitrary descendants' kernel death.
     Unregistered detached sessions and non-POSIX descendants are not claimed.
     """
     if not _valid_timeout(timeout):
@@ -679,7 +1060,13 @@ def run_process_group(
                 root=True,
             )
         finally:
-            broker.close()
+            primary = sys.exc_info()[1]
+            try:
+                broker.close()
+            except OSError as error:
+                if primary is None:
+                    raise
+                _note(primary, f"broker close: {type(error).__name__}: {error}")
     else:
         # Direct-child only; no POSIX/cooperative-descendant guarantee.
         process = subprocess.Popen(

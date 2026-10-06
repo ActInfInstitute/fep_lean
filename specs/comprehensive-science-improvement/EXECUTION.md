@@ -178,7 +178,7 @@ Final local PKG4 wheel probes pass real CPython3.10.20/3.11.15/3.12.13/3.13.15/
 3.14.4 on macOS, with equal uncompressed wheel members across all five and
 current core/helper/CLI digest parity. Connected release controls pass184 with
 one missing-mutool PDF-inspection skip (30.40 seconds). The actual observation
-is evidence/pkg4-local-runtime-20260930-r1.json. Hosted Linux/Windows matrix,
+is retained privately with the local runtime evidence. Hosted Linux/Windows matrix,
 Windows capture, current full production capture and two accepted bundles
 remain distinct open evidence requirements.
 

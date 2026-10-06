@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import socket
@@ -348,11 +349,12 @@ def test_scope_release_is_iterative_revokes_before_signals_and_preserves_sibling
     monkeypatch.setattr(_subprocess.subprocess, "Popen", unexpected)
     broker.release(ancestor, cancelled=cancelled)
     assert signals == [group.process.pid for group in reversed(subtree)]
-    assert caller.children == {sibling}
+    assert caller.children == {sibling, ancestor}
     assert not caller.cancel.is_set() and not sibling.cancel.is_set()
     assert not caller.channel.closed and not sibling.channel.closed
     for group in subtree:
-        assert group.cancel.is_set() and group.channel.closed and not group.children
+        assert group.cancel.is_set() and group.channel.closed
+        assert not group.cleanup_done.is_set()
         assert group.expired.is_set() == (cancelled or group is not ancestor)
         with pytest.raises(ValueError, match="inactive process supervision scope"):
             broker._scope(group.scope_token)
@@ -484,12 +486,16 @@ def _sleeper_tree(tmp_path: Path) -> tuple[str, Path, Path]:
         f"Path({str(grand)!r}).write_text(json.dumps([os.getpid(),os.getpgid(0)]));"
         "time.sleep(30)"
     )
+    # Print before the grandchild marker exists: callers that crash once the
+    # marker appears must not race the broker's forward of this output, which
+    # the barrier rightly treats as an undelivered obligation.
     program = (
         "import os,sys,subprocess,time,json\nfrom pathlib import Path\n"
         f"Path({str(child)!r}).write_text(json.dumps([os.getpid(),os.getpgid(0)]))\n"
+        "print('nested tool started',flush=True)\n"
         f"subprocess.Popen([sys.executable,'-S','-c',{grand_program!r}])\n"
         f"while not Path({str(grand)!r}).exists(): time.sleep(.005)\n"
-        "print('nested tool started',flush=True)\ntime.sleep(30)\n"
+        "time.sleep(30)\n"
     )
     return program, child, grand
 
@@ -871,3 +877,878 @@ def test_unregistered_detached_pipe_has_bounded_drain(tmp_path: Path) -> None:
         time.sleep(0.02)
     else:
         pytest.fail("test-owned short detached child did not finish")
+
+
+@pytest.mark.parametrize("blocked", [False, True])
+def test_closing_subtree_shares_deadline_and_retains_failure(
+    monkeypatch: pytest.MonkeyPatch, blocked: bool
+) -> None:
+    broker, parent = _synthetic_scope_broker()
+    sibling = _subprocess._Group(
+        SimpleNamespace(pid=12346),
+        parent.channel.__class__(),
+        scope_token="sibling",
+        parent=None,
+    )
+    broker.groups.add(sibling)
+    broker.scopes[sibling.scope_token] = sibling
+    nodes = []
+    for index in range(24):
+        ancestor = parent if index % 2 == 0 else nodes[-1]
+        child = _subprocess._Group(
+            SimpleNamespace(pid=12400 + index),
+            parent.channel.__class__(),
+            scope_token=f"child-{index}",
+            parent=ancestor,
+        )
+        ancestor.children.add(child)
+        broker.groups.add(child)
+        broker.scopes[child.scope_token] = child
+        nodes.append(child)
+    signals = []
+    monkeypatch.setattr(
+        _subprocess, "os", SimpleNamespace(killpg=lambda pid, sig: signals.append(pid))
+    )
+    # Model a forward-error release before the ancestor sees its outcome.
+    broker.release(nodes[0])
+    assert nodes[0] in parent.children
+    broker.release(parent)
+    assert len(signals) == 25 and len(set(signals)) == 25
+    broker.release(parent, cancelled=True)
+    assert len(signals) == 25
+    assert broker._scope(sibling.scope_token) is sibling
+    for group in [parent, *nodes]:
+        with pytest.raises(ValueError, match="inactive"):
+            broker._scope(group.scope_token)
+    assert all(n.cleanup_deadline <= parent.cleanup_deadline for n in nodes)
+    entered, unblock = threading.Event(), threading.Event()
+
+    def complete() -> None:
+        entered.set()
+        assert unblock.wait(2)
+        for child in reversed(nodes):
+            child.cleanup_settled = True
+            broker._complete_cleanup(child)
+
+    worker = threading.Thread(target=complete)
+    worker.start()
+    assert entered.wait(1)
+    started = time.monotonic()
+    try:
+        if blocked:
+            with pytest.raises(OSError, match="subtree cleanup incomplete"):
+                broker._await_children(parent)
+            assert time.monotonic() - started < _subprocess._REAP_TIMEOUT_S + 0.2
+        else:
+            unblock.set()
+            broker._await_children(parent)
+        assert not parent.cleanup_done.is_set()
+    finally:
+        unblock.set()
+        worker.join(timeout=1)
+    assert not worker.is_alive() and not parent.children
+    failed = nodes[0]
+    failed.parent = parent
+    parent.children.add(failed)
+    failed.cleanup_error = OSError("controlled failure")
+    with pytest.raises(
+        OSError, match="subtree cleanup failed|subtree cleanup incomplete"
+    ):
+        broker._await_children(parent)
+
+
+@pytest.mark.skipif(os.name != "posix", reason="private broker requires POSIX")
+@pytest.mark.parametrize("forward_failure", [False, True])
+@pytest.mark.parametrize("blocked", [False, True])
+def test_real_ancestor_response_waits_for_closing_child(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    forward_failure: bool,
+    blocked: bool,
+) -> None:
+    broker = _subprocess._Broker()
+    entered, unblock, barrier = threading.Event(), threading.Event(), threading.Event()
+    forward_hook = threading.Event()
+    request_exit = threading.Event()
+    request = broker._request
+    complete = broker._complete_cleanup
+    await_children = broker._await_children
+    send = _subprocess._send_frame
+    children = []
+
+    def hold(group: Any) -> None:
+        if group.parent is not None:
+            children.append(group)
+            entered.set()
+            assert unblock.wait(2), "cleanup control was not released"
+        complete(group)
+
+    def await_control(group: Any) -> None:
+        if group.parent is None:
+            barrier.set()
+        await_children(group)
+
+    def forward(channel: Any, value: Any) -> None:
+        if isinstance(value, dict) and value.get("kind") == "stream":
+            # Let the caller crash only after the child's guard reported, so
+            # the early-closing classification is deterministic.
+            with broker.lock:
+                closing = [g for g in broker.groups if g.parent is not None]
+            deadline = time.monotonic() + 2
+            while (
+                any(g.outcome is None for g in closing) and time.monotonic() < deadline
+            ):
+                time.sleep(0.005)
+            marker.touch()
+            if forward_failure:
+                forward_hook.set()
+                raise BrokenPipeError("controlled caller transport failure")
+        send(channel, value)
+
+    def request_control(connection: Any) -> None:
+        try:
+            request(connection)
+        finally:
+            request_exit.set()
+
+    monkeypatch.setattr(broker, "_request", request_control)
+    monkeypatch.setattr(broker, "_complete_cleanup", hold)
+    monkeypatch.setattr(broker, "_await_children", await_control)
+    monkeypatch.setattr(_subprocess, "_send_frame", forward)
+    marker = tmp_path / "ready"
+    tool = "print('child output',flush=True)"
+    outer = (
+        _load_shared()
+        + "import sys,threading,time,os\nfrom pathlib import Path\n"
+        + f"def inner():\n helper.run_process_group([sys.executable,'-S','-c',{tool!r}],cwd={str(tmp_path)!r},timeout=None)\n"
+        + "threading.Thread(target=inner,daemon=True).start()\n"
+        + f"deadline=time.monotonic()+2\nwhile not Path({str(marker)!r}).exists() and time.monotonic()<deadline: time.sleep(.005)\n"
+        + f"assert Path({str(marker)!r}).exists()\n"
+        + "os._exit(7)\n"
+    )
+    results, errors = [], []
+
+    def run() -> None:
+        try:
+            results.append(
+                broker.run(
+                    [sys.executable, "-S", "-c", outer],
+                    cwd=tmp_path,
+                    env=dict(os.environ),
+                    timeout=4,
+                    capture=True,
+                    root=True,
+                )
+            )
+        except BaseException as error:
+            errors.append(error)
+
+    worker = threading.Thread(target=run)
+    worker.start()
+    try:
+        assert entered.wait(3), "child cleanup hook did not activate"
+        assert barrier.wait(1), "ancestor barrier hook did not activate"
+        if forward_failure:
+            assert forward_hook.is_set(), "forward-error hook did not activate"
+        assert worker.is_alive() and not results and not errors
+        if not blocked:
+            unblock.set()
+        worker.join(timeout=1)
+        assert not worker.is_alive(), "ancestor exceeded original cleanup cap"
+        # The caller crashed before this early-closing request could deliver
+        # its terminal response. Even the unblocked, EOF-clean branch retains
+        # that unacknowledged obligation. Live commands canceled by an ancestor
+        # remain the original crash test's distinct clean-cancellation case.
+        assert not results and len(errors) == 1
+        assert isinstance(errors[0], OSError)
+        assert ("cleanup incomplete" if blocked else "cleanup failed") in str(errors[0])
+        if not blocked and not forward_failure:
+            assert children[0].request_done.is_set()
+            assert not children[0].delivery_done.is_set()
+            assert any(
+                "terminal response unacknowledged" in str(error)
+                for error in children[0].cleanup_errors
+            )
+    finally:
+        # Test-only teardown of the deliberately held worker, after the
+        # production barrier's expected failure; never reset that deadline.
+        unblock.set()
+        worker.join(timeout=1)
+        assert request_exit.wait(1), "held request did not exit during teardown"
+        broker.close()
+    assert children and all(child.cleanup_done.is_set() for child in children)
+    assert not broker.workers and not broker.groups
+
+
+def test_outcome_and_watchdog_release_race_is_idempotent(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    broker, group = _synthetic_scope_broker()
+    start = threading.Barrier(3)
+    signals = []
+    monkeypatch.setattr(
+        _subprocess, "os", SimpleNamespace(killpg=lambda pid, sig: signals.append(pid))
+    )
+
+    def release(cancelled: bool) -> None:
+        start.wait(timeout=1)
+        broker.release(group, cancelled=cancelled)
+
+    workers = [
+        threading.Thread(target=release, args=(value,)) for value in (False, True)
+    ]
+    for worker in workers:
+        worker.start()
+    start.wait(timeout=1)
+    for worker in workers:
+        worker.join(timeout=1)
+    assert all(not worker.is_alive() for worker in workers)
+    assert signals == [group.process.pid]
+    assert group.cancel.is_set() and not group.cleanup_done.is_set()
+    with pytest.raises(ValueError, match="inactive"):
+        broker._scope(group.scope_token)
+
+
+@pytest.mark.parametrize(
+    "state",
+    [
+        "accepted",
+        "send-only",
+        "incomplete",
+        "wrong-token",
+        "wrong-receipt",
+        "revoked",
+        "expired",
+    ],
+)
+def test_terminal_acceptance_only_discharges_settled_authenticated_error(
+    monkeypatch: pytest.MonkeyPatch, state: str
+) -> None:
+    broker, parent = _synthetic_scope_broker()
+    child = _subprocess._Group(
+        SimpleNamespace(pid=12346),
+        type(parent.channel)(),
+        scope_token="child",
+        parent=parent,
+    )
+    parent.children.add(child)
+    child.cleanup_error = OSError("nonEOF capture")
+    child.cleanup_errors.append(child.cleanup_error)
+    child.cleanup_settled = state != "incomplete"
+    child.request_done.set()
+    child.terminal_receipt = "d" * 64
+    broker._complete_cleanup(child)
+    assert child in parent.children and child.cleanup_done.is_set()
+    token = "sibling" if state == "wrong-token" else parent.scope_token
+    receipt = "e" * 64 if state == "wrong-receipt" else child.terminal_receipt
+    if state == "revoked":
+        broker.groups.remove(parent)
+        broker.scopes.clear()
+    if state == "expired":
+        parent.expired.set()
+    if state != "send-only":
+        broker._acknowledge(child, token, receipt)
+    assert child.delivery_done.is_set() == (state == "accepted")
+    assert (child not in parent.children) == (state == "accepted")
+    assert child.cleanup_error is not None and child.cleanup_errors
+    # Acceptance cannot reactivate an expired child or signal a supplied PID.
+    with pytest.raises(ValueError, match="inactive"):
+        broker._scope(child.scope_token)
+    parent.cleanup_deadline = time.monotonic()
+    if state == "accepted":
+        broker._await_children(parent)
+    else:
+        with pytest.raises(
+            OSError, match="subtree cleanup failed|subtree cleanup incomplete"
+        ):
+            broker._await_children(parent)
+
+
+@pytest.mark.parametrize("depth", [1, 40])
+def test_completion_tree_has_one_budget_even_with_terminal_errors(
+    monkeypatch: pytest.MonkeyPatch, depth: int
+) -> None:
+    broker, parent = _synthetic_scope_broker()
+    nodes = [parent]
+    for index in range(40):
+        ancestor = nodes[-1] if depth == 40 else parent
+        child = _subprocess._Group(
+            SimpleNamespace(pid=13000 + index),
+            type(parent.channel)(),
+            scope_token=f"tree-{index}",
+            parent=ancestor,
+        )
+        ancestor.children.add(child)
+        broker.groups.add(child)
+        broker.scopes[child.scope_token] = child
+        nodes.append(child)
+    signals = []
+    monkeypatch.setattr(
+        _subprocess, "os", SimpleNamespace(killpg=lambda pid, sig: signals.append(pid))
+    )
+    started = time.monotonic()
+    broker.release(parent)
+    deadline = parent.cleanup_deadline
+    assert all(node.cleanup_deadline == deadline for node in nodes)
+    # This is a synthetic completion tree, not a claim of 40 live guard reaps.
+    for node in reversed(nodes[1:]):
+        with (
+            pytest.raises(
+                OSError, match="subtree cleanup incomplete|subtree cleanup failed"
+            )
+            if node.children
+            else contextlib.nullcontext()
+        ):
+            broker._await_children(node)
+        node.cleanup_error = OSError("controlled incomplete descendant")
+        node.cleanup_settled = False
+        broker._complete_cleanup(node)
+    with pytest.raises(
+        OSError, match="subtree cleanup failed|subtree cleanup incomplete"
+    ):
+        broker._await_children(parent)
+    assert time.monotonic() - started < _subprocess._REAP_TIMEOUT_S + 0.2
+    broker.release(parent)
+    assert parent.cleanup_deadline == deadline and len(signals) == 41
+
+
+@pytest.mark.parametrize(
+    "case",
+    [
+        "completed",
+        "timeout",
+        "oserror",
+        "length",
+        "returncode",
+        "timeout-type",
+        "timeout-mismatch",
+        "error-type",
+        "bad-kind",
+        "bad-text",
+        "ack-send-failure",
+        "close-primary-failure",
+    ],
+)
+def test_remote_validates_terminal_response_before_acknowledgment(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    import base64
+    import hashlib
+
+    class Channel:
+        def __enter__(self) -> Any:
+            return self
+
+        def close(self) -> None:
+            if case == "close-primary-failure":
+                raise OSError("controlled remote close failure")
+
+        def settimeout(self, value: Any) -> None:
+            pass
+
+        def connect(self, address: str) -> None:
+            assert address == "synthetic-address"
+
+        def sendall(self, data: bytes) -> None:
+            pass
+
+        def recv(self, count: int) -> bytes:
+            return b""
+
+    response: dict[str, Any] = {
+        "kind": "completed",
+        "returncode": 0,
+        "receipt": "d" * 64,
+        "diagnostics": ["controlled cleanup diagnostic"],
+        "stdout_bytes": 4,
+        "stderr_bytes": 0,
+    }
+    data = b"ok\r\n"
+    if case in {
+        "timeout",
+        "timeout-type",
+        "timeout-mismatch",
+        "ack-send-failure",
+        "close-primary-failure",
+    }:
+        response.pop("returncode")
+        response.update(
+            kind="timeout",
+            timeout=True
+            if case == "timeout-type"
+            else 3
+            if case == "timeout-mismatch"
+            else 2,
+        )
+        data = b"\xe2\r\nx"
+    if case in {"oserror", "error-type"}:
+        response.pop("returncode")
+        response.update(
+            kind="oserror",
+            error=[None, 4 if case == "error-type" else "controlled error"],
+        )
+    if case == "length":
+        response["stderr_bytes"] = 1
+    if case == "returncode":
+        response["returncode"] = True
+    if case == "bad-kind":
+        response["kind"] = []
+    if case == "bad-text":
+        data = b"\xffabc"
+    frames = iter(
+        [
+            {
+                "kind": "stream",
+                "pipe": "stdout",
+                "data": base64.b64encode(data).decode(),
+            },
+            response,
+        ]
+    )
+    sent = []
+
+    def send(channel: Any, value: Any) -> None:
+        sent.append(value)
+        if case == "ack-send-failure":
+            raise BrokenPipeError("controlled acknowledgment loss")
+
+    monkeypatch.setattr(
+        _subprocess,
+        "os",
+        SimpleNamespace(
+            environ={
+                _subprocess._TOKEN_ENV: "authenticated-parent",
+                _subprocess._SOCKET_ENV: "synthetic-address",
+            },
+            fspath=os.fspath,
+        ),
+    )
+    monkeypatch.setattr(
+        _subprocess,
+        "socket",
+        SimpleNamespace(
+            AF_UNIX=1,
+            SOCK_STREAM=1,
+            socket=lambda *args: Channel(),
+            send_fds=lambda channel, frames, fds: len(frames[0]),
+        ),
+    )
+    monkeypatch.setattr(_subprocess, "_read_frame", lambda channel: next(frames))
+    monkeypatch.setattr(_subprocess, "_send_frame", send)
+    if case == "completed":
+        result = _subprocess._remote(
+            ["accepted"], cwd=tmp_path, env={}, timeout=2, capture=True
+        )
+        assert result.stdout == "ok\n"
+    elif case in {"timeout", "ack-send-failure", "close-primary-failure"}:
+        with pytest.raises(subprocess.TimeoutExpired) as caught:
+            _subprocess._remote(
+                ["accepted"], cwd=tmp_path, env={}, timeout=2, capture=True
+            )
+        assert caught.value.output == b"\xe2\r\nx" and caught.value.stderr == b""
+        assert caught.value.__notes__
+    else:
+        with pytest.raises((OSError, UnicodeDecodeError)):
+            _subprocess._remote(
+                ["accepted"], cwd=tmp_path, env={}, timeout=2, capture=True
+            )
+    valid = case in {
+        "completed",
+        "timeout",
+        "oserror",
+        "ack-send-failure",
+        "close-primary-failure",
+    }
+    assert len(sent) == int(valid), "invalid response must never be acknowledged"
+    if valid:
+        assert sent[0] == {
+            "kind": "ack",
+            "token": "authenticated-parent",
+            "receipt": hashlib.sha256(_subprocess._frame_bytes(response)).hexdigest(),
+        }
+
+
+@pytest.mark.skipif(os.name != "posix", reason="owned POSIX guard")
+@pytest.mark.parametrize(
+    "fault", ["wait-reaped", "wait-unreaped", "join-done", "close-done", "close-open"]
+)
+@pytest.mark.parametrize("capture", [False, True])
+def test_cleanup_faults_publish_terminal_diagnostics_and_physical_settlement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, fault: str, capture: bool
+) -> None:
+    if not capture and fault.startswith("close"):
+        pytest.skip("uncaptured guard has no capture stream to fault")
+    broker = _subprocess._Broker()
+    processes = []
+    groups = []
+    allocate = _subprocess.subprocess.Popen
+    group_type = _subprocess._Group
+    join = threading.Thread.join
+
+    class Stream:
+        def __init__(self, stream: Any) -> None:
+            self.stream = stream
+
+        def fileno(self) -> int:
+            return self.stream.fileno()
+
+        @property
+        def closed(self) -> bool:
+            return bool(self.stream.closed)
+
+        def close(self) -> None:
+            if fault == "close-done":
+                self.stream.close()
+            raise OSError("controlled capture close fault")
+
+    def popen(*args: Any, **kwargs: Any) -> Any:
+        process = allocate(*args, **kwargs)
+        processes.append(process)
+        wait = process.wait
+        process.real_wait = wait
+        if fault.startswith("wait"):
+
+            def wait_fault(*args: Any, **kwargs: Any) -> Any:
+                if fault == "wait-reaped":
+                    wait(*args, **kwargs)
+                raise OSError(f"controlled {fault} fault")
+
+            process.wait = wait_fault
+        if capture and fault.startswith("close"):
+            process.stdout = Stream(process.stdout)
+            process.stderr = Stream(process.stderr)
+        return process
+
+    class Group(group_type):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, **kwargs)
+            groups.append(self)
+
+    def join_fault(thread: Any, timeout: Any = None) -> None:
+        join(thread, timeout=timeout)
+        if thread is not broker.server:
+            raise OSError("controlled join fault after real thread exit")
+
+    monkeypatch.setattr(_subprocess.subprocess, "Popen", popen)
+    monkeypatch.setattr(_subprocess, "_Group", Group)
+    if fault == "join-done":
+        monkeypatch.setattr(threading.Thread, "join", join_fault)
+    try:
+        with pytest.raises(OSError, match="controlled"):
+            broker.run(
+                [sys.executable, "-S", "-c", "pass"],
+                cwd=tmp_path,
+                env=dict(os.environ),
+                timeout=2,
+                capture=capture,
+                root=True,
+            )
+        group = groups[0]
+        assert group.cleanup_done.is_set() and group.cleanup_error is not None
+        assert group.cleanup_errors and group.cleanup_error.__notes__
+        assert group.cleanup_settled == (fault not in {"wait-unreaped", "close-open"})
+        assert group.process.returncode is not None or fault == "wait-unreaped"
+        if capture and fault != "close-open":
+            assert all(
+                stream.closed for stream in (group.process.stdout, group.process.stderr)
+            )
+    finally:
+        # Explicit test-only settlement of an intentionally unreaped guard/open
+        # stream; production observed failure is retained, never relabeled EOF.
+        monkeypatch.setattr(threading.Thread, "join", join)
+        for process in processes:
+            process.real_wait(timeout=1)
+            for stream in (process.stdout, process.stderr):
+                if stream is not None:
+                    (stream.stream if isinstance(stream, Stream) else stream).close()
+        broker.close()
+    assert not broker.groups and not broker.workers
+
+
+def test_broker_close_error_preserves_primary_timeout_and_exact_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    primary = subprocess.TimeoutExpired(
+        ["command"], 1, output=b"\xe2\r\n", stderr=b"\xff"
+    )
+
+    class Broker:
+        def run(self, *args: Any, **kwargs: Any) -> Any:
+            raise primary
+
+        def close(self) -> None:
+            raise OSError("controlled broker close failure")
+
+    monkeypatch.setattr(_subprocess, "os", SimpleNamespace(name="posix", environ={}))
+    monkeypatch.setattr(_subprocess, "_Broker", Broker)
+    with pytest.raises(subprocess.TimeoutExpired) as caught:
+        _subprocess.run_process_group(["command"], cwd=tmp_path, timeout=1)
+    assert (
+        caught.value is primary
+        and caught.value.output == b"\xe2\r\n"
+        and caught.value.stderr == b"\xff"
+    )
+    assert "controlled broker close failure" in caught.value.__notes__[0]
+
+
+@pytest.mark.skipif(os.name != "posix", reason="SCM_RIGHTS request protocol")
+@pytest.mark.parametrize(
+    "mode",
+    [
+        "ack",
+        "send-only",
+        "lost-response",
+        "send-fault",
+        "wrong-token",
+        "revoked",
+        "incomplete",
+        "clean-lost-response",
+        "clean-revoked-response",
+        "cancelled-clean-response",
+    ],
+)
+def test_request_handoff_requires_actual_authenticated_terminal_receipt(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mode: str
+) -> None:
+    import hashlib
+
+    broker, parent = _synthetic_scope_broker()
+    child = _subprocess._Group(
+        SimpleNamespace(pid=12346),
+        type(parent.channel)(),
+        scope_token="child",
+        parent=parent,
+    )
+    child.cleanup_error = (
+        None
+        if mode
+        in {"clean-lost-response", "clean-revoked-response", "cancelled-clean-response"}
+        else OSError("controlled nonEOF capture failure")
+    )
+    child.ancestor_cancelled = mode == "cancelled-clean-response"
+    if child.ancestor_cancelled:
+        child.expired.set()
+    child.cleanup_settled = mode != "incomplete"
+    child.cleanup_done.set()
+    parent.children.add(child)
+    local, client = socket.socketpair()
+    local.settimeout(1)
+    client.settimeout(1)
+    broker.connections = {local}
+    broker.workers = set()
+    exited = threading.Event()
+    sent = threading.Event()
+    send_frame = _subprocess._send_frame
+
+    def send(channel: Any, value: Any) -> None:
+        if isinstance(value, dict) and "receipt" in value:
+            sent.set()
+            if mode == "send-fault":
+                raise BrokenPipeError("controlled terminal response send fault")
+        send_frame(channel, value)
+
+    def run(command: Any, **kwargs: Any) -> Any:
+        kwargs["registered"](child)
+        raise subprocess.TimeoutExpired(command, 1, output=b"", stderr=b"")
+
+    def request() -> None:
+        try:
+            broker._request(local)
+        finally:
+            exited.set()
+
+    monkeypatch.setattr(broker, "run", run)
+    monkeypatch.setattr(_subprocess, "_send_frame", send)
+    worker = threading.Thread(target=request)
+    worker.start()
+    descriptor = os.open(os.devnull, os.O_RDONLY)
+    try:
+        frame = _subprocess._frame_bytes(
+            {
+                "token": parent.scope_token,
+                "command": ["controlled"],
+                "cwd": str(tmp_path),
+                "env": {},
+                "timeout": 1,
+                "capture": True,
+            }
+        )
+        count = socket.send_fds(client, [frame], [descriptor])
+        if count < len(frame):
+            client.sendall(frame[count:])
+        assert sent.wait(1), "terminal send control did not activate"
+        if mode not in {"lost-response", "send-fault"}:
+            response = _subprocess._read_frame(client)
+            assert response["kind"] == "timeout" and response["stdout_bytes"] == 0
+            if mode in {
+                "revoked",
+                "clean-revoked-response",
+                "cancelled-clean-response",
+            }:
+                with broker.lock:
+                    broker.groups.remove(parent)
+                    broker.scopes.clear()
+            if mode not in {
+                "send-only",
+                "clean-lost-response",
+                "clean-revoked-response",
+                "cancelled-clean-response",
+            }:
+                send_frame(
+                    client,
+                    {
+                        "kind": "ack",
+                        "token": "sibling"
+                        if mode == "wrong-token"
+                        else parent.scope_token,
+                        "receipt": hashlib.sha256(
+                            _subprocess._frame_bytes(response)
+                        ).hexdigest(),
+                    },
+                )
+        client.close()
+        assert exited.wait(1), "request worker did not finish bounded fixture teardown"
+        worker.join(timeout=1)
+        assert (
+            child.request_done.is_set()
+            and not broker.connections
+            and not broker.workers
+        )
+        assert child.delivery_done.is_set() == (mode == "ack")
+        assert (child not in parent.children) == (
+            mode in {"ack", "cancelled-clean-response"}
+        )
+        assert (child.cleanup_error is None) == (mode == "cancelled-clean-response")
+        parent.cleanup_deadline = time.monotonic()
+        if mode in {"ack", "cancelled-clean-response"}:
+            broker._await_children(parent)
+        else:
+            with pytest.raises(
+                OSError, match="subtree cleanup failed|subtree cleanup incomplete"
+            ):
+                broker._await_children(parent)
+    finally:
+        os.close(descriptor)
+        client.close()
+        local.close()
+        worker.join(timeout=1)
+    assert not worker.is_alive()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="owned POSIX guard")
+@pytest.mark.parametrize("capture", [False, True])
+def test_live_owned_guard_cannot_be_discharged_by_delivered_error(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capture: bool
+) -> None:
+    # A failed authorized signal leaves the real owned tool blocked on our
+    # socket. Test teardown releases it through that socket, without any new
+    # PID/PGID authority or a signal after reap.
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listener.bind(("127.0.0.1", 0))
+    listener.listen()
+    listener.settimeout(2)
+    ready, release = threading.Event(), threading.Event()
+    exited = threading.Event()
+    control_errors = []
+
+    def controller() -> None:
+        try:
+            with listener.accept()[0] as channel:
+                channel.settimeout(3)
+                assert channel.recv(1) == b"H"
+                ready.set()
+                assert release.wait(2)
+                channel.sendall(b"R")
+                assert channel.recv(1) == b""
+        except BaseException as error:
+            control_errors.append(error)
+        finally:
+            exited.set()
+
+    control = threading.Thread(target=controller)
+    control.start()
+    broker = _subprocess._Broker()
+    groups = []
+    group_type = _subprocess._Group
+
+    class Group(group_type):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, **kwargs)
+            groups.append(self)
+
+    signal_entered = threading.Event()
+
+    def fail_signal(pid: int, sig: int) -> None:
+        signal_entered.set()
+        raise OSError("controlled owned signal failure")
+
+    # A command with no detached descendants. The cooperative guard remains
+    # genuinely live until the controller releases its direct tool.
+    tool = (
+        "import socket,os\ns=socket.socket();s.settimeout(3)\n"
+        f"s.connect({listener.getsockname()!r});s.sendall(b'H')\n"
+        "assert s.recv(1)==b'R';s.close()\n"
+    )
+    monkeypatch.setattr(_subprocess, "_Group", Group)
+    monkeypatch.setattr(_subprocess.os, "killpg", fail_signal)
+    result_errors = []
+
+    def run() -> None:
+        try:
+            broker.run(
+                [sys.executable, "-S", "-c", tool],
+                cwd=tmp_path,
+                env=dict(os.environ),
+                timeout=0.15,
+                capture=capture,
+                root=True,
+            )
+        except BaseException as error:
+            result_errors.append(error)
+
+    worker = threading.Thread(target=run)
+    started = time.monotonic()
+    worker.start()
+    try:
+        assert ready.wait(1), "real held tool never reached its socket barrier"
+        worker.join(timeout=1)
+        assert not worker.is_alive() and signal_entered.is_set()
+        assert time.monotonic() - started < 0.15 + _subprocess._REAP_TIMEOUT_S + 0.3
+        assert len(result_errors) == 1 and isinstance(
+            result_errors[0], (OSError, subprocess.TimeoutExpired)
+        )
+        group = groups[0]
+        assert group.cleanup_done.is_set() and not group.cleanup_settled
+        assert group.process.returncode is None, (
+            "negative control did not keep the guard unreaped"
+        )
+        assert any(
+            "guard cleanup incomplete" in str(error) for error in group.cleanup_errors
+        )
+        parent = group_type(
+            SimpleNamespace(pid=-1),
+            group.channel,
+            scope_token="synthetic-active-parent",
+            parent=None,
+        )
+        group.parent = parent
+        parent.children.add(group)
+        broker.groups.add(parent)
+        broker.scopes[parent.scope_token] = parent
+        group.request_done.set()
+        group.terminal_receipt = "d" * 64
+        broker.closed = False
+        broker._acknowledge(group, parent.scope_token, group.terminal_receipt)
+        assert group in parent.children and not group.delivery_done.is_set()
+        broker.groups.remove(parent)
+        broker.scopes.clear()
+    finally:
+        release.set()
+        assert exited.wait(1), "socket controller did not finish teardown"
+        control.join(timeout=1)
+        worker.join(timeout=1)
+        for group in groups:
+            group.process.wait(timeout=1)
+        broker.close()
+        listener.close()
+    assert not control_errors and not control.is_alive()

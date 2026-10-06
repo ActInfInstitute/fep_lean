@@ -6,9 +6,9 @@ Each linked GitHub Issue contains its owner, detailed scope, dependencies,
 positive acceptance, failure controls and claim boundary. This file is the
 canonical delivery inventory, not an acceptance receipt.
 
-The latest instruction is scoping and handoff only. Implementation and pending
-acceptance execution are stopped. Reviewed code/test/guidance candidates remain
-unapplied. The [full handoff](HANDOFF.md) records continuation order and evidence
+Daniel resumed implementation on 2026-10-05 and authorized verified changes to
+be pushed to main. Work proceeds through the stated dependencies and acceptance
+gates. The [full handoff](HANDOFF.md) records continuation order and evidence
 boundaries. Size means implementation scope, not a version or schedule promise.
 
 ## Observed starting state
@@ -39,8 +39,6 @@ keeps package, scientific and publication gates distinct.
 | --- | --- | --- | --- |
 | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46) — Diagnose hosted live Chrome startup and review conditional grouping | Minor | Independent repair | Actual two-Chrome acceptance and meaningful xdist controls; fresh exact-SHA Python passes without retries/skips/cap changes. |
 | [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) — Diagnose noncanonical live DOM rejection in the closed production capture | Minor | Independent repair | Explain and repair the actual noncanonical DOM rejection; real browser receipt passes, with old output hashes kept historical. |
-| [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47) — Port PR45 regression coverage without changing the fixed 80-case matrix | Minor | Independent repair | Original 80-case collection preserved; nine separate cases pass; pinned resource and private concurrent PDF/provenance parity hold. |
-| [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48) — Reconcile active guidance and legacy references through dependency review | Minor | [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47) | Active guidance reflects current evidence; strict links/hygiene/xrefs pass; history and substantive PRs preserved. |
 | [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) — Seal complete approved tests membership in the successor source freeze | Minor | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | Exact approved full tests membership enforced before imports/planning/dispatch and at closure; nonauthor source review passes. |
 | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53) — Accept a fresh full seven-stage capture and identical package archives | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | All seven actual stages and closing guards pass; two identical package archives independently claim-ready. |
 | [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49) — Accept five local installed-wheel runtimes and read-only status | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48) | Five actual isolated runtime cells and read-only status controls pass; 184 resources/80 cases and 15 GiB gate preserved. |
@@ -60,7 +58,7 @@ until a verified integration or disposition; they are not removed as legacy.
 
 | Work | Size | Predecessors and activation | Closure probe |
 | --- | --- | --- | --- |
-| [CUR-12](https://github.com/ActiveInferenceInstitute/fep_formal/issues/50) — Refresh optional strict Hermes/OpenGauss evidence for all 168 topics | Medium | Secure current credential/model route and concrete spend boundary | Complete source-bound strict full-mode report for all 168 topics independently claim-ready; paid maximum spend remains unresolved. |
+| [CUR-12](https://github.com/ActiveInferenceInstitute/fep_formal/issues/50) — Refresh optional strict Hermes/OpenGauss evidence for all 168 topics | Medium | Secure current credential/model route and concrete spend boundary | Complete source-bound strict full-mode report for all 168 topics independently claim-ready; secure preflight and enforcement of the separately authorized spend ceiling remain required. |
 | [CUR-13](https://github.com/ActiveInferenceInstitute/fep_formal/issues/58) — Review substantive PR44 against current formal and ownership contracts | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Fresh current-base PR44 formal/ownership brief, warning-free native/axiom/projection evidence and independent domain review before integration. |
 | [BRIDGE-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/61) — Prove actual generated GNN runner execution on an isolated named pair | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) and an explicitly named isolated pair | Actual source-bound generated-runner output and positive/adversarial controls; active GNN work remains untouched. |
 | [EMP-J1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/77) — Gate future empirical work on licensed data and new immutable protocol | Major | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) and named licensed data/new protocol | Verifiable license/provenance/split and independently reviewed real measurements, or retained governed no-go. |
@@ -98,8 +96,8 @@ roster refresh; new topics are not implicitly reserved by this plan.
 | Original criterion | Required open gates |
 | --- | --- |
 | 1 — truthful static status | CUR-06, CUR-14 |
-| 2 — actual package support | CUR-02, CUR-06, CUR-07 |
-| 3 — docs and accepted render | CUR-04, CUR-07 |
+| 2 — actual package support | CUR-06, CUR-07 |
+| 3 — docs and accepted render | CUR-07 |
 | 4 — strict capture/archive parity | CUR-03, CUR-05 |
 | 5 — information identity/coarsening | CUR-07, CUR-14 |
 | 6 — relative-support/native information | CUR-07, CUR-14 |

@@ -21,6 +21,7 @@ import tarfile
 import time
 import zlib
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -2029,6 +2030,30 @@ def test_pdf_renderer_uses_two_xelatex_passes_per_isolated_render(
     assert all(wrapper.count("/tex/bin/xelatex") == 2 for wrapper in wrappers)
     assert len(drivers) == 2
     assert all("'/driver path/bin/xdvipdfmx' -q -E -o -" in body for body in drivers)
+
+
+def test_native_publication_pdf_is_reproducible_across_concurrent_private_jobs(
+    tmp_path: Path,
+) -> None:
+    if any(
+        shutil.which(name) is None
+        for name in ("pandoc", "xelatex", "xdvipdfmx", "mutool")
+    ):
+        pytest.skip("complete PDF renderer toolchain is unavailable")
+    _minimal_manuscript(tmp_path)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [
+            pool.submit(render_publication_manuscript, tmp_path, source_date_epoch=0)
+            for _ in range(2)
+        ]
+        results = [future.result(timeout=180) for future in futures]
+    assert results[0].pdf is not None
+    assert results[0].pdf == results[1].pdf
+    assert results[0].provenance == results[1].provenance
+    assert all(
+        json.loads(result.provenance)["pdf"]["status"] == "reproducible"
+        for result in results
+    )
 
 
 @pytest.mark.parametrize("timeout", [0, -1, float("inf"), float("nan"), True])
@@ -5002,7 +5027,9 @@ def test_publication_capture_runs_real_numerical_owner_in_disposable_project(
         (str(root / "output/numerical-witnesses.json"),),
         (*command, "produce", str(root), "{attempt}", str(root), "0"),
         (*command, "check", str(root), "{artifact_attempt}", str(root), "0"),
-        30,
+        # Functional budget only: a cold numerical owner can exceed 30 s under
+        # xdist load. Deadline reaping is covered by the dedicated test below.
+        180,
     )
     result = run_publication_capture(
         _capture_plan(root, (stage,)), tmp_path / "journal"

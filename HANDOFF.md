@@ -4,8 +4,9 @@
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
 **Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
-`v1.3.0`; latest published GitHub release `v1.2.0`. Daniel authorized the minor
-release after final-source acceptance, tracked by [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60).
+`v1.3.0` tag and latest published GitHub release `v1.2.0` at the recorded
+pre-release checkpoint. Daniel authorized the minor release after final-source
+acceptance, tracked by [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60).
 
 ## Mission and evidence boundary
 
@@ -104,11 +105,11 @@ summarizing scientific completeness.
 
 ## Current source and evidence state
 
-The latest instruction on 2026-10-05 is **scope all next work into TODO and
-GitHub Issues, then provide a full handoff**. Implementation and acceptance
-execution have stopped. The [32-item open backlog](TODO.md) records current
-release blockers, separately governed lanes and minor/medium/major future
-improvements. Reviewed implementation candidates remain unapplied.
+Daniel resumed implementation on 2026-10-05 and authorized updating the scoped
+work and pushing verified versioned changes to main. The [30-item open
+backlog](TODO.md) records current release blockers, separately governed lanes
+and minor/medium/major future improvements. Each item retains its dependencies,
+acceptance criteria and claim boundary; resumption supplies no new acceptance.
 
 Source main was `14fe6bab8fdcf27b0d7d457e1fdb923afffba83b`, independently
 matching remote before these scoping documents. Its
@@ -134,16 +135,19 @@ occurred. [Hosted startup](https://github.com/ActiveInferenceInstitute/fep_forma
 [local DOM rejection](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) have separate scopes.
 
 The independently reviewed
-[current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+[2026-10-05 Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
 passed twelve stages and four closing checks in 1,199.3769 seconds, binding its
-current 291-input native roster. Historical Q5/Q6/Q7 receipts remain unchanged;
+recorded 291-input native roster. The public observation is not itself a native
+receipt or validation of this checkout; later source-owner changes require fresh
+source-pair acceptance. Historical Q5/Q6/Q7 receipts remain unchanged;
 generated-runner execution remains unverified. The future
 [isolated runner lane](https://github.com/ActiveInferenceInstitute/fep_formal/issues/61) cannot relabel this static evidence.
 Preserve concurrent active GNN work and use only a specifically named isolated
 pair if that lane is activated.
 
-The r7-r1 materializer remains **REVISE**; its compatible observer has
-source-only approval. No r7-r2 was authored or executed. The exact known
+The retained r7-r1 materializer review is **REVISE**; its compatible observer
+has source-only approval. That checkpoint established no r7-r2 execution. The
+exact known
 [roster gap](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) is
 `tests/fixtures/formalism_catalogue_155_reviewed_deltas.json`: actual native
 planning bound 141 test members while the outer frozen set included 140.
@@ -152,13 +156,15 @@ complete membership around imports, planning, dispatch and closure. Preserve
 all 560 existing frozen inputs plus approved additions, all reviewed public
 paths, native 291/scientific 293 distinctions, caps and no-resume policy.
 
-The conditional two-Chrome grouping, separate nine-case PR45 adaptation and
-eight guidance corrections have independent source reviews; they remain
-unapplied and runtime-unverified. The nine-case adaptation preserves the
-original 80-case distribution matrix, pins a historical test-only resource and
-checks byte-identical PDF/provenance from concurrent private jobs. Its quality
-policy supersedes the older quality candidate. Recheck exact preimages and
-review changed formatting; do not blindly merge substantive PR44/45.
+The bounded PR45 adaptation passed all nine separate cases after independent
+source review, preserving the byte-identical original 80-case distribution
+matrix. Its pinned test-only validator rejects tampering, and concurrent real
+PDF renders produced byte-identical PDF and provenance. The guidance corrections
+passed independent source review and strict links, hygiene and xrefs. CUR-02
+and CUR-04 leave the open backlog; their delivery is recorded in CHANGELOG.md.
+The browser repairs passed 82 local cases without skips and independent source
+review, but fresh production browser capture and hosted startup acceptance
+remain open. Do not blindly merge substantive PR44/45.
 
 Candidate `1.4.0`, authored 2026-10-02, remains unreleased. H3 primary output
 has not been opened and its seeds remain unused. The
@@ -168,10 +174,13 @@ actual accepted package evidence, current native export and three independent
 proof-role reviews before the sole primary invocation. Outcome reviews,
 42-array replay, two study archives and clean installed reproduction follow.
 Governed empirical no-go remains valid without licensed data. Optional current
-Hermes/OpenGauss evidence has a separate credential/model/spend boundary; paid
-maximum spend is unresolved. No immutable `1.4.0` version DOI is established.
+Hermes/OpenGauss execution has separate bounded spend authorization; secure
+credential/model routing, preflight and enforceable spend controls remain
+prerequisites. No current provider acceptance or immutable `1.4.0` version DOI
+is established here.
 
-This scoping documentation creates a new source epoch for future capture.
+These guidance and implementation edits create a new source epoch for future
+capture.
 Later truthful outcome-prose edits also require honest final-source acceptance;
 they never authorize repeating or relabeling the primary. The original
 [nine criteria](specs/comprehensive-science-improvement/PROTOCOL.md) and
@@ -313,8 +322,9 @@ authorize publication or establish the FEP as a physical theory.
 The 2026-10-02 [Q7 post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
 passed all three read-only checks after independent prose review with unchanged
 custody and native JSON, closing portability for those recorded inputs. That
-observation remains historical. The 2026-10-05 current source-pair capture
-closes the later Q7 currency requirement without promoting earlier receipts.
+observation remains historical. The 2026-10-05 source-pair capture closed the
+later Q7 currency requirement for its recorded inputs without promoting earlier
+receipts; later owner changes require fresh validation.
 Later acceptance and publication progress is recorded in the program's
 execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized
@@ -322,21 +332,21 @@ committing and pushing reviewed changes to `main` and publishing the next minor
 release, `v1.4.0`, after its acceptance gates. The
 [upcoming scopes](docs/design/fep-research-program/next-improvements.md) define
 future minor, medium and major package/formal work separately from current
-release obligations. Licensed-data access, paid provider fallback and account
-settings still require their own authorized boundaries.
+release obligations. Licensed-data access, provider routing/spend enforcement
+and account settings retain their separate boundaries.
 
 ## Copyable continuation prompt
 
-> Continue FEP Formal from this handoff. The current instruction is scoping and
-> handoff only; do not execute pending work until Daniel resumes implementation.
+> Continue FEP Formal from this handoff. Daniel resumed implementation and
+> authorized verified versioned changes to be pushed to main on 2026-10-05.
 > Read AGENTS.md, TODO.md, this handoff, the original nine-criterion protocol,
 > NEXT.md and the immutable H3 preregistration/freeze. Inspect actual main and
 > remote state, preserve concurrent edits and use native subagents with disjoint
 > ownership. The local operator handoff contains private closed packet copies;
 > keep them out of public Issues, commits and generated artifacts.
 >
-> When execution resumes, settle both browser failures independently, then
-> review/apply the bounded test and guidance candidates through exact preimages.
+> Settle both browser failures independently, then finish the bounded test and
+> guidance edits against the reviewed source candidates and actual diffs.
 > Preserve the fixed original 80-case matrix and separate nine-case additions.
 > Correct the complete tests-roster guard and obtain fresh independent review
 > before imports/planning/dispatch. Execute all seven real production stages
