@@ -34,11 +34,11 @@ H3_CUSTODY_SUPPORT_CHANGES = (VALIDATOR_PATH, READINESS_TEST_PATH)
 RELEASE_METADATA_REPLACEMENTS = {
     "pyproject.toml": (
         '[project]\nname = "fep_lean"\nversion = "1.3.0"\n',
-        '[project]\nname = "fep_lean"\nversion = "1.4.0"\n',
+        '[project]\nname = "fep_lean"\nversion = "1.5.0"\n',
     ),
     "uv.lock": (
         '[[package]]\nname = "fep-lean"\nversion = "1.3.0"\n',
-        '[[package]]\nname = "fep-lean"\nversion = "1.4.0"\n',
+        '[[package]]\nname = "fep-lean"\nversion = "1.5.0"\n',
     ),
 }
 H3_OWNER_SOURCE_PATHS = (
@@ -584,7 +584,7 @@ def validate_h2_r0_custody(project_root: Path) -> dict[str, Any]:
         addendum["release_metadata_transition"]
         == {
             "historical_version": "1.3.0",
-            "current_version": "1.4.0",
+            "current_version": "1.5.0",
             "sources": release_transition,
         },
         "release metadata transition does not match the exact root-version delta",

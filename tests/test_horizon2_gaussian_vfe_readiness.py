@@ -792,9 +792,9 @@ def test_h2_7_h3_custody_addendum_rejects_tampering(
         elif tamper == "release_lock_schema_drift":
             altered = contents.replace("revision = 3\n", "revision = 5\n", 1)
         elif tamper == "release_version_drift":
-            altered = contents.replace('version = "1.4.0"', 'version = "1.5.0"', 1)
+            altered = contents.replace('version = "1.5.0"', 'version = "1.6.0"', 1)
         else:
-            altered = contents + '\n[project]\nname = "fep_lean"\nversion = "1.4.0"\n'
+            altered = contents + '\n[project]\nname = "fep_lean"\nversion = "1.5.0"\n'
         assert altered != contents
         path.write_text(altered, encoding="utf-8")
         # Coherently rebinding the new bytes never authorizes another delta.
