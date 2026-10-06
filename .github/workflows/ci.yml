@@ -398,8 +398,15 @@ jobs:
           curl -fsSL -o /tmp/JuliaMono.tar.gz \
             https://github.com/cormullion/juliamono/releases/download/v0.63.2/JuliaMono-ttf.tar.gz
           tar -xzf /tmp/JuliaMono.tar.gz -C "$HOME/.fonts"
-          curl -fsSL -o /tmp/freefont.zip \
-            https://ftp.gnu.org/gnu/freefont/freefont-ttf-20120503.zip
+          # ftp.gnu.org is intermittently unreachable from hosted runners;
+          # try identical mirrors and accept only the pinned archive bytes.
+          for mirror in https://ftp.gnu.org/gnu https://mirrors.kernel.org/gnu \
+              https://mirrors.ocf.berkeley.edu/gnu; do
+            curl -fsSL --connect-timeout 20 --max-time 120 -o /tmp/freefont.zip \
+              "$mirror/freefont/freefont-ttf-20120503.zip" && break
+          done
+          echo "7c85baf1bf82a1a1845d1322112bc6ca982221b484e3b3925022e25b5cae89af  /tmp/freefont.zip" \
+            | sha256sum -c -
           unzip -j /tmp/freefont.zip 'freefont-20120503/FreeSerif*' \
             -d "$HOME/.fonts"
           rm -f /tmp/JuliaMono.tar.gz /tmp/freefont.zip

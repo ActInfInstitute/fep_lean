@@ -30,6 +30,10 @@ byte-identical; a test fixture validates a copy of the custody inputs with the
 approved `1.5.0` token mapped back to `1.4.0`, so every other bound byte must
 still match and any other version or duplicate root still fails.
 
+The CI render job fetches the pinned GNU FreeSerif archive from
+`ftp.gnu.org` or two identical mirrors and accepts only its SHA-256, after an
+unreachable `ftp.gnu.org` failed the render job.
+
 ### Package, browser and process-supervision repairs (2026-10-06)
 
 Browser interaction validation now uses the canonical 118 theorem pairings.
