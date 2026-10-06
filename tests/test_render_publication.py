@@ -11,6 +11,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
+import shutil
+import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -18,6 +21,10 @@ from pathlib import Path
 import pytest
 import yaml
 
+from fep_lean.output.publication_metadata import (
+    project_cover_author,
+    publication_cover_defects,
+)
 from fep_lean.output.render_log import manuscript_source_digest, receipt_defects
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -44,6 +51,7 @@ def _driver():
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
+    module.crossref_toolchain_defects = lambda: ()
     return module
 
 
@@ -53,6 +61,9 @@ def _project(tmp_path: Path, log: str) -> Path:
     pdf = tmp_path / "output" / "pdf"
     manuscript.mkdir(parents=True)
     pdf.mkdir(parents=True)
+    (pdf / "_combined_manuscript.tex").write_text(
+        "A clean document.\n", encoding="utf-8"
+    )
     (pdf / "_combined_manuscript.log").write_text(log, encoding="utf-8")
     (pdf / "_latex_stdout.log").write_text(log, encoding="utf-8")
     (pdf / "_combined_manuscript.md").write_text(
@@ -65,7 +76,48 @@ def _project(tmp_path: Path, log: str) -> Path:
         "maintained area of the formalization.\n",
         encoding="utf-8",
     )
+    _cover_fixture(tmp_path)
     return tmp_path
+
+
+def _cover_fixture(root: Path) -> None:
+    """Literal custom-cover TeX following pinned template 5b3c0f4's output."""
+    (root / "CITATION.cff").write_text(
+        "authors: &authors\n"
+        "  - given-names: Daniel\n"
+        "    family-names: Friedman\n"
+        "    affiliation: Institute & Research\n"
+        "    email: daniel_test@example.org\n"
+        "    orcid: https://orcid.org/0000-0001-6232-9096\n"
+        "preferred-citation:\n  authors: *authors\n",
+        encoding="utf-8",
+    )
+    config = b'paper:\n  title: "FEP & Lean"\n  subtitle: "A 100% formalization"\n'
+    (root / "manuscript/config.yaml").write_bytes(config)
+    generated = root / "output/manuscript"
+    generated.mkdir(parents=True, exist_ok=True)
+    (generated / "config.yaml").write_bytes(project_cover_author(config, root))
+    (root / "output/pdf/_combined_manuscript.tex").write_text(
+        r"""\author{Daniel Friedman}
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{0.55cm}
+{\Huge\sffamily\bfseries FEP \& Lean\par}
+\vspace{0.4em}
+{\Large\sffamily A 100\% formalization\par}
+\vspace{0.75em}
+{\large\sffamily\bfseries Daniel Friedman\par}
+{\small\sffamily Institute \& Research\par}
+{\small\sffamily\texttt{daniel\_test@example.org}\par}
+{\small\sffamily\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}\par}
+\vspace{0.08em}
+\end{titlepage}
+A clean document.
+\end{document}
+""",
+        encoding="utf-8",
+    )
 
 
 def _successful_template(_command: Sequence[str], _cwd: Path) -> int:
@@ -376,7 +428,12 @@ def test_a_clean_render_writes_the_committed_receipt(tmp_path: Path) -> None:
     assert receipt["manuscript_source_digest"] == manuscript_source_digest(
         project / "manuscript"
     )
-    assert sorted(receipt["source_digests"]) == ["02b_background.md", "preamble.md"]
+    assert sorted(receipt["source_digests"]) == [
+        "../CITATION.cff",
+        "02b_background.md",
+        "config.yaml",
+        "preamble.md",
+    ]
 
 
 def test_a_rejected_render_leaves_no_receipt(tmp_path: Path) -> None:
@@ -464,4 +521,250 @@ def test_the_committed_receipt_covers_the_committed_manuscript() -> None:
             PROJECT_ROOT / "manuscript",
         )
         == ()
+    )
+
+
+def test_crossref_failure_prevents_hydration_and_template(
+    tmp_path: Path,
+) -> None:
+    driver = _driver()
+    driver.crossref_toolchain_defects = lambda: ("missing pandoc-crossref",)
+
+    def forbidden(*_args):
+        pytest.fail("a missing crossref capability must stop before any render write")
+
+    assert (
+        driver.render_publication(
+            tmp_path, tmp_path, runner=forbidden, hydrator=forbidden, skip_probe=True
+        )
+        == 1
+    )
+
+
+def test_unresolved_references_reject_successful_template(tmp_path: Path) -> None:
+    driver = _driver()
+    project = _project(tmp_path, CLEAN_LOG)
+    (project / "output/pdf/_combined_manuscript.tex").write_text(
+        r"\citep{eq:lost} \{\#eq:lost\}", encoding="utf-8"
+    )
+    assert (
+        driver.render_publication(
+            project,
+            tmp_path,
+            runner=_successful_template,
+            hydrator=_hydrated,
+            skip_probe=True,
+        )
+        == 1
+    )
+    assert not (project / driver.RECEIPT_PATH).exists()
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "wrong_author",
+        "wrong_visible_author",
+        "duplicate_cover",
+        "stale_config",
+        "body_only",
+        "missing_cover",
+        "wrong_title",
+        "wrong_affiliation",
+        "wrong_email",
+        "wrong_orcid",
+        "doubled_orcid_url",
+        "url_orcid_label",
+        "stale_orcid_projection",
+        "malformed_canonical_orcid",
+        "commented_cover",
+        "missing_projection",
+        "stale_projection",
+        "missing_marker",
+        "stale_cff",
+        "missing_tex",
+    ],
+)
+def test_accept_only_rejects_noncanonical_cover(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, mutation: str
+) -> None:
+    driver = _driver()
+    project = _project(tmp_path, CLEAN_LOG)
+    # The real --accept-only route must run the acceptance gate without hydration.
+    monkeypatch.setattr(
+        driver, "__file__", str(project / "scripts/render_publication.py")
+    )
+    assert driver.main(["--accept-only"]) == 0
+    receipt = project / driver.RECEIPT_PATH
+    assert receipt.is_file()
+    tex = project / "output/pdf/_combined_manuscript.tex"
+    projection = project / "output/manuscript/config.yaml"
+    text = tex.read_text()
+    if mutation == "wrong_author":
+        text = text.replace("Daniel Friedman", "Project Author") + "\nDaniel Friedman\n"
+    elif mutation == "wrong_visible_author":
+        text = text.replace(r"\bfseries Daniel Friedman", r"\bfseries Project Author")
+        text += "\nDaniel Friedman\n"
+    elif mutation == "duplicate_cover":
+        text += text[
+            text.index(r"\begin{titlepage}") : text.index(r"\end{titlepage}")
+            + len(r"\end{titlepage}")
+        ]
+    elif mutation == "stale_config":
+        config = project / "manuscript/config.yaml"
+        config.write_bytes(config.read_bytes().replace(b"FEP & Lean", b"New Title"))
+        projection.write_bytes(project_cover_author(config.read_bytes(), project))
+    elif mutation == "body_only":
+        text = text.replace(r"\begin{titlepage}", "").replace(r"\end{titlepage}", "")
+    elif mutation == "missing_cover":
+        text = r"\author{Project Author}" + "\nDaniel Friedman\n"
+    elif mutation == "wrong_title":
+        text = text.replace(r"FEP \& Lean", "Old title")
+    elif mutation == "wrong_affiliation":
+        text = text.replace(r"Institute \& Research", "Other Institute")
+    elif mutation == "wrong_email":
+        text = text.replace(r"daniel\_test@example.org", "wrong@example.org")
+    elif mutation == "wrong_orcid":
+        text = text.replace("0000-0001-6232-9096", "0000-0000-0000-0000")
+    elif mutation == "doubled_orcid_url":
+        text = text.replace(
+            "https://orcid.org/", "https://orcid.org/https://orcid.org/"
+        )
+    elif mutation == "url_orcid_label":
+        text = text.replace("ORCID: ", "ORCID: https://orcid.org/")
+    elif mutation == "stale_orcid_projection":
+        projection.write_bytes(
+            projection.read_bytes().replace(
+                b"orcid: 0000-0001-6232-9096",
+                b"orcid: https://orcid.org/0000-0001-6232-9096",
+            )
+        )
+    elif mutation == "malformed_canonical_orcid":
+        cff = project / "CITATION.cff"
+        cff.write_text(
+            cff.read_text().replace("https://orcid.org/", "http://orcid.org/")
+        )
+    elif mutation == "commented_cover":
+        text = "\n".join(
+            "% " + line if "author{" not in line else line for line in text.splitlines()
+        )
+    elif mutation == "missing_projection":
+        projection.unlink()
+    elif mutation == "stale_projection":
+        projection.write_bytes(
+            projection.read_bytes().replace(b"Daniel Friedman", b"Project Author")
+        )
+    elif mutation == "missing_marker":
+        projection.write_bytes(
+            projection.read_bytes().replace(
+                b"# Project-resolved config: author projected from CITATION.cff\n", b""
+            )
+        )
+    elif mutation == "stale_cff":
+        cff = project / "CITATION.cff"
+        cff.write_text(cff.read_text().replace("Daniel", "New Author"))
+    if mutation == "missing_tex":
+        tex.unlink()
+    else:
+        tex.write_text(text)
+    assert driver.main(["--accept-only"]) == 1
+    assert not receipt.exists()
+
+
+def test_canonical_escaped_cover_and_projection_pass(tmp_path: Path) -> None:
+    project = _project(tmp_path, CLEAN_LOG)
+    assert (
+        publication_cover_defects(project / "manuscript", project / "output/pdf") == ()
+    )
+
+
+def test_identical_pandoc_and_template_author_declarations_pass(tmp_path: Path) -> None:
+    project = _project(tmp_path, CLEAN_LOG)
+    tex = project / "output/pdf/_combined_manuscript.tex"
+    tex.write_text(r"\author{Daniel Friedman}" + "\n" + tex.read_text())
+    assert (
+        publication_cover_defects(project / "manuscript", project / "output/pdf") == ()
+    )
+
+
+def test_actual_pinned_template_cover_orcid(tmp_path: Path) -> None:
+    """Generate real cover TeX without invoking Pandoc or a PDF compiler."""
+    template_path = os.environ.get("FEP_LEAN_TEMPLATE_DIR")
+    if not template_path:
+        pytest.skip("set FEP_LEAN_TEMPLATE_DIR to the pinned template checkout")
+    template = Path(template_path).resolve()
+    revision = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=template,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=10,
+    ).stdout.strip()
+    assert revision == "5b3c0f43940f0322fbc6205b3be4c2854f99329d"
+    project = _project(tmp_path, CLEAN_LOG)
+    source = project / "manuscript/config.yaml"
+    source.write_bytes(
+        source.read_bytes()
+        + b"  cover: {image: assets/graphical-abstract.png, alt: Graphical abstract}\n"
+    )
+    generated = project / "output/manuscript"
+    (generated / "assets").mkdir()
+    shutil.copy2(
+        PROJECT_ROOT / "manuscript/assets/graphical-abstract.png",
+        generated / "assets/graphical-abstract.png",
+    )
+    projected = project_cover_author(source.read_bytes(), project)
+    (generated / "config.yaml").write_bytes(projected)
+    code = r"""
+import sys
+from pathlib import Path
+from infrastructure.rendering._pdf_title_page import (
+    generate_title_page_preamble, generate_title_page_body,
+)
+manuscript = Path(sys.argv[1])
+print(generate_title_page_preamble(manuscript))
+print(r"\begin{document}")
+print(generate_title_page_body(manuscript))
+print(r"\end{document}")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code, str(generated)],
+        cwd=template,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    tex = project / "output/pdf/_combined_manuscript.tex"
+    tex.write_text(result.stdout, encoding="utf-8")
+    assert (generated / "config.yaml").read_bytes() == projected
+    assert (
+        r"\href{https://orcid.org/0000-0001-6232-9096}{ORCID: 0000-0001-6232-9096}"
+        in result.stdout
+    )
+    assert result.stdout.count("https://orcid.org/") == 1
+    assert publication_cover_defects(project / "manuscript", tex.parent) == ()
+    # Reproduce the old configuration bug through the same real generator.
+    (generated / "config.yaml").write_bytes(
+        projected.replace(
+            b"orcid: 0000-0001-6232-9096",
+            b"orcid: https://orcid.org/0000-0001-6232-9096",
+        )
+    )
+    stale = subprocess.run(
+        [sys.executable, "-c", code, str(generated)],
+        cwd=template,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
+    )
+    assert "https://orcid.org/https://orcid.org/" in stale.stdout
+    tex.write_text(stale.stdout, encoding="utf-8")
+    assert publication_cover_defects(project / "manuscript", tex.parent)
+    # Even with the config repaired, stale TeX must independently fail.
+    (generated / "config.yaml").write_bytes(projected)
+    assert publication_cover_defects(project / "manuscript", tex.parent) == (
+        "publication titlepage does not contain the canonical cover projection",
     )

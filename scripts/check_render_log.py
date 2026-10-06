@@ -36,11 +36,13 @@ if __name__ == "__main__":
 
 import yaml
 
+from fep_lean.output.publication_metadata import publication_cover_defects
 from fep_lean.output.render_log import (
     build_acceptance_receipt,
     contents_number_overflow_defects,
     mermaid_fallback_defects,
     receipt_defects,
+    reference_render_defects,
     render_log_defects,
     stale_render_defects,
     uncaptioned_table_defects,
@@ -140,7 +142,25 @@ def main(argv: list[str] | None = None) -> int:
         print(f"FAIL: {line}")
     if not overflowed:
         print("OK: no contents number overflows its number box")
-    status = 1 if failed or fallbacks or stale or uncaptioned or overflowed else 0
+    references = reference_render_defects(pdf_dir)
+    for line in references:
+        print(f"FAIL: {line}")
+    if not references:
+        print("OK: final references resolve and no crossref markup leaked")
+    cover = publication_cover_defects(manuscript_dir, pdf_dir)
+    for line in cover:
+        print(f"FAIL: {line}")
+    status = (
+        1
+        if failed
+        or fallbacks
+        or stale
+        or uncaptioned
+        or overflowed
+        or references
+        or cover
+        else 0
+    )
     if args.receipt is not None:
         counts = {
             "tex_errors": sum(len(defects.tex_errors) for defects in results),
@@ -151,6 +171,8 @@ def main(argv: list[str] | None = None) -> int:
             "stale_sources": len(stale),
             "uncaptioned_tables": len(uncaptioned),
             "contents_number_overflows": len(overflowed),
+            "unresolved_references": len(references),
+            "publication_cover": len(cover),
         }
         receipt = build_acceptance_receipt(manuscript_dir, pdf_dir, counts=counts)
         path = (

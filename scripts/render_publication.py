@@ -57,6 +57,7 @@ from fep_lean.output.render_fonts import (
     FontProbeError,
     font_coverage_defects,
 )
+from fep_lean.output.rendering import crossref_toolchain_defects
 
 PROJECT_NAME = "fep_lean"
 RENDER_STAGE = Path("scripts/pipeline/stage_03_render.py")
@@ -212,6 +213,11 @@ def render_publication(
     zero exit over a defective log.
     """
 
+    crossref_defects = crossref_toolchain_defects()
+    if crossref_defects:
+        for defect in crossref_defects:
+            print(f"FAIL: {defect}")
+        return 1
     if not skip_probe:
         try:
             font_defects = font_coverage_defects(project_root)

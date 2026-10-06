@@ -166,6 +166,65 @@ def load_publication_author(project_root: Path) -> PublicationAuthor:
     )
 
 
+def _cover_orcid_identifier(canonical_url: str) -> str:
+    """Validate a canonical ORCID URL and return the template's bare identifier."""
+    match = re.fullmatch(
+        r"https://orcid\.org/([0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X])",
+        canonical_url,
+    )
+    if match is None:
+        raise PublicationMetadataError(
+            "CITATION.cff author orcid must be a canonical https://orcid.org/ URL"
+        )
+    identifier = match.group(1)
+    digits = identifier.replace("-", "")
+    total = 0
+    for digit in digits[:-1]:
+        total = (total + int(digit)) * 2
+    checksum = (12 - total % 11) % 11
+    if digits[-1] != ("X" if checksum == 10 else str(checksum)):
+        raise PublicationMetadataError(
+            "CITATION.cff author orcid has an invalid checksum"
+        )
+    return identifier
+
+
+def project_cover_author(config_bytes: bytes, project_root: Path) -> bytes:
+    """Project the canonical CFF author into the template's cover metadata.
+
+    The authored config remains unchanged and must not own a second author
+    record. The pinned template preserves this explicitly marked generated
+    config instead of replacing it with the authored config during rendering.
+    Only this projection uses the bare ORCID identifier: the template supplies
+    the URL prefix, while CFF and manuscript variables retain the canonical URL.
+    """
+    try:
+        config = _mapping(
+            yaml.safe_load(config_bytes.decode("utf-8")),
+            label="manuscript cover config",
+        )
+    except (UnicodeError, yaml.YAMLError) as exc:
+        raise PublicationMetadataError("invalid manuscript cover config") from exc
+    if "authors" in config or "author" in config:
+        raise PublicationMetadataError(
+            "manuscript cover config must not duplicate the CITATION.cff author"
+        )
+    author = load_publication_author(project_root)
+    cover_author = author.manuscript_variables()
+    cover_author["orcid"] = _cover_orcid_identifier(author.orcid)
+    projection = yaml.safe_dump(
+        {"authors": [cover_author]},
+        sort_keys=False,
+        allow_unicode=True,
+    ).encode("utf-8")
+    return (
+        config_bytes
+        + (b"" if config_bytes.endswith(b"\n") else b"\n")
+        + b"\n# Project-resolved config: author projected from CITATION.cff\n"
+        + projection
+    )
+
+
 def load_repository_url(project_root: Path) -> str:
     """Return the canonical repository URL declared by ``CITATION.cff``.
 
@@ -354,3 +413,94 @@ def pdf_metadata_drift(project_root: Path) -> tuple[str, ...]:
                 f"manuscript/config.yaml\n  preamble: {actual}\n  config:   {wanted}"
             )
     return tuple(drift)
+
+
+def publication_cover_defects(manuscript_dir: Path, pdf_dir: Path) -> tuple[str, ...]:
+    """Validate the canonical config projection and pinned-template cover evidence.
+
+    This deliberately accepts only the custom paper-cover layout used by this
+    publication (template 5b3c0f4). Body author information, comments and a bare
+    author declaration cannot substitute for the visible title-page block.
+    This checks TeX evidence, not PDF pixels or arbitrary TeX execution semantics.
+    """
+    root = manuscript_dir.parent
+    try:
+        source = (manuscript_dir / "config.yaml").read_bytes()
+        expected = project_cover_author(source, root)
+        projected = (root / "output/manuscript/config.yaml").read_bytes()
+        if projected != expected:
+            return ("publication cover config is not the exact canonical projection",)
+        config = yaml.safe_load(expected)
+        paper = _mapping(config.get("paper"), label="publication paper")
+        title = _required_text(paper, "title", label="publication paper")
+        subtitle = _required_text(paper, "subtitle", label="publication paper")
+        author = load_publication_author(root)
+        orcid_identifier = _cover_orcid_identifier(author.orcid)
+        tex = (pdf_dir / "_combined_manuscript.tex").read_text(encoding="utf-8")
+    except (OSError, UnicodeError, ValueError, yaml.YAMLError) as exc:
+        return (f"publication cover evidence missing or invalid: {exc}",)
+
+    # Match the pinned template's character-wise text and hyperref escaping;
+    # do not unescape TeX into text (that would discard structural evidence).
+    replacements = dict(
+        zip(
+            "\\&%$#_{}~^",
+            (
+                r"\textbackslash{}",
+                r"\&",
+                r"\%",
+                r"\$",
+                r"\#",
+                r"\_",
+                r"\{",
+                r"\}",
+                r"\textasciitilde{}",
+                r"\textasciicircum{}",
+            ),
+            strict=True,
+        )
+    )
+
+    def escaped(value: str) -> str:
+        return "".join(replacements.get(char, char) for char in value)
+
+    expected_opening = "\n".join(
+        [
+            r"\begin{titlepage}",
+            r"\centering",
+            r"\vspace*{0.55cm}",
+            r"{\Huge\sffamily\bfseries " + escaped(title) + r"\par}",
+            r"\vspace{0.4em}",
+            r"{\Large\sffamily " + escaped(subtitle) + r"\par}",
+            r"\vspace{0.75em}",
+            r"{\large\sffamily\bfseries " + escaped(author.name) + r"\par}",
+            r"{\small\sffamily " + escaped(author.affiliation) + r"\par}",
+            r"{\small\sffamily\texttt{" + escaped(author.email) + r"}\par}",
+            r"{\small\sffamily\href{https://orcid.org/"
+            + orcid_identifier
+            + r"}{ORCID: "
+            + orcid_identifier
+            + r"}\par}",
+            r"\vspace{0.08em}",
+        ]
+    )
+    # Remove only actual TeX comments, respecting escaped percent characters.
+    tex = re.sub(r"(?<!\\)((?:\\\\)*)%[^\n]*", r"\1", tex)
+    parts = tex.split(r"\begin{document}")
+    if len(parts) != 2:
+        return ("publication cover requires one document environment",)
+    preamble, body = parts
+    declarations = re.findall(r"^\\author\{.*$", preamble, re.MULTILINE)
+    if not declarations or any(
+        value != r"\author{" + escaped(author.name) + "}" for value in declarations
+    ):
+        return ("publication cover author declaration differs from CITATION.cff",)
+    covers = re.findall(r"\\begin\{titlepage\}.*?\\end\{titlepage\}", body, re.DOTALL)
+    if len(covers) != 1 or not covers[0].startswith(expected_opening + "\n"):
+        return (
+            "publication titlepage does not contain the canonical cover projection",
+        )
+    # A matching block inside a comment/verbatim/body section is not a cover.
+    if body[: body.index(covers[0])].strip():
+        return ("publication titlepage is not the document opening",)
+    return ()

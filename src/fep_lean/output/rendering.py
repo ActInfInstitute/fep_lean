@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
@@ -14,7 +15,10 @@ from fep_lean.output.fsutil import atomic_write_bytes, atomic_write_text
 from fep_lean.output.publication_metadata import (
     PublicationMetadataError,
     load_graphical_abstract,
+    load_publication_author,
+    project_cover_author,
 )
+from fep_lean.verification._subprocess import run_process_group
 
 PLACEHOLDER_RE = re.compile(r"\{\{([^}]+)\}\}")
 # Every shell block this repository publishes is a promise a reader can run.
@@ -363,6 +367,22 @@ def render_manuscript(
             )
         if metadata_path.is_file():
             asset_contents[Path(metadata_name)] = metadata_path.read_bytes()
+    publication = variables.get("publication")
+    if isinstance(publication, Mapping) and "author" in publication:
+        try:
+            author = load_publication_author(source.parent)
+            if publication["author"] != author.manuscript_variables():
+                raise PublicationMetadataError(
+                    "publication author variables do not match CITATION.cff"
+                )
+            config_bytes = asset_contents.get(Path("config.yaml"))
+            if config_bytes is None:
+                raise PublicationMetadataError("publication cover config is missing")
+            asset_contents[Path("config.yaml")] = project_cover_author(
+                config_bytes, source.parent
+            )
+        except PublicationMetadataError as exc:
+            raise ManuscriptRenderError(str(exc)) from exc
     graphical_abstract_requested = any(
         "publication.graphical_abstract." in content
         for content in source_contents.values()
@@ -412,3 +432,88 @@ def render_manuscript(
         if staged.exists():
             shutil.rmtree(staged)
     return tuple(destination / source_path.name for source_path in rendered_contents)
+
+
+# Exercise the same reader/writer/filter contract as the pinned template without
+# compiling a PDF or touching manuscript sources. Version strings alone cannot
+# establish Pandoc JSON API compatibility.
+_CROSSREF_PROBE = """# Probe {#sec:fep-probe}
+
+$$
+x=y
+$$ {#eq:fep-probe}
+
+See [@eq:fep-probe] and [@sec:fep-probe]; [@fep-bibliography-probe].
+
+```text
+[@eq:codeonly] {#eq:codeonly}
+```
+
+`[@sec:inlineonly]`
+"""
+
+
+def crossref_toolchain_defects() -> tuple[str, ...]:
+    """Require a working crossref filter before the template can degrade silently."""
+    pandoc = shutil.which("pandoc")
+    crossref = shutil.which("pandoc-crossref")
+    if not pandoc or not crossref:
+        return (
+            (
+                "publication requires pandoc and a compatible pandoc-crossref on PATH; "
+                "the pinned template otherwise prints unresolved citations and labels"
+            ),
+        )
+    try:
+        # The broker has no stdin payload API. Close the input before launch so
+        # Pandoc can read it on every platform, and remove it on cancellation too.
+        with tempfile.TemporaryDirectory(prefix="fep-crossref-") as directory:
+            source = Path(directory) / "probe.md"
+            source.write_text(_CROSSREF_PROBE, encoding="utf-8")
+            result = run_process_group(
+                [
+                    pandoc,
+                    "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
+                    "--to=latex",
+                    "--number-sections",
+                    "--natbib",
+                    "--filter",
+                    crossref,
+                    str(source),
+                ],
+                cwd=directory,
+                timeout=30,
+                check=False,
+            )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return (f"crossref capability probe failed: {error}",)
+    required = (
+        r"\label{sec:fep-probe}",
+        r"\label{eq:fep-probe}",
+        r"\ref{sec:fep-probe}",
+        r"\ref{eq:fep-probe}",
+        r"\citep{fep-bibliography-probe}",
+        "codeonly",
+        "inlineonly",
+    )
+    forbidden = (
+        r"\citep{eq:fep-probe}",
+        r"\citep{sec:fep-probe}",
+        r"\label{eq:codeonly}",
+        r"\ref{eq:codeonly}",
+        r"\ref{sec:inlineonly}",
+    )
+    if (
+        result.returncode
+        or result.stderr.strip()
+        or any(token not in result.stdout for token in required)
+        or any(token in result.stdout for token in forbidden)
+    ):
+        return (
+            (
+                "crossref capability probe failed: real labels/references, bibliography "
+                "citations and code exclusions must survive without diagnostics "
+                f"(exit={result.returncode}; {result.stderr.strip()[:500]})"
+            ),
+        )
+    return ()

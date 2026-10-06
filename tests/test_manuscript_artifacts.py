@@ -40,6 +40,7 @@ from fep_lean.output.publication_metadata import (
     load_publication_author,
     pdf_metadata_drift,
     pdf_metadata_fields,
+    project_cover_author,
 )
 
 PROJ = Path(__file__).resolve().parent.parent
@@ -159,6 +160,81 @@ def test_build_manuscript_vars_projects_the_canonical_citation_author(
         "orcid": author["orcid"],
     }
     assert "authors" not in manuscript_config
+
+
+def test_cover_author_projects_citation_without_changing_authored_metadata(
+    tmp_path: Path,
+) -> None:
+    _copy_publication_metadata(tmp_path)
+    config_path = tmp_path / "manuscript/config.yaml"
+    before = config_path.read_bytes()
+    citation_before = (tmp_path / "CITATION.cff").read_bytes()
+    author = load_publication_author(tmp_path)
+    canonical = author.manuscript_variables()
+    projected = project_cover_author(before, tmp_path)
+    expected = yaml.safe_load(before)
+    expected["authors"] = [{**canonical, "orcid": "0000-0001-6232-9096"}]
+    assert yaml.safe_load(projected) == expected
+    assert b"# Project-resolved config" in projected
+    assert config_path.read_bytes() == before
+    assert projected == project_cover_author(before, tmp_path)
+    assert (tmp_path / "CITATION.cff").read_bytes() == citation_before
+    assert author.manuscript_variables() == canonical
+    assert canonical["orcid"] == "https://orcid.org/0000-0001-6232-9096"
+
+
+@pytest.mark.parametrize(
+    "orcid",
+    [
+        "0000-0001-6232-9096",
+        "http://orcid.org/0000-0001-6232-9096",
+        "https://orcid.org/https://orcid.org/0000-0001-6232-9096",
+        "https://orcid.org.evil/0000-0001-6232-9096",
+        "https://orcid.org/0000-0001-6232-9096/",
+        "https://orcid.org/0000-0001-6232-9096?query=1",
+        "https://orcid.org/0000-0001-6232-9096#fragment",
+        "https://orcid.org/0000-0001-6232-9095",
+        "https://orcid.org/0000-0002-1694-233x",
+        "https://orcid.org/not-an-identifier",
+    ],
+)
+def test_cover_author_rejects_malformed_canonical_orcid(
+    tmp_path: Path, orcid: str
+) -> None:
+    _copy_publication_metadata(tmp_path)
+    citation = tmp_path / "CITATION.cff"
+    citation.write_text(
+        citation.read_text().replace("https://orcid.org/0000-0001-6232-9096", orcid)
+    )
+    before = citation.read_bytes()
+    with pytest.raises(PublicationMetadataError, match="orcid"):
+        project_cover_author(b"paper: {title: Example}\n", tmp_path)
+    assert citation.read_bytes() == before
+
+
+def test_cover_author_accepts_orcid_x_check_digit(tmp_path: Path) -> None:
+    _copy_publication_metadata(tmp_path)
+    citation = tmp_path / "CITATION.cff"
+    citation.write_text(
+        citation.read_text().replace("0000-0001-6232-9096", "0000-0002-1694-233X")
+    )
+    projected = project_cover_author(b"paper: {title: Example}\n", tmp_path)
+    assert yaml.safe_load(projected)["authors"][0]["orcid"] == "0000-0002-1694-233X"
+    assert load_publication_author(tmp_path).orcid == (
+        "https://orcid.org/0000-0002-1694-233X"
+    )
+
+
+@pytest.mark.parametrize("key", ["author", "authors"])
+def test_cover_author_rejects_duplicate_identity(tmp_path: Path, key: str) -> None:
+    _copy_publication_metadata(tmp_path)
+    with pytest.raises(PublicationMetadataError, match="must not duplicate"):
+        project_cover_author(f"{key}: Someone Else\n".encode(), tmp_path)
+
+
+def test_cover_author_requires_canonical_identity(tmp_path: Path) -> None:
+    with pytest.raises(PublicationMetadataError, match="required CITATION.cff"):
+        project_cover_author(b"paper: {title: Example}\n", tmp_path)
 
 
 def test_publication_author_rejects_a_duplicated_preferred_citation_owner(

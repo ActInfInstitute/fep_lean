@@ -377,18 +377,35 @@ jobs:
           # stage runs.
           mkdir -p render-template/projects/active
           ln -s "$GITHUB_WORKSPACE" render-template/projects/active/fep_lean
-      - name: Install the XeLaTeX toolchain, pandoc, and the SVG rasterizer
+      - name: Install the XeLaTeX toolchain, Pandoc, pandoc-crossref, and the SVG rasterizer
+        shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             texlive-xetex texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended lmodern fontconfig librsvg2-bin
-          # The apt pandoc trails the pinned release this document renders
-          # with; install the pinned upstream build instead.
-          curl -fsSL -o /tmp/pandoc.deb \
-            https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-1-amd64.deb
-          sudo dpkg -i /tmp/pandoc.deb
-          rm -f /tmp/pandoc.deb
+          # Pin the locally validated pair; crossref v0.3.25 uses
+          # pandoc-types 1.23.1.2, within Pandoc 3.12's declared API range.
+          # SHA256 values are the asset digests from the official releases:
+          # https://api.github.com/repos/jgm/pandoc/releases/tags/3.12
+          # https://api.github.com/repos/lierdakil/pandoc-crossref/releases/tags/v0.3.25
+          render_tools_dir="$(mktemp -d)"
+          trap 'rm -rf "$render_tools_dir"' EXIT
+          curl -fsSL --retry 3 --connect-timeout 30 --max-time 300 \
+            -o "$render_tools_dir/pandoc.deb" \
+            https://github.com/jgm/pandoc/releases/download/3.12/pandoc-3.12-1-amd64.deb
+          curl -fsSL --retry 3 --connect-timeout 30 --max-time 300 \
+            -o "$render_tools_dir/pandoc-crossref.tar.xz" \
+            https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.25/pandoc-crossref-Linux-X64.tar.xz
+          printf '%s  %s\n' \
+            91903ff19f1b1d4db4129797c7e18f71212990d7394fcff1787719aebf04e372 "$render_tools_dir/pandoc.deb" \
+            2319816e3545ee78e44e4a97c2174c72eedf4b51d436b32721b48f43458eb0f6 "$render_tools_dir/pandoc-crossref.tar.xz" \
+            | sha256sum --check --strict
+          sudo dpkg -i "$render_tools_dir/pandoc.deb"
+          tar -xJf "$render_tools_dir/pandoc-crossref.tar.xz" -C "$render_tools_dir" pandoc-crossref
+          sudo install -m 0755 "$render_tools_dir/pandoc-crossref" /usr/local/bin/pandoc-crossref
+          pandoc --version
+          pandoc-crossref --version
       - name: Install the two faces the preamble selects
         run: |
           # JuliaMono (the code face; no distribution package) and GNU
@@ -648,7 +665,7 @@ jobs:
           template_sources = template_manifest()
           validate_evidence()
           versions = {}
-          for command in ("xelatex", "pandoc", "rsvg-convert", "mmdc"):
+          for command in ("xelatex", "pandoc", "pandoc-crossref", "rsvg-convert", "mmdc"):
               versions[command] = subprocess.check_output([command, "--version"], text=True, timeout=30).strip()
           fonts = {}
           font_files = {}

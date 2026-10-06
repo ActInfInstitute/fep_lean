@@ -180,6 +180,91 @@ def render_log_defects(
     return [scan_render_log(pdf_dir / name) for name in log_names]
 
 
+# Code examples are literal text, not publication references. Pandoc emits
+# Highlighting for highlighted fences, verbatim for plain ones and texttt for
+# inline code. Balanced braces matter: a non-greedy regex stops inside \# IDs.
+def _without_tex_code(text: str) -> str:
+    text = re.sub(
+        r"\\begin\{(verbatim\*?|Verbatim|Highlighting|lstlisting|minted)\}"
+        r".*?\\end\{\1\}",
+        "",
+        text,
+        flags=re.DOTALL,
+    )
+    out: list[str] = []
+    cursor = 0
+    for match in re.finditer(r"\\(?:texttt|verb\*?)", text):
+        if match.start() < cursor:
+            continue
+        end = match.end()
+        if text[match.start() : end].startswith(r"\verb"):
+            if end >= len(text) or text[end].isspace():
+                continue
+            closing = text.find(text[end], end + 1)
+            if closing < 0:
+                continue
+            end = closing + 1
+        else:
+            if text[end : end + 1] != "{":
+                continue
+            depth = 1
+            end += 1
+            while end < len(text) and depth:
+                if text[end] == "\\":
+                    end += 2
+                    continue
+                depth += (text[end] == "{") - (text[end] == "}")
+                end += 1
+            if depth:
+                continue
+        out.append(text[cursor : match.start()])
+        cursor = end
+    out.append(text[cursor:])
+    return "".join(out)
+
+
+def reference_render_defects(pdf_dir: Path) -> tuple[str, ...]:
+    """Reject unresolved final references and leaked Pandoc crossref markup.
+
+    Inspect final TeX as well as compiler logs: unreferenced equation IDs can
+    print literally without any compiler warning. Bibliographic citations are
+    allowed; undefined citations in the final log are not.
+    """
+    tex = Path(pdf_dir) / "_combined_manuscript.tex"
+    defects: list[str] = []
+    if not tex.is_file():
+        defects.append(f"{tex}: final TeX absent; references cannot be checked")
+    else:
+        content = _without_tex_code(tex.read_text(encoding="utf-8"))
+        patterns = (
+            r"\\cite\w*\*?(?:\[[^\]]*\])*\{[^}]*\b(?:eq|sec|fig|tbl):[^}]*\}",
+            r"(?:\\\{\\\#|\{#)(?:eq|sec|fig|tbl):[^\s}]+",
+            r"\b(?:eq|sec|fig|tbl):[^\s}]*\?\?",
+        )
+        for pattern in patterns:
+            for match in re.finditer(pattern, content):
+                defects.append(
+                    f"{tex.name}: unresolved cross-reference {match.group()}"
+                )
+        labels = set(re.findall(r"\\label\{([^}]+)\}", content))
+        for target in re.findall(r"\\(?:eqref|ref|autoref)\*?\{([^}]+)\}", content):
+            if target not in labels:
+                defects.append(f"{tex.name}: reference has no label: {target}")
+    for name in DEFAULT_LOG_NAMES:
+        log = Path(pdf_dir) / name
+        if not log.is_file():
+            continue  # The compiler-log gate already rejects missing logs.
+        content = log.read_text(encoding="utf-8", errors="replace")
+        # TeX wraps long warning lines; include the continuation when matching.
+        for match in re.finditer(
+            r"(?:LaTeX|Package natbib) Warning:[^\n]*(?:\n[^\n]*){0,2}", content
+        ):
+            warning = match.group()
+            if re.search(r"undefined|multiply[- ]defined", warning, re.IGNORECASE):
+                defects.append(f"{name}: {warning.strip()}")
+    return tuple(defects)
+
+
 # A ``mermaid`` fence the renderer could not rasterize is replaced by a
 # ``verbatim`` block holding the diagram's own source, captioned with the
 # fence's alt text or the literal fallback ``Mermaid diagram``. The template
@@ -484,7 +569,7 @@ def contents_number_overflow_defects(
 # :func:`stale_render_defects` compares those against the render variables on
 # the render path, and ``manuscript_projection_drift`` owns the generated
 # projections against the catalogue.
-RECEIPT_VERSION = 1
+RECEIPT_VERSION = 2
 # Every check whose defect list must be empty for a render to be publishable.
 _RECEIPT_CHECKS = (
     "tex_errors",
@@ -493,6 +578,8 @@ _RECEIPT_CHECKS = (
     "stale_sources",
     "uncaptioned_tables",
     "contents_number_overflows",
+    "unresolved_references",
+    "publication_cover",
 )
 _PAGES_RE = re.compile(r"Output written on \S+ \((?P<pages>\d+) pages?")
 
@@ -522,14 +609,20 @@ def manuscript_source_digests(manuscript_dir: Path) -> dict[str, str]:
     """
 
     manuscript = Path(manuscript_dir)
-    return {
-        path.name: hashlib.sha256(
-            path.read_bytes() if path.is_file() else b""
-        ).hexdigest()
+    sources = {
+        path.name: path
         for path in (
             *rendered_manuscript_sources(manuscript),
             manuscript / "preamble.md",
+            manuscript / "config.yaml",
         )
+    }
+    # The cover projects its author from CFF rather than duplicating identity
+    # in config.yaml. Both owners must invalidate an earlier render receipt.
+    sources["../CITATION.cff"] = manuscript.parent / "CITATION.cff"
+    return {
+        name: hashlib.sha256(path.read_bytes() if path.is_file() else b"").hexdigest()
+        for name, path in sources.items()
     }
 
 

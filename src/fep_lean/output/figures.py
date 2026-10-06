@@ -51,6 +51,15 @@ def _write_bar_chart(
     nums = [int(values[k]) for k in labels]
     fig, ax = plt.subplots(figsize=(7, 4.2))
     bars = ax.bar(labels, nums, color="#315f8c")
+    # Display line breaks only; category identities, order and counts stay intact.
+    area_labels = {
+        "ActiveInference": "Active\nInference",
+        "BayesianMechanics": "Bayesian\nMechanics",
+        "InfoGeometry": "Info\nGeometry",
+    }
+    ax.set_xticks(
+        range(len(labels)), [area_labels.get(label, label) for label in labels]
+    )
     ax.set_title(title)
     if subtitle:
         ax.set_xlabel(subtitle)

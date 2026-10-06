@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import contextlib
 import importlib.util
+import os
 import shutil
+import signal
 import subprocess
+import sys
+import time
 from pathlib import Path
 from types import ModuleType
 
@@ -355,6 +360,36 @@ def test_render_manuscript_copies_and_rewrites_visual_assets(
     ) == '<html id="dashboard"/>\n'
 
 
+def test_render_projects_canonical_cover_author_and_rejects_stale_variables(
+    tmp_path: Path,
+) -> None:
+    from fep_lean.output.publication_metadata import load_publication_author
+
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    _copy_publication_metadata(tmp_path)
+    _stage_asset_roster(tmp_path)
+    (source / "01_chapter.md").write_text("Authored chapter\n")
+    authored = (source / "config.yaml").read_bytes()
+    author = load_publication_author(tmp_path).manuscript_variables()
+    destination = tmp_path / "build"
+    render_manuscript(source, destination, {"publication": {"author": author}})
+    rendered = (destination / "config.yaml").read_bytes()
+    assert yaml.safe_load(rendered)["authors"] == [
+        {**author, "orcid": "0000-0001-6232-9096"}
+    ]
+    assert author["orcid"] == "https://orcid.org/0000-0001-6232-9096"
+    assert b"# Project-resolved config" in rendered
+    assert (source / "config.yaml").read_bytes() == authored
+    with pytest.raises(ManuscriptRenderError, match="do not match CITATION.cff"):
+        render_manuscript(
+            source,
+            destination,
+            {"publication": {"author": {**author, "name": "Stale Author"}}},
+        )
+    assert (destination / "config.yaml").read_bytes() == rendered
+
+
 def test_render_preserves_raw_metadata_and_removes_obsolete_copies(
     tmp_path: Path,
 ) -> None:
@@ -647,3 +682,173 @@ def test_generating_render_mode_does_not_count_as_the_generator(
     defects = unreproducible_command_blocks(tmp_path)
     assert len(defects) == 1
     assert "runs with no generator ahead of it" in defects[0]
+
+
+def test_crossref_missing_dependency_fails_closed(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from fep_lean.output import rendering
+
+    monkeypatch.setattr(rendering.shutil, "which", lambda _name: None)
+    assert rendering.crossref_toolchain_defects()
+
+
+def test_real_pandoc_crossref_preserves_labels_citations_and_code(
+    tmp_path: Path,
+) -> None:
+    import shutil
+
+    from fep_lean.output import rendering
+    from fep_lean.output.render_log import reference_render_defects
+
+    if not shutil.which("pandoc") or not shutil.which("pandoc-crossref"):
+        pytest.skip(
+            "requires pandoc and pandoc-crossref; publication preflight fails without them"
+        )
+    assert rendering.crossref_toolchain_defects() == ()
+    base = [
+        "pandoc",
+        "--from=markdown+tex_math_dollars+raw_tex+header_attributes",
+        "--to=latex",
+        "--number-sections",
+        "--natbib",
+    ]
+    source = tmp_path / "probe.md"
+    source.write_text(rendering._CROSSREF_PROBE, encoding="utf-8")
+    # The former hosted path: a successful conversion with no filter is broken.
+    for use_filter in (False, True):
+        result = rendering.run_process_group(
+            base
+            + (["--filter", "pandoc-crossref"] if use_filter else [])
+            + [str(source)],
+            cwd=tmp_path,
+            timeout=30,
+            check=True,
+        )
+        (tmp_path / "_combined_manuscript.tex").write_text(
+            result.stdout, encoding="utf-8"
+        )
+        defects = reference_render_defects(tmp_path)
+        assert bool(defects) is not use_filter
+        assert r"\citep{fep-bibliography-probe}" in result.stdout
+
+
+@pytest.mark.parametrize("failure", ["noop", "incompatible", "timeout", "oserror"])
+def test_crossref_probe_rejects_broken_installed_toolchain(
+    monkeypatch: pytest.MonkeyPatch,
+    failure: str,
+) -> None:
+    import subprocess
+
+    from fep_lean.output import rendering
+
+    monkeypatch.setattr(rendering.shutil, "which", lambda name: "/tools/" + name)
+
+    inputs = []
+
+    def broken(command, **kwargs):
+        inputs.append(Path(command[-1]))
+        assert inputs[-1].read_text(encoding="utf-8") == rendering._CROSSREF_PROBE
+        assert Path(kwargs["cwd"]) == inputs[-1].parent
+        assert kwargs["timeout"] == 30
+        if failure == "oserror":
+            raise OSError("tool disappeared")
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+        return subprocess.CompletedProcess(
+            command,
+            0 if failure == "noop" else 1,
+            stdout=rendering._CROSSREF_PROBE,
+            stderr="" if failure == "noop" else "incompatible Pandoc API",
+        )
+
+    monkeypatch.setattr(rendering, "run_process_group", broken)
+    assert rendering.crossref_toolchain_defects()
+    assert inputs and not inputs[0].parent.exists()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="descendant cleanup requires POSIX")
+@pytest.mark.timeout(10, method="signal")
+@pytest.mark.parametrize("cancel", [False, True], ids=["timeout", "cancellation"])
+def test_crossref_probe_cleans_up_live_filter_and_held_pipes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, cancel: bool
+) -> None:
+    from fep_lean.output import rendering
+
+    # Real Pandoc stand-in launches a filter which inherits BOTH capture pipes.
+    # Readiness records ensure we test a live descendant, not just a slow launch.
+    records = [tmp_path / "pandoc.pid", tmp_path / "filter.pid"]
+    source_record = tmp_path / "source.txt"
+    broker_record = tmp_path / "broker.txt"
+    descendant = (
+        "import os,sys,time; from pathlib import Path; "
+        "print('filter stdout',flush=True); "
+        "print('filter stderr',file=sys.stderr,flush=True); "
+        f"Path({str(records[1])!r}).write_text(str(os.getpid())); "
+        "time.sleep(20)"
+    )
+    tool = tmp_path / "pandoc"
+    tool.write_text(
+        f"#!{sys.executable}\n"
+        "import os,signal,subprocess,sys,time\nfrom pathlib import Path\n"
+        f"Path({str(records[0])!r}).write_text(str(os.getpid()))\n"
+        f"Path({str(source_record)!r}).write_text(sys.argv[-1])\n"
+        f"Path({str(broker_record)!r}).write_text(os.environ['FEP_LEAN_PROCESS_OWNER_SOCKET'])\n"
+        f"assert Path(sys.argv[-1]).read_text() == {rendering._CROSSREF_PROBE!r}\n"
+        f"subprocess.Popen([sys.executable,'-S','-c',{descendant!r}])\n"
+        "deadline=time.monotonic()+3\n"
+        f"while not Path({str(records[1])!r}).exists() and time.monotonic()<deadline: time.sleep(.01)\n"
+        f"assert Path({str(records[1])!r}).exists()\n"
+        + (f"os.kill({os.getpid()},signal.SIGUSR1)\n" if cancel else "")
+        + "time.sleep(20)\n",
+        encoding="utf-8",
+    )
+    tool.chmod(0o700)
+    monkeypatch.setattr(rendering.shutil, "which", lambda _name: str(tool))
+    run = rendering.run_process_group
+
+    def bounded_run(command, **kwargs):
+        assert kwargs["timeout"] == 30
+        return run(command, **{**kwargs, "timeout": 2})
+
+    monkeypatch.setattr(rendering, "run_process_group", bounded_run)
+
+    def interrupt(_signum, _frame):
+        raise KeyboardInterrupt("probe cancelled")
+
+    previous = signal.signal(signal.SIGUSR1, interrupt)
+    started = time.monotonic()
+    try:
+        if cancel:
+            with pytest.raises(KeyboardInterrupt, match="probe cancelled"):
+                rendering.crossref_toolchain_defects()
+        else:
+            defects = rendering.crossref_toolchain_defects()
+            assert len(defects) == 1 and "timed out" in defects[0]
+        assert time.monotonic() - started < 5
+        assert source_record.exists()
+        assert not Path(source_record.read_text()).parent.exists()
+        assert not Path(broker_record.read_text()).parent.exists()
+        for record in records:
+            assert record.exists(), "child did not reach readiness"
+            pid = int(record.read_text())
+            deadline = time.monotonic() + 1
+            while True:
+                state = subprocess.run(
+                    ["/bin/ps", "-o", "stat=", "-p", str(pid)],
+                    capture_output=True,
+                    text=True,
+                    timeout=1,
+                    check=False,
+                ).stdout.strip()
+                if not state or state.startswith("Z"):
+                    break
+                assert time.monotonic() < deadline, f"live process survived: {pid}"
+                time.sleep(0.01)
+    finally:
+        signal.signal(signal.SIGUSR1, previous)
+        # Even a regressed implementation must not leave the test's sleepers.
+        for record in records:
+            if record.exists():
+                with contextlib.suppress(ProcessLookupError):
+                    os.kill(int(record.read_text()), signal.SIGKILL)
