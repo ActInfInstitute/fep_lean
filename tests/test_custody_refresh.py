@@ -1600,6 +1600,8 @@ def _render_candidate(root: Path) -> Path:
             "stale_sources",
             "uncaptioned_tables",
             "contents_number_overflows",
+            "unresolved_references",
+            "publication_cover",
         ),
         0,
     )

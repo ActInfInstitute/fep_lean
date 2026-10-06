@@ -116,6 +116,8 @@ def _exercise_render_artifact_staging(
                 "stale_sources",
                 "uncaptioned_tables",
                 "contents_number_overflows",
+                "unresolved_references",
+                "publication_cover",
             ),
             0,
         ),
