@@ -177,9 +177,16 @@ source-bound native/custody capture required by a serializer change. The retaine
 56,968-byte scaffold and native acceptance at that source epoch; see the
 [Q7 report](../specs/gnn-bridge-q7-continuous-ou-proof/REPORT.md).
 Its native receipt covers static coefficient statements and leaves runner
-execution unverified. Later owner changes and an incomplete capture keep
-`FEP-Q7-CURRENT` open in [TODO.md](../TODO.md). Historical Q7 JSON and Q5/Q6
-native and delivery observations retain their original epochs after a re-pin.
+execution unverified. The separately reviewed
+[2026-10-05 Q7 observation](../specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records the complete 2026-10-05 source-pair capture, including five fresh
+parser/serializer probes, all 124 pure controls and its separate native
+receipt for its recorded 291 inputs. This closed the later Q7 requirement for
+that epoch; later owner or serializer changes require their own acceptance.
+The public observation is not itself a native receipt or validation of this
+checkout. Historical Q7 JSON, Q5/Q6 observations and failed attempts retain their
+original epochs. No parser/serializer control establishes generated-runner
+execution.
 
 To exercise a target runtime locally while keeping the harness pinned:
 
@@ -329,6 +336,11 @@ uv run fep-lean publication-capture --template /path/to/template \
 uv run fep-lean publication-capture --template /path/to/template \
   --journal /tmp/fep-publication-capture --source-date-epoch 0 --timeout 21600 --resume
 ```
+
+For the current governed production attempt, the
+[execution sequence](../specs/comprehensive-science-improvement/NEXT.md) requires
+the original caps and no-resume policy. These general CLI examples describe
+available functionality; they do not change that reviewed attempt contract.
 
 The journal must be a new directory outside the checkout. Existing producers
 retain their declared project output paths; the manager preserves prior and

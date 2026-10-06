@@ -1183,7 +1183,7 @@ def _interactions(observations: Mapping[str, Any]) -> dict[str, bool]:
             (
                 atlas["searchVisible"] == 1,
                 atlas["fepVisible"] == 41,
-                atlas["pairingVisible"] == 105,
+                atlas["pairingVisible"] == 118,
                 dashboard["searchVisible"] == 1,
                 dashboard["familyVisible"] == 1,
                 dashboard["filterOpened"] == 1,

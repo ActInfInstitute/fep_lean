@@ -1,16 +1,24 @@
-# Quality-gate decision record (updated 2026-08-19)
+# Quality-gate decision record (updated 2026-10-05)
 
 **Decision date:** 2026-08-19<br>
 **Owner:** fep_lean repository maintainers<br>
 **Decision:** Ruff lint and formatting are both blocking zero-debt gates.
 
-## Revision 5 — 2026-08-19 (current)
+## Current policy — 2026-10-05
 
 CI now runs both `ruff check src tests scripts docs` and
 `ruff format --check src tests scripts docs` without `--exit-zero` or a shell
-fallback. The repository is clean under the pinned development dependency.
-Any future exception belongs in the reviewed `pyproject.toml` rule policy, not
-in an informational CI wrapper.
+fallback. Both checks must pass under the pinned development dependency before
+acceptance is recorded for a source epoch.
+Exceptions require a reviewed `pyproject.toml` rule policy or a narrowly scoped,
+justified line-local suppression. The two `S102` suppressions currently in
+[`tests/test_release_bundle.py`](../tests/test_release_bundle.py) execute only
+allowlisted functions from held local workflow syntax. A separate suppression
+in [tests/_support/custody_fixture_knobs.py](../tests/_support/custody_fixture_knobs.py)
+loads the byte-checked historical validator for a synthetic, disposable test
+epoch. These suppressions do not authorize broad ignores, an informational CI
+wrapper or a lint fallback. Source review of an exception does not establish
+runtime acceptance of the affected tests.
 
 ## Revision 4 — 2026-07-31 (superseded)
 

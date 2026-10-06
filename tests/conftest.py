@@ -27,14 +27,31 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 
+_LIVE_CHROME_NODE_IDS = frozenset(
+    {
+        (
+            "tests/test_browser_capture.py::"
+            "test_live_chrome_blocks_and_records_a_delayed_outbound_request"
+        ),
+        (
+            "tests/test_browser_capture.py::"
+            "test_live_chrome_replay_terminates_every_profile_writer"
+        ),
+    }
+)
+
+
+@pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(
     config: pytest.Config, items: list[pytest.Item]
 ) -> None:
-    """Pin ``serial_lean`` tests to one xdist group.
+    """Group shared Lean probes and the two live Chrome cases under loadgroup.
 
     The Lean probe files compile against the shared ``lean/.lake`` tree and
     must never run in parallel with each other; this makes the documented
     marker enforce that constraint instead of relying on serial-only runs.
+    Chrome grouping is a contention hypothesis for CUR-01, not a diagnosed
+    startup fix. Run before xdist derives its loadgroup node IDs.
     """
     # ``xdist_group`` is registered by pytest-xdist, which the hermetic
     # Python-acceptance environment deliberately does not autoload (its
@@ -45,6 +62,8 @@ def pytest_collection_modifyitems(
         for item in items:
             if item.get_closest_marker("serial_lean") is not None:
                 item.add_marker(pytest.mark.xdist_group("lean"))
+            if item.nodeid in _LIVE_CHROME_NODE_IDS:
+                item.add_marker(pytest.mark.xdist_group("live_chrome"))
 
 
 def pytest_configure(config: pytest.Config) -> None:

@@ -159,11 +159,16 @@ retain their respective recorded source epochs. The 2026-10-02 Q7 capture
 passed all 12
 stages, four closing checks, five-runtime scaffold parity and 124 pure controls
 without skips. Its native receipt proves the exact static coefficient
-statements and leaves runner execution unverified. Existing-owner repairs
-reopen `FEP-Q7-CURRENT`; a later incomplete capture does not promote any
-successful prefix or native output. Historical Q5/Q6/Q7 and provider reports
-remain evidence for their own checked sources. Ignored provider reports are
-not shipped in a release. Active GNN work remains preserved.
+statements and leaves runner execution unverified. The separately reviewed
+[2026-10-05 Q7 source-pair observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records a complete 2026-10-05 capture with all twelve stages and four closing
+checks. Its native receipt binds the recorded 291-input roster at that source
+epoch and leaves runner execution unverified. The public observation is not
+itself a native receipt or verification of the current checkout. Later
+source-owner changes require fresh source-pair acceptance. Earlier incomplete
+captures promote no prefix or native output. Historical Q5/Q6/Q7 and provider
+reports remain evidence for their own checked sources. Ignored provider reports
+are not shipped in a release. Active GNN work remains preserved.
 
 The H3 primary remains unopened pending current package and source-bound
 proof/export review. Frozen execution and replay, claim review and clean study

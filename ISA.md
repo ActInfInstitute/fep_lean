@@ -174,10 +174,16 @@ The [Q7 source-pair capture](specs/comprehensive-science-improvement/evidence/pu
 passed all 12 stages and four closing checks, five-runtime scaffold parity and
 124 pure controls at its recorded 2026-10-02 source epoch. Its exact native
 receipt is separately validated for that epoch; runner execution remains
-unverified. Existing-owner changes reopen `FEP-Q7-CURRENT`, and a later
-incomplete capture supplies no current acceptance. Historical Q5/Q6/Q7 receipts
-and active GNN work remain preserved. Catalogue-native and package publication
-acceptance remain separate.
+unverified. The separately reviewed
+[2026-10-05 Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records a complete 2026-10-05 capture with twelve stages and four closing
+checks against its recorded 291 native inputs. This closed the later Q7
+source-pair requirement for that epoch without promoting any failed prefix or
+historical native receipt. The observation is not itself a native receipt or
+validation of this checkout; later source-owner changes require fresh source-pair
+acceptance. Historical Q5/Q6/Q7 receipts and active GNN work remain preserved.
+Catalogue-native, package, hosted, provider and scientific acceptance remain
+separate.
 
 Fresh H2 custody and continuous G0 acceptance preceded the immutable H3.0
 freeze. H3 model/composition proofs, exports and independent proof-role reviews

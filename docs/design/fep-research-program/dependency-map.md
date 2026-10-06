@@ -165,8 +165,14 @@ it does not weaken the old no-go. H2.0 has now exited with 25 `go`, 13
 `optional_no_go`, three `blocking_no_go`, and one `upstream_required` decision.
 Only slices whose exact incoming rows are green may open. H2.1, H2.2a,
 H2.3a/b, H2.4a/b, H2.5a/b/c/d, H2.5b-R0, H2.5d-R0, H2.6a/b/c, and H2.6a-R0
-and H2.7-R0 have exited. H2.7 is the only legal implementation slice now
-open; H3 remains closed at its named seam.
+and H2.7-R0 have exited. These are retained prerequisite milestones. The
+H2.7 terminal merge, H3.G0 carrier decision and H3.0 protocol freeze passed
+in their recorded source epochs. Current H3 implementation follows the
+[execution sequence](../../../specs/comprehensive-science-improvement/NEXT.md):
+current package acceptance, native export and independent proof reviews precede
+the exactly-once frozen primary run, complete replay, claim review and installed
+reproduction. Historical H2/G0 evidence remains bound to its predecessor source;
+it does not establish current H3 compilation or scientific acceptance.
 
 A no-go decision must update both the affected terminal clause and every
 outgoing edge before dependent work continues. A stopped solid lane either

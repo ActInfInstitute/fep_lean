@@ -10,6 +10,34 @@ compiled statements from semantic adequacy and empirical validity. Dependency
 pins and historical releases/receipts retain their identities. Publication
 awaits final-source acceptance, same-SHA hosted evidence and artifact validation.
 
+Browser interaction validation now uses the canonical 118 theorem pairings.
+Mobile dashboard summary padding brings its default document height within the
+existing acceptance limit while retaining accessible touch targets. Worker-level
+controls protect Chrome and Lean grouping under pytest-xdist. Local browser
+verification passed 82 cases without skips; hosted startup acceptance remains
+open. Historical browser artifacts are retained until fresh capture.
+
+Synthetic custody fixtures execute byte-checked historical validator source in
+an isolated module. The current validator continues to reject fabricated
+historical evidence. Nine supplemental controls passed, including concurrent
+real PDF and provenance reproducibility; the installed 80-case matrix remains
+unchanged. These local results establish neither native nor release acceptance.
+
+Cooperative process supervision now holds a leased caller's result until owned
+descendant cleanup settles within the original shared cleanup deadline. A
+child's handled timeout no longer fails its ancestor, guard-wait faults still
+publish final cleanup state, and only a command whose guard had not reported is
+treated as cleanly cancelled by its ancestor, so an undelivered terminal
+response remains an obligation regardless of release order. Remote requests
+skip an empty frame remainder that raised EPIPE against a rejecting peer.
+
+CUR-02 and CUR-04 leave the open-only backlog after their bounded acceptance:
+the original matrix still collects 80 cases, exactly nine separate additions
+pass, formatted source has fresh independent review, and reconciled guidance
+passes strict links, Markdown hygiene and cross-reference audits. Historical
+receipts and substantive PR44/45 remain preserved. The backlog retains 30 open
+items; package, current native, hosted and scientific gates remain separate.
+
 Publication capture now refreshes the paired manuscript projections and test
 census only after strict native acceptance, renders those final values, then
 runs Python acceptance against the accepted render. The seven evidence stages
@@ -28,19 +56,21 @@ The canonical backlog contains open work only. The
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
 
-## 2026-10-05 — Current Q7 source-pair acceptance
+## 2026-10-05 — Retained Q7 source-pair acceptance
 
 The independently reviewed [current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
 records all twelve stages and four closing checks passing under the original
 limits. The actual root terminal closed exit 0 in 1,199.3769 seconds, and its
-separate native receipt is claim-ready for the current 291-input roster,
+separate native receipt was claim-ready for its then-current 291-input roster,
 selected isolated source pair and twelve static coefficient theorem reports.
 All 124 pure cases, including twelve inventory controls, passed without skips.
 Five fresh CPython parser/serializer probes returned the same 56,968-byte
 canonical digest with all semantic/schema controls passing. These probes are
 separate from native proof and generated-runner execution. Runner execution remains
 unverified; Q5/Q6 observations and all failed/historical receipts keep their
-original scope and bytes. Active GNN work remains untouched.
+original scope and bytes. Active GNN work remains untouched. Subsequent
+browser-capture and dashboard owner changes make this observation historical;
+a reviewed successor must establish currency for the new source pair.
 
 After current-guidance read-only closure, `FEP-Q7-CURRENT` leaves the open-only
 backlog. The seven-stage package capture, two identical independently validated

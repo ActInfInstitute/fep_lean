@@ -658,6 +658,13 @@ def test_mobile_defaults_keep_counted_plot_groups_and_exact_records_collapsed() 
         'data-group-count="6">' in rendered
     )
     assert rendered.count('class="mobile-plot-group" open') == 0
+    # Six collapsed summaries retain readable type and touch targets while
+    # avoiding the extra 48px of desktop padding in the mobile default page.
+    assert (
+        "@media (max-width: 760px){.desktop-overview{display:none}"
+        ".mobile-overview{display:block}"
+        ".mobile-plot-group>summary{padding:10px 16px}" in rendered
+    )
     assert "Groups start collapsed; use the index to open any group." in rendered
     assert (
         f'<details id="witnesses" class="record-collection" '

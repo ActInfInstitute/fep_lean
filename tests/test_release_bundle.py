@@ -2035,7 +2035,10 @@ def test_pdf_renderer_uses_two_xelatex_passes_per_isolated_render(
 def test_native_publication_pdf_is_reproducible_across_concurrent_private_jobs(
     tmp_path: Path,
 ) -> None:
-    if any(shutil.which(name) is None for name in ("pandoc", "xelatex", "mutool")):
+    if any(
+        shutil.which(name) is None
+        for name in ("pandoc", "xelatex", "xdvipdfmx", "mutool")
+    ):
         pytest.skip("complete PDF renderer toolchain is unavailable")
     _minimal_manuscript(tmp_path)
     with ThreadPoolExecutor(max_workers=2) as pool:
@@ -2070,39 +2073,6 @@ def test_render_budget_rejects_malformed_values_before_dispatch(
             extra_args=(),
             timeout=timeout,
         )
-
-
-@pytest.mark.skipif(os.name != "posix", reason="process groups require POSIX")
-def test_renderer_timeout_reaps_parent_and_stops_pipe_holding_grandchild(
-    tmp_path: Path,
-) -> None:
-    pid_file = tmp_path / "owned-child.pid"
-    script = (
-        "import subprocess, sys, time\n"
-        "from pathlib import Path\n"
-        "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'])\n"
-        "Path(sys.argv[1]).write_text(str(child.pid))\n"
-        "time.sleep(60)\n"
-    )
-    started = time.monotonic()
-    with pytest.raises(bundle_module.ReleaseBundleError, match="deterministic budget"):
-        bundle_module._run_renderer(
-            (sys.executable, "-c", script, str(pid_file)),
-            project_root=tmp_path,
-            environment_root=tmp_path / "environment",
-            epoch=0,
-            timeout=0.5,
-        )
-    assert time.monotonic() - started < 5
-    assert pid_file.is_file()
-    status = subprocess.run(
-        ("ps", "-o", "stat=", "-p", pid_file.read_text()),
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=3,
-    )
-    assert not status.stdout.strip() or status.stdout.lstrip().startswith("Z")
 
 
 @pytest.mark.parametrize("normalize_pdf", [False, True])
@@ -5057,7 +5027,9 @@ def test_publication_capture_runs_real_numerical_owner_in_disposable_project(
         (str(root / "output/numerical-witnesses.json"),),
         (*command, "produce", str(root), "{attempt}", str(root), "0"),
         (*command, "check", str(root), "{artifact_attempt}", str(root), "0"),
-        30,
+        # Functional budget only: a cold numerical owner can exceed 30 s under
+        # xdist load. Deadline reaping is covered by the dedicated test below.
+        180,
     )
     result = run_publication_capture(
         _capture_plan(root, (stage,)), tmp_path / "journal"

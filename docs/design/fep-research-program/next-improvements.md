@@ -51,19 +51,25 @@ proposal or as proof that the final source epoch passed every gate.
 | FORM-3: actual finite rate-distortion optimization | Compactness-derived `rateDistortion_exists_minimizer`, infimum-derived weak duality and Boolean boundary witnesses in variational duality | Current source-bound acceptance for feasibility, attainment, informative interior, infeasible budget, zero multiplier and nonunique optimizer. The existing primary theorem still assumes component bounds; general strong duality is unproved. |
 | FORM-4: frozen H3 chain | Manifested [reference model](../../../src/fep_lean/formal/h3_reference_model.lean), [composition](../../../src/fep_lean/formal/compositions/h3_case_study.lean), native export, synthetic executor and study bundler | Current native/export and three independent proof-role reviews, unchanged one-attempt synthetic execution and complete replay, outcome-bound claim reviews, and clean installed study reproduction. The licensed empirical branch remains governed no-go without data. |
 
-The [accepted Q7 capture](../../../specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
-closed the source-pair residual for its recorded native inputs. Current
-output/configuration repairs change existing native owners and reopen
-`FEP-Q7-CURRENT` and dependent export/package currency. Preserve its emitter
-checks, native receipt and postcapture guidance preimages as historical evidence;
-the old isolated r3 acceptance is not rebound to changed source. Active GNN work
-and historical Q5/Q6/Q7 receipts remain preserved; static coefficient proofs
-leave runner execution unverified. Current guidance and all declared checks
-remain obligations under the ninth criterion.
+The [2026-10-02 Q7 capture](../../../specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
+closed the source-pair residual for its recorded native inputs. Preserve its
+emitter checks, native receipt and postcapture guidance preimages as historical
+evidence; the old isolated r3 acceptance is not rebound to changed source.
+The separately reviewed
+[2026-10-05 Q7 observation](../../../specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+records a complete 2026-10-05 capture with twelve stages and four closing checks,
+closing the later Q7 requirement for its recorded 291 native inputs. The public
+observation is not itself a native receipt or validation of this checkout;
+later source-owner changes require fresh source-pair acceptance. Package,
+export, hosted and scientific acceptance remain separate obligations. Active
+GNN work, failed attempts and historical Q5/Q6/Q7 receipts remain preserved;
+static coefficient proofs leave runner execution unverified. Current guidance
+and all declared checks remain obligations under the ninth criterion.
 
 The output/configuration repairs are minor existing-owner reliability work.
-Focused validation and fresh independent infrastructure review passed; final
-source-bound native, package and scientific acceptance remains open.
+Their retained focused validation and independent infrastructure reviews apply
+to the reviewed source epochs; later repairs require their own checks and review.
+Final source-bound native, package and scientific acceptance remains open.
 They do not activate the future medium API/information-theory scopes or the
 major Windows capture, control and path-law scopes below. Those proposals retain
 their named predecessors and reviews; none substitutes for current package or
@@ -376,10 +382,12 @@ SDE, Itô and physical-entropy claims.
 
 ## Sequence, release acceptance and closure
 
-1. Complete the original nine-criterion current program, refresh the reopened
-   native/Q7 source-pair gates and reconcile open-only guidance. Obtain
-   final-source evidence in each distinct plane; preserve prior accepted epochs
-   and failed attempts unchanged.
+1. Complete the original nine-criterion current program, retain the Q7
+   acceptance for its recorded source pair and finish the remaining source-bound
+   native, package and scientific gates, including fresh Q7 validation after
+   later source-owner changes. Reconcile open-only guidance and obtain final-source
+   evidence in each distinct plane; preserve prior accepted epochs and failed
+   attempts unchanged.
 2. Reconcile candidate `1.4.0` across package/publication metadata, lockfile,
    documentation, changelog and citation/DOI references. Build fresh wheel,
    source and scientific artifacts after the final metadata change; old source
