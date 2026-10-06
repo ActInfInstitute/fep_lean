@@ -5,7 +5,7 @@
 **Checkout:** this repository checkout (see the `origin` remote)
 **Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
 `v1.3.0`; latest published GitHub release `v1.2.0`. Daniel authorized the minor
-release after final-source acceptance, tracked by `FEP-RELEASE-NEXT`.
+release after final-source acceptance, tracked by [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60).
 
 ## Mission and evidence boundary
 
@@ -40,7 +40,7 @@ for its own source snapshot. It is now historical too: the schema-2 expansion
 changed the roster, body-source manifest, formal resources, and source digests.
 It must not be described as current evidence for the live checkout.
 
-No provider secret is stored in the repository. Versioned publication does not
+Provider credentials must stay out of versioned and public artifacts. Versioned publication does not
 promote the historical provider runs: only a separately authorized,
 source-bound full receipt can make a current Hermes/OpenGauss claim.
 
@@ -104,59 +104,78 @@ summarizing scientific completeness.
 
 ## Current source and evidence state
 
-The latest retained hosted checkpoint is
-[c99e933](https://github.com/ActiveInferenceInstitute/fep_formal/commit/c99e9330dc98caf0f78bd50da2146fee25ae96ce),
-published on 2026-10-05. Its
-[same-SHA run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37334643019)
-passed all 15 Ubuntu/macOS/Windows distribution cells on Python 3.10–3.14,
-and the Python, Lean and render jobs. Hosted nonserial Python passed 2,404 tests
-with 15 skipped tests and 91.31% coverage on Linux CPython 3.14.8. The separate
-local validator remains CPython 3.14.4. These results bind that commit; later
-source changes require their own acceptance.
+The latest instruction on 2026-10-05 is **scope all next work into TODO and
+GitHub Issues, then provide a full handoff**. Implementation and acceptance
+execution have stopped. The [32-item open backlog](TODO.md) records current
+release blockers, separately governed lanes and minor/medium/major future
+improvements. Reviewed implementation candidates remain unapplied.
 
-That checkpoint publishes the output-root, empty-filter, read-only Hermes
-configuration and paired manuscript-writer repairs. Focused local results,
-independent infrastructure review and historical failures retain their exact
-source epochs. The later render deadline, output-custody and process-ownership repairs
-are independently reviewed and published at `f37769a`; focused local validation
-passed all 413 cases without skips. Their full-source acceptance remains separate.
+Source main was `14fe6bab8fdcf27b0d7d457e1fdb923afffba83b`, independently
+matching remote before these scoping documents. Its
+[hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37376897900)
+completed with 19 successful jobs, one failed Python job and one skipped docs
+job. All 15 distribution cells passed 80 cases each. Hosted Python recorded
+2,483 passed, two failed, 15 skipped and 90.87% coverage; the two failures were
+Chrome startup without a usable CDP port within 15 seconds. Cause is unproved.
+Hosted Lean serial recorded 557 passed and five skipped. Native/audit/render
+passed in that run, but the whole run failed. Historical green `c99e933` and
+later focused results remain their original source epochs.
+
+The actual local r6 production capture closed naturally on
+2026-10-05 at 23:46:49 UTC, integer exit 1, no timeout, after 7,275.3362 seconds.
+Native, formalism audit, render, Python and numerical stages were accepted by
+its controller. Browser failed with `live Chrome DOM observations are not
+canonical`; bundle was unattempted. Python recorded 2,488 passed, 12 skipped,
+90.84% coverage and 1,745.78 seconds. Whole acceptance is false. The seven
+browser output hashes were unchanged from earlier artifacts and are not fresh
+failed-run browser evidence. Failed journals/raw streams and closed operator
+packets are preserved privately. No cancellation or accepted-prefix promotion
+occurred. [Hosted startup](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46) and
+[local DOM rejection](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) have separate scopes.
 
 The independently reviewed
 [current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
-records all twelve stages and four closing checks passing in 1,199.3769 seconds.
-Its native receipt binds the current 291-input roster. The earlier capture's
-custody timeout remains a rejected attempt without promoted prefixes.
-Historical Q5/Q6/Q7 receipts stay unchanged. Static coefficient statements
-leave generated-runner execution unverified.
+passed twelve stages and four closing checks in 1,199.3769 seconds, binding its
+current 291-input native roster. Historical Q5/Q6/Q7 receipts remain unchanged;
+generated-runner execution remains unverified. The future
+[isolated runner lane](https://github.com/ActiveInferenceInstitute/fep_formal/issues/61) cannot relabel this static evidence.
+Preserve concurrent active GNN work and use only a specifically named isolated
+pair if that lane is activated.
 
-The [open backlog](TODO.md) and
-[remaining acceptance](specs/comprehensive-science-improvement/NEXT.md) own
-current delivery and execution order. Remaining work includes real seven-stage production capture, two identical independently
-validated package archives, five actual local installed-wheel runtimes and
-same-SHA hosted acceptance. Check the unchanged 15 GiB free-space prerequisite
-before the local matrix and every cell; a past space shortage is not a current
-measurement or a waiver.
+The r7-r1 materializer remains **REVISE**; its compatible observer has
+source-only approval. No r7-r2 was authored or executed. The exact known
+[roster gap](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) is
+`tests/fixtures/formalism_catalogue_155_reviewed_deltas.json`: actual native
+planning bound 141 test members while the outer frozen set included 140.
+Review this tracked fixture and any new tests explicitly before enforcing
+complete membership around imports, planning, dispatch and closure. Preserve
+all 560 existing frozen inputs plus approved additions, all reviewed public
+paths, native 291/scientific 293 distinctions, caps and no-resume policy.
 
-The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
-retains all nine criteria. The
-[H3 reference study](specs/h3-reference-study/README.md) requires current
-package acceptance, a native export and three independent proof-role reviews
-before opening the primary seeds. The frozen primary run once, recovery and
-controls, pure replay, outcome-bound claim reviews and clean installed study
-reproduction remain subsequent requirements. Primary seeds remain unopened
-pending the package and proof/export gates. Without licensed data, the empirical branch remains governed
-no-go. The v1.4.0 candidate remains unreleased, with canonical authored date
-2026-10-02.
+The conditional two-Chrome grouping, separate nine-case PR45 adaptation and
+eight guidance corrections have independent source reviews; they remain
+unapplied and runtime-unverified. The nine-case adaptation preserves the
+original 80-case distribution matrix, pins a historical test-only resource and
+checks byte-identical PDF/provenance from concurrent private jobs. Its quality
+policy supersedes the older quality candidate. Recheck exact preimages and
+review changed formatting; do not blindly merge substantive PR44/45.
 
-Completed implementation and dated source epochs belong in
-[CHANGELOG.md](CHANGELOG.md), the archived
-[Horizon 1](specs/done/horizon-1-finite-synthesis/README.md) and
-[Horizon 2](specs/done/horizon-2-smooth-stochastic/README.md) acceptance records,
-and Git history. They remain scientific provenance, not current-source
-acceptance. Private operator journals and concurrent GNN work are preserved.
-Only reviewed public source and evidence are published. Native, declaration,
-Python, browser, numerical, manuscript and provider evidence remain separate;
-current Hermes/OpenGauss claims require a fresh independently validated report.
+Candidate `1.4.0`, authored 2026-10-02, remains unreleased. H3 primary output
+has not been opened and its seeds remain unused. The
+[immutable protocol](specs/h3-reference-study/preregistration.yaml) and
+[implementation gates](specs/h3-reference-study/IMPLEMENTATION.md) require
+actual accepted package evidence, current native export and three independent
+proof-role reviews before the sole primary invocation. Outcome reviews,
+42-array replay, two study archives and clean installed reproduction follow.
+Governed empirical no-go remains valid without licensed data. Optional current
+Hermes/OpenGauss evidence has a separate credential/model/spend boundary; paid
+maximum spend is unresolved. No immutable `1.4.0` version DOI is established.
+
+This scoping documentation creates a new source epoch for future capture.
+Later truthful outcome-prose edits also require honest final-source acceptance;
+they never authorize repeating or relabeling the primary. The original
+[nine criteria](specs/comprehensive-science-improvement/PROTOCOL.md) and
+[final audit](https://github.com/ActiveInferenceInstitute/fep_formal/issues/59) keep all required evidence planes explicit.
 
 ## Reproduction commands
 
@@ -305,3 +324,50 @@ release, `v1.4.0`, after its acceptance gates. The
 future minor, medium and major package/formal work separately from current
 release obligations. Licensed-data access, paid provider fallback and account
 settings still require their own authorized boundaries.
+
+## Copyable continuation prompt
+
+> Continue FEP Formal from this handoff. The current instruction is scoping and
+> handoff only; do not execute pending work until Daniel resumes implementation.
+> Read AGENTS.md, TODO.md, this handoff, the original nine-criterion protocol,
+> NEXT.md and the immutable H3 preregistration/freeze. Inspect actual main and
+> remote state, preserve concurrent edits and use native subagents with disjoint
+> ownership. The local operator handoff contains private closed packet copies;
+> keep them out of public Issues, commits and generated artifacts.
+>
+> When execution resumes, settle both browser failures independently, then
+> review/apply the bounded test and guidance candidates through exact preimages.
+> Preserve the fixed original 80-case matrix and separate nine-case additions.
+> Correct the complete tests-roster guard and obtain fresh independent review
+> before imports/planning/dispatch. Execute all seven real production stages
+> within original caps and independently validate two identical package archives.
+> Complete five local installed-wheel runtimes, 184-resource parity and installed
+> read-only status, preserving 15 GiB before launch and every cell. Run every
+> applicable AGENTS check and final-SHA hosted 15-cell/Python/Lean/docs/render
+> acceptance. Canonical validation remains CPython 3.14; no pin upgrade or
+> dependency acquisition belongs to read-only checks.
+>
+> Bind accepted package/native/axiom/Q7 evidence to current H3 export and three
+> independent Lean/domain/statistical proof-role reviews. Only then execute the
+> unchanged frozen primary once: same continuous branch, seeds, counts, gates,
+> controls, budgets and 42-array roster. Retain complete acceptance or scientific
+> rejection, pure replay, three outcome reviews, two identical valid study
+> archives and clean installed reproduction. No rerun, reseed, threshold change,
+> carrier substitution or unsupported physical/empirical claim is allowed.
+> Outcome-prose changes need honest final-source capture without relabeling the
+> primary's actual package or repeating it. Empirical no-go is valid without
+> licensed data; optional provider execution retains its separate spend boundary.
+>
+> Have an independent nonauthor map all nine criteria to exact final-source
+> receipts, including truthful static status and FORM-1–FORM-3 boundary/semantic
+> acceptance. Only after required gates pass, publish the authorized v1.4.0
+> normal main/tag/release with actual uploaded hashes and immutable version DOI;
+> verify live remote identities and preserve rollback evidence. Do not change
+> account settings, force-push, erase history or touch active GNN work.
+>
+> Activate future minor/medium/major Issues only after their stated predecessors
+> and concrete stop/go probes. Keep canonical owners, thin orchestration,
+> configurability, manuscript and accessible visuals unified; never infer
+> scientific disposition from compilation or numerical agreement. Report exact
+> changes, commands, results and deferred gates. Remove completed TODO rows only
+> after their own acceptance and record delivery facts in changelog/history.

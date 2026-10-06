@@ -1,36 +1,116 @@
-# fep_lean — canonical backlog
+# fep_lean — canonical open backlog
 
-Only open work belongs here. Completed work and dated closure evidence belong
-in [CHANGELOG.md](CHANGELOG.md) and repository history.
+Scoped on 2026-10-05. Only open work belongs here; completed delivery and dated
+acceptance belong in [CHANGELOG.md](CHANGELOG.md) and retained history.
+Each linked GitHub Issue contains its owner, detailed scope, dependencies,
+positive acceptance, failure controls and claim boundary. This file is the
+canonical delivery inventory, not an acceptance receipt.
 
-| ID | Open work | Acceptance probe |
-| --- | --- | --- |
-| FEP-FULL-CURRENT | Refresh optional Hermes/OpenGauss full-mode evidence for the live sealed roster, currently 168 topics. Historical provider reports remain historical. | Under an explicitly authorized credential and spend boundary, every live topic passes and `validate_report_receipt(..., require_complete=True, project_root=...)` reports `valid`, `source_bound`, and `claim_ready` with no validation errors. |
-| FEP-RELEASE-NEXT | Assemble and publish the authorized v1.4.0 minor release. Source metadata identifies the 1.4.0 candidate; existing tag 1.3.0 and latest published GitHub release 1.2.0 remain historical. Obtain validated same-SHA CI native/audit receipts, current local Python/browser/render evidence, and the immutable version DOI cross-reference. | All applicable receipt validators pass against final source, two bundle builds are byte-identical, `scripts/build_release_bundle.py --check --output PATH` is claim-ready, version/DOI references agree, and publication verifies remote commit, tag, release and artifact hashes. |
-| FEP-H3-SCIENCE | Implement the independently reviewed and [frozen continuous protocol](specs/h3-reference-study/preregistration.yaml), then complete the formal/export/synthetic/claim chain. H2/G0 prerequisite and H3.0 freeze are retained evidence. | Current native and axiom evidence binds both H3 resources and their exact carrier; frozen synthetic gates, failures/controls, independent claim review and bundle reproduction are retained. Empirical execution requires its own licensed-data gate; a documented no-go/null outcome is valid. |
+The latest instruction is scoping and handoff only. Implementation and pending
+acceptance execution are stopped. Reviewed code/test/guidance candidates remain
+unapplied. The [full handoff](HANDOFF.md) records continuation order and evidence
+boundaries. Size means implementation scope, not a version or schedule promise.
 
-Daniel authorized the full [scientific improvement program](specs/comprehensive-science-improvement/PROTOCOL.md)
-on 2026-09-30. Its original scope remains binding through implementation and
-acceptance. The [status review](SCOPE-2026-09-30.md) records the baseline before
-that implementation; dated counts and receipt verdicts there are baseline evidence.
+## Observed starting state
 
-| ID | Authorized implementation and remaining acceptance |
+Source main `14fe6bab8fdcf27b0d7d457e1fdb923afffba83b` was equal to remote
+before this documentation refresh. Its [hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37376897900)
+failed: 19 successful jobs, one Python failure and one skipped docs job; all
+15 distribution cells passed their fixed 80 cases. Hosted Chrome startup
+failures are distinct from the local production DOM rejection.
+
+The closed local r6 production attempt accepted native, audit, render, Python
+and numerical stages, then failed browser validation; bundle was unattempted.
+Local Python passed 2,488 tests with 12 skips and 90.84% coverage. Whole capture
+is rejected. The [current Q7 selected-pair result](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
+is accepted for its recorded source and static coefficient statements;
+generated-runner execution remains unverified. H3 primary seeds remain unopened.
+Candidate `1.4.0`, authored 2026-10-02, remains unreleased.
+
+## Current program and release prerequisites
+
+The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
+retains all nine original criteria. Existing PKG-1 and FORM-1–FORM-3
+implementation needs final evidence; it is not an instruction to reimplement
+accepted mathematics. The [execution sequence](specs/comprehensive-science-improvement/NEXT.md)
+keeps package, scientific and publication gates distinct.
+
+| Work | Size | Predecessors | Closure probe |
+| --- | --- | --- | --- |
+| [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46) — Diagnose hosted live Chrome startup and review conditional grouping | Minor | Independent repair | Actual two-Chrome acceptance and meaningful xdist controls; fresh exact-SHA Python passes without retries/skips/cap changes. |
+| [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) — Diagnose noncanonical live DOM rejection in the closed production capture | Minor | Independent repair | Explain and repair the actual noncanonical DOM rejection; real browser receipt passes, with old output hashes kept historical. |
+| [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47) — Port PR45 regression coverage without changing the fixed 80-case matrix | Minor | Independent repair | Original 80-case collection preserved; nine separate cases pass; pinned resource and private concurrent PDF/provenance parity hold. |
+| [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48) — Reconcile active guidance and legacy references through dependency review | Minor | [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47) | Active guidance reflects current evidence; strict links/hygiene/xrefs pass; history and substantive PRs preserved. |
+| [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) — Seal complete approved tests membership in the successor source freeze | Minor | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | Exact approved full tests membership enforced before imports/planning/dispatch and at closure; nonauthor source review passes. |
+| [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53) — Accept a fresh full seven-stage capture and identical package archives | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | All seven actual stages and closing guards pass; two identical package archives independently claim-ready. |
+| [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49) — Accept five local installed-wheel runtimes and read-only status | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48) | Five actual isolated runtime cells and read-only status controls pass; 184 resources/80 cases and 15 GiB gate preserved. |
+| [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) — Pass every declared check and exact-SHA hosted artifact gate | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49) | Every applicable declared check and all same-SHA hosted jobs/artifacts validate; local and hosted evidence remain separate. |
+| [CUR-08](https://github.com/ActiveInferenceInstitute/fep_formal/issues/55) — Refresh H3 native export and three independent proof-role reviews | Medium | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Current 293-source export, 24 roles/33 supplements/12 witnesses and three independent proof-role reviews accepted. |
+| [CUR-09](https://github.com/ActiveInferenceInstitute/fep_formal/issues/56) — Execute frozen H3 primary once and replay all 42 arrays | Major | [CUR-08](https://github.com/ActiveInferenceInstitute/fep_formal/issues/55) | Exactly one frozen primary invocation; all 42 arrays/control results retained and replayed, including governed scientific rejection. |
+| [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) — Close outcome claims, study archive parity and clean installed reproduction | Major | [CUR-09](https://github.com/ActiveInferenceInstitute/fep_formal/issues/56) | Three outcome reviews, identical independently valid study archives and clean installed 42-array reproduction complete. |
+| [CUR-14](https://github.com/ActiveInferenceInstitute/fep_formal/issues/59) — Audit all nine original criteria and final evidence boundaries | Medium | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Independent mapping closes all nine criteria and exact FORM-1–FORM-3 semantic/native/axiom boundaries at final source. |
+| [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60) — Publish and verify authorized v1.4.0 minor release | Medium | [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57), [CUR-14](https://github.com/ActiveInferenceInstitute/fep_formal/issues/59) | Actual reviewed main/tag/release/assets and immutable version DOI verified after all required acceptance. |
+
+## Separately governed lanes
+
+These remain open but are not unconditional current-release prerequisites.
+A governed empirical no-go satisfies the frozen current program. Accepted Q7
+static proofs do not imply the future runner lane ran. PRs remain substantive
+until a verified integration or disposition; they are not removed as legacy.
+
+| Work | Size | Predecessors and activation | Closure probe |
+| --- | --- | --- | --- |
+| [CUR-12](https://github.com/ActiveInferenceInstitute/fep_formal/issues/50) — Refresh optional strict Hermes/OpenGauss evidence for all 168 topics | Medium | Secure current credential/model route and concrete spend boundary | Complete source-bound strict full-mode report for all 168 topics independently claim-ready; paid maximum spend remains unresolved. |
+| [CUR-13](https://github.com/ActiveInferenceInstitute/fep_formal/issues/58) — Review substantive PR44 against current formal and ownership contracts | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Fresh current-base PR44 formal/ownership brief, warning-free native/axiom/projection evidence and independent domain review before integration. |
+| [BRIDGE-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/61) — Prove actual generated GNN runner execution on an isolated named pair | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) and an explicitly named isolated pair | Actual source-bound generated-runner output and positive/adversarial controls; active GNN work remains untouched. |
+| [EMP-J1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/77) — Gate future empirical work on licensed data and new immutable protocol | Major | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) and named licensed data/new protocol | Verifiable license/provenance/split and independently reviewed real measurements, or retained governed no-go. |
+
+## Upcoming minor, medium and major scopes
+
+The [maintained research scopes](docs/design/fep-research-program/next-improvements.md)
+retain the eleven existing detailed proposals; the additional bounded issues
+cover configuration, accessibility, catalogue review and general finite duality.
+Use the [work-package contract](docs/design/fep-research-program/research-contract.md)
+before activating an implementation. Demonstrate a concrete gap first for
+configuration and visualization work. New owners require a coordinated source
+roster refresh; new topics are not implicitly reserved by this plan.
+
+| Work | Size | Predecessors | Closure probe |
+| --- | --- | --- | --- |
+| [CORE-M1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/62) — precise operator contracts | Minor | [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Parser/API/installed-help agreement on inputs, mutation, platform and exit meanings; operator review. |
+| [CORE-M2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/63) — maintain current guidance through dependency review | Minor | [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48) | Current active reading paths, complete retirement caller inventory, strict links/hygiene/xrefs and preserved historical evidence. |
+| [CORE-M3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/73) — Audit configurable defaults and thin orchestration across workflows | Minor | [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Documented configuration/default/precedence matches actual behavior; bounded compatibility changes keep orchestration thin. |
+| [FORM-M1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/68) — align primary theorem proxies with the proved information seams | Minor | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Exact primary types/assumptions/non-vacuity reviewed; stable IDs/signatures and all native/axiom/boundary projections accepted. |
+| [CORE-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/64) — expose one reusable typed readiness API | Medium | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | One immutable readiness API and real non-CLI consumer; installed/CLI parity, race/process/mutation controls and infrastructure review. |
+| [CORE-D2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/65) — portable semantic and relation queries from one canonical join | Medium | [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Reviewed generated query schema conserves topics/relations/assumptions/blockers; deterministic isolated-wheel parity and semantic review. |
+| [CORE-D3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/74) — Improve accessible offline manuscript, atlas and numerical explanations | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Demonstrated accessibility gap resolved through shared models; deterministic offline SVG/HTML/PDF and actual browser/text alternatives pass. |
+| [FORM-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/69) — exact fair-Boolean Hamming rate-distortion curve | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Derived Boolean Hamming converse/attaining channel/curve, endpoints and interior multiplier with information-theory review. |
+| [FORM-D2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/70) — fixed-truth consistency for the continuous static-latent model | Medium | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Explicit infinite fixed-truth law, prefix/native equality and actual convergence proof; new protocol preserves current H3 seeds. |
+| [FORM-D3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/75) — Review all 168 theorem proxies and rank substantive strengthening | Medium | [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [FORM-M1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/68) | All 168 proxies receive statement-based semantic review and ranked substantive proof briefs; no automatic disposition promotion. |
+| [CORE-J1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/66) — equivalent Windows capture custody and process supervision | Major | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54) | Equivalent Windows no-follow handle custody and descendant containment; actual seven-stage acceptance and identical valid archives. |
+| [CORE-J2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/67) — measured incremental capture and bounded resource lifecycle | Major | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CORE-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/64) | Measured full/resumed/edited capture equivalence, exact dependency invalidation and closed-owned resource receipts without weaker budgets. |
+| [FORM-J1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/71) — observation-dependent finite-horizon control on one carrier | Major | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Finite-horizon measurable updates/selectors, Bellman/native cost equality, attainment/moment bounds and exact two-step recovery. |
+| [FORM-J2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/72) — generator-to-path lifting with an explicit library stop gate | Major | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Pinned generator/path API stop gate, semigroup compatibility and actual path construction, or bounded upstream proposal/no-go. |
+| [FORM-J3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/76) — Probe general finite rate-distortion strong duality before staged proof | Major | [FORM-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/69) | Pinned convexity/support/separation/endpoint seam passes before derived general finite duality, or explicit library no-go. |
+
+## Original requirement coverage and closure
+
+| Original criterion | Required open gates |
 | --- | --- |
-| PKG-2 | Real isolated wheel API/resources/help across Python 3.10–3.14 and Ubuntu/macOS/Windows; retain 3.14 as the evidence-validator runtime. All 15 hosted cells passed at `c99e933`; refresh evidence after later owner edits and complete the local matrix with its unchanged 15 GiB free-space prerequisite checked before launch and every cell. |
-| PKG-3 | Appropriate documentation PR gates plus exact-SHA accepted PDF/render/font/renderer/source artifacts; independent infrastructure review and positive/negative workflow probes. Hosted Lean/render passed at `c99e933`; dependent artifacts require validation at the final successor SHA. |
-| PKG-4 | Typed readiness with separate evidence planes; strict bounded capture/resume; source-race invalidation; current receipts; two identical independently accepted bundles. Publication remains separately governed. |
-| FORM-4 | Full H3 mathematical, preregistered synthetic and independently reviewed claim chain through H3.7. Accepted H2/G0 custody and immutable protocol freeze precede the current H3 source epoch; complete final-source export/review, frozen outcomes, claim reviews and reproduction. Unavailable licensed data produce the governed empirical no-go. |
+| 1 — truthful static status | CUR-06, CUR-14 |
+| 2 — actual package support | CUR-02, CUR-06, CUR-07 |
+| 3 — docs and accepted render | CUR-04, CUR-07 |
+| 4 — strict capture/archive parity | CUR-03, CUR-05 |
+| 5 — information identity/coarsening | CUR-07, CUR-14 |
+| 6 — relative-support/native information | CUR-07, CUR-14 |
+| 7 — genuine finite rate-distortion | CUR-07, CUR-14 |
+| 8 — frozen H3 full chain | CUR-08, CUR-09, CUR-10 |
+| 9 — all checks/source/remote evidence | CUR-07, CUR-14, CUR-11 |
 
-The [upcoming improvement scopes](docs/design/fep-research-program/next-improvements.md)
-define minor, medium and major core-package and formalization work with owners,
-dependencies, measurable acceptance and boundary controls. They are future
-work packages; activating them requires their named predecessor gates and does
-not replace the current nine-criterion release acceptance.
-
-## Closure rule
-
-An item leaves this backlog only when its acceptance probe passes in the current
-checkout, the evidence is retained in a test/report/documentation change where
-appropriate, and the result is recorded in the repository's changelog or
-release notes. Until then, the row remains open even if a partial local probe
-looks promising.
+An item leaves TODO and its Issue closes only after its own exact-current-source
+acceptance is retained and recorded in changelog/release notes or accepted
+history. Missing, historical, partial or indirect evidence keeps it open.
+Scientific null/rejection/no-go outcomes remain evidence under their protocol;
+they do not authorize retries, changed gates or unsupported success claims.
+Source-only approval, installation, local runtime, hosted acceptance and live
+publication are separate states. Never close a broad requirement on a subset.
