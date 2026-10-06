@@ -1,21 +1,39 @@
-## Unreleased — v1.4.0 candidate
+## 1.5.0 — 2026-10-06 — 168-topic catalogue, finite information program and streamlined release gate
 
-The next minor release is authorized for the comprehensive package and
-formalization improvements. Coordinated source, runtime, citation, manuscript,
-configuration, sidecar and strict bundle metadata identify the `1.4.0` candidate
-prepared on 2026-10-02. Citation and InstituteOS metadata retain that canonical
-authored snapshot date; actual publication timestamps are recorded separately.
-The citation describes 168 canonical topic bodies and separates
-compiled statements from semantic adequacy and empirical validity. Dependency
-pins and historical releases/receipts retain their identities. Publication
-awaits final-source acceptance, same-SHA hosted evidence and artifact validation.
+First published release since `v1.3.0` (the `1.4.0` candidate prepared on
+2026-10-02 was never tagged; its content ships here). The catalogue grows from
+159 to 168 canonical topics across 22 families (waves 3 and 4), with finite
+information identity/coarsening, relative-support information and genuine
+finite rate–distortion results, the Q7 source-pair acceptance, publication
+capture with seven deadline-bounded evidence stages, render custody, and
+cooperative process supervision. Citation metadata describes 168 canonical
+topic bodies and separates compiled statements from semantic adequacy and
+empirical validity. Lean/Mathlib stays at the v4.34.1 pair.
+
+### Streamlined release gate (2026-10-06)
+
+A versioned release now requires exactly: one version and date across every
+version-bearing file, a dated `CHANGELOG.md` section, a clean `main` equal to
+`origin/main`, and a successful hosted `ci.yml` run on that exact commit
+(Python, distribution matrix, Lean and render jobs). `scripts/release_check.py`
+checks all of it and extracts these notes; [docs/release.md](docs/release.md)
+is the procedure. Research and evidence lanes — the frozen H3 study, full
+seven-stage capture and archive parity, the installed-wheel runtime matrix,
+Q7 runner execution, provider (Hermes/OpenGauss) runs and the nine-criterion
+audit — are tracked in `TODO.md` and reported in release notes, but no longer
+block a release. No scientific or acceptance claim is upgraded by this change:
+H3 primary seeds remain unopened and generated-runner execution unverified.
+
+### Package, browser and process-supervision repairs (2026-10-06)
 
 Browser interaction validation now uses the canonical 118 theorem pairings.
-Mobile dashboard summary padding brings its default document height within the
-existing acceptance limit while retaining accessible touch targets. Worker-level
-controls protect Chrome and Lean grouping under pytest-xdist. Local browser
-verification passed 82 cases without skips; hosted startup acceptance remains
-open. Historical browser artifacts are retained until fresh capture.
+The mobile dashboard fits the unchanged two-viewport height limit on Linux as
+well as macOS: tighter summary padding, a smaller mobile title and side-by-side
+family/status filters take the 390×844 document from 1,705 px to 1,538 px on
+macOS. Hosted Linux Chrome had measured 1,727 px against the 1,688 px limit, so
+the earlier padding-only fix failed there. Summary touch targets stay at
+63 px. Worker-level controls protect Chrome and Lean grouping under
+pytest-xdist. Historical browser artifacts are retained until fresh capture.
 
 Synthetic custody fixtures execute byte-checked historical validator source in
 an isolated module. The current validator continues to reject fabricated
@@ -56,7 +74,7 @@ The canonical backlog contains open work only. The
 minor, medium and major improvements for package and formal work with explicit
 dependency, acceptance and failure boundaries.
 
-## 2026-10-05 — Retained Q7 source-pair acceptance
+### Retained Q7 source-pair acceptance (2026-10-05)
 
 The independently reviewed [current Q7 observation](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
 records all twelve stages and four closing checks passing under the original
@@ -77,7 +95,7 @@ backlog. The seven-stage package capture, two identical independently validated
 archives, local installed-wheel matrix, final-SHA hosted acceptance and complete
 frozen H3 chain remain open. The 1.4.0 candidate remains unreleased.
 
-## 2026-10-05 — Render deadlines, process ownership and current guidance
+### Render deadlines, process ownership and current guidance (2026-10-05)
 
 Renderer preparation, execution, normalization, artifact capture and cleanup
 now share one monotonic deadline. Finite timeout validation and bounded regular
@@ -112,7 +130,7 @@ remain open. The later incomplete Q7 capture supplies no accepted prefix.
 Licensed empirical data remain governed by the recorded no-go. Candidate
 `1.4.0` remains unreleased and retains its 2026-10-02 authored snapshot date.
 
-## 2026-10-05 — Output/configuration repairs and reopened currency
+### Output/configuration repairs and reopened currency (2026-10-05)
 
 The published `main` checkpoint
 [fa3c88e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/fa3c88e)
@@ -144,7 +162,7 @@ primary execution, claim review and study reproduction remain open. The empirica
 branch remains governed no-go without licensed data. Candidate `v1.4.0` is
 unreleased and retains its canonical authored date of 2026-10-02.
 
-## 2026-10-03 — Candidate publication and custody fixture repair
+### Candidate publication and custody fixture repair (2026-10-03)
 
 Published the reviewed candidate source to `main` at
 [9aaa30e](https://github.com/ActiveInferenceInstitute/fep_formal/commit/9aaa30e94d9e31082665746dfb8715177ec84c8b)
@@ -161,7 +179,7 @@ metadata regression passes separately. Citation and sidecar dates agree with
 the canonical authored candidate date. Full production and H3 acceptance and
 the v1.4.0 release remain open.
 
-## 2026-10-02 — Fresh Q7 source-pair closure
+### Fresh Q7 source-pair closure (2026-10-02)
 
 The [fresh Q7 capture](specs/comprehensive-science-improvement/evidence/public-q7-final-source-20261002-r1/summary.json)
 passes all 12 newly executed stages and four closing checks in 1,249.5858
@@ -179,7 +197,7 @@ postcapture guidance changes do not alter the 191 FEP or 291 native inputs.
 Catalogue-native, full package/hosted acceptance, H3 outcomes, provider evidence
 and the v1.4.0 release remain separate pending gates.
 
-## 2026-10-02 — Main publication and hosted follow-up
+### Main publication and hosted follow-up (2026-10-02)
 
 Published reviewed improvements to `main` at
 [409ee71](https://github.com/ActiveInferenceInstitute/fep_formal/commit/409ee71f82b3353303e6306e87c1b1fedc949088),
@@ -197,7 +215,7 @@ failed attempts, frozen scientific protocol and active GNN work are preserved.
 The open-only [remaining acceptance](specs/comprehensive-science-improvement/NEXT.md)
 records the full original scope and execution order.
 
-## 2026-10-02 — Q7 portability acceptance
+### Q7 portability acceptance (2026-10-02)
 
 The [post-guidance observation](specs/comprehensive-science-improvement/evidence/public-q7-current-doc-20261002-r1/summary.json)
 passes live bridge status, static generation and the exact new native receipt's

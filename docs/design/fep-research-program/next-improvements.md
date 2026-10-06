@@ -10,11 +10,10 @@ owns the current execution sequence, and the
 retains all nine original acceptance criteria. Future work cannot substitute
 for an unfinished criterion.
 
-Daniel has authorized a minor versioned release after the comprehensive work.
-The [package metadata](../../../pyproject.toml) now identifies candidate
-`1.4.0`, dated 2026-10-02. It remains unreleased pending final metadata and
-release acceptance. A version number, source publication or green subset of CI
-does not establish a completed scientific study.
+The [package metadata](../../../pyproject.toml) identifies release `1.5.0`,
+dated 2026-10-06, published through the [release procedure](../../release.md).
+A version number, source publication or green CI run does not establish a
+completed scientific study.
 
 ## Size, ownership and activation
 
@@ -388,22 +387,17 @@ SDE, Itô and physical-entropy claims.
    later source-owner changes. Reconcile open-only guidance and obtain final-source
    evidence in each distinct plane; preserve prior accepted epochs and failed
    attempts unchanged.
-2. Reconcile candidate `1.4.0` across package/publication metadata, lockfile,
-   documentation, changelog and citation/DOI references. Build fresh wheel,
-   source and scientific artifacts after the final metadata change; old source
-   epochs do not become current by renaming their files.
-3. Require the [declared release gates](../../testing.md), actual advertised
-   target-runtime/hosted matrix, exact-SHA native/audit and accepted-render
-   artifacts, two independently validated identical package archives, and the
-   completed outcome-bound H3 study/reproduction chain. A governed empirical
-   no-go is retained; no synthetic result supplies licensed data. Optional
-   provider evidence has its own current credential/model/spend boundary.
-4. Publish only reviewed public artifacts and release notes that state proved,
-   assumed, synthetic, empirical no-go and unverified runtime claims separately.
-   Verify the final remote commit/tag identity and uploaded artifact hashes,
-   preserve rollback evidence and report local versus hosted observations.
-   Reuse a concept DOI only according to its actual repository policy; an
-   immutable release DOI must identify the final artifact, never a guessed ID.
+2. Cut versioned releases through the [release procedure](../../release.md):
+   one version/date, a dated changelog section and green hosted CI on the exact
+   commit. Package archives, the H3 study/reproduction chain and provider
+   evidence are research lanes reported in release notes, not release gates.
+   A governed empirical no-go is retained; no synthetic result supplies
+   licensed data.
+3. Release notes state proved, assumed, synthetic, empirical no-go and
+   unverified runtime claims separately. An immutable release DOI comes from
+   the Zenodo record for the actual release, never a guessed ID.
+4. Close the research lanes above in their own order; each keeps its
+   acceptance probe in TODO.md and its Issue.
 5. Activate minor future scopes first, then CORE-D1/CORE-D2 and FORM-D1/FORM-D2
    as independent existing-owner lanes. CORE-J2 depends on CORE-D1; Windows
    capture and generator/path work retain their own prerequisite reviews.

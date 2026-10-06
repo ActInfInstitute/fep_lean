@@ -1,39 +1,28 @@
 # fep_lean — canonical open backlog
 
-Scoped on 2026-10-05. Only open work belongs here; completed delivery and dated
-acceptance belong in [CHANGELOG.md](CHANGELOG.md) and retained history.
+Rescoped on 2026-10-06. Only open work belongs here; completed delivery and
+dated acceptance belong in [CHANGELOG.md](CHANGELOG.md) and retained history.
 Each linked GitHub Issue contains its owner, detailed scope, dependencies,
-positive acceptance, failure controls and claim boundary. This file is the
-canonical delivery inventory, not an acceptance receipt.
+positive acceptance, failure controls and claim boundary. Size means
+implementation scope, not a version or schedule promise.
 
-Daniel resumed implementation on 2026-10-05 and authorized verified changes to
-be pushed to main. Work proceeds through the stated dependencies and acceptance
-gates. The [full handoff](HANDOFF.md) records continuation order and evidence
-boundaries. Size means implementation scope, not a version or schedule promise.
+## Release gate
 
-## Observed starting state
+Releases follow the short [release procedure](docs/release.md): one version
+and date across version-bearing files, a dated changelog section, and a
+successful hosted `ci.yml` run on the exact `main` commit, all checked by
+`scripts/release_check.py`. `v1.5.0` (2026-10-06) is the current release; the
+untagged `1.4.0` candidate shipped within it. Nothing below blocks a release.
 
-Source main `14fe6bab8fdcf27b0d7d457e1fdb923afffba83b` was equal to remote
-before this documentation refresh. Its [hosted run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37376897900)
-failed: 19 successful jobs, one Python failure and one skipped docs job; all
-15 distribution cells passed their fixed 80 cases. Hosted Chrome startup
-failures are distinct from the local production DOM rejection.
+## Evidence and research lanes
 
-The closed local r6 production attempt accepted native, audit, render, Python
-and numerical stages, then failed browser validation; bundle was unattempted.
-Local Python passed 2,488 tests with 12 skips and 90.84% coverage. Whole capture
-is rejected. The [current Q7 selected-pair result](specs/comprehensive-science-improvement/evidence/public-q7-current-source-20261005-r1/summary.json)
-is accepted for its recorded source and static coefficient statements;
-generated-runner execution remains unverified. H3 primary seeds remain unopened.
-Candidate `1.4.0`, authored 2026-10-02, remains unreleased.
-
-## Current program and release prerequisites
-
-The [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md)
-retains all nine original criteria. Existing PKG-1 and FORM-1–FORM-3
-implementation needs final evidence; it is not an instruction to reimplement
-accepted mathematics. The [execution sequence](specs/comprehensive-science-improvement/NEXT.md)
-keeps package, scientific and publication gates distinct.
+These keep their own acceptance probes and are reported in release notes, not
+claimed. Hosted Chrome startup (CUR-01) and the closed production DOM rejection
+(CUR-15) remain the entry points for full capture. H3 primary seeds remain
+unopened; Q7 generated-runner execution remains unverified. The
+[locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md) retains
+all nine original criteria; the [execution sequence](specs/comprehensive-science-improvement/NEXT.md)
+orders this work.
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
@@ -47,11 +36,10 @@ keeps package, scientific and publication gates distinct.
 | [CUR-09](https://github.com/ActiveInferenceInstitute/fep_formal/issues/56) — Execute frozen H3 primary once and replay all 42 arrays | Major | [CUR-08](https://github.com/ActiveInferenceInstitute/fep_formal/issues/55) | Exactly one frozen primary invocation; all 42 arrays/control results retained and replayed, including governed scientific rejection. |
 | [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) — Close outcome claims, study archive parity and clean installed reproduction | Major | [CUR-09](https://github.com/ActiveInferenceInstitute/fep_formal/issues/56) | Three outcome reviews, identical independently valid study archives and clean installed 42-array reproduction complete. |
 | [CUR-14](https://github.com/ActiveInferenceInstitute/fep_formal/issues/59) — Audit all nine original criteria and final evidence boundaries | Medium | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57) | Independent mapping closes all nine criteria and exact FORM-1–FORM-3 semantic/native/axiom boundaries at final source. |
-| [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60) — Publish and verify authorized v1.4.0 minor release | Medium | [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53), [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49), [CUR-07](https://github.com/ActiveInferenceInstitute/fep_formal/issues/54), [CUR-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/57), [CUR-14](https://github.com/ActiveInferenceInstitute/fep_formal/issues/59) | Actual reviewed main/tag/release/assets and immutable version DOI verified after all required acceptance. |
 
 ## Separately governed lanes
 
-These remain open but are not unconditional current-release prerequisites.
+These remain open and activate only on their stated conditions.
 A governed empirical no-go satisfies the frozen current program. Accepted Q7
 static proofs do not imply the future runner lane ran. PRs remain substantive
 until a verified integration or disposition; they are not removed as legacy.
@@ -103,7 +91,7 @@ roster refresh; new topics are not implicitly reserved by this plan.
 | 6 — relative-support/native information | CUR-07, CUR-14 |
 | 7 — genuine finite rate-distortion | CUR-07, CUR-14 |
 | 8 — frozen H3 full chain | CUR-08, CUR-09, CUR-10 |
-| 9 — all checks/source/remote evidence | CUR-07, CUR-14, CUR-11 |
+| 9 — all checks/source/remote evidence | CUR-07, CUR-14 |
 
 An item leaves TODO and its Issue closes only after its own exact-current-source
 acceptance is retained and recorded in changelog/release notes or accepted

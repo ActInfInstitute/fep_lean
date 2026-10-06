@@ -39,8 +39,8 @@ This assessment covers the standalone repository boundary:
   manuscript artifacts.
 - Documentation links, cross-references, pinned dependency claims, and this
   repository's operator contracts.
-- The authorized `v1.4.0` minor release after final-source acceptance, including
-  intentional main publication and verified tag, release and artifact identity.
+- Versioned releases through the [release procedure](docs/release.md): one
+  version/date, a dated changelog section and green hosted CI on the exact commit.
 
 ## Out of scope
 
@@ -200,14 +200,11 @@ credential/spend authorization and independent live-source validation.
 
 ## Release boundary
 
-Source metadata is the 1.4.0 candidate dated 2026-10-02; the existing v1.3.0
-tag records the earlier 159-topic cut. As checked on 2026-10-02, the latest
-published GitHub release is v1.2.0. Daniel authorized the next minor release
-after final-source acceptance.
-The current 168-topic tree is not a published GitHub release. Publication
-readiness requires all applicable final-source receipts, deterministic bundle
-parity, version/DOI agreement, and publication with remote
-commit and artifact-hash verification. Historical receipts do not cross this
+`v1.5.0` (2026-10-06) is the current release of the 168-topic tree; the
+untagged 1.4.0 candidate ships within it. Releases require only the
+[release gate](docs/release.md): version/date agreement, a dated changelog
+section and a green hosted CI run on the exact `main` commit. Research and
+evidence lanes are reported, not claimed. Historical receipts do not cross this
 boundary. Neither compilation nor provider execution establishes the FEP as a
 physical theory.
 

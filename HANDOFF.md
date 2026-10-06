@@ -1,12 +1,11 @@
 # fep_lean formalism and publication handoff
 
-**Date:** 2026-10-05
+**Date:** 2026-10-06
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
-**Release line:** source candidate `v1.4.0`, dated 2026-10-02; existing tag
-`v1.3.0` tag and latest published GitHub release `v1.2.0` at the recorded
-pre-release checkpoint. Daniel authorized the minor release after final-source
-acceptance, tracked by [CUR-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/60).
+**Release line:** current release `v1.5.0` (2026-10-06), which ships the
+untagged `1.4.0` candidate. Releases follow the short
+[release procedure](docs/release.md); research lanes below do not block them.
 
 ## Mission and evidence boundary
 
@@ -166,7 +165,7 @@ The browser repairs passed 82 local cases without skips and independent source
 review, but fresh production browser capture and hosted startup acceptance
 remain open. Do not blindly merge substantive PR44/45.
 
-Candidate `1.4.0`, authored 2026-10-02, remains unreleased. H3 primary output
+Release `v1.5.0` publishes the 168-topic tree. H3 primary output
 has not been opened and its seeds remain unused. The
 [immutable protocol](specs/h3-reference-study/preregistration.yaml) and
 [implementation gates](specs/h3-reference-study/IMPLEMENTATION.md) require
@@ -176,8 +175,7 @@ proof-role reviews before the sole primary invocation. Outcome reviews,
 Governed empirical no-go remains valid without licensed data. Optional current
 Hermes/OpenGauss execution has separate bounded spend authorization; secure
 credential/model routing, preflight and enforceable spend controls remain
-prerequisites. No current provider acceptance or immutable `1.4.0` version DOI
-is established here.
+prerequisites. No current provider acceptance is established here.
 
 These guidance and implementation edits create a new source epoch for future
 capture.
@@ -328,8 +326,8 @@ receipts; later owner changes require fresh validation.
 Later acceptance and publication progress is recorded in the program's
 execution ledger; the dated
 checkpoints above retain their original source epochs. Daniel has authorized
-committing and pushing reviewed changes to `main` and publishing the next minor
-release, `v1.4.0`, after its acceptance gates. The
+committing and pushing reviewed changes to `main`; versioned releases follow
+the [release procedure](docs/release.md). The
 [upcoming scopes](docs/design/fep-research-program/next-improvements.md) define
 future minor, medium and major package/formal work separately from current
 release obligations. Licensed-data access, provider routing/spend enforcement
@@ -370,9 +368,8 @@ and account settings retain their separate boundaries.
 >
 > Have an independent nonauthor map all nine criteria to exact final-source
 > receipts, including truthful static status and FORM-1–FORM-3 boundary/semantic
-> acceptance. Only after required gates pass, publish the authorized v1.4.0
-> normal main/tag/release with actual uploaded hashes and immutable version DOI;
-> verify live remote identities and preserve rollback evidence. Do not change
+> acceptance. Cut later versioned releases through docs/release.md
+> (`scripts/release_check.py --hosted`); report unrun lanes as unrun. Do not change
 > account settings, force-push, erase history or touch active GNN work.
 >
 > Activate future minor/medium/major Issues only after their stated predecessors
