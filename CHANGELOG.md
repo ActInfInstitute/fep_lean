@@ -24,6 +24,12 @@ audit — are tracked in `TODO.md` and reported in release notes, but no longer
 block a release. No scientific or acceptance claim is upgraded by this change:
 H3 primary seeds remain unopened and generated-runner execution unverified.
 
+The hash-bound H2.7-R0 custody record pins the root release token to its
+recorded `1.3.0 → 1.4.0` transition. Its validator and readiness tests stay
+byte-identical; a test fixture validates a copy of the custody inputs with the
+approved `1.5.0` token mapped back to `1.4.0`, so every other bound byte must
+still match and any other version or duplicate root still fails.
+
 ### Package, browser and process-supervision repairs (2026-10-06)
 
 Browser interaction validation now uses the canonical 118 theorem pairings.
