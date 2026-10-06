@@ -1,6 +1,6 @@
 {
   "fep_lean": {
-    "commit": "1791745db73a35811e1fee9894f87260b98f1601",
+    "commit": "86e7233af3c4152c00e7bb545691e860bf3b7e96",
     "owners": {
       "docs/design/gnn-bridge/bridge-contract.md": "61102fa2602c482106365b1eb655c34f3d55ad5fc481637dbc6d0d6777612c53",
       "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
@@ -143,10 +143,10 @@
       "src/fep_lean/llm/__init__.py": "ae438b5778960193d24ee8e8cd43f75b698d4f7e283b9e8368d965e92dc581e8",
       "src/fep_lean/llm/hermes.py": "1866fdca3bd8b9d4c016c3a2ec35a0f7920b0c36118f9a33de01b7738a358679",
       "src/fep_lean/output/__init__.py": "3c03be9583354f04f8cd30cb98351e667636d9c2ebed4f5ac1e5f40bddd982ae",
-      "src/fep_lean/output/browser_capture.py": "e912adcd4e5e13a24a14acc38ea5ceb72d62b9b1640eace84943c58772e5f03d",
+      "src/fep_lean/output/browser_capture.py": "aed3dabb99dc9589706196c85c13ec600d9b5a49a7f283ddef62cff090547df6",
       "src/fep_lean/output/evidence.py": "6cc830b6c8c51b1f41792281e3f84ec9b98eac1e49312fc298ab4f69d3a230ec",
       "src/fep_lean/output/figures.py": "054254405cc12d175636d9376a62c6cbc05be0edf48b06ab77bff570c0ee97fb",
-      "src/fep_lean/output/formal_kernel_dashboard.py": "34f55f65b955a0287c8e8632f7d5e74a24a84107fb0dfb0a3ae4278316a3cfee",
+      "src/fep_lean/output/formal_kernel_dashboard.py": "8927bae816b5cec447e154bfa23f99a4afb5a8d69747c621087aaa86b99b108f",
       "src/fep_lean/output/formalism_atlas.py": "1ab4bd189cddb77f8e8a6475a97c52544d5ccfa8523dac509a1acd0a69042ed3",
       "src/fep_lean/output/formalism_presentation.py": "478324d2debe3a05998ff963264ab187c4896dc5b5227b1e58d7f995f6aedcb7",
       "src/fep_lean/output/fsutil.py": "2d895d2c2bfa97782895b3f7a67176b45e96220938f2c46ec17a8413a92a9bc9",
@@ -180,7 +180,7 @@
       "src/fep_lean/verification/__init__.py": "1611904641ad8f129290bc1a8841e68c50b1c602abb91e4b0bd900a742d62686",
       "src/fep_lean/verification/_horizon_numerical_witnesses.py": "70944d232b67e194b00bbcd38090d2b8e38439e66dbb24e94f7be1ff02f50941",
       "src/fep_lean/verification/_jsonutil.py": "8e389db30143881d795eecc8786df2ff5d9c21dd2fc1592e92e501991cee8e9d",
-      "src/fep_lean/verification/_subprocess.py": "52a9aece7f9ee42bcc57b3baff2fd1cd719a17f6efb0e681ceea2f155849f1f0",
+      "src/fep_lean/verification/_subprocess.py": "482a19898e0c3ffc1f2a4e71d83727715ced1ce1db4f211a06b6caf26a0aedef",
       "src/fep_lean/verification/_toolchain.py": "932bb7655aeb214baff62df9e0b7bde58d4f31feccb2f57a1334b305eff5af96",
       "src/fep_lean/verification/environment.py": "5a2a922218989fec2aa317865f433a3aa8fb582bf76159bc76ce8465f9df917a",
       "src/fep_lean/verification/formalism_audit.py": "3861f4310abd428334aee84feee4c8577ec050468f09c93e6de061d3e1e78dfe",
@@ -196,7 +196,7 @@
     }
   },
   "gnn": {
-    "commit": "3daec774e69dbf9ade7fae059f8ac7a105824747",
+    "commit": "1c3c36c1535e14dfb3df0652303f50435b2c9370",
     "owners": {
       "docs/gnn/gnn_syntax.md": "1a1feaaee71c12c384babcdbb752711453c03204ff443ed0579c9cc644bd557c",
       "docs/other/fep_lean/bridge-contract.md": "07ff3f32f82e5788e2669cb5401b6557be763010165ca2512e3ed522f79810dc",
@@ -362,7 +362,7 @@
       "src/gnn/execute/jax/jax_runner.py": "109389542e660b16d2697e5db1e10659a69daf7ffb77b4bbed092ccd2eb06ee6",
       "src/gnn/execute/jax/kronecker_executor.py": "aff5fafd1c41f27cea644d4bbe5f4d1e85cab9cc2dcb59d26342939a8fcd26e9",
       "src/gnn/execute/jax/kronecker_factorized.py": "4dbdd5469b63446d9b91c88ae33436f32a839dedd9df4f6a15d07517bfea604f",
-      "src/gnn/execute/jax/semantic_runner.py": "705fdf9e8be0b742662b63039b7899b5f7673bd32a64452dbf9d9dde37a3be7f",
+      "src/gnn/execute/jax/semantic_runner.py": "b682f0be03ead79846166cbcf02a9319043b17c9e16e6c8fba634df59c76d107",
       "src/gnn/execute/julia_env.py": "756648281828a2dbdfe8d637d3e5a9717dae680786a4c2d52af33bf8ceca3674",
       "src/gnn/execute/julia_setup.py": "32c169ffefc8a080253cff8a3b10424f3b79cc674ec5ebcff41c5375ed46e6d8",
       "src/gnn/execute/lean/__init__.py": "68e4d97b456325f5c96acf381c70ec8c4a5eb293a186e37147e38e8752606743",
