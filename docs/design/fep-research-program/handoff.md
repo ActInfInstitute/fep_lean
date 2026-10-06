@@ -9,9 +9,8 @@ frozen primary was unopened and H3's final scientific exit was not accepted.
 Later measured results belong to the source-bound execution and claim records;
 the canonical backlog owns subsequent delivery status.
 
-The candidate source version is `1.4.0`, dated 2026-10-02; at this checkpoint it
-was not a released artifact. Daniel authorized the minor release after the comprehensive
-work. The original
+The current release is `v1.5.0` (2026-10-06), which ships the untagged
+`1.4.0` candidate through the [release procedure](../../release.md). The original
 [nine-criterion program](../../../specs/comprehensive-science-improvement/PROTOCOL.md)
 remains binding; a successful subset or a new version cannot close it.
 [TODO.md](../../../TODO.md) owns the open-only backlog and

@@ -19,8 +19,8 @@ authors:
     email: daniel@activeinference.institute
     orcid: "https://orcid.org/0000-0001-6232-9096"
     affiliation: Active Inference Institute
-version: "1.4.0"
-date-released: "2026-10-02"
+version: "1.5.0"
+date-released: "2026-10-06"
 repository-code: "https://github.com/ActiveInferenceInstitute/fep_formal"
 url: "https://github.com/ActiveInferenceInstitute/fep_formal"
 license: CC-BY-4.0

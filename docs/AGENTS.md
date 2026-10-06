@@ -4,9 +4,9 @@ All documentation is local to this checkout. Keep links relative to the file
 that owns them, keep toolchain/model claims synchronized with the canonical
 configuration, and mark generated values as generated data.
 
-The complete gate list is maintained as "Required release gates" in
-[testing.md](testing.md); the documentation-specific gates from the project
-root are:
+The complete local check list is maintained in [testing.md](testing.md); the
+release gate is [release.md](release.md), checked by `release_check.py`. The
+documentation-specific gates from the project root are:
 
 ```bash
 uv run python docs/check_links.py --strict --include-root

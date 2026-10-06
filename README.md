@@ -14,29 +14,24 @@ standalone EFE and geometric-mechanics families.
 
 ## Release
 
-Source metadata is `1.4.0`, dated 2026-10-02. Daniel authorized its minor
-versioned release after final-source acceptance. At the pre-release checkpoint
-on that date, publication remained pending. The
-[existing `v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
-records the earlier 159-topic cut. At that pre-release checkpoint, the latest
-published GitHub release is [v1.2.0](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.2.0);
-the 168-topic `main` tree had not been published as a GitHub release. The
-repository's [release history](https://github.com/ActiveInferenceInstitute/fep_formal/releases)
-and open-only backlog own later delivery status.
+The current release is [`v1.5.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.5.0)
+(2026-10-06): the 168-topic catalogue in 22 families on Lean/Mathlib `v4.34.1`.
+It supersedes the [`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
+(159 topics); the `1.4.0` candidate was never tagged and ships within 1.5.0.
+Releases follow the short [release procedure](docs/release.md): one version
+and date everywhere, a dated changelog section and a green hosted CI run on
+the exact `main` commit, checked by `docs/release_check.py`.
 The evolving scholarly record is identified by the
-[Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233). The GitHub
-release process must publish the release-bundle checksum and cross-reference
-the immutable Zenodo version DOI after the configured integration creates and
-validates its record. That integration cannot pre-reserve a DOI. Inspect the
-record's concept linkage and file inventory; a source-snapshot DOI does not
-establish archival of the separately attached evidence bundle or manuscript.
-The bundle manifest owns per-file hashes.
-Neither publication surface changes the evidence boundaries below.
+[Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233); the Zenodo
+integration mints each immutable version DOI from the GitHub release.
+A release changes no evidence boundary below: unrun research lanes (the H3
+study, full publication capture, installed-wheel matrix, provider runs) stay
+described as unrun.
 
 The [upcoming improvement scopes](docs/design/fep-research-program/next-improvements.md)
 define minor, medium and major work for the core package and formalizations,
 with named owners, dependencies, acceptance probes and failure boundaries.
-The open-only [backlog](TODO.md) owns the current release obligations.
+The open-only [backlog](TODO.md) owns open research and evidence work.
 
 ## Contract
 

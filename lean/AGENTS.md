@@ -1,6 +1,6 @@
 # fep_lean/lean/
 
-**Version**: v1.4.0 | **Status**: Active | **Last Updated**: October 2026
+**Version**: v1.5.0 | **Status**: Active | **Last Updated**: October 2026
 
 Full **Lake** workspace with **Mathlib4** dependency for FEP theorem verification.
 

@@ -14,9 +14,9 @@ and the H3 scientific exit was not accepted. Later measured results belong to
 the study's source-bound execution and claim records.
 Implemented theorem bodies, generators and earlier receipt checkpoints do not
 close the current source-bound package/export/review/outcome/reproduction chain.
-The next minor release candidate is `1.4.0`, subject to the original
+Release `v1.5.0` does not close it; the original
 [nine-criterion program](../../../specs/comprehensive-science-improvement/PROTOCOL.md)
-and final release acceptance. [TODO.md](../../../TODO.md) and
+keeps its own acceptance. [TODO.md](../../../TODO.md) and
 [remaining acceptance](../../../specs/comprehensive-science-improvement/NEXT.md)
 own open execution; [future scopes](next-improvements.md) cannot alter this freeze.
 

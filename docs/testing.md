@@ -10,7 +10,8 @@ The suite uses real temporary files, SQLite databases, subprocesses, and local
 HTTP servers. Environment variables isolate secrets and expensive external
 integration tests; they do not manufacture successful execution results.
 
-Required release gates are:
+Local checks are below; hosted `ci.yml` runs them, and a green hosted run on
+the exact commit is the release gate (see the [release procedure](release.md)):
 
 ```bash
 uv lock --check && uv pip check
@@ -96,7 +97,7 @@ and freshness checks. The same-SHA artifact includes the PDF and logs, receipts,
 font/renderer provenance, source hashes, and artifact hashes. Source drift or a
 missing required output prevents upload. Retained CI evidence must be validated
 against the live source and intended SHA before import or publication; it is
-never a substitute for the release gates above. See the
+never a substitute for the checks above. See the
 [retained-render procedure](development.md#documentation-prs-and-retained-renders).
 
 ## Transport and capability deadlines

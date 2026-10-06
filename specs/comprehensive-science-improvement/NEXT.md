@@ -48,9 +48,9 @@ Execution order:
    no-go without licensed data. Truthful later outcome-prose edits require honest
    final-source recapture; never repeat or relabel the primary for currency.
 7. Independently audit all nine criteria and exact FORM-1–FORM-3 semantic/native
-   boundaries (CUR-14), then publish the authorized v1.4.0 release (CUR-11) with
-   actual main/tag/release/asset hashes and an immutable version DOI. Candidate
-   authored date remains 2026-10-02; actual publication time is separate.
+   boundaries (CUR-14). Versioned releases no longer wait on this sequence:
+   `v1.5.0` shipped on 2026-10-06 through the [release procedure](../../docs/release.md),
+   and later releases report these lanes' status rather than claim them.
 
 Optional provider execution, substantive PR44 disposition, isolated GNN runner
 execution and future licensed empirical work remain separately governed lanes.

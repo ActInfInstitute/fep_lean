@@ -20,9 +20,9 @@ learning and thermodynamic results on declared carriers. The current program
 must complete one end-to-end formal/export/synthetic/reproduction chain before
 claiming its scientific exit. A separately licensed empirical branch remains
 governed no-go. **Vertical depth and falsifiability** are the progress measures;
-topic count is a non-goal. The next minor candidate is `1.4.0`, pending the
+topic count is a non-goal. The current release is `v1.5.0`; the
 [comprehensive program](../../../specs/comprehensive-science-improvement/PROTOCOL.md)
-and final release acceptance.
+continues as research lanes that releases report rather than wait on.
 
 ## North star
 
