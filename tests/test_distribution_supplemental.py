@@ -116,6 +116,8 @@ def _exercise_render_artifact_staging(
                 "stale_sources",
                 "uncaptioned_tables",
                 "contents_number_overflows",
+                "unresolved_references",
+                "publication_cover",
             ),
             0,
         ),
@@ -450,10 +452,12 @@ def _exercise_render_artifact_staging(
         "def _version_probe(argv, **kwargs):\n"
         "    if argv[0] == 'fc-match':\n"
         f"        return {str(selected_font)!r} + '\\n'\n"
-        "    if argv[0] in {'xelatex', 'pandoc', 'rsvg-convert', 'mmdc'}:\n"
+        "    if argv[0] in {'xelatex', 'pandoc', 'pandoc-crossref', 'rsvg-convert', 'mmdc'}:\n"
         "        if argv[0] == 'xelatex':\n"
         f"            {version_mutation}\n"
         "        return 'fixture version 1\\n'\n"
+        "    if argv[1:] == ['--version']:\n"
+        "        raise AssertionError(f'Unmodelled tool version probe: {argv[0]}')\n"
         "    return _real_check_output(argv, **kwargs)\n"
         "subprocess.check_output = _version_probe\n"
         "_real_write_bytes = Path.write_bytes\n"

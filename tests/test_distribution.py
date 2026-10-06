@@ -153,6 +153,24 @@ def test_distribution_exports_one_root_package_and_console_script() -> None:
     assert scripts == {"fep-lean": "fep_lean.cli:main"}
 
 
+def test_q7_scaffold_bytes_refuse_legacy_codepage_substitution() -> None:
+    """Wrong text decoding must not become accepted canonical AST evidence."""
+    from fep_lean.verification.gnn_continuous_artifact_proof import (
+        canonical_scaffold_bytes,
+    )
+
+    fixture_root = PROJECT_ROOT / "specs/gnn-bridge-q7-continuous-ou-proof"
+    source = fixture_root / "fixtures/continuous_ou_jax.py"
+    expected = json.loads((fixture_root / "expected.json").read_text(encoding="utf-8"))[
+        "runner_ast_sha256"
+    ]
+    utf8 = source.read_text(encoding="utf-8")
+    legacy = source.read_text(encoding="cp1252")
+    assert utf8 != legacy, "control requires the actual UTF-8 scaffold text"
+    assert hashlib.sha256(canonical_scaffold_bytes(utf8)).hexdigest() == expected
+    assert hashlib.sha256(canonical_scaffold_bytes(legacy)).hexdigest() != expected
+
+
 def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
     """Exercise the built bytes outside the checkout's import path."""
     uv = shutil.which("uv")
@@ -636,6 +654,7 @@ def test_documentation_classifier_rejects_source_rename_into_prose(
         "during_chapter_addition",
         "during_pdf_drift",
         "during_template_drift",
+        "during_template_mode_drift",
         "during_font_drift",
         "while_staging_source_drift",
         "while_staging_pdf_drift",
@@ -658,6 +677,7 @@ _TEMPLATE_SUCCESS_CASES = frozenset(
         "relative_file_and_directory",
         "absolute_internal_file",
         "directory_excluded_cache",
+        "executable_owner",
     }
 )
 _TEMPLATE_GITLINK = (
@@ -671,6 +691,8 @@ _TEMPLATE_LINK_CASES = (
     "relative_file_and_directory",
     "absolute_internal_file",
     "directory_excluded_cache",
+    "executable_owner",
+    "during_link_read",
     "absolute_escape",
     "missing_target",
     "cyclic_target",
@@ -705,8 +727,8 @@ def test_render_artifact_staging_binds_template_links(
 ) -> None:
     """Run the actual workflow against committed link and referent controls."""
     if template_case == "unsupported_git_mode":
-        # Keep the collected public 80-case matrix while exercising every real
-        # gitlink rejection in its own independent repository and staging path.
+        # Exercise each real gitlink rejection in its own independent
+        # repository and staging path.
         for variant in (
             "unknown_path",
             "changed_commit",
@@ -792,6 +814,8 @@ def _exercise_render_artifact_staging(
                 "stale_sources",
                 "uncaptioned_tables",
                 "contents_number_overflows",
+                "unresolved_references",
+                "publication_cover",
             ),
             0,
         ),
@@ -868,6 +892,8 @@ def _exercise_render_artifact_staging(
                 template_links["file-link"] = ".venv/cache.txt"
             elif template_case == "regular_mode_as_link":
                 template_files["mode-owner.txt"] = b"resources/data.txt"
+            elif template_case == "executable_owner":
+                template_files["tools/run.py"] = b"print('template executable')\n"
             elif template_case == "untracked_file_referent":
                 template_links["file-link"] = "resources/ignored.txt"
             elif template_case == "empty_directory_referent":
@@ -894,6 +920,8 @@ def _exercise_render_artifact_staging(
         path = template / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
+        if os.name == "posix" and name == "tools/run.py":
+            path.chmod(0o755)
     for name, target in template_links.items():
         (template / name).symlink_to(
             target, target_is_directory=name == "directory-link"
@@ -1052,6 +1080,10 @@ def _exercise_render_artifact_staging(
         (pdf / "fep_lean_combined.pdf").rename(pdf / "_combined_manuscript.pdf")
     elif failure == "source_drift":
         font.write_bytes(b"changed tracked input")
+    elif failure == "during_template_mode_drift":
+        subprocess.run(
+            ["git", "config", "core.filemode", "false"], cwd=template, check=True
+        )
     elif failure == "untracked_chapter":
         (manuscript / "02_extra.md").write_text("An uncommitted accepted chapter.\n")
         receipt = build_acceptance_receipt(manuscript, pdf, counts=receipt["checks"])
@@ -1064,6 +1096,7 @@ def _exercise_render_artifact_staging(
         "during_chapter_addition": "Path('manuscript/02_extra.md').write_text('Added during provenance discovery.\\n')",
         "during_pdf_drift": "Path('output/pdf/fep_lean_combined.pdf').write_bytes(b'%PDF-unaccepted replacement')",
         "during_template_drift": "Path('render-template/README.md').write_text('Uncommitted template mutation.\\n')",
+        "during_template_mode_drift": "Path('render-template/README.md').chmod(0o755); assert not _real_check_output(['git', '-C', 'render-template', 'diff', '--ignore-submodules=all', '--name-only', 'HEAD', '-z'])",
     }.get(failure, "pass")
     staged_mutation = {
         "while_staging_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed while retaining evidence.\\n')",
@@ -1094,8 +1127,21 @@ def _exercise_render_artifact_staging(
         "retained_read_pdf_drift": "_real_write_bytes(Path('output/pdf/fep_lean_combined.pdf'), b'%PDF-changed during retained read')",
     }.get(failure, "pass")
     script = (
+        "import os\n"
         "import subprocess\n"
         "from pathlib import Path\n"
+        "_real_readlink = os.readlink\n"
+        "_link_read_mutated = False\n"
+        "def _mutating_readlink(path, **kwargs):\n"
+        "    global _link_read_mutated\n"
+        "    data = _real_readlink(path, **kwargs)\n"
+        f"    if {template_case == 'during_link_read'!r} and kwargs.get('dir_fd') is not None and os.fsdecode(path) == 'file-link' and not _link_read_mutated:\n"
+        "        owner = Path('render-template/file-link')\n"
+        "        owner.unlink()\n"
+        "        owner.symlink_to('resources/other.txt')\n"
+        "        _link_read_mutated = True\n"
+        "    return data\n"
+        "os.readlink = _mutating_readlink\n"
         "import fep_lean.output.evidence as _native\n"
         "import fep_lean.verification.formalism_audit as _audit\n"
         f"_native.validate_native_lean_receipt = lambda *args, **kwargs: {{'native_claim_ready': {failure != 'native_stale'!r}}}\n"
@@ -1104,10 +1150,12 @@ def _exercise_render_artifact_staging(
         "def _version_probe(argv, **kwargs):\n"
         "    if argv[0] == 'fc-match':\n"
         f"        return {str(selected_font)!r} + '\\n'\n"
-        "    if argv[0] in {'xelatex', 'pandoc', 'rsvg-convert', 'mmdc'}:\n"
+        "    if argv[0] in {'xelatex', 'pandoc', 'pandoc-crossref', 'rsvg-convert', 'mmdc'}:\n"
         "        if argv[0] == 'xelatex':\n"
         f"            {version_mutation}\n"
         "        return 'fixture version 1\\n'\n"
+        "    if argv[1:] == ['--version']:\n"
+        "        raise AssertionError(f'Unmodelled tool version probe: {argv[0]}')\n"
         "    return _real_check_output(argv, **kwargs)\n"
         "subprocess.check_output = _version_probe\n"
         "_real_write_bytes = Path.write_bytes\n"
@@ -1206,6 +1254,7 @@ def _exercise_render_artifact_staging(
             "wrong_internal_registration": "template active-project registration differs from this checkout",
             "tracked_registration": "template active-project registration differs from this checkout",
             "missing_registration": "template resource link membership differs from its recorded commit",
+            "during_link_read": "capture resource link changed",
         }.get(template_case, "changed during evidence staging")
         assert expected_error in result.stderr
     elif failure:
@@ -1224,6 +1273,7 @@ def _exercise_render_artifact_staging(
             "during_chapter_addition": "changed during evidence staging",
             "during_pdf_drift": "changed during evidence staging",
             "during_template_drift": "changed during evidence staging",
+            "during_template_mode_drift": "changed during evidence staging",
             "during_font_drift": "changed during evidence staging",
             "while_staging_source_drift": "changed during evidence staging",
             "while_staging_pdf_drift": "changed during evidence staging",
@@ -1261,7 +1311,11 @@ def _exercise_render_artifact_staging(
         }
         expected_sources = {
             name: {
-                "mode": "120000" if name in template_links else "100644",
+                "mode": "120000"
+                if name in template_links
+                else "100755"
+                if name == "tools/run.py"
+                else "100644",
                 "git_blob": hashlib.new(
                     object_format,
                     b"blob " + str(len(data)).encode("ascii") + b"\0" + data,

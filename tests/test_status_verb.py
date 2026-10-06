@@ -34,7 +34,7 @@ SECTION_NAMES = (
 def accepted_receipt_payload(manuscript_dir: Path) -> dict[str, object]:
     """Build the smallest render-acceptance receipt covering *manuscript_dir*."""
     return {
-        "receipt_version": 1,
+        "receipt_version": 2,
         "accepted": True,
         "pages": 1,
         "checks": {
@@ -44,6 +44,8 @@ def accepted_receipt_payload(manuscript_dir: Path) -> dict[str, object]:
             "stale_sources": [],
             "uncaptioned_tables": [],
             "contents_number_overflows": [],
+            "unresolved_references": [],
+            "publication_cover": [],
         },
         "manuscript_source_digest": manuscript_source_digest(manuscript_dir),
         "source_digests": {},

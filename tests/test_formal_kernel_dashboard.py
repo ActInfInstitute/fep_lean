@@ -5,7 +5,7 @@ from __future__ import annotations
 import html as html_lib
 import math
 import re
-from itertools import pairwise
+from itertools import combinations, pairwise
 from pathlib import Path
 from xml.etree import ElementTree
 
@@ -147,7 +147,8 @@ def test_standalone_dashboard_uses_full_canvas_in_three_readable_columns() -> No
     assert root.attrib["width"] == str(int(view_width))
     assert root.attrib["height"] == str(int(view_height))
     assert root.attrib["data-column-count"] == "3"
-    assert view_width / view_height >= 0.45
+    # Complete wrapped headers and legends may increase row heights.
+    assert view_width / view_height >= 0.40
     assert len(cards) == len(dashboard.witnesses)
     assert len({rectangle.attrib["x"] for rectangle in cards}) == 3
     assert len({rectangle.attrib["y"] for rectangle in cards}) == 6
@@ -415,12 +416,10 @@ def test_desktop_legend_lines_fit_inside_each_summary_card() -> None:
             if text.attrib.get("class") == "legend"
         ):
             for line in legend.findall(f"{{{SVG_NAMESPACE}}}tspan"):
-                # Seven pixels per character is conservative for the declared
-                # 13 px system font and catches labels that overrun the card.
-                assert float(line.attrib["x"]) + 7 * len(line.text or "") <= (
-                    card_right - 8
-                )
-                assert float(line.attrib["y"]) + 13 <= card_bottom - 8
+                # Font-aware horizontal bounds are checked independently with
+                # Agg below; this test retains each card's structural bounds.
+                assert float(line.attrib["x"]) < card_right - 8
+                assert float(line.attrib["y"]) + 15 <= card_bottom - 8
 
 
 def test_every_plot_discloses_axis_quantities_units_domain_and_y_extrema() -> None:
@@ -1253,3 +1252,136 @@ def test_dashboard_writer_and_drift_check_are_deterministic(tmp_path: Path) -> N
     assert formal_kernel_dashboard_drift(PROJECT_ROOT, output_root=tmp_path) == (
         html_path,
     )
+
+
+def test_dashboard_complete_labels_fit_measured_card_geometry() -> None:
+    """Agg font bounds supplement SVG structure; browser system-ui is not measured."""
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+    from matplotlib.figure import Figure
+    from matplotlib.font_manager import FontProperties
+
+    dashboard = build_formal_kernel_dashboard(PROJECT_ROOT)
+    desktop = ElementTree.fromstring(render_formal_kernel_dashboard_svg(dashboard))
+    mobile = _mobile_svg_roots(render_formal_kernel_dashboard_html(dashboard))
+    renderer = FigureCanvasAgg(Figure(dpi=72)).get_renderer()
+    for root in [desktop, *mobile]:
+        narrow = root.attrib.get("data-layout") == "mobile"
+        group_key = "data-mobile-witness-summary" if narrow else "data-witness-summary"
+        prefix = "mobile-" if narrow else ""
+        for group in (g for g in root.iter() if group_key in g.attrib):
+            witness = next(
+                w for w in dashboard.witnesses if w.id == group.attrib[group_key]
+            )
+            texts = list(group.iter(f"{{{SVG_NAMESPACE}}}text"))
+            rect = next(r for r in group if r.attrib.get("class") == prefix + "card")
+            right = float(rect.attrib["x"]) + float(rect.attrib["width"]) - 8
+            bottom = float(rect.attrib["y"]) + float(rect.attrib["height"]) - 8
+            title = [t for t in texts if t.attrib.get("class") == prefix + "card-title"]
+            family = [t for t in texts if t.attrib.get("class") == prefix + "family"]
+            compact = lambda value: "".join(value.split())
+            assert compact("".join(t.text or "" for t in title)) == compact(
+                witness.title
+            )
+            expected_family = (
+                witness.family
+                if narrow
+                else (
+                    f"{witness.family} · {len(witness.rows)} rows · {witness.plot.kind}"
+                )
+            )
+            assert compact("".join(t.text or "" for t in family)) == compact(
+                expected_family
+            )
+            assert float(title[-1].attrib["y"]) + 18 <= float(family[0].attrib["y"])
+            metric = next(
+                t for t in texts if t.attrib.get("class") == prefix + "metric"
+            )
+            assert float(family[-1].attrib["y"]) + 18 <= float(metric.attrib["y"])
+            axis_y = next(
+                t for t in texts if t.attrib.get("class") == "axis-label axis-y-label"
+            )
+            assert float(metric.attrib["y"]) + 20 <= float(axis_y.attrib["y"])
+            legends = [t for t in texts if t.attrib.get("class") == "legend"]
+            columns = {c.key: c.label for c in witness.columns}
+            for legend in legends:
+                label = "".join(
+                    t.text or "" for t in legend.findall(f"{{{SVG_NAMESPACE}}}tspan")
+                )
+                assert compact(label) == compact(
+                    columns[legend.attrib["data-series-key"]]
+                )
+            sizes = {
+                prefix + "card-title": (17 if narrow else 19, 800),
+                prefix + "family": (14 if narrow else 15, 650),
+                "legend": (14 if narrow else 15, 650),
+                "axis-label axis-y-label": (15 if narrow else 16, 750),
+                "axis-label axis-x-label": (15 if narrow else 16, 750),
+                "x-domain": (14 if narrow else 15, 650),
+                "exact-zero-key": (14, 700),
+                "coincident-series-key": (14, 700),
+            }
+            bounds = []
+            for text in texts:
+                if text.attrib.get("class") not in sizes:
+                    continue
+                size, weight = sizes[text.attrib["class"]]
+                font = FontProperties(family="DejaVu Sans", size=size, weight=weight)
+                spans = text.findall(f"{{{SVG_NAMESPACE}}}tspan")
+                for line in spans or [text]:
+                    width, height, descent = renderer.get_text_width_height_descent(
+                        line.text or "", font, False
+                    )
+                    assert float(line.attrib["x"]) + width <= right
+                    assert float(line.attrib["y"]) + descent <= bottom
+                    x, y = float(line.attrib["x"]), float(line.attrib["y"])
+                    bounds.append((x, y - height + descent, x + width, y + descent))
+            for a, b in combinations(bounds, 2):
+                assert a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1]
+
+
+def test_mobile_evidence_banner_complete_text_fits_before_cards() -> None:
+    """Measure full banner lines independently; browser system-ui remains separate."""
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+    from matplotlib.figure import Figure
+    from matplotlib.font_manager import FontProperties
+
+    dashboard = build_formal_kernel_dashboard(PROJECT_ROOT)
+    roots = _mobile_svg_roots(render_formal_kernel_dashboard_html(dashboard))
+    renderer = FigureCanvasAgg(Figure(dpi=72)).get_renderer()
+    font = FontProperties(family="DejaVu Sans", size=13, weight=800)
+    assert len(roots) == 6
+    for root in roots:
+        assert root.attrib["viewBox"].split()[2] == "390"
+        banner = next(e for e in root if e.attrib.get("class") == "mobile-banner")
+        labels = [e for e in root if e.attrib.get("class") == "mobile-banner-label"]
+        assert " ".join(e.text or "" for e in labels) == (
+            "NON-PROOF WITNESS · explanatory typed checks only"
+        )
+        assert len(labels) > 1
+        left, top, width, height = (
+            float(banner.attrib[key]) for key in ("x", "y", "width", "height")
+        )
+        previous_bottom = top
+        for label in labels:
+            text_width, text_height, descent = renderer.get_text_width_height_descent(
+                label.text or "", font, False
+            )
+            x, y = float(label.attrib["x"]), float(label.attrib["y"])
+            assert left + 12 <= x
+            assert x + text_width <= left + width - 12
+            assert previous_bottom < y - text_height + descent
+            previous_bottom = y + descent
+            assert previous_bottom <= top + height - 12
+        first_card = next(
+            e for e in root.iter() if e.attrib.get("class") == "mobile-card"
+        )
+        assert float(first_card.attrib["y"]) == top + height + 16
+
+
+def test_width_wrapping_preserves_overlong_identifiers_without_truncation() -> None:
+    from fep_lean.output.formal_kernel_dashboard import _wrap_pixels
+
+    label = "WWWWideFamilyIdentifier" * 8
+    lines = _wrap_pixels(label, 180, 19, 800)
+    assert len(lines) > 2
+    assert "".join(lines) == label

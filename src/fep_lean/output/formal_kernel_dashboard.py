@@ -4,8 +4,12 @@ from __future__ import annotations
 
 import html
 import math
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal, TypeAlias
+
+from matplotlib.font_manager import FontProperties
+from matplotlib.textpath import TextToPath
 
 from fep_lean.output.formalism_presentation import (
     FormalismPresentation,
@@ -43,6 +47,57 @@ _MOBILE_PLOTS_PER_GROUP = 3
 def build_formal_kernel_dashboard(project_root: Path) -> FormalKernelDashboard:
     """Return the same immutable presentation join used by the atlas."""
     return build_formalism_presentation(Path(project_root))
+
+
+@lru_cache(maxsize=4096)
+def _text_width(value: str, size: int, weight: int) -> float:
+    """Estimate SVG pixels with bundled DejaVu Sans and 15% fallback headroom.
+
+    Browser system-ui metrics vary; this deterministic offline budget is not a
+    browser measurement. SVG font sizes and these measurements both use pixels.
+    """
+    font = FontProperties(family="DejaVu Sans", size=size, weight=weight)
+    width, _, _ = TextToPath().get_text_width_height_descent(value, font, False)
+    return float(width) * 1.15
+
+
+@lru_cache(maxsize=1024)
+def _wrap_pixels(value: str, width: float, size: int, weight: int) -> tuple[str, ...]:
+    """Wrap all text, splitting overlong identifiers without omitting characters."""
+    result: list[str] = []
+    current = ""
+    for word in value.split():
+        candidate = current + word
+        if current and _text_width(candidate, size, weight) > width:
+            result.append(current)
+            current = ""
+        if _text_width(current + word, size, weight) <= width:
+            current += word
+        else:
+            for character in word:
+                if current and _text_width(current + character, size, weight) > width:
+                    result.append(current)
+                    current = ""
+                current += character
+        # Keep word boundaries while allowing character-level identifier breaks.
+        current += " "
+    if current.strip():
+        result.append(current.rstrip())
+    return tuple(line.rstrip() for line in result)
+
+
+def _header_layout(
+    witness: NumericalWitness, width: int, *, mobile: bool
+) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
+    """Return complete header lines and relative family/metric baselines."""
+    title = _wrap_pixels(witness.title, width, 17 if mobile else 19, 800)
+    family = witness.family
+    if not mobile:
+        family += f" · {len(witness.rows)} rows · {witness.plot.kind}"
+    families = _wrap_pixels(family, width, 14 if mobile else 15, 650)
+    family_y = (70 if mobile else 73) + len(title) * 23
+    metric_y = family_y + len(families) * 20 + (22 if mobile else 0)
+    return title, families, family_y, metric_y
 
 
 def _text(value: object) -> str:
@@ -242,47 +297,34 @@ def _plot_elements(
     y_unit = "dimensionless"
     y_axis = f"y · {' / '.join(y_labels)} · unit: {y_unit}"
     x_axis = f"x · {x_label} · unit: {x_unit}"
-    axis_text_width = max(28, int((width - 32) / 8))
-    y_axis_lines = wrap_text(y_axis, axis_text_width, lines=None)
-    x_axis_lines = wrap_text(x_axis, axis_text_width, lines=None)
     x_domain = _x_domain_caption(witness, raw_x)
-    domain_lines = wrap_text(x_domain, axis_text_width, lines=None)
     categorical = x_unit == "categorical"
     category_labels = tuple(f"C{index + 1}" for index in range(len(raw_x)))
     category_key_columns = 1 if stacked_legend else 2
     legend_layout = "stacked" if stacked_legend else "direct"
-    legend_width = 0 if stacked_legend else max(162, int(width * 0.34))
+    legend_width = 0 if stacked_legend else max(182, int(width * 0.42))
     scale_gutter = 82
     legend_gap = 14 if not stacked_legend else 0
-    axis_line_step = 19
-    annotation_line_step = 18
+    axis_line_step = 21
+    annotation_line_step = 20
     category_key_step = 21
     plot_left = x + 8 + scale_gutter
-    plot_top = y + len(y_axis_lines) * axis_line_step + 8
     plot_width = width - 16 - scale_gutter - legend_width - legend_gap
+    right = x + width - 8
+    axis_size = 15 if stacked_legend else 16
+    label_size = 14 if stacked_legend else 15
+    y_axis_lines = _wrap_pixels(y_axis, width - 16, axis_size, 750)
+    plot_top = y + len(y_axis_lines) * axis_line_step + 8
     plot_bottom = plot_top + native_plot_height
     x_axis_left = x + 8 if categorical else plot_left
-    category_tick_y = plot_bottom + 15
-    x_axis_y = plot_bottom + (33 if categorical else 22)
-    domain_y = x_axis_y + len(x_axis_lines) * annotation_line_step + 2
-    category_key_y = domain_y + 21
-    if categorical:
-        category_rows = math.ceil(len(raw_x) / category_key_columns)
-        annotation_bottom = (
-            category_key_y + (category_rows - 1) * category_key_step + 15
-        )
-    else:
-        annotation_bottom = (
-            domain_y + (len(domain_lines) - 1) * annotation_line_step + 16
-        )
-    legend_limit = max(
-        24 if stacked_legend else 10,
-        int(((width - 42) if stacked_legend else (legend_width - 18)) / 7),
-    )
+    legend_x = x + 16 if stacked_legend else plot_left + plot_width + 18
+    legend_available = right - (legend_x + 20)
     legend_lines = tuple(
-        wrap_text(columns[key].label, legend_limit, lines=None)
+        _wrap_pixels(columns[key].label, legend_available, label_size, 650)
         for key, _values in series
     )
+    x_axis_lines = _wrap_pixels(x_axis, right - x_axis_left, axis_size, 750)
+    domain_lines = _wrap_pixels(x_domain, right - plot_left, label_size, 650)
     coincident_with: list[str | None] = []
     for series_index, (_key, values) in enumerate(series):
         match = next(
@@ -312,6 +354,50 @@ def _plot_elements(
     has_exact_zero = zero_baseline and any(
         value == 0.0 for _key, values in series for value in values
     )
+    overlap_lines = (
+        _wrap_pixels(
+            "Identical values · shared rail + ring/diamond identities · no value offset",
+            right - legend_x,
+            14,
+            700,
+        )
+        if witness.plot.kind == "line" and coincident_roots
+        else ()
+    )
+    zero_key_lines = (
+        _wrap_pixels(
+            "Hollow marker per series · exact zero, not missing",
+            legend_available,
+            14,
+            700,
+        )
+        if has_exact_zero
+        else ()
+    )
+    legend_height = sum(
+        len(part) * annotation_line_step + 9
+        for part in (*legend_lines, overlap_lines, zero_key_lines)
+        if part
+    )
+    annotation_top = plot_bottom
+    if not stacked_legend:
+        annotation_top = max(annotation_top, plot_top + 13 + legend_height)
+    category_tick_y = plot_bottom + 15
+    x_axis_y = annotation_top + (33 if categorical else 22)
+    domain_y = x_axis_y + len(x_axis_lines) * annotation_line_step + 2
+    category_note_lines = _wrap_pixels(
+        "Category key · full labels in exact HTML table", width - 16, label_size, 650
+    )
+    category_key_y = domain_y + len(category_note_lines) * annotation_line_step + 1
+    if categorical:
+        category_rows = math.ceil(len(raw_x) / category_key_columns)
+        annotation_bottom = (
+            category_key_y + (category_rows - 1) * category_key_step + 15
+        )
+    else:
+        annotation_bottom = (
+            domain_y + (len(domain_lines) - 1) * annotation_line_step + 16
+        )
     lines = [
         (
             f'<g class="plot" data-plot-for="{escape_svg_text(witness.id)}" '
@@ -469,9 +555,14 @@ def _plot_elements(
         f"{x_axis_tspans}</text>"
     )
     if categorical:
+        note_tspans = "".join(
+            f'<tspan x="{x + 8}" y="{domain_y + index * annotation_line_step}">'
+            f"{escape_svg_text(line)}</tspan>"
+            for index, line in enumerate(category_note_lines)
+        )
         lines.append(
             f'<text class="x-domain" data-x-domain="{escape_svg_text(x_domain)}" '
-            f'x="{x + 8}" y="{domain_y}">Category key · full labels in exact HTML table</text>'
+            f'x="{x + 8}" y="{domain_y}">{note_tspans}</text>'
         )
         key_width = (width - 16) / category_key_columns
         for category_index, (category_label, category_value) in enumerate(
@@ -549,11 +640,6 @@ def _plot_elements(
         )
         legend_y += len(wrapped_label) * annotation_line_step + 9
     if witness.plot.kind == "line" and coincident_roots:
-        overlap_lines = wrap_text(
-            "Identical values · shared rail + ring/diamond identities · no value offset",
-            legend_limit,
-            lines=None,
-        )
         tspans = "".join(
             f'<tspan x="{legend_x:.2f}" y="{legend_y + index * annotation_line_step:.2f}">'
             f"{escape_svg_text(line)}</tspan>"
@@ -565,11 +651,6 @@ def _plot_elements(
         )
         legend_y += len(overlap_lines) * annotation_line_step + 9
     if has_exact_zero:
-        zero_key_lines = wrap_text(
-            "Hollow marker per series · exact zero, not missing",
-            legend_limit,
-            lines=None,
-        )
         tspans = "".join(
             f'<tspan x="{legend_x + 20:.2f}" y="{legend_y + index * annotation_line_step:.2f}">'
             f"{escape_svg_text(line)}</tspan>"
@@ -590,7 +671,7 @@ def _plot_elements(
         )
         legend_y += len(zero_key_lines) * annotation_line_step + 9
     lines.append("</g>")
-    return lines, max(annotation_bottom, legend_y - 7)
+    return lines, max(annotation_bottom, legend_y - 9)
 
 
 def _render_formal_kernel_dashboard_desktop_svg(
@@ -608,7 +689,7 @@ def _render_formal_kernel_dashboard_desktop_svg(
         _plot_elements(
             witness,
             x=0,
-            y=148,
+            y=_header_layout(witness, card_width - 36, mobile=False)[3] + 16,
             width=card_width - 24,
             native_plot_height=145,
             stacked_legend=False,
@@ -723,15 +804,23 @@ def _render_formal_kernel_dashboard_desktop_svg(
                 f'<rect class="card" x="{x}" y="{y}" width="{card_width}" height="{card_height}" rx="13"/>',
             ]
         )
+        title_lines, family_lines, family_y, metric_y = _header_layout(
+            witness, card_width - 36, mobile=False
+        )
         lines.extend(
-            f'<text class="card-title" x="{x + 18}" y="{y + 73 + line_index * 21}">{escape_svg_text(line)}</text>'
-            for line_index, line in enumerate(wrap_text(witness.title, 46))
+            svg_text_lines(
+                title_lines, x=x + 18, y=y + 73, css_class="card-title", step=23
+            )
+        )
+        lines.extend(
+            svg_text_lines(
+                family_lines, x=x + 18, y=y + family_y, css_class="family", step=20
+            )
         )
         lines.extend(
             [
-                f'<text class="family" x="{x + 18}" y="{y + 115}">{escape_svg_text(witness.family)} · {len(witness.rows)} rows · {witness.plot.kind}</text>',
                 (
-                    f'<text class="metric" x="{x + 18}" y="{y + 135}">'
+                    f'<text class="metric" x="{x + 18}" y="{y + metric_y}">'
                     f"{len(witness.checks)} typed checks · max residual "
                     f"{_compact_number(_maximum_check_residual(witness))}</text>"
                 ),
@@ -761,7 +850,7 @@ def _render_formal_kernel_dashboard_desktop_svg(
         plot_lines, _plot_bottom = _plot_elements(
             witness,
             x=x + 12,
-            y=y + 148,
+            y=y + metric_y + 16,
             width=card_width - 24,
             native_plot_height=145,
             stacked_legend=False,
@@ -800,14 +889,21 @@ def _render_formal_kernel_dashboard_mobile_svg(
     margin = 10
     card_width = width - 2 * margin
     card_gap = 10
-    top = 144
+    banner_y = 92
+    banner_padding = 12
+    banner_step = 18
+    banner_lines = _wrap_pixels(
+        _COMPACT_BOUNDARY_BADGE, card_width - 2 * banner_padding, 13, 800
+    )
+    banner_height = 2 * banner_padding + len(banner_lines) * banner_step
+    top = banner_y + banner_height + 16
     card_layouts: list[tuple[int, int, int, list[str]]] = []
     next_y = top
     for witness in witnesses:
         plot_lines, plot_bottom = _plot_elements(
             witness,
             x=margin + 6,
-            y=next_y + 182,
+            y=next_y + _header_layout(witness, card_width - 24, mobile=True)[3] + 16,
             width=card_width - 12,
             native_plot_height=170,
             stacked_legend=True,
@@ -861,8 +957,17 @@ def _render_formal_kernel_dashboard_mobile_svg(
             f"{start_index + len(witnesses) - 1} of {len(dashboard.witnesses)} · "
             f"group {group_index} of {group_count}</text>"
         ),
-        '<rect class="mobile-banner" x="10" y="92" width="370" height="36" rx="18"/>',
-        f'<text class="mobile-banner-label" x="22" y="115">{_COMPACT_BOUNDARY_BADGE}</text>',
+        (
+            f'<rect class="mobile-banner" x="{margin}" y="{banner_y}" '
+            f'width="{card_width}" height="{banner_height}" rx="18"/>'
+        ),
+        *svg_text_lines(
+            banner_lines,
+            x=margin + banner_padding,
+            y=banner_y + banner_padding + 13,
+            css_class="mobile-banner-label",
+            step=banner_step,
+        ),
     ]
     lines.append(
         f'<g role="list" aria-label="Typed numerical witnesses, group {group_index} '
@@ -895,28 +1000,35 @@ def _render_formal_kernel_dashboard_mobile_svg(
                 ),
             ]
         )
-        lines.extend(
-            f'<text class="mobile-card-title" x="{margin + 12}" '
-            f'y="{y + 70 + line_index * 17}">{escape_svg_text(line)}</text>'
-            for line_index, line in enumerate(wrap_text(witness.title, 39, lines=3))
+        title_lines, family_lines, family_y, metric_y = _header_layout(
+            witness, card_width - 24, mobile=True
         )
         lines.extend(
             svg_text_lines(
-                wrap_text(witness.family, 52, lines=2),
+                title_lines,
                 x=margin + 12,
-                y=y + 122,
+                y=y + 70,
+                css_class="mobile-card-title",
+                step=23,
+            )
+        )
+        lines.extend(
+            svg_text_lines(
+                family_lines,
+                x=margin + 12,
+                y=y + family_y,
                 css_class="mobile-family",
-                step=15,
+                step=20,
             )
         )
         lines.extend(
             [
                 (
-                    f'<text class="mobile-alignment" x="{margin + 12}" y="{y + 154}">'
+                    f'<text class="mobile-alignment" x="{margin + 12}" y="{y + metric_y - 20}">'
                     f"Formal alignment · {escape_svg_text(humanize_identifier(witness.formal_alignment))}</text>"
                 ),
                 (
-                    f'<text class="mobile-metric" x="{margin + 12}" y="{y + 172}">'
+                    f'<text class="mobile-metric" x="{margin + 12}" y="{y + metric_y}">'
                     f"{len(witness.checks)} typed checks · max residual "
                     f"{_compact_number(_maximum_check_residual(witness))}</text>"
                 ),

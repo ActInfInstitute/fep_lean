@@ -4,14 +4,17 @@
     "contents_number_overflows": 0,
     "mermaid_fallbacks": 0,
     "missing_characters": 0,
+    "publication_cover": 0,
     "stale_sources": 0,
     "tex_errors": 0,
-    "uncaptioned_tables": 0
+    "uncaptioned_tables": 0,
+    "unresolved_references": 0
   },
-  "manuscript_source_digest": "7ceb36ad7b20e33ed319fcf8f318ce015579ecedfa7e54af3ffb47b9d47b0c43",
-  "pages": 353,
-  "receipt_version": 1,
+  "manuscript_source_digest": "20f0f45ecca4b56ac05ca472d06616251f8cd9ee1333453f862246004ae25346",
+  "pages": 356,
+  "receipt_version": 2,
   "source_digests": {
+    "../CITATION.cff": "5acb6ec5f18d47f4ab429428aa80a11ea6d02cc29f3da190459658796ec59377",
     "00_front_matter.md": "fd071cb817071f18032483c41b0ab1bb0a384f7ec3536dda2698a5ecd2e0683a",
     "01_abstract.md": "76300cab8513525e470b00f578c90987bddf0114b88814481e1c11363b464dfd",
     "02a_introduction.md": "65ae104a10b7131a71bee3b38223a82bfbaab26144e46cefb603c1be94447055",
@@ -42,6 +45,7 @@
     "07_references.md": "b6132569eea5c54b542fff8754cee5c5d288873d8e920ce27c66a4a0318a7d94",
     "08_appendix_a_overview.md": "75bbd397cea0d9f532820c769da05b9913cd152043735b07a383748fe14a3292",
     "09z_unified_formalism_catalogue.md": "fc1e671371b8e5ccdd84a2b573282e3bf2fc5b0992cc4e22c3b31423e2b824a4",
+    "config.yaml": "4d10a4a28c4fa083b28774c0ccd21abfaf584c89874e2fd4ee2e6ddd2553a5e4",
     "preamble.md": "0ca6e7d06bf56f64e2e2850c96e7a802695f0225128d9a955ab9d1318651a6d9"
   }
 }

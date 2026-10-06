@@ -13,6 +13,7 @@ from fep_lean.custody import apply as apply_module
 from fep_lean.verification import horizon_acceptance as acceptance
 from tests._support import custody_fixture_knobs as fixtures
 from tests._support import h2_r0_custody as current_r0
+from tests._support.release_lineage import custody_root
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -113,3 +114,19 @@ def test_synthetic_epoch_uses_real_isolated_historical_validator(
     # The current validator refuses synthetic rewrites of the immutable past.
     with pytest.raises(ValueError, match="immutable R0 prior changed"):
         current_r0.validate_h2_r0_custody(root)
+
+
+def test_current_post_h3_terminal_is_still_refused_without_mutation(
+    tmp_path: Path,
+) -> None:
+    before = _production_snapshot()
+    recorded_root = custody_root(REPO_ROOT, tmp_path)
+    assert (
+        current_r0.validate_h2_r0_custody(recorded_root)["native_evidence"]["status"]
+        == "not_executed"
+    )
+    with pytest.raises(
+        ValueError, match="current validator/diagnostic source mismatch"
+    ):
+        acceptance.validate_terminal_acceptance(REPO_ROOT)
+    assert before == _production_snapshot()

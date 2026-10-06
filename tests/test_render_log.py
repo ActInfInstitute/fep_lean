@@ -496,6 +496,8 @@ CLEAN_COUNTS = {
     "stale_sources": 0,
     "uncaptioned_tables": 0,
     "contents_number_overflows": 0,
+    "unresolved_references": 0,
+    "publication_cover": 0,
 }
 
 
@@ -547,10 +549,29 @@ def test_every_covered_file_carries_its_own_digest(tmp_path: Path) -> None:
     manuscript = _manuscript(tmp_path)
     digests = manuscript_source_digests(manuscript)
     assert sorted(digests) == [
+        "../CITATION.cff",
         "01_abstract.md",
         "09z_unified_formalism_catalogue.md",
+        "config.yaml",
         "preamble.md",
     ]
+
+
+@pytest.mark.parametrize("owner", ["config.yaml", "../CITATION.cff"])
+def test_cover_owner_change_invalidates_render_receipt(
+    tmp_path: Path, owner: str
+) -> None:
+    manuscript = _manuscript(tmp_path)
+    source = manuscript / owner
+    source.write_text("original cover metadata\n", encoding="utf-8")
+    receipt = build_acceptance_receipt(
+        manuscript, _pdf_dir(tmp_path), counts=CLEAN_COUNTS
+    )
+    path = tmp_path / "render-acceptance.json"
+    path.write_text(json.dumps(receipt), encoding="utf-8")
+    assert receipt_defects(path, manuscript) == ()
+    source.write_text("changed cover metadata\n", encoding="utf-8")
+    assert any(owner in defect for defect in receipt_defects(path, manuscript))
 
 
 def test_a_clean_acceptance_receipt_covers_this_checkout(tmp_path: Path) -> None:
@@ -637,18 +658,18 @@ def test_a_receipt_from_a_future_schema_is_a_defect(tmp_path: Path) -> None:
     assert any("receipt_version" in line for line in receipt_defects(path, manuscript))
 
 
-def test_a_receipt_missing_a_check_is_not_accepted(tmp_path: Path) -> None:
+@pytest.mark.parametrize("check", ["mermaid_fallbacks", "publication_cover"])
+def test_a_receipt_missing_a_check_is_not_accepted(tmp_path: Path, check: str) -> None:
     """A receipt written by an older acceptance cannot vouch for a newer one."""
     manuscript = _manuscript(tmp_path)
     receipt = build_acceptance_receipt(
         manuscript, _pdf_dir(tmp_path), counts=CLEAN_COUNTS
     )
-    del receipt["checks"]["mermaid_fallbacks"]
+    del receipt["checks"][check]
     path = tmp_path / "render-acceptance.json"
     path.write_text(json.dumps(receipt), encoding="utf-8")
     assert any(
-        "does not record mermaid_fallbacks" in line
-        for line in receipt_defects(path, manuscript)
+        f"does not record {check}" in line for line in receipt_defects(path, manuscript)
     )
 
 
@@ -834,6 +855,7 @@ def test_absent_manuscript_vars_prints_a_degraded_staleness_line(
     _write(pdf, "_latex_stdout.log", CLEAN_LOG)
     (manuscript / "01_abstract.md").write_text("An abstract.\n", encoding="utf-8")
     _write(pdf, "_combined_manuscript.md", "An abstract.\n")
+    _write(pdf, "_combined_manuscript.tex", "An abstract.\n")
     module = _check_render_log_module()
     status = module.main(["--pdf-dir", str(pdf), "--manuscript-dir", str(manuscript)])
     out = capsys.readouterr().out
@@ -842,7 +864,8 @@ def test_absent_manuscript_vars_prints_a_degraded_staleness_line(
         "skipped from the staleness comparison" in out
     )
     assert "OK: every manuscript source is typeset in the combined render" not in out
-    assert status == 0
+    assert status == 1  # Missing cover evidence independently fails closed.
+    assert "publication cover evidence missing" in out
 
 
 def test_present_manuscript_vars_keeps_the_unconditional_ok_line(
@@ -857,6 +880,7 @@ def test_present_manuscript_vars_keeps_the_unconditional_ok_line(
     _write(pdf, "_latex_stdout.log", CLEAN_LOG)
     (manuscript / "01_abstract.md").write_text("An abstract.\n", encoding="utf-8")
     _write(pdf, "_combined_manuscript.md", "An abstract.\n")
+    _write(pdf, "_combined_manuscript.tex", "An abstract.\n")
     (manuscript / "manuscript_vars.yaml").write_text(
         "topic_count: 155\n", encoding="utf-8"
     )
@@ -865,3 +889,66 @@ def test_present_manuscript_vars_keeps_the_unconditional_ok_line(
     out = capsys.readouterr().out
     assert "OK: every manuscript source is typeset in the combined render" in out
     assert "WARN: manuscript_vars.yaml absent" not in out
+
+
+@pytest.mark.parametrize(
+    "warning",
+    [
+        "LaTeX Warning: Reference `eq:lost' on page 3 undefined on input line 4.",
+        "Package natbib Warning: Citation `real-source' on page 3 undefined on input line 4.",
+        "LaTeX Warning: There were undefined references.",
+        "LaTeX Warning: There were multiply-defined labels.",
+    ],
+)
+def test_final_undefined_warnings_fail_closed(tmp_path: Path, warning: str) -> None:
+    from fep_lean.output.render_log import reference_render_defects
+
+    _write(tmp_path, "_combined_manuscript.tex", r"\citep{real-source}")
+    _write(tmp_path, "_combined_manuscript.log", warning + "\n" + CLEAN_LOG)
+    assert reference_render_defects(tmp_path)
+
+
+def test_reference_gate_excludes_code_and_preserves_citations(tmp_path: Path) -> None:
+    from fep_lean.output.render_log import reference_render_defects
+
+    _write(
+        tmp_path,
+        "_combined_manuscript.tex",
+        r"""
+\section{Title}\label{sec:real}
+\begin{equation}\label{eq:real}x=y\end{equation}
+See \ref{sec:real}, \eqref{eq:real}; \citep{scientific-source}.
+\begin{Highlighting}[]
+\NormalTok{\citep{eq:example} \{\#eq:example\}}
+\end{Highlighting}
+\begin{verbatim}
+\ref{eq:example} {#eq:example}
+\end{verbatim}
+\texttt{\{\#eq:inline\} \citep{eq:example}}
+\verb|\ref{eq:example}|
+""",
+    )
+    assert reference_render_defects(tmp_path) == ()
+
+
+@pytest.mark.parametrize(
+    "broken",
+    [
+        r"\citep{eq:lost}",
+        r"\citep{sec:lost}",
+        r"\citep{real,eq:lost}",
+        r"\{\#eq:unreferenced\}",
+        r"\ref{eq:lost}",
+    ],
+)
+def test_reference_gate_rejects_broken_tex(tmp_path: Path, broken: str) -> None:
+    from fep_lean.output.render_log import reference_render_defects
+
+    _write(tmp_path, "_combined_manuscript.tex", broken)
+    assert reference_render_defects(tmp_path)
+
+
+def test_reference_gate_requires_final_tex(tmp_path: Path) -> None:
+    from fep_lean.output.render_log import reference_render_defects
+
+    assert "final TeX absent" in reference_render_defects(tmp_path)[0]

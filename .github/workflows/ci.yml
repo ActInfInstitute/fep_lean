@@ -377,39 +377,75 @@ jobs:
           # stage runs.
           mkdir -p render-template/projects/active
           ln -s "$GITHUB_WORKSPACE" render-template/projects/active/fep_lean
-      - name: Install the XeLaTeX toolchain, pandoc, and the SVG rasterizer
+      - name: Install the XeLaTeX toolchain, Pandoc, pandoc-crossref, and the SVG rasterizer
+        shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             texlive-xetex texlive-latex-recommended texlive-latex-extra \
             texlive-fonts-recommended lmodern fontconfig librsvg2-bin
-          # The apt pandoc trails the pinned release this document renders
-          # with; install the pinned upstream build instead.
-          curl -fsSL -o /tmp/pandoc.deb \
-            https://github.com/jgm/pandoc/releases/download/3.11/pandoc-3.11-1-amd64.deb
-          sudo dpkg -i /tmp/pandoc.deb
-          rm -f /tmp/pandoc.deb
+          # Match the Pandoc version used to compile the Linux crossref binary.
+          # A matching pandoc-types API alone does not establish compatibility.
+          # SHA256 values are the asset digests from the official releases:
+          # https://api.github.com/repos/jgm/pandoc/releases/tags/3.10.1
+          # https://api.github.com/repos/lierdakil/pandoc-crossref/releases/tags/v0.3.25
+          render_tools_dir="$(mktemp -d)"
+          trap 'rm -rf "$render_tools_dir"' EXIT
+          curl -fsSL --retry 3 --connect-timeout 30 --max-time 300 \
+            -o "$render_tools_dir/pandoc.deb" \
+            https://github.com/jgm/pandoc/releases/download/3.10.1/pandoc-3.10.1-1-amd64.deb
+          curl -fsSL --retry 3 --connect-timeout 30 --max-time 300 \
+            -o "$render_tools_dir/pandoc-crossref.tar.xz" \
+            https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.25/pandoc-crossref-Linux-X64.tar.xz
+          printf '%s  %s\n' \
+            b419369915e0f3181be0afdb040ec8ecc6b70e72e5992652a0d83aed9e6bc109 "$render_tools_dir/pandoc.deb" \
+            2319816e3545ee78e44e4a97c2174c72eedf4b51d436b32721b48f43458eb0f6 "$render_tools_dir/pandoc-crossref.tar.xz" \
+            | sha256sum --check --strict
+          sudo dpkg -i "$render_tools_dir/pandoc.deb"
+          tar -xJf "$render_tools_dir/pandoc-crossref.tar.xz" -C "$render_tools_dir" pandoc-crossref
+          sudo install -m 0755 "$render_tools_dir/pandoc-crossref" /usr/local/bin/pandoc-crossref
+          pandoc --version
+          pandoc-crossref --version
       - name: Install the two faces the preamble selects
+        timeout-minutes: 10
         run: |
           # JuliaMono (the code face; no distribution package) and GNU
           # FreeSerif (the main and Lean-unicode face), at pinned versions,
           # into the user font directory fontconfig resolves under $HOME.
-          mkdir -p "$HOME/.fonts"
-          curl -fsSL -o /tmp/JuliaMono.tar.gz \
+          font_archives_dir="$(mktemp -d)"
+          trap 'rm -rf "$font_archives_dir"' EXIT
+          download_font() {
+            local archive="$1" digest="$2" url
+            shift 2
+            for url in "$@"; do
+              if curl -fsSL --proto '=https' --proto-redir '=https' \
+                --retry 2 --retry-all-errors --retry-delay 2 --retry-max-time 120 \
+                --connect-timeout 15 --max-time 60 -o "$archive" "$url"; then
+                # Integrity failures are fatal, not a reason to try another mirror.
+                printf '%s  %s\n' "$digest" "$archive" | sha256sum --check --strict || return 1
+                return 0
+              fi
+              rm -f "$archive"
+              echo "Font download failed: $url" >&2
+            done
+            return 1
+          }
+          # JuliaMono: official GitHub v0.63.2 release-asset SHA256.
+          download_font "$font_archives_dir/JuliaMono.tar.gz" \
+            be6517295198ec5c92bdbaad42f4f6f8d83f921d80512b79f54fe036add95c0c \
             https://github.com/cormullion/juliamono/releases/download/v0.63.2/JuliaMono-ttf.tar.gz
-          tar -xzf /tmp/JuliaMono.tar.gz -C "$HOME/.fonts"
-          # ftp.gnu.org is intermittently unreachable from hosted runners;
-          # try identical mirrors and accept only the pinned archive bytes.
-          for mirror in https://ftp.gnu.org/gnu https://mirrors.kernel.org/gnu \
-              https://mirrors.ocf.berkeley.edu/gnu; do
-            curl -fsSL --connect-timeout 20 --max-time 120 -o /tmp/freefont.zip \
-              "$mirror/freefont/freefont-ttf-20120503.zip" && break
-          done
-          echo "7c85baf1bf82a1a1845d1322112bc6ca982221b484e3b3925022e25b5cae89af  /tmp/freefont.zip" \
-            | sha256sum -c -
-          unzip -j /tmp/freefont.zip 'freefont-20120503/FreeSerif*' \
+          # FreeFont: identical kernel.org/Wayne State mirror bytes, also checked
+          # against Arch's upstream-archive SHA512 in ttf-freefont/trunk/PKGBUILD:
+          # https://github.com/archlinux/svntogit-packages/blob/3f47a532ecf83e8233dbb4e6c4808013fee2ff48/trunk/PKGBUILD
+          download_font "$font_archives_dir/freefont.zip" \
+            7c85baf1bf82a1a1845d1322112bc6ca982221b484e3b3925022e25b5cae89af \
+            https://ftp.gnu.org/gnu/freefont/freefont-ttf-20120503.zip \
+            https://mirrors.kernel.org/gnu/freefont/freefont-ttf-20120503.zip
+          # Verify both archives before extracting either into the font directory.
+          mkdir -p "$HOME/.fonts"
+          tar -xzf "$font_archives_dir/JuliaMono.tar.gz" -C "$HOME/.fonts"
+          unzip -j "$font_archives_dir/freefont.zip" 'freefont-20120503/FreeSerif*' \
             -d "$HOME/.fonts"
-          rm -f /tmp/JuliaMono.tar.gz /tmp/freefont.zip
           fc-cache -f
       - name: Install the mermaid CLI
         run: npm install -g "@mermaid-js/mermaid-cli@11.17.0"
@@ -552,6 +588,9 @@ jobs:
 
           allowed_gitlink = ("infrastructure/steganography/kmyth", "cb23c6d94423cbe4f5ef0caf23594d1095ddde79")
 
+          def template_identity(item):
+              return [item.st_dev, item.st_ino, item.st_mode, item.st_size, item.st_mtime_ns, item.st_ctime_ns]
+
           def uninitialized_gitlink(name, mode, oid):
               if mode != "160000" or (name, oid) != allowed_gitlink:
                   raise SystemExit("template tracked resource mode is unsupported")
@@ -577,9 +616,6 @@ jobs:
                       os.close(parent_fd)
               except OSError as error:
                   raise SystemExit("template allowed gitlink is not a canonical empty directory") from error
-
-          def template_identity(item):
-              return [item.st_dev, item.st_ino, item.st_mode, item.st_size, item.st_mtime_ns, item.st_ctime_ns]
 
           def template_manifest():
               tree = subprocess.check_output(["git", "-C", str(template), "ls-tree", "-r", "-z", template_sha])
@@ -655,7 +691,7 @@ jobs:
           template_sources = template_manifest()
           validate_evidence()
           versions = {}
-          for command in ("xelatex", "pandoc", "rsvg-convert", "mmdc"):
+          for command in ("xelatex", "pandoc", "pandoc-crossref", "rsvg-convert", "mmdc"):
               versions[command] = subprocess.check_output([command, "--version"], text=True, timeout=30).strip()
           fonts = {}
           font_files = {}

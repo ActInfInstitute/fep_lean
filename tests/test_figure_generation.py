@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from itertools import pairwise
 from pathlib import Path
 
 import pytest
@@ -108,3 +109,47 @@ def test_write_sequence_diagram_four_actors(tmp_path: Path) -> None:
     out = tmp_path / "seq.png"
     _write_sequence_diagram(out)
     assert out.stat().st_size > 1000
+
+
+def test_area_tick_labels_preserve_counts_and_do_not_overlap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Measure the actual Agg-rendered tick boxes after production tight_layout."""
+    import matplotlib.pyplot as plt
+    from matplotlib.figure import Figure
+
+    from fep_lean.output import figures
+
+    values = {
+        "FEP": 37,
+        "ActiveInference": 41,
+        "BayesianMechanics": 41,
+        "InfoGeometry": 21,
+        "Thermodynamics": 28,
+    }
+    save = figures._save
+
+    def inspect_and_save(fig: Figure, path: Path) -> Path:
+        fig.tight_layout()
+        fig.canvas.draw()
+        ax = fig.axes[0]
+        ticks = ax.get_xticklabels()
+        assert [tick.get_text().replace("\n", "") for tick in ticks] == list(values)
+        assert [bar.get_height() for bar in ax.patches] == list(values.values())
+        assert [text.get_text() for text in ax.texts] == [
+            f"{n} ({100 * n / 168:.0f}%)" for n in values.values()
+        ]
+        boxes = [tick.get_window_extent(fig.canvas.get_renderer()) for tick in ticks]
+        assert all(left.x1 + 4 <= right.x0 for left, right in pairwise(boxes))
+        assert all(
+            fig.bbox.contains(box.x0, box.y0) and fig.bbox.contains(box.x1, box.y1)
+            for box in boxes
+        )
+        return save(fig, path)
+
+    monkeypatch.setattr(figures, "_save", inspect_and_save)
+    out = _write_bar_chart(
+        values, "Topics by area", tmp_path / "areas.png", show_pct=True
+    )
+    assert out.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
+    assert not plt.get_fignums()
