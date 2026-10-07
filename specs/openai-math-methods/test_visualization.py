@@ -8,7 +8,15 @@ import json
 import math
 import re
 import sys
-from decimal import Decimal, localcontext
+from decimal import (
+    ROUND_HALF_EVEN,
+    ROUND_UP,
+    Context,
+    Decimal,
+    Inexact,
+    Underflow,
+    localcontext,
+)
 from html.parser import HTMLParser
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -199,11 +207,134 @@ def test_fisher_energy_preserves_representable_subnormal_intermediate_results(
     assert abs(total * total / variance - expected) > 2 * math.ulp(expected)
 
 
-def test_fisher_energy_keeps_normal_panel_values_unchanged():
-    panel = visual.numerical_panels()[1]
-    for row in panel["directions"]:
-        direction = math.cos(row["angle"]), math.sin(row["angle"])
-        assert row["energy"] == (direction[0] + direction[1]) ** 2 / 2.0
+def test_fisher_energy_keeps_normal_float_api_values_unchanged():
+    for index in range(97):
+        angle = index * 2 * math.pi / 96
+        direction = math.cos(angle), math.sin(angle)
+        assert (
+            visual.fisher_energy(direction) == (direction[0] + direction[1]) ** 2 / 2.0
+        )
+
+
+def test_decimal_diagnostic_grid_matches_independent_exact_identities():
+    panels = visual.numerical_panels()
+    with localcontext(Context(prec=110, rounding=ROUND_HALF_EVEN)):
+        quantum = Decimal("1e-24")
+
+        def published(value):
+            return float(value.quantize(quantum, rounding=ROUND_HALF_EVEN))
+
+        support, fisher, hidden, risk = panels
+        assert support["rows"][-1]["epsilon"] == 0.1
+        assert support["rows"][-1]["kl_delta_to_p"] == published(
+            -(Decimal(9) / 10).ln()
+        )
+        # Independent arcsin series (not the producer's range-reduced atan).
+        p = Decimal("0.12")
+        term = p.sqrt()
+        arcsin = term
+        for index in range(500):
+            term *= (2 * index + 1) ** 2 * p / (2 * (index + 1) * (2 * index + 3))
+            arcsin += term
+            if abs(term) < Decimal("1e-100"):
+                break
+        else:
+            pytest.fail("independent arcsin reference did not converge")
+        assert fisher["rows"][5]["coordinate"] == published(2 * arcsin)
+        assert fisher["rows"][5]["fisher"] == published(1 / (p * (1 - p)))
+        # The two hosted drifting direction values admit independent radicals.
+        assert fisher["directions"][32]["energy"] == published(
+            (2 - Decimal(3).sqrt()) / 4
+        )
+        assert fisher["directions"][33]["energy"] == published(
+            (2 - (2 + Decimal(2).sqrt()).sqrt()) / 4
+        )
+        assert [row["energy"] for row in fisher["directions"][::12]] == [
+            0.5,
+            1.0,
+            0.5,
+            0.0,
+            0.5,
+            1.0,
+            0.5,
+            0.0,
+            0.5,
+        ]
+        assert hidden["rows"][20]["full_law_kl"] == published(
+            Decimal("4.5") * Decimal(-4).exp()
+        )
+        assert risk["rows"][0]["preference_kl"] == published(Decimal("1.25").ln())
+        assert risk["rows"][-1]["preference_kl"] == published(Decimal(5).ln())
+        assert risk["rows"][20]["preference_kl"] == 0
+        assert risk["rows"][70]["expected_brier"] == 0.21
+
+
+def test_diagnostic_producer_ignores_platform_libm_and_ambient_decimal(monkeypatch):
+    expected = json.dumps(visual.numerical_panels(), sort_keys=True, allow_nan=False)
+
+    def forbidden(*args):
+        pytest.fail("platform libm cannot determine publication diagnostic values")
+
+    for name in ("log", "log1p", "sqrt", "asin", "atan", "sin", "cos", "exp", "pow"):
+        monkeypatch.setattr(math, name, forbidden)
+    with localcontext() as ambient:
+        ambient.prec = 6
+        ambient.rounding = ROUND_UP
+        ambient.Emin = 0
+        ambient.Emax = 9
+        ambient.traps[Inexact] = True
+        ambient.traps[Underflow] = True
+        before = ambient.copy()
+        assert (
+            json.dumps(visual.numerical_panels(), sort_keys=True, allow_nan=False)
+            == expected
+        )
+        assert ambient.prec == before.prec
+        assert ambient.rounding == before.rounding
+        assert ambient.traps == before.traps
+        assert ambient.flags == before.flags
+
+
+def test_diagnostic_series_bounds_domains_and_exhaustion_fail_closed(monkeypatch):
+    with localcontext(Context(prec=80, rounding=ROUND_HALF_EVEN)):
+        # Both series are within the reviewed next-omitted-term domains.
+        assert abs(
+            visual._atan_series(Decimal("0.25")) - Decimal(str(math.atan(0.25)))
+        ) < Decimal("1e-16")
+        for bad in (Decimal("0.251"), Decimal("NaN"), Decimal("Infinity")):
+            with pytest.raises(ValueError, match="atan series requires"):
+                visual._atan_series(bad)
+        pi = Decimal(
+            "3.141592653589793238462643383279502884197169399375105820974944592307816406286209"
+        )
+        for value in (Decimal("0.99"), Decimal(1), Decimal(7)):
+            assert float(visual._decimal_atan(value, pi)) == pytest.approx(
+                math.atan(float(value)), abs=visual.TOLERANCE
+            )
+        assert abs(visual._decimal_sin(pi / 6, pi) - Decimal("0.5")) < Decimal("1e-74")
+        with pytest.raises(ValueError, match="sine requires"):
+            visual._decimal_sin(5 * pi, pi)
+        monkeypatch.setattr(visual, "_SERIES_LIMIT", 1)
+        with pytest.raises(ValueError, match="atan remainder did not converge"):
+            visual.numerical_panels()
+        with pytest.raises(ValueError, match="sine remainder did not converge"):
+            visual._decimal_sin(pi / 6, pi)
+
+
+def test_display_quantization_is_half_even_and_not_a_freshness_tolerance(model):
+    with localcontext(Context(prec=80, rounding=ROUND_HALF_EVEN)):
+        assert visual._display_number(Decimal("0.5e-24")) == 0.0
+        assert visual._display_number(Decimal("1.5e-24")) == 2e-24
+        assert math.copysign(1, visual._display_number(Decimal("-0.5e-24"))) == 1
+        with pytest.raises(ValueError, match="display value must be finite"):
+            visual._display_number(Decimal("NaN"))
+    method = model["numerical_method"]
+    assert method["decimal_precision"] == 80
+    assert method["display_decimal_places"] == 24
+    assert method["rounding"] == "ROUND_HALF_EVEN"
+    assert model["arithmetic_tolerance"] == 1e-12
+    assert "Display quantization does not change" in method["scope"]
+    assert "Reproducible diagnostic arithmetic" in visual.render_html(model).decode()
 
 
 def test_hidden_projection_and_risk_preference_keep_distinct_objects():
@@ -347,7 +478,7 @@ def test_print_exports_preserve_prior_explorer_views_and_add_three_source_views(
         visual.numerical_panels(), sort_keys=True, allow_nan=False
     ).encode()
     assert hashlib.sha256(numerical_bytes).hexdigest() == (
-        "128ce9b9980896fe0e88cbd1309b9c011f7fefba3b98ae818eb1685f854389a0"
+        "6ca9a9b33556b696bdeb0814a12882df2a50878e9653bf4d791f8e465f0dd0da"
     )
 
 

@@ -8957,7 +8957,7 @@
     "methods/model.py": "e56cc88696960f4cff23b53894dd1cdca7b4e027e91987484fda2edaf766bdf6",
     "methods/probes.py": "798587410e1f8b39b279081649241228fe6ee622db392d74236ccf1c9c35e595",
     "methods/projection.py": "28ac68b3d8a340d6a430258110b6d4198745ebb703ce6af5acb6450ed5a30f54",
-    "methods/visualization.py": "8006502369ce15c9d101861e3e65d5386885db90177bce9d3ce424ef7eb475a9"
+    "methods/visualization.py": "3c12c0213ef98a4b1ad803836d637969efe4a3e28e02302d3ba63ed2f229719a"
   },
   "theorem_analysis": {
     "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",

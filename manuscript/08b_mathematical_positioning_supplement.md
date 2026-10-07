@@ -1648,6 +1648,21 @@ number may exceed the numerical format even when the mathematical theorem
 applies. Rejecting that input numerically must not be described as a failed
 Fisher theorem, and silently clipping it would change the diagnostic.
 
+The four explanatory publication grids use exact rational grid indices and
+coefficients; their pi-dependent angles and logarithmic epsilon grid are
+evaluated in an explicit 80-digit Decimal context. Logarithms, exponentials, square roots,
+and range-reduced alternating trigonometric series produce the displayed
+values; each series fails if its fixed cap is reached before the declared
+first-omitted-term bound. The shared model discloses these truncation bounds
+and their reconstruction factors, separately from rounded arithmetic error.
+Derived grid values are quantized to 24 decimal places with half-even
+rounding before finite JSON serialization. This publication rule removes
+platform-dependent elementary-function low bits; it neither rounds arbitrary
+probe inputs nor changes the arithmetic acceptance tolerance. Exact formulas
+remain authoritative, and artifact freshness still compares exact bytes.
+These computations provide reproducible explanatory values, not certified
+interval enclosures or additional Lean proofs.
+
 The **transport review** consumes two complete result passports and a
 proposed map. It emits a commuting obligation, a premise comparison, and three
 possible outcomes: an exact transfer with a qualified proof; a theorem

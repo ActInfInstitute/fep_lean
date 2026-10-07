@@ -16,11 +16,23 @@ import math
 import sys
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
+from decimal import (
+    ROUND_HALF_EVEN,
+    Context,
+    Decimal,
+    DivisionByZero,
+    InvalidOperation,
+    Overflow,
+    localcontext,
+)
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree as ET
 
 TOLERANCE = 1e-12
+_SERIES_LIMIT = 512
+_SERIES_REMAINDER = Decimal("1e-75")
+_DISPLAY_QUANTUM = Decimal("1e-24")
 PRINT_WIDTH = 880
 PRINT_HEIGHT = 760
 PRINT_FONT_SIZE = 15
@@ -124,53 +136,163 @@ def fisher_energy(direction: Sequence[float], variance: float = 2.0) -> float:
     return energy
 
 
+def _atan_series(value: Decimal) -> Decimal:
+    """For |x|<=1/4, the alternating-series error is at most the next term."""
+    if not value.is_finite() or abs(value) > Decimal("0.25"):
+        raise ValueError("diagnostic atan series requires |x| <= 1/4")
+    power = value
+    result = Decimal(0)
+    for index in range(_SERIES_LIMIT):
+        term = power / (2 * index + 1)
+        if abs(term) <= _SERIES_REMAINDER:
+            return result
+        result += term
+        power *= -value * value
+    raise ValueError("diagnostic atan remainder did not converge within its fixed cap")
+
+
+def _decimal_atan(value: Decimal, pi: Decimal) -> Decimal:
+    """Positive atan via reciprocal and half-angle reduction, then bounded series."""
+    if not value.is_finite() or value < 0:
+        raise ValueError("diagnostic atan requires a finite nonnegative argument")
+    if value > 1:
+        return pi / 2 - _decimal_atan(1 / value, pi)
+    factor = 1
+    while value > Decimal("0.25"):
+        value /= 1 + (1 + value * value).sqrt()
+        factor *= 2
+    return factor * _atan_series(value)
+
+
+def _decimal_sin(value: Decimal, pi: Decimal) -> Decimal:
+    """Reduce to [-pi,pi]; after n>=1 omitted terms decrease in magnitude."""
+    if not value.is_finite() or abs(value) > 4 * pi:
+        raise ValueError("diagnostic sine requires a finite argument in [-4pi,4pi]")
+    value %= 2 * pi
+    if value > pi:
+        value -= 2 * pi
+    elif value < -pi:
+        value += 2 * pi
+    term = value
+    result = Decimal(0)
+    for index in range(_SERIES_LIMIT):
+        # At index >=1 the next ratio is <=pi²/20<1. Consequently the
+        # alternating Taylor tail is bounded by this first omitted term.
+        if (index >= 1 or value == 0) and abs(term) <= _SERIES_REMAINDER:
+            return result
+        result += term
+        term *= -value * value / ((2 * index + 2) * (2 * index + 3))
+    raise ValueError("diagnostic sine remainder did not converge within its fixed cap")
+
+
+def _display_number(value: Decimal) -> float:
+    """Quantize derived display values; never round a generic probe input."""
+    if not value.is_finite():
+        raise ValueError("diagnostic display value must be finite")
+    rounded = value.quantize(_DISPLAY_QUANTUM, rounding=ROUND_HALF_EVEN)
+    return float(rounded) if rounded else 0.0
+
+
+def _numerical_method() -> dict[str, Any]:
+    """Disclose the finite-grid producer, separately from arithmetic acceptance."""
+    return {
+        "decimal_precision": 80,
+        "elementary_functions": "Decimal ln/exp/sqrt; Machin pi = 16 atan(1/5) - 4 atan(1/239); reciprocal/half-angle atan and range-reduced sine alternating series",
+        "series_cap": _SERIES_LIMIT,
+        "series_first_omitted_term_limit": str(_SERIES_REMAINDER),
+        "remainder_scope": "Alternating atan with |x|<=1/4 and sine on [-pi,pi] after decreasing terms: truncation error <= first omitted term. Atan reconstruction multiplies this bound by at most 4; Machin pi by at most 20. Decimal arithmetic is rounded at 80 digits; these are algorithmic bounds, not an interval-arithmetic certificate.",
+        "grid_inputs": "Exact rational indices and coefficients: p=(i+1)/50, time=i/20, forecast=i/100; pi-dependent angle=2*pi*i/96 and log-space epsilon=exp((-6+i/8)*ln(10)) evaluated in Decimal",
+        "display_decimal_places": 24,
+        "rounding": "ROUND_HALF_EVEN",
+        "serialization": "Finite derived grid values quantized to 24 decimal places then converted to IEEE float/JSON; signed zero canonicalized. Exact formulas and grid definitions remain authoritative.",
+        "scope": "Finite explanatory publication grid only; generic binary_kl/fisher_energy retain their input and range contracts. Display quantization does not change the arithmetic tolerance or the exact-byte freshness comparator.",
+    }
+
+
 def numerical_panels() -> list[dict[str, Any]]:
-    """Evaluate specified examples; float tolerance validates arithmetic only."""
-    support = [
-        {
-            "epsilon": 10 ** (-6 + i * 5 / 40),
-            "total_variation": 10 ** (-6 + i * 5 / 40),
-            "kl_delta_to_p": -math.log1p(-(10 ** (-6 + i * 5 / 40))),
-            "kl_p_to_delta": None,
-        }
-        for i in range(41)
-    ]
-    fisher = [
-        {
-            "p": 0.02 + i * 0.96 / 48,
-            "fisher": 1 / ((0.02 + i * 0.96 / 48) * (1 - (0.02 + i * 0.96 / 48))),
-            "coordinate": 2 * math.asin(math.sqrt(0.02 + i * 0.96 / 48)),
-        }
-        for i in range(49)
-    ]
-    directions = [
-        {
-            "angle": i * 2 * math.pi / 96,
-            "energy": fisher_energy(
-                (math.cos(i * 2 * math.pi / 96), math.sin(i * 2 * math.pi / 96))
-            ),
-        }
-        for i in range(97)
-    ]
-    hidden = [
-        {
-            "time": i / 20,
-            "observed_mean_both": math.exp(-i / 20),
-            "hidden_mean_first": 0.0,
-            "hidden_mean_second": 3 * math.exp(-2 * i / 20),
-            "full_law_kl": 4.5 * math.exp(-4 * i / 20),
-            "observed_law_kl": 0.0,
-        }
-        for i in range(61)
-    ]
-    risk = [
-        {
-            "forecast": i / 100,
-            "expected_brier": 0.7 * 0.3 + (i / 100 - 0.7) ** 2,
-            "preference_kl": binary_kl(i / 100, 0.2),
-        }
-        for i in range(101)
-    ]
+    """Evaluate finite display grids without platform libm or ambient Decimal state."""
+    arithmetic = Context(
+        prec=80,
+        rounding=ROUND_HALF_EVEN,
+        Emin=-999999,
+        Emax=999999,
+        capitals=1,
+        clamp=0,
+        traps=[InvalidOperation, DivisionByZero, Overflow],
+    )
+    with localcontext(arithmetic):
+        one = Decimal(1)
+        pi = 16 * _atan_series(one / 5) - 4 * _atan_series(one / 239)
+        support = []
+        for index in range(41):
+            epsilon = ((-6 + Decimal(index) / 8) * Decimal(10).ln()).exp()
+            support.append(
+                {
+                    "epsilon": _display_number(epsilon),
+                    "total_variation": _display_number(epsilon),
+                    "kl_delta_to_p": _display_number(-(1 - epsilon).ln()),
+                    "kl_p_to_delta": None,
+                }
+            )
+        fisher = []
+        for index in range(49):
+            p = Decimal(index + 1) / 50
+            fisher.append(
+                {
+                    "p": _display_number(p),
+                    "fisher": _display_number(1 / (p * (1 - p))),
+                    "coordinate": _display_number(
+                        2 * _decimal_atan((p / (1 - p)).sqrt(), pi)
+                    ),
+                }
+            )
+        directions = []
+        for index in range(97):
+            angle = Decimal(index) * 2 * pi / 96
+            directions.append(
+                {
+                    "angle": _display_number(angle),
+                    # For unit direction (cos a,sin a), fixed variance 2:
+                    # (cos a+sin a)^2/2 = (1+sin(2a))/2.
+                    "energy": _display_number((1 + _decimal_sin(2 * angle, pi)) / 2),
+                }
+            )
+        hidden = []
+        for index in range(61):
+            time = Decimal(index) / 20
+            hidden.append(
+                {
+                    "time": _display_number(time),
+                    "observed_mean_both": _display_number((-time).exp()),
+                    "hidden_mean_first": 0.0,
+                    "hidden_mean_second": _display_number(3 * (-2 * time).exp()),
+                    "full_law_kl": _display_number(Decimal("4.5") * (-4 * time).exp()),
+                    "observed_law_kl": 0.0,
+                }
+            )
+        risk = []
+        for index in range(101):
+            forecast = Decimal(index) / 100
+            kl = sum(
+                (
+                    mass * (mass.ln() - reference.ln())
+                    for mass, reference in (
+                        (forecast, Decimal("0.2")),
+                        (1 - forecast, Decimal("0.8")),
+                    )
+                    if mass
+                ),
+                Decimal(0),
+            )
+            risk.append(
+                {
+                    "forecast": _display_number(forecast),
+                    "expected_brier": _display_number(
+                        Decimal("0.21") + (forecast - Decimal("0.7")) ** 2
+                    ),
+                    "preference_kl": _display_number(kl),
+                }
+            )
     return [
         {
             "id": "support-convergence",
@@ -307,6 +429,7 @@ def build_visual_model(source: Mapping[str, Any]) -> dict[str, Any]:
         "upstream_affinities": affinities,
         "theorem_analysis": copy.deepcopy(source.get("theorem_analysis")),
         "cross_corpus_embedding": copy.deepcopy(source.get("cross_corpus_embedding")),
+        "numerical_method": _numerical_method(),
         "numerical_panels": numerical_panels(),
         "arithmetic_tolerance": TOLERANCE,
         "tolerance_scope": "Absolute floating-point diagnostic tolerance, not a scientific/native acceptance threshold.",
@@ -1361,6 +1484,10 @@ def render_html(model: Mapping[str, Any]) -> bytes:
         '<section id="boundaries"><h2>Exact formulas expose interpretation boundaries</h2><p>Deterministic numerical evaluation; no random samples or empirical observations. Absolute arithmetic tolerance: '
         + escape(model["arithmetic_tolerance"])
         + ". This is not a scientific or native acceptance threshold.</p>"
+        + table(
+            [model["numerical_method"]],
+            "Reproducible diagnostic arithmetic and display serialization",
+        )
     )
     for panel in model["numerical_panels"]:
         chunks.append(

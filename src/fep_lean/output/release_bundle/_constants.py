@@ -33,6 +33,12 @@ _CANONICAL_LICENSE = "CC-BY-4.0"
 
 _CANONICAL_PUBLICATION_DOI = "10.5281/zenodo.19699233"
 
+# The scholarly concept, this release's manuscript version, and the software
+# archive have distinct identities. Concept guards retain the work-level DOI.
+_CANONICAL_PUBLICATION_VERSION_DOI = "10.5281/zenodo.23220027"
+
+_CANONICAL_SOFTWARE_CONCEPT_DOI = "10.5281/zenodo.23196891"
+
 _CANONICAL_PUBLICATION_JOURNAL = "Active Inference Journal"
 
 _CANONICAL_REPOSITORY_URL = "https://github.com/ActiveInferenceInstitute/fep_formal"

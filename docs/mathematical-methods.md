@@ -143,6 +143,14 @@ scalar-descent probe retains different hidden coordinates and distinct limits.
 A binary decision example shows how changing preference alignment
 changes agreement with risk minimization. Every panel declares its formula,
 carrier and boundary; accessible data tables preserve the underlying numbers.
+The four fixed publication grids use exact rational indices and coefficients.
+Pi-dependent angles and logarithmic epsilon values are evaluated in an
+explicit 80-digit Decimal context with bounded trigonometric series. Half-even
+display quantization uses 24 decimal places before JSON serialization. The shared model
+records the series remainder criteria and reconstruction factors. Exhaustion
+fails closed. This reproducible display producer leaves arbitrary-input probe
+contracts and the arithmetic tolerance unchanged; freshness compares exact
+bytes, and the method does not provide interval-certified numerical proof.
 
 These probes make failed transfers intelligible. They do not estimate a
 population parameter, validate a biological model, or replace a qualified
@@ -185,5 +193,6 @@ The [local validation record](../specs/openai-math-methods/VALIDATION.md)
 separates package, native, publication and scientific evidence. Installed-wheel
 methods checks passed locally on Python 3.10 through 3.14. The existing
 15-cell distribution job also runs that supplemental check on its selected
-interpreter; those hosted results remain pending for this candidate. The
-validator itself remains Python 3.14.
+interpreter. Release acceptance requires its successful results on the exact
+release commit; consult the linked GitHub release and workflow evidence for
+that commit. The validator itself remains Python 3.14.

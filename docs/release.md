@@ -68,5 +68,7 @@ A release changes no scientific claim. Unrun lanes stay described as unrun.
    the published version, author, ORCID, license, file bytes and DOI resolution.
 
 `CITATION.cff` distinguishes software citation from its preferred scholarly
-citation. The manuscript's DOI identifies the scholarly concept; do not replace
-it with the software concept or describe the two histories as one version chain.
+citation. The manuscript DOI identifies its exact scholarly version under the
+scholarly concept. For v1.6.0 the reserved version is
+`10.5281/zenodo.23220027`. Keep the scholarly concept, scholarly version and
+software concept distinct; do not describe the two histories as one version chain.

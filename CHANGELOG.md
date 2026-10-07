@@ -25,6 +25,18 @@ unions and those twelve result units in 30 authored coordinates. Its
 deterministic Decimal MDS reports distances, spectrum, stress and axis
 ambiguity without creating theorem relations.
 
+The scholarly manuscript version has reserved DOI
+`10.5281/zenodo.23220027` under concept `10.5281/zenodo.19699233`. The automatic
+GitHub software archive belongs to the separate concept
+`10.5281/zenodo.23196891`. Release identity checks distinguish these three
+roles while retaining the established package concept URL and historical
+custody validator. Hosted Python acceptance retains per-case JUnit evidence
+and coverage for review of actual passes, failures and skips. The four
+explanatory numerical grids use explicit Decimal arithmetic and bounded
+series with disclosed display serialization, so macOS/Linux elementary
+function differences cannot change generated artifacts. Generic diagnostic
+inputs, arithmetic thresholds and exact-byte freshness remain unchanged.
+
 The original local candidate, before integration with newer GitHub main,
 completed a coordinated source-owner refresh from version 24 to 25: five methods modules, four generated package YAML
 resources and the authored positioning policy join the explicit owner roster.

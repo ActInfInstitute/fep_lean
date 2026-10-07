@@ -14,14 +14,17 @@ standalone EFE and geometric-mechanics families.
 
 ## Release
 
-The current release is [`v1.5.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.5.0)
-(2026-10-06): the 168-topic catalogue in 22 families on Lean/Mathlib `v4.34.1`.
-It supersedes the [`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
-(159 topics); the `1.4.0` candidate was never tagged and ships within 1.5.0.
+The **v1.6.0 release line** (2026-10-07) retains the 168-topic catalogue in
+22 families on Lean/Mathlib `v4.34.1` and extends its mathematical methods and
+manuscript. The previous published release is
+[`v1.5.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.5.0)
+(2026-10-06). It superseded the
+[`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
+(159 topics); the untagged `1.4.0` candidate shipped within 1.5.0.
 Releases follow the short [release procedure](docs/release.md): one version
 and date everywhere, a dated changelog section and a green hosted CI run on
 the exact `main` commit, checked by `docs/release_check.py`.
-The working package and manuscript metadata prepare **1.6.0**, with portable
+The package and manuscript metadata identify **1.6.0**, with portable
 mathematical methods, source-grounded Lean statement analysis, shared FEP/OpenAI
 feature coordinates, an offline explorer, publication panels and an extended
 [Supplement A](manuscript/08b_mathematical_positioning_supplement.md).

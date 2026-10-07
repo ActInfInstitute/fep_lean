@@ -3,8 +3,8 @@
 **Date:** 2026-10-07
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
-**Release line:** current release `v1.5.0` (2026-10-06), which ships the
-untagged `1.4.0` candidate. Releases follow the short
+**Release line:** `v1.6.0` (2026-10-07); the previous published release is
+`v1.5.0` (2026-10-06), which ships the untagged `1.4.0` candidate. Releases follow the short
 [release procedure](docs/release.md); research lanes below do not block them.
 
 ## Mathematical methods release line
