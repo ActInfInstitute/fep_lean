@@ -3625,8 +3625,9 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
     )
     (project_root / "CITATION.cff").write_text(
         "cff-version: 1.2.0\n"
-        'version: "1.5.0"\n'
-        'date-released: "2026-10-06"\n'
+        "doi: 10.5281/zenodo.23196891\n"
+        'version: "1.6.0"\n'
+        'date-released: "2026-10-07"\n'
         "repository-code: https://github.com/ActiveInferenceInstitute/fep_formal\n"
         "url: https://github.com/ActiveInferenceInstitute/fep_formal\n"
         "license: CC-BY-4.0\n"
@@ -3642,15 +3643,16 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
         "  authors:\n"
         "    - *canonical-author\n"
         "  journal: Active Inference Journal\n"
-        "  doi: 10.5281/zenodo.19699233\n",
+        "  doi: 10.5281/zenodo.23220027\n"
+        "  url: https://doi.org/10.5281/zenodo.23220027\n",
         encoding="utf-8",
     )
     (project_root / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.5.0"\n'
-        '  date: "2026-10-06"\n'
+        '  version: "1.6.0"\n'
+        '  date: "2026-10-07"\n'
         "publication:\n"
-        "  doi: 10.5281/zenodo.19699233\n"
+        "  doi: 10.5281/zenodo.23220027\n"
         "  journal: Active Inference Journal\n"
         "metadata:\n"
         "  license: CC-BY-4.0\n",
@@ -3659,7 +3661,7 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
     (project_root / "pyproject.toml").write_text(
         '[build-system]\nrequires = ["setuptools>=77.0.3"]\n'
         'build-backend = "setuptools.build_meta"\n\n'
-        '[project]\nname = "fixture"\nversion = "1.5.0"\n'
+        '[project]\nname = "fixture"\nversion = "1.6.0"\n'
         'readme = "README.md"\n'
         'authors = [{ name = "Daniel Ari Friedman", email = "daniel@activeinference.institute" }]\n'
         'license = "CC-BY-4.0"\n',
@@ -3673,17 +3675,17 @@ def _write_release_metadata_fixture(project_root: Path) -> None:
             '"Concept DOI" = "https://doi.org/10.5281/zenodo.19699233"\n'
         )
     (project_root / "src/fep_lean/__init__.py").write_text(
-        '__version__ = "1.5.0"\n', encoding="utf-8"
+        '__version__ = "1.6.0"\n', encoding="utf-8"
     )
     (project_root / "config/settings.yaml").write_text(
-        'project:\n  version: "1.5.0"\n', encoding="utf-8"
+        'project:\n  version: "1.6.0"\n', encoding="utf-8"
     )
     (project_root / ".aii/config.yaml").write_text(
         "meta:\n"
-        "  updated: '2026-10-06'\n"
+        "  updated: '2026-10-07'\n"
         "repo:\n"
         "  full_name: ActiveInferenceInstitute/fep_formal\n"
-        "  description: 'Release v1.5.0 (2026-10-06); concept DOI 10.5281/zenodo.19699233'\n"
+        "  description: 'Release v1.6.0 (2026-10-07); concept DOI 10.5281/zenodo.19699233'\n"
         "ecosystem:\n"
         "  links:\n"
         "    github: https://github.com/ActiveInferenceInstitute/fep_formal\n"
@@ -3699,12 +3701,12 @@ def test_release_metadata_rejects_a_stale_institute_sidecar(tmp_path: Path) -> N
     _write_release_metadata_fixture(tmp_path)
     sidecar = tmp_path / ".aii/config.yaml"
     sidecar.write_text(
-        sidecar.read_text(encoding="utf-8").replace("v1.5.0", "v1.0.0"),
+        sidecar.read_text(encoding="utf-8").replace("v1.6.0", "v1.0.0"),
         encoding="utf-8",
     )
 
     assert bundle_module._license_metadata_errors(tmp_path) == (
-        "InstituteOS sidecar description must identify release v1.5.0",
+        "InstituteOS sidecar description must identify release v1.6.0",
     )
 
 
@@ -3790,8 +3792,8 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.5.0"\n'
-        '  date: "2026-10-06"\n'
+        '  version: "1.6.0"\n'
+        '  date: "2026-10-07"\n'
         "publication:\n"
         "  doi: 10.0000/wrong\n"
         "  journal: Active Inference Journal\n"
@@ -3800,15 +3802,15 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     assert bundle_module._license_metadata_errors(tmp_path) == (
-        "manuscript publication DOI must be 10.5281/zenodo.19699233",
+        "manuscript publication DOI must be 10.5281/zenodo.23220027",
     )
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.5.0"\n'
-        '  date: "2026-10-06"\n'
+        '  version: "1.6.0"\n'
+        '  date: "2026-10-07"\n'
         "publication:\n"
-        "  doi: 10.5281/zenodo.19699233\n"
+        "  doi: 10.5281/zenodo.23220027\n"
         "  journal: Other Journal\n"
         "metadata:\n"
         "  license: Apache-2.0\n",
@@ -3821,10 +3823,10 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
     (tmp_path / "manuscript/config.yaml").write_text(
         "paper:\n"
-        '  version: "1.5.0"\n'
-        '  date: "2026-10-06"\n'
+        '  version: "1.6.0"\n'
+        '  date: "2026-10-07"\n'
         "publication:\n"
-        "  doi: 10.5281/zenodo.19699233\n"
+        "  doi: 10.5281/zenodo.23220027\n"
         "  journal: Active Inference Journal\n"
         "metadata:\n"
         "  license: CC-BY-4.0\n",
@@ -3841,19 +3843,19 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
     assert bundle_module._license_metadata_errors(tmp_path) == (
         "Python build system must require setuptools>=77.0.3",
         "Python package license must be CC-BY-4.0",
-        "Python package version must be 1.5.0",
+        "Python package version must be 1.6.0",
     )
 
     _write_release_metadata_fixture(tmp_path)
     citation_path = tmp_path / "CITATION.cff"
     citation_path.write_text(
         citation_path.read_text(encoding="utf-8").replace(
-            "doi: 10.5281/zenodo.19699233", "doi: 10.0000/wrong"
+            "doi: 10.5281/zenodo.23220027", "doi: 10.0000/wrong"
         ),
         encoding="utf-8",
     )
     assert bundle_module._license_metadata_errors(tmp_path) == (
-        "CITATION.cff preferred-citation DOI must be 10.5281/zenodo.19699233",
+        "CITATION.cff preferred-citation DOI must be 10.5281/zenodo.23220027",
     )
 
     _write_release_metadata_fixture(tmp_path)
@@ -3869,49 +3871,178 @@ def test_release_metadata_is_consistent_and_fail_closed(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
+    ("plane", "replacement"),
+    [
+        ("software", None),
+        ("software", "10.5281/zenodo.19699233"),
+        ("software", "10.5281/zenodo.23220027"),
+        ("software", "10.5281/zenodo.23196892"),
+        ("preferred", None),
+        ("preferred", "10.5281/zenodo.19699233"),
+        ("preferred", "10.5281/zenodo.23196891"),
+        ("preferred", "10.5281/zenodo.22072956"),
+        ("preferred_url", None),
+        ("preferred_url", "https://doi.org/10.5281/zenodo.19699233"),
+        ("preferred_url", "https://doi.org/10.5281/zenodo.23196891"),
+        ("preferred_url", "https://doi.org/10.5281/zenodo.22072956"),
+        ("preferred_url", "http://doi.org/10.5281/zenodo.23220027"),
+        ("manuscript", None),
+        ("manuscript", "10.5281/zenodo.19699233"),
+        ("manuscript", "10.5281/zenodo.23196891"),
+        ("manuscript", "10.5281/zenodo.22072956"),
+    ],
+)
+def test_release_metadata_rejects_swapped_or_absent_doi_identity(
+    tmp_path: Path, plane: str, replacement: str | None
+) -> None:
+    _write_release_metadata_fixture(tmp_path)
+    relative = "manuscript/config.yaml" if plane == "manuscript" else "CITATION.cff"
+    path = tmp_path / relative
+    document = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if plane == "software":
+        record, field = document, "doi"
+        error = "CITATION.cff software concept DOI must be 10.5281/zenodo.23196891"
+    elif plane == "manuscript":
+        record, field = document["publication"], "doi"
+        error = "manuscript publication DOI must be 10.5281/zenodo.23220027"
+    else:
+        record = document["preferred-citation"]
+        field = "url" if plane == "preferred_url" else "doi"
+        error = (
+            "CITATION.cff preferred-citation URL must be "
+            "https://doi.org/10.5281/zenodo.23220027"
+            if field == "url"
+            else "CITATION.cff preferred-citation DOI must be 10.5281/zenodo.23220027"
+        )
+    if replacement is None:
+        record.pop(field)
+    else:
+        record[field] = replacement
+    path.write_text(yaml.safe_dump(document, sort_keys=False), encoding="utf-8")
+
+    assert bundle_module._license_metadata_errors(tmp_path) == (error,)
+
+
+@pytest.mark.parametrize(
+    "wrong_version_doi",
+    [
+        "10.5281/zenodo.19699233",
+        "10.5281/zenodo.23196891",
+        "10.5281/zenodo.22072956",
+        "10.5281/zenodo.23220028",
+    ],
+)
+def test_release_metadata_rejects_matching_but_wrong_manuscript_version(
+    tmp_path: Path, wrong_version_doi: str
+) -> None:
+    """Agreement between authored owners cannot replace the fixed release ID."""
+    _write_release_metadata_fixture(tmp_path)
+    citation_path = tmp_path / "CITATION.cff"
+    citation = yaml.safe_load(citation_path.read_text(encoding="utf-8"))
+    citation["preferred-citation"]["doi"] = wrong_version_doi
+    citation["preferred-citation"]["url"] = f"https://doi.org/{wrong_version_doi}"
+    citation_path.write_text(
+        yaml.safe_dump(citation, sort_keys=False), encoding="utf-8"
+    )
+    manuscript_path = tmp_path / "manuscript/config.yaml"
+    manuscript = yaml.safe_load(manuscript_path.read_text(encoding="utf-8"))
+    manuscript["publication"]["doi"] = wrong_version_doi
+    manuscript_path.write_text(
+        yaml.safe_dump(manuscript, sort_keys=False), encoding="utf-8"
+    )
+
+    assert bundle_module._license_metadata_errors(tmp_path) == (
+        "CITATION.cff preferred-citation DOI must be 10.5281/zenodo.23220027",
+        "CITATION.cff preferred-citation URL must be https://doi.org/10.5281/zenodo.23220027",
+        "manuscript publication DOI must be 10.5281/zenodo.23220027",
+    )
+
+
+@pytest.mark.parametrize(
+    ("relative", "old", "new", "expected_error"),
+    [
+        (
+            "LICENSE",
+            "https://doi.org/10.5281/zenodo.19699233",
+            "https://doi.org/10.5281/zenodo.23196891",
+            "LICENSE does not declare DOI 10.5281/zenodo.19699233",
+        ),
+        (
+            "pyproject.toml",
+            '"Concept DOI" = "https://doi.org/10.5281/zenodo.19699233"',
+            '"Concept DOI" = "https://doi.org/10.5281/zenodo.23220027"',
+            "Python package Concept DOI URL must be https://doi.org/10.5281/zenodo.19699233",
+        ),
+        (
+            ".aii/config.yaml",
+            "concept DOI 10.5281/zenodo.19699233",
+            "concept DOI 10.5281/zenodo.23220027",
+            "InstituteOS sidecar description must identify concept DOI 10.5281/zenodo.19699233",
+        ),
+        (
+            ".aii/config.yaml",
+            "    doi: 10.5281/zenodo.19699233",
+            "    doi: 10.5281/zenodo.23220027",
+            "InstituteOS sidecar citation DOI must be 10.5281/zenodo.19699233",
+        ),
+    ],
+)
+def test_release_metadata_retains_each_scholarly_concept_guard(
+    tmp_path: Path, relative: str, old: str, new: str, expected_error: str
+) -> None:
+    _write_release_metadata_fixture(tmp_path)
+    path = tmp_path / relative
+    before = path.read_text(encoding="utf-8")
+    assert before.count(old) == 1
+    path.write_text(before.replace(old, new), encoding="utf-8")
+
+    assert bundle_module._license_metadata_errors(tmp_path) == (expected_error,)
+
+
+@pytest.mark.parametrize(
     ("relative", "old", "new", "expected_error"),
     [
         (
             "CITATION.cff",
-            'version: "1.5.0"',
+            'version: "1.6.0"',
             'version: "1.2.0"',
-            "CITATION.cff version must be 1.5.0",
+            "CITATION.cff version must be 1.6.0",
         ),
         (
             "CITATION.cff",
-            'date-released: "2026-10-06"',
+            'date-released: "2026-10-07"',
             'date-released: "2026-09-16"',
-            "CITATION.cff date-released must be 2026-10-06",
+            "CITATION.cff date-released must be 2026-10-07",
         ),
         (
             "manuscript/config.yaml",
-            'version: "1.5.0"',
+            'version: "1.6.0"',
             'version: "1.2.0"',
-            "manuscript paper version must be 1.5.0",
+            "manuscript paper version must be 1.6.0",
         ),
         (
             "manuscript/config.yaml",
-            'date: "2026-10-06"',
+            'date: "2026-10-07"',
             'date: "2026-09-16"',
-            "manuscript paper date must be 2026-10-06",
+            "manuscript paper date must be 2026-10-07",
         ),
         (
             "pyproject.toml",
-            'version = "1.5.0"',
+            'version = "1.6.0"',
             'version = "1.2.0"',
-            "Python package version must be 1.5.0",
+            "Python package version must be 1.6.0",
         ),
         (
             "src/fep_lean/__init__.py",
-            '__version__ = "1.5.0"',
+            '__version__ = "1.6.0"',
             '__version__ = "1.2.0"',
-            "Python runtime version must be 1.5.0",
+            "Python runtime version must be 1.6.0",
         ),
         (
             "config/settings.yaml",
-            'version: "1.5.0"',
+            'version: "1.6.0"',
             'version: "1.2.0"',
-            "runtime settings version must be 1.5.0",
+            "runtime settings version must be 1.6.0",
         ),
     ],
 )
@@ -3937,12 +4068,12 @@ def test_release_metadata_rejects_each_version_and_date_plane_independently(
         (
             "pyproject.toml",
             'version = "1.2.0"\n',
-            "Python package version must be 1.5.0",
+            "Python package version must be 1.6.0",
         ),
         (
             "src/fep_lean/__init__.py",
             '__version__ = "1.2.0"\n',
-            "Python runtime version must be 1.5.0",
+            "Python runtime version must be 1.6.0",
         ),
     ],
 )
@@ -3957,8 +4088,8 @@ def test_release_metadata_rejects_ambiguous_duplicate_runtime_versions(
     contents = path.read_text(encoding="utf-8")
     if relative == "pyproject.toml":
         contents = contents.replace(
-            'version = "1.5.0"\n',
-            'version = "1.5.0"\n' + duplicate,
+            'version = "1.6.0"\n',
+            'version = "1.6.0"\n' + duplicate,
             1,
         )
     else:

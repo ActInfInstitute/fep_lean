@@ -63,6 +63,7 @@ def test_real_catalogue_writes_only_the_private_project(
     } == {
         "specs/geo-infer-notation-bridge/check_geo_notation_bridge.py",
         "specs/gnn-bridge-q6-activeinference-artifact/skeleton/canonical_bool_runner.jl.in",
+        "specs/openai-math-methods/positioning.yaml",
     }
     variables = catalogue_project / "manuscript/manuscript_vars.yaml"
     appendix = catalogue_project / "manuscript/09z_unified_formalism_catalogue.md"

@@ -108,3 +108,16 @@ The following notation is used throughout this paper:
 | $Q = -Q^\top$ | Skew-symmetric (solenoidal) matrix | [@sec:the_theoretical_landscape], [@eq:eq_25] |
 | $F, U, T, S$ | Helmholtz free energy, internal energy, temperature, entropy | [@sec:thermodynamics_results] |
 : Notation used throughout the paper, with the section in which each symbol is first used.
+
+## Mathematical location and transfer {#sec:intro_mathematical_location}
+
+The mathematical supplement (Section @sec:math_positioning_supplement) asks where these
+results sit within probability, topology, information geometry, statistics,
+control and thermodynamics. Its unit of comparison is a typed result contract:
+carrier, hypotheses, invariant, qualified witness, boundary and evidence.
+A pinned research corpus [@openaiMath2026] supplies a useful result-family
+presentation, while each association remains accountable to the maintained
+FEP sources. The portable methods and visual explorer support that analysis
+from the installed package as well as a checkout. The aim is to identify
+which mathematical transfers commute, which require new assumptions, and
+which fail through explicit countermodels.

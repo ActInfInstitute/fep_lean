@@ -1,0 +1,587 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/openai/math",
+  "commit": "adc7f1241b42e322a6451854ab7e4b4c146bf78a",
+  "reviewed_on": "2026-10-07",
+  "integration": "pinned-reference-corpus",
+  "license": "Apache-2.0",
+  "evidence": "Reviewed metadata, formal scope, selected challenge statements, twelve exact result statements, manuscript records, and substantive TeX slices; no upstream solution build, Comparator execution, or scientific endorsement.",
+  "upstream_toolchain": "leanprover/lean4:v4.34.1",
+  "upstream_mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "reviewed_files": [
+    {
+      "path": "CONTENTS.md",
+      "bytes": 640371,
+      "sha256": "c492802b53fb4c4161e45fc678bb67bd526add72ca2635493a367ff7fb860bf9",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/CONTENTS.md",
+      "git_blob_sha1": "8148d2c9077e611d5665a2ded93da68e5b608f0f"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/LICENSE",
+      "git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4131,
+      "sha256": "af984f110f6583ba57ec1af907dc989bfce86713161e9c8b0543b052a138ff64",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/README.md",
+      "git_blob_sha1": "8ac0cb7dbf1f38ad3b7480310d4e1d9482f0cfe8"
+    },
+    {
+      "path": "lean/ComparatorChallenges/BiholderTransport.json",
+      "bytes": 344,
+      "sha256": "7c9eb6cfa8ef73414fd72772596c4289850e13af37fe0d2204e9823af97737f8",
+      "git_blob_sha1": "4d4bbcf0c97812a0cb50dd71c577ae69e7ca4f66",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/BiholderTransport.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/BiholderTransport.lean",
+      "bytes": 5413,
+      "sha256": "0a01595c5b2289901b195b6a358e5c463146d6e1f3a106250139672bed2ff20e",
+      "git_blob_sha1": "4f16cf778cb4550c5e0eba3d05c425b09248dcfc",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/BiholderTransport.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/Brenier.json",
+      "bytes": 799,
+      "sha256": "e1dad7691ebf7ce32c1f09d852983ec3826c3f8c1f3663d436ff99c2b1674e66",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/Brenier.json",
+      "git_blob_sha1": "0e920f1bd63fc3cad52e9fac2fd00f93bd867371"
+    },
+    {
+      "path": "lean/ComparatorChallenges/Brenier.lean",
+      "bytes": 4824,
+      "sha256": "f8ab00911bc6b6716cc47acdde3e40044d99b5c826abc9aa31d00536c2c9b7bb",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/Brenier.lean",
+      "git_blob_sha1": "73aa94c7226db7e0548459fe11eec424c62def7f"
+    },
+    {
+      "path": "lean/ComparatorChallenges/DilutedSpin.json",
+      "bytes": 322,
+      "sha256": "9e5e391833d235b09e34d4d097126710f1d135bed388b68f550bc211cb75967b",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/DilutedSpin.json",
+      "git_blob_sha1": "dc683f0caa3960ec34ab13c4b5543061583321af"
+    },
+    {
+      "path": "lean/ComparatorChallenges/DilutedSpin.lean",
+      "bytes": 6860,
+      "sha256": "457945ece56d8e51a5995d6cf6d44af979f0c5339adf7ea09abdbdf01473f6cf",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/DilutedSpin.lean",
+      "git_blob_sha1": "d6df4eb9c837e9083c15159cd0a74947f47f759e"
+    },
+    {
+      "path": "lean/ComparatorChallenges/GaussianInformation.json",
+      "bytes": 503,
+      "sha256": "17b5676ee836c6a024a3977fcd5be63e02e6d6011d947d648802e62bee270673",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/GaussianInformation.json",
+      "git_blob_sha1": "60f6184ef6127936263d6c7bc432be754e03a190"
+    },
+    {
+      "path": "lean/ComparatorChallenges/GaussianInformation.lean",
+      "bytes": 9784,
+      "sha256": "6d80b75a8ee9c38df55a93bd9802075d3ec2280bee6a6b706683db733496a843",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/GaussianInformation.lean",
+      "git_blob_sha1": "13a121157428c9655083cb192d78cfc503e2174a"
+    },
+    {
+      "path": "lean/ComparatorChallenges/IsingFiniteness.json",
+      "bytes": 368,
+      "sha256": "05055be2dfa31146c772ef39d632f01f5f0c2df5eec3eeb78b1dba0224121617",
+      "git_blob_sha1": "e92b742c2f00e0287193aedd9f31457706ed6f8c",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/IsingFiniteness.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/IsingFiniteness.lean",
+      "bytes": 2934,
+      "sha256": "dd2c0c85d60f2fcc732b9e15203a0db8c2d019bacde1dd1efbc2cebb79d908ca",
+      "git_blob_sha1": "0374f095bb59fa18877420d08d5696c2c9cb256a",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/IsingFiniteness.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/LogConcaveQuery.json",
+      "bytes": 331,
+      "sha256": "5a0e43007406bf58e647ffa64a7aa89ec8c37c68535ad6193723ccf0aa6620e7",
+      "git_blob_sha1": "9a80391ad8226fdbdfd6db1ebca617821b571a2a",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/LogConcaveQuery.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/LogConcaveQuery.lean",
+      "bytes": 3733,
+      "sha256": "e35be4c9d8352ba082385717f8209296b6ddf264fbe03228df4daee47f7aedf2",
+      "git_blob_sha1": "bb5e705b7f6a62aee93a071473d7a06d9dc735d3",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/LogConcaveQuery.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/MarkovType.json",
+      "bytes": 357,
+      "sha256": "74bc3d73b1cc70fd9f5a41cca42da521fb217f775d722b176d6ebb130382306f",
+      "git_blob_sha1": "35f10fca9eafdab3c99979464ceed4b964325a6c",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/MarkovType.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/MarkovType.lean",
+      "bytes": 2314,
+      "sha256": "c5be3acd0f01b53f937fe769eda54257f2f93f5aa2b6e9ea31ad93c450d4aba3",
+      "git_blob_sha1": "5fcf3818f09073764b6be28ecaf25acb2a432d30",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/MarkovType.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/PerceptronFreeEnergy.json",
+      "bytes": 334,
+      "sha256": "f655696e1e162ca6207fa08575b34b911c4b2db5213f47f73e6ad78d5f5c27b9",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/PerceptronFreeEnergy.json",
+      "git_blob_sha1": "c25886ed2ea74a10813757dc99d38f03cc8a301d"
+    },
+    {
+      "path": "lean/ComparatorChallenges/PerceptronFreeEnergy.lean",
+      "bytes": 4297,
+      "sha256": "4760bb816d0b9c2e94c747dc3b4fe404f00a0a35671befe6bc11eecd1d72ca60",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/PerceptronFreeEnergy.lean",
+      "git_blob_sha1": "408c1b65ee5ce32896101e6892cfae34b0e50596"
+    },
+    {
+      "path": "lean/ComparatorChallenges/PosteriorReplicas.json",
+      "bytes": 333,
+      "sha256": "aa8e4892d4f48c971b6caa742d4362a572fae3ab72bc8fe13a6359424965ff93",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/PosteriorReplicas.json",
+      "git_blob_sha1": "c665eebab98f3fe87917c1c462cf1718c14f6463"
+    },
+    {
+      "path": "lean/ComparatorChallenges/PosteriorReplicas.lean",
+      "bytes": 19025,
+      "sha256": "4738f722c6294eae589ecd91c1132f3862154c97bcaea7090bed792e98375dcc",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/PosteriorReplicas.lean",
+      "git_blob_sha1": "be840922beb1feff22f51fa3d0c5b1d21f2f2211"
+    },
+    {
+      "path": "lean/ComparatorChallenges/README.md",
+      "bytes": 287,
+      "sha256": "051459a45da1bedd1c0a6585a5b5e5425c7c40a369f2922d7b519e2fd02333b0",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/README.md",
+      "git_blob_sha1": "c1ac131559880e759c28caf79905ba4fe6194eb7"
+    },
+    {
+      "path": "lean/ComparatorChallenges/Rokhlin.json",
+      "bytes": 440,
+      "sha256": "a0421a77acd1ebe5a01865b0aed6c19fcb35cd6fd0c5a8d5614e9c7ec1e723a9",
+      "git_blob_sha1": "0d34e548f8a0b4a10082fd4702221c770db40163",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/Rokhlin.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/Rokhlin.lean",
+      "bytes": 1190,
+      "sha256": "f1cb24d9b04f86273fd9895eef73da12dcda912a6c9e1fb90956ed6af2a8383d",
+      "git_blob_sha1": "39cd6de52ff29c3dc4b799925f43d9d6005e565a",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/Rokhlin.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SelfSimilar.json",
+      "bytes": 337,
+      "sha256": "5352e95649d1dd075b7a7951db9bf72c85dbbe386c258f655ed1c01365490d61",
+      "git_blob_sha1": "0588dba1e6de59a9f7f92a1f2801b4c4f3ef46f8",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SelfSimilar.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SelfSimilar.lean",
+      "bytes": 2253,
+      "sha256": "95798462a1dfc33be8d3e67efc137b6193d9800776beb2fe6b3a27912fecb18d",
+      "git_blob_sha1": "36631fae29445952b191f98801e772aab83dcc64",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SelfSimilar.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SwitchChain.json",
+      "bytes": 406,
+      "sha256": "be54c6cb351e52a09d39c96b5929cf4f79547253d376b941f20fc10f65696d99",
+      "git_blob_sha1": "67753efda0a4d807a0aa2c0caf9fbcfa7e869055",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SwitchChain.json"
+    },
+    {
+      "path": "lean/ComparatorChallenges/SwitchChain.lean",
+      "bytes": 5706,
+      "sha256": "b138abf5c2f30bf7124064f3b9c1464ff9110ca4647e6a2f1117b131f636e18e",
+      "git_blob_sha1": "3a275cf5c0cccff2921b091799299cd7795c1d2f",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/SwitchChain.lean"
+    },
+    {
+      "path": "lean/ComparatorChallenges/WeakMTWGlobalSupport.json",
+      "bytes": 337,
+      "sha256": "deb8a523598d086b146fe7908bfa641c4654f9f1c20e58b84036b1e4ee334385",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/WeakMTWGlobalSupport.json",
+      "git_blob_sha1": "f0a8b93d8fe8975109bcf8626807998f7e488d5c"
+    },
+    {
+      "path": "lean/ComparatorChallenges/WeakMTWGlobalSupport.lean",
+      "bytes": 2699,
+      "sha256": "7cb7b3cb07bfd7a6ba8f2e289dcf95e7dc7b722a6b2f679a47ecec0da7e34f35",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/ComparatorChallenges/WeakMTWGlobalSupport.lean",
+      "git_blob_sha1": "74d786cf47e5ef9ab6d23491aa47ef9c3132420a"
+    },
+    {
+      "path": "lean/README.md",
+      "bytes": 650,
+      "sha256": "292ff9d539f494158dfbf68d989ba85a82782a4343b2fe43088f8fa62525bf1b",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/README.md",
+      "git_blob_sha1": "f1ab618366051a4b3683b14ed2a0ac4bb7c620fb"
+    },
+    {
+      "path": "lean/docs/131.md",
+      "bytes": 1176,
+      "sha256": "95890a0433c375da400f600f581f1eb352416bc25f720c3483767022ce3fba4c",
+      "git_blob_sha1": "c8f733a08e4536d0184873086ee4fbaa9e077690",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/131.md"
+    },
+    {
+      "path": "lean/docs/139.md",
+      "bytes": 1123,
+      "sha256": "01a80d3457fd2b8abf1a013c484a14dd7b52f4585a759f5aef3cfc9849d6ce27",
+      "git_blob_sha1": "323bb69fdd61aaa00418330c794a19f6b2efc368",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/139.md"
+    },
+    {
+      "path": "lean/docs/140.md",
+      "bytes": 7886,
+      "sha256": "71f6b45431c698c92960574de306b727271ea53b7b9e6b6a099d22f5a2336dd3",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/140.md",
+      "git_blob_sha1": "dbabe31e00bf52ef24a4633980ff3794fb1e8127"
+    },
+    {
+      "path": "lean/docs/145.md",
+      "bytes": 887,
+      "sha256": "ea72c0ad0646b0b425402ab4a0ccaa7f4aab5df3c1e0c71101f3ae5411fe04d9",
+      "git_blob_sha1": "0efa05919ab9774c50264fef71e4cc3077c069db",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/145.md"
+    },
+    {
+      "path": "lean/docs/148.md",
+      "bytes": 1453,
+      "sha256": "340f3919c849c2485886b3df087cbb840cc770408f84c3fbbad7a4a0de898e60",
+      "git_blob_sha1": "f40e1f2a9ee44fda0b9e2725c5f57703d81471e0",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/148.md"
+    },
+    {
+      "path": "lean/docs/221.md",
+      "bytes": 987,
+      "sha256": "e814a7bb867d610dde4e7d6061365e4c302be5d4e06ff63d00a9a39c6954c5f9",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/221.md",
+      "git_blob_sha1": "860fb28fe29f84d0f802c55fc979d9c92732c8a1"
+    },
+    {
+      "path": "lean/docs/222.md",
+      "bytes": 2127,
+      "sha256": "3edd641684ef6c65973f830ea2a31d9d33aae077c73a2c60d3e93a527449fc98",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/222.md",
+      "git_blob_sha1": "e5e3b913b789e243430257f54d9e9c5f6378e1b8"
+    },
+    {
+      "path": "lean/docs/327.md",
+      "bytes": 1031,
+      "sha256": "6e7aa05cf96fadd65581ba74de37c1a78b975a57431729313dbb03e931327948",
+      "git_blob_sha1": "033c3ae17bbdf9b25bceb39924bc3fc9497d8cec",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/327.md"
+    },
+    {
+      "path": "lean/docs/360.md",
+      "bytes": 1927,
+      "sha256": "36af7a15e7d017d426bf0b9b6468f43d18dc417ffa0715d39bd515472d8423c5",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/360.md",
+      "git_blob_sha1": "df390e9b0413040cf5c95de9adb559e1d21f5a43"
+    },
+    {
+      "path": "lean/docs/374.md",
+      "bytes": 1138,
+      "sha256": "db319fc02b2a12ef2e60b7322c24b50f1ff41c16366da563da9dc9b3f11d0fa5",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/docs/374.md",
+      "git_blob_sha1": "b7babfc1abbf1b258182e7eab91fbdbe469cdb2f"
+    },
+    {
+      "path": "lean/formalization.yaml",
+      "bytes": 73925,
+      "sha256": "2dcbd0d6e6a22475f53d49bfdfcac9b6d2b470653c332a9f56522f5be166edb9",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/formalization.yaml",
+      "git_blob_sha1": "e0584d4993df01ec08233ab344ebc1b1039bf7f7"
+    },
+    {
+      "path": "lean/lake-manifest.json",
+      "bytes": 14622,
+      "sha256": "cf6105a25d9dca2f166b241d9191bd12c7e13305890dc9c4d0952351cccc0794",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/lake-manifest.json",
+      "git_blob_sha1": "67d01d2717d0aaff59fb8814bb53581b961f42b4"
+    },
+    {
+      "path": "lean/lakefile.lean",
+      "bytes": 15457,
+      "sha256": "4cca977ebece444b6c999d99755c1ad3c93119bafc127ea761f7f703c7279e74",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/lakefile.lean",
+      "git_blob_sha1": "66c3867331c7c607ffc0e60955cc86cccf046e12"
+    },
+    {
+      "path": "lean/lean-toolchain",
+      "bytes": 25,
+      "sha256": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/lean-toolchain",
+      "git_blob_sha1": "ba8ebf2dbaf6a668cd2a0e086186d6d569b69ff5"
+    },
+    {
+      "path": "lean/patches/README.md",
+      "bytes": 211,
+      "sha256": "6d2020cdb49a99331391ea3331bd817a8b31fad33e5be4555247c9f1194542e2",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/patches/README.md",
+      "git_blob_sha1": "7e5d730ab22d51c12aaf8a94ff143ebd63d903cb"
+    },
+    {
+      "path": "overview.tex",
+      "bytes": 322922,
+      "sha256": "98533a7bc976f44970153f036320932655d07488382e858c25bb6c9e1e029789",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/overview.tex",
+      "git_blob_sha1": "fc40ebdcd0fb9db026a2e44bde66f2e469939fd4"
+    },
+    {
+      "path": "preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/README.md",
+      "bytes": 780,
+      "sha256": "7f5adb927bfae3d0f2b1e4579c96a6eb007bf81d2182fb5c506245f36b4e9684",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/README.md",
+      "git_blob_sha1": "0af0bf6e5a2fcc92d9a1ec5a6678c3a66a787458"
+    },
+    {
+      "path": "preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/build/sections/01-introduction.tex",
+      "bytes": 12203,
+      "sha256": "6b737533c3be85eed78ccee2cc3503eb812ac746cac2a55147cb5d4f0b4324f4",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/build/sections/01-introduction.tex",
+      "git_blob_sha1": "17e26d7f6710d986241c1d65d4daae1b6caff506"
+    },
+    {
+      "path": "preprints/Global-Support-and-Convex-Injectivity-Domains-under-Weak-MTW-September-25-2026/README.md",
+      "bytes": 686,
+      "sha256": "40d2d0dd11252f25c3a2ae7865ea4f0bb8fb24dc57768f4a7069c633b1091cc5",
+      "git_blob_sha1": "79796e6daf03d7445040fed8d9ee074dbb733655",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Global-Support-and-Convex-Injectivity-Domains-under-Weak-MTW-September-25-2026/README.md"
+    },
+    {
+      "path": "preprints/Global-Support-and-Convex-Injectivity-Domains-under-Weak-MTW-September-25-2026/build/sections/introduction.tex",
+      "bytes": 10322,
+      "sha256": "1fa8b606b6c774c399a05dbe56f804fc08d193b771735e7b2f71a031137bd5b7",
+      "git_blob_sha1": "a17608323207e26c589bb4ed1f7b62f561d02dcd",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Global-Support-and-Convex-Injectivity-Domains-under-Weak-MTW-September-25-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/Memory-and-precision-in-noiseless-Gaussian-regression-September-27-2026/README.md",
+      "bytes": 605,
+      "sha256": "91e6c5617a782769dd0bf315a806c5ca831ad7c5846b73547751a6c68618ba3d",
+      "git_blob_sha1": "9187ac7f2c16ab6ec9dadaad8375822fd14a587d",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Memory-and-precision-in-noiseless-Gaussian-regression-September-27-2026/README.md"
+    },
+    {
+      "path": "preprints/Memory-and-precision-in-noiseless-Gaussian-regression-September-27-2026/build/sections/introduction.tex",
+      "bytes": 14856,
+      "sha256": "9c69b335be7fabf970dd4854a767cebdaec1d4447427c10047a95ad2f4daa26e",
+      "git_blob_sha1": "b1de3135e58287519b2a3df7a3d9eaa33796e291",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Memory-and-precision-in-noiseless-Gaussian-regression-September-27-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/README.md",
+      "bytes": 532,
+      "sha256": "8b64d6e519795daabeb788ce81aa36574e8087da41f8252b9d8de62c63bc7316",
+      "git_blob_sha1": "b8686f32293013ca783f24b9784aec2d489ebdef",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/README.md"
+    },
+    {
+      "path": "preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/build/main.tex",
+      "bytes": 23932,
+      "sha256": "656a6f35bf6543ecf0cf2dbc38a83a7a05427592123a5eb817be24250e2e6953",
+      "git_blob_sha1": "8f318a3dbffdcc67cec2f9f7590abf4c52b1cd79",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/build/main.tex"
+    },
+    {
+      "path": "preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/README.md",
+      "bytes": 590,
+      "sha256": "6cc3369244a9324d53603131eb4a50eb10f95a2f1c56197c70765910cfbb5db6",
+      "git_blob_sha1": "30611bfb3ae19293c50ade5f410ff4b9d31a49f5",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/README.md"
+    },
+    {
+      "path": "preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/build/main.tex",
+      "bytes": 42458,
+      "sha256": "967be1ac13fe35f0a0dc48063d8bc9dc447163a3aaa86c793f924eef0b0c8ed4",
+      "git_blob_sha1": "df4cfa0fea06a86194ccfa1abebede441b3aa9a8",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/build/main.tex"
+    },
+    {
+      "path": "preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/README.md",
+      "bytes": 723,
+      "sha256": "c843b6e9097e56738b273acf3b5685dc91851eb793ff914ad666e42d77e5f19a",
+      "git_blob_sha1": "56d52f6c788c2b0535f385be604b5df836a74576",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/README.md"
+    },
+    {
+      "path": "preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/build/sections/introduction.tex",
+      "bytes": 9633,
+      "sha256": "7c4684d2d3b698bf2be17088c17575e72a4588faf667bd71e2743430911a106f",
+      "git_blob_sha1": "0c0a8931f8b8873373a76be6bf1f07b26278b260",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/README.md",
+      "bytes": 685,
+      "sha256": "236166b3796cb4260121412accb3447da065e52f3f497c1772a32835af3e2856",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/README.md",
+      "git_blob_sha1": "fc387532002be4d4b98e0d46e374d9cbbfc5462e"
+    },
+    {
+      "path": "preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/00-introduction.tex",
+      "bytes": 12842,
+      "sha256": "b892d5e4eb9498a44f3838c5dff684c91b9c5f509d26c4ac70959bbbe5c57d5d",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/00-introduction.tex",
+      "git_blob_sha1": "45ed0fbb65dddb2e9ffc72ac31e629bb54532917"
+    },
+    {
+      "path": "preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/01-model-endpoint.tex",
+      "bytes": 21293,
+      "sha256": "f4513a7e4f6e095ca0f592f29412b57dca0450915461e7dca9148398d3ab17c6",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/01-model-endpoint.tex",
+      "git_blob_sha1": "3bf5cd5d8ac7ff820f96bb1fea9b3a8334cb90b9"
+    },
+    {
+      "path": "preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/02-replicas.tex",
+      "bytes": 25164,
+      "sha256": "d5e45f55fba0d66b9553e1e1ff7232599ae319c8dac0bca4fbc9463312437d1c",
+      "git_blob_sha1": "bdf1d0622043655e31d47f1dcf28a7580b056871",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/02-replicas.tex"
+    },
+    {
+      "path": "preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/README.md",
+      "bytes": 663,
+      "sha256": "e302007f4899866a922f5d5acab6658b84f514a07e9ac74a97bbafd9294ec102",
+      "git_blob_sha1": "e8ee5317e0d0bf0ad74646095cabf207a86f174d",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/README.md"
+    },
+    {
+      "path": "preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/build/sections/01-introduction.tex",
+      "bytes": 10779,
+      "sha256": "88914bccc2fac68b930898a6a5587287ad07d0be7fbec9423931f8f71ddea35a",
+      "git_blob_sha1": "49fd4d05cdb48edec0d6e09f4044fe01e340c2a4",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/build/sections/01-introduction.tex"
+    },
+    {
+      "path": "preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/README.md",
+      "bytes": 548,
+      "sha256": "6a9edf8accb9bc366d580abee0a219b08345832199b9be3e8e9722e93d9e30fd",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/README.md",
+      "git_blob_sha1": "575cccc262d3d9c9e7a87df235884857a1620f79"
+    },
+    {
+      "path": "preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/introduction.tex",
+      "bytes": 8775,
+      "sha256": "73d98e5f63dc7d89b91ccb5f47737458a84a463288651ca83ae02f930c9c8b60",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/introduction.tex",
+      "git_blob_sha1": "a3f79cd0ba261e054ad3ebb0a5641453788f20ef"
+    },
+    {
+      "path": "preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/README.md",
+      "bytes": 725,
+      "sha256": "8033d0538131895069c3b9203f94325d16038244a9ccb0efc1c1671f4ae0c2e5",
+      "git_blob_sha1": "607834ad3b6946c5bf115996155e57471278cf79",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/README.md"
+    },
+    {
+      "path": "preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/build/sections/introduction.tex",
+      "bytes": 12969,
+      "sha256": "b163dbf1f56f109ac7aad2e4efc4bab5294053b0f714723558ba826c40164ba2",
+      "git_blob_sha1": "76bc5525bbd3aa6164b1e8072059ced09acbc595",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/README.md",
+      "bytes": 618,
+      "sha256": "cfb2eda868e864d9dcb118d0843d0155556b53fb9abf68b15b20e99f74148353",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/README.md",
+      "git_blob_sha1": "7e1480f3a0c31307f10508bae21f54f32099a8ee"
+    },
+    {
+      "path": "preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/introduction.tex",
+      "bytes": 5006,
+      "sha256": "d53e28ef3828a25bde66376f23ee77e0e742ffd4a5c494b36910c8755089b711",
+      "git_blob_sha1": "52efcd212374904620add195bc0041cb1269e70f",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/model.tex",
+      "bytes": 6091,
+      "sha256": "8794914e5e7dbe802de6ee006c5e398bdae2790be27898054e5ac4c20ec18487",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/model.tex",
+      "git_blob_sha1": "a0d5325a387006b0aa5932904550c626b168593b"
+    },
+    {
+      "path": "preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/overview.tex",
+      "bytes": 2777,
+      "sha256": "ca028efcbd8db3527e7a30459749763ba02e285260654ccbbdff36eaf4acf74e",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/overview.tex",
+      "git_blob_sha1": "e79a5a16a0c6f064960f1b0338c0935bbbf49cc2"
+    },
+    {
+      "path": "preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/README.md",
+      "bytes": 718,
+      "sha256": "d4c00a7ac0c026874a3bd0f8d21b161f1df473bf43214bb69db05f662a702553",
+      "git_blob_sha1": "daf290290fb8448d74b859d4174115daa597dfb2",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/README.md"
+    },
+    {
+      "path": "preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/build/sections/introduction.tex",
+      "bytes": 13264,
+      "sha256": "c2c501b0e3199a6b3b53a35699a3ecb6a4d3b7035791d4c2639cd36d0d0533e0",
+      "git_blob_sha1": "392257edeafda857eefdd7bafc2cffcbefcf511b",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/The-free-energy-of-the-Ising-random-perceptron-September-24-2026/README.md",
+      "bytes": 708,
+      "sha256": "a4b6efc1bd059f774e9c5331c5da5a5c4a668758cb3c21bf4371b8499b7b4de6",
+      "git_blob_sha1": "0480c24fde70aacbee6971264a74b4e1701f878b",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-Ising-random-perceptron-September-24-2026/README.md"
+    },
+    {
+      "path": "preprints/The-free-energy-of-the-Ising-random-perceptron-September-24-2026/build/sections/introduction.tex",
+      "bytes": 11242,
+      "sha256": "dfd93447c28f8d5dfb1358d0d3e181faeb621669f5df44ca479ad61e57432a01",
+      "git_blob_sha1": "bc127d191b3022575aed2281c7800115761ffc43",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-Ising-random-perceptron-September-24-2026/build/sections/introduction.tex"
+    },
+    {
+      "path": "preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/README.md",
+      "bytes": 736,
+      "sha256": "94d41998e4a6d144e9588f1a8fa9bcef2f8f1351302a1132aae6dafd6080e220",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/README.md",
+      "git_blob_sha1": "aedf62115be3b9c19216ae9a0dfa944f9b4221f3"
+    },
+    {
+      "path": "preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/figures/proof-map.tex",
+      "bytes": 1127,
+      "sha256": "3cebe16419ee8ebea0eac3924c7e442032446257dc1550a9c46fa6c067ca227f",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/figures/proof-map.tex",
+      "git_blob_sha1": "f52187b75203cb82f78586c5eb7f5fcf2af5758f"
+    },
+    {
+      "path": "preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/paper.tex",
+      "bytes": 95875,
+      "sha256": "468da5cd5b5c74d92611a7e776a559a13a70359e3c6dbc22f7637d6bc381db6c",
+      "git_blob_sha1": "c11ae02520dc29940bc41028e1ff12f142b044af",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/paper.tex"
+    },
+    {
+      "path": "preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/README.md",
+      "bytes": 596,
+      "sha256": "be5b5729e1cf814ccc6c0898ca43ff5356c2aaa80c00da72b213cf66cef733cb",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/README.md",
+      "git_blob_sha1": "1e10af54f497a849912a2de274f93cba3165e272"
+    },
+    {
+      "path": "preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/build/sections/introduction.tex",
+      "bytes": 10033,
+      "sha256": "08e697324bf067dcc76fc938bb123919080b245e591ab40142c9bc9a3b6681b6",
+      "url": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/build/sections/introduction.tex",
+      "git_blob_sha1": "9ebc2e11c10436dfeae06025ebc5ecf9121f97aa"
+    }
+  ]
+}

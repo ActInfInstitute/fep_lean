@@ -1,6 +1,6 @@
 # Lean workspace — FEP Sketches
 
-**Version**: v1.5.0 | **Status**: Active | **Last Updated**: October 2026
+**Version**: v1.6.0 | **Status**: Active | **Last Updated**: October 2026
 
 Lake package with full **Mathlib4 v4.34.1** dependency (see `lakefile.lean` / `lake-manifest.json`).
 

@@ -109,6 +109,11 @@ uv run python scripts/build_formalism_coverage.py --check
 uv run python scripts/_maint_build_lean_landscape.py --check
 uv run python scripts/build_formalism_atlas.py --check
 uv run python scripts/build_formal_kernel_dashboard.py --check
+uv run python specs/openai-math-methods/generate_package_methods.py --check
+uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
+uv run pytest specs/openai-math-methods/test_methods.py \
+  specs/openai-math-methods/test_upstream.py \
+  specs/openai-math-methods/test_visualization.py -q --no-cov
 uv run python scripts/audit_formalisms.py \
   --receipt output/formalism-audit.json
 uv run python docs/theorem_ref_audit.py

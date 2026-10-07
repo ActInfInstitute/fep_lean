@@ -1,0 +1,1240 @@
+# Authored interpretive taxonomy, reviewed against canonical invariants and bodies.
+# Domains are overlapping research coordinates, never theorem dependencies.
+schema_version: 1
+domains:
+  algebra: finite sums, matrices, identities, and algebraic constructions
+  analysis: real differentiation, integration, inequalities, and limits
+  topology: compactness, closed feasible carriers, continuity, and weak convergence
+  probability: normalized laws, kernels, independence, and stochastic evolution
+  measure-theory: sigma-algebras, native measures, disintegration, and integration
+  information-theory: entropy, relative entropy, information, and coding bounds
+  statistics: estimation, scoring rules, concentration, and model evidence
+  optimization: variational bounds, minimization, descent, and projection
+  control: finite planning, feedback, decision rules, and policy recursion
+  dynamical-systems: iterates, semigroups, stationarity, and convergence
+  differential-geometry: Fisher pairings, coordinate pullbacks, and dual coordinates
+  graph-theory: finite causal ordering, node divergence, and edge currents
+  causal-inference: authored intervention mechanisms and conditional factorization
+  thermodynamics: entropy-production and free-energy identities on explicit carriers
+families:
+  - family: core-free-energy
+    domains: [analysis, topology, probability, measure-theory, information-theory, optimization, dynamical-systems]
+    carriers: [native measures and ENNReal KL, measurable maps, scalar real quadratics, finite policy weights]
+    scale: [finite horizon, general measurable state, exact scalar continuous state]
+    topology: Measurability alone supplies no topology; scalar contraction and Gaussian integration have their explicit real topology.
+    embedding: Posterior equality is equality of measures; scalar quadratics are local models rather than embeddings of arbitrary generative models.
+    statistics: Variational bounds constrain recognition laws; they do not identify the empirical data-generating mechanism.
+    limits: Objective descent and a fixed point do not identify an FEP agent or establish empirical adequacy.
+  - family: core-active-inference
+    domains: [algebra, probability, measure-theory, information-theory, optimization, control]
+    carriers: [finite policy supports and matrices, ENNReal costs, native Markov posterior kernels]
+    scale: [finite horizon and support, general measurable posterior kernels]
+    topology: Finite policy minimization needs no smooth manifold; kernel normalization needs the stated measurable structure.
+    embedding: Reachable laws are a policy-map image; no injective policy coordinate or identifiable inverse is implied.
+    statistics: Posterior reconstruction and information gain are carrier-specific; EFE sign depends on its real or truncating ENNReal convention.
+    limits: Finite argmin, softmax, and filtering do not establish general POMDP optimality or a full perception-action loop.
+  - family: core-bayesian-mechanics
+    domains: [algebra, analysis, probability, measure-theory, statistics, dynamical-systems]
+    carriers: [finite four-block partition, native measure kernels, Boolean sampling laws, real Gaussian law]
+    scale: [finite and measurable carriers, discrete-time two-state relaxation, scalar Gaussian continuous state]
+    topology: A partition has set structure; sigma-algebra independence is distinct from geometric separation; Gaussian parameters have real topology.
+    embedding: A 20-state assignment partitions states but does not learn a blanket; posterior kernels reconstruct a measure joint.
+    statistics: Bernoulli sufficiency, conjugate closure, smoothing, and Brier properness retain normalization and evidence premises.
+    limits: A named block, a stationary law, and a physical Markov blanket require different additional arguments.
+  - family: core-information-geometry
+    domains: [algebra, analysis, probability, measure-theory, information-theory, differential-geometry, optimization]
+    carriers: [finite weighted tangent coordinates, Bernoulli unit interval, native ENNReal measure KL, scalar quadratic Bregman]
+    scale: [finite coordinates, one-dimensional statistical family, general measures]
+    topology: Bernoulli Fisher is regular on the open interval; its coordinate distance extends to the closed interval without regular endpoint Fisher information.
+    embedding: The Fisher-Rao coordinate pulls back a Euclidean metric; Hellinger and KL are distinct constructions with distinct domains.
+    statistics: fep-004 supplies weights; fep-038 derives the Bernoulli weight and needs interior probabilities.
+    limits: Positive semidefiniteness is weaker than a nondegenerate Riemannian metric and provides no curvature theorem.
+  - family: core-thermodynamics
+    domains: [algebra, analysis, probability, information-theory, optimization, dynamical-systems, thermodynamics]
+    carriers: [scalar Helmholtz differential, finite Gibbs laws, two-state chains, finite edge fluxes, logical bit reset]
+    scale: [finite states, scalar temperature response, discrete-time relaxation]
+    topology: Entropy differentiation uses positive real parameters; graph current cancellation is algebraic rather than continuum divergence theory.
+    embedding: Thermodynamic free energy and variational free energy need an explicit energy map, units, and scaling to be identified.
+    statistics: Maximum entropy and Gibbs normalization are distributional results; correlation-response is exact for the maintained two-state carrier.
+    limits: Landauer bounds retain total-entropy, temperature, heat, and work assumptions; compiled inequalities do not certify a physical erasure device.
+  - family: measure-bayesian-inversion
+    domains: [probability, measure-theory, statistics]
+    carriers: [native finite measures, Markov kernels, Radon-Nikodym derivatives, standard-Borel conditional kernels]
+    scale: [general measurable carriers under declared regularity, positive finite evidence atoms]
+    topology: Standard-Borel regularity supports conditional-kernel constructions; it does not supply a manifold metric or arbitrary conditioning at null events.
+    embedding: Bayesian inversion reconstructs joint measures, with almost-everywhere equivalence distinct from pointwise uniqueness.
+    statistics: Posterior tilting and expectation towers describe exact model laws, not consistency or model identification from data.
+    limits: Absolute continuity, finite measures, evidence positivity, and almost-everywhere qualifications cannot be removed.
+  - family: variational-duality-and-information-bounds
+    domains: [analysis, topology, probability, information-theory, statistics, optimization]
+    carriers: [finite full-support laws, certified Gibbs optimizers, IID fixed-sample products, finite channels, rate-distortion feasible sets]
+    scale: [finite hypotheses and alphabets, fixed sample size]
+    topology: The fixed-source finite-channel mass feasible set is compact and closed, continuous mutual information attains its constrained minimum even with zero atoms; this does not establish arbitrary functional-analytic duality or infinite-dimensional existence.
+    embedding: Gibbs and KL certificates represent exact objective relationships; coordinate factorization is not latent identifiability.
+    statistics: IID and positive importance weights are explicit; data-processing is channel-specific and rate-distortion conclusions follow the certified feasible carrier.
+    limits: Weak duality is not strong duality; a supplied optimizer certificate is not a general algorithm for finding it.
+  - family: control-and-planning-as-inference
+    domains: [algebra, probability, information-theory, optimization, control]
+    carriers: [finite controlled kernels, finite reachable-belief indices, finite action scores, observation-dependent policies]
+    scale: [finite horizon, finite state and action sets]
+    topology: Beliefs are finite laws with explicit normalization; the maintained reachable index is not the complete continuous belief simplex.
+    embedding: Reachable-belief interpretation preserves a specified policy value; it need not enumerate every possible belief.
+    statistics: Positive evidence enables Bayesian belief updates; soft posterior normalization alone does not identify a causal policy.
+    limits: The feedback advantage witness is concrete; continuous-state and infinite-horizon POMDP optimality are separate problems.
+  - family: temporal-and-hierarchical-inference
+    domains: [algebra, probability, statistics]
+    carriers: [finite hidden-state laws, backward messages, smoothing marginals, finite hierarchical kernels, finite model mixtures]
+    scale: [one-step recursion, finite levels and finite model classes]
+    topology: Normalizers and finite products give algebraic factorization; no limiting smoother or infinite hierarchy is established.
+    embedding: Forward-backward and hierarchical factorization preserve the authored joint law; latent labels can remain unidentifiable.
+    statistics: Smoothing excludes zero normalizers; normalized variational updates do not establish optimization convergence.
+    limits: Finite model averaging is distinct from posterior model selection and asymptotic concentration.
+  - family: causal-blankets-and-interventions
+    domains: [probability, information-theory, graph-theory, causal-inference]
+    carriers: [finite blanket-factorized laws, shared conditional kernels, deterministic intervention kernels, ordered four-node model]
+    scale: [finite states, fixed parent ordering]
+    topology: Conditional independence concerns a probability law and sigma-algebras, rather than adjacency or geometric proximity.
+    embedding: A do-assignment is an authored mechanism; recovering a causal graph from observational data is another inverse problem.
+    statistics: Positive blanket or mediator evidence bounds the stated equivalences; conditional and marginal independence differ.
+    limits: No general d-separation, faithfulness, confounding control, or arbitrary-DAG identification follows from this fixed ordering.
+  - family: predictive-coding-and-generalized-coordinates
+    domains: [algebra, analysis, optimization, dynamical-systems]
+    carriers: [precision-weighted scalar quadratics, finite hierarchy, finite jets and discrete shifts]
+    scale: [finite jet order, exact scalar real state, discrete iterations]
+    topology: Real derivatives are exact for the scalar quadratic; finite jets do not establish an analytic infinite jet or continuous-time process.
+    embedding: Jet shifts and correction equations encode declared coordinates; they are not learned neural representations.
+    statistics: Positive precision gives separation; zero precision destroys it, and precision weighting alone supplies no noise-model calibration.
+    limits: Under nonnegative precision, the closed step-size interval [0,2] gives nonincreasing exact-quadratic energy; the open interval (0,2) gives scalar convergence, with strict decrease additionally requiring positive precision and nonzero error. This does not establish nonlinear predictive-coding stability.
+  - family: path-space-stochastic-thermodynamics
+    domains: [algebra, probability, information-theory, dynamical-systems, thermodynamics]
+    carriers: [normalized finite path laws, reverse-aligned path laws, full-support ratios, finite exponential-work protocols]
+    scale: [finite paths and protocols, one-step finite Markov contraction]
+    topology: Finite path support is not a continuous path-space measure or stochastic differential equation.
+    embedding: Reversal is an explicit map on the same path carrier; reference alignment and support are part of the information comparison.
+    statistics: Path KL is oriented; log-ratio expectations and fluctuation equalities retain full-support and normalization premises.
+    limits: Zero reverse rates expose totalized-log boundaries; arbitrary physical work protocols and continuum fluctuation laws are not inferred.
+  - family: information-geometry-and-geometric-optimization
+    domains: [algebra, analysis, probability, statistics, differential-geometry, optimization]
+    carriers: [categorical simplex tangents, finite Jacobians and Fisher matrices, supplied potential-gradient data, affine projection certificates]
+    scale: [finite-dimensional chart algebra, scalar estimation]
+    topology: Full support and invertible charts bound regular Fisher geometry; a duplicated-score model records a nonzero null direction.
+    embedding: Jacobian pullback composes exactly; rank-deficient reparameterization can lose tangent information.
+    statistics: Cramer-Rao needs unbiasedness, score regularity, and positive information; it is not universal estimator performance.
+    limits: Three-point identities and a certified affine projection do not establish a manifold connection, curvature, or global mirror-descent convergence.
+  - family: collective-and-multiagent-active-inference
+    domains: [algebra, probability, information-theory, optimization, dynamical-systems]
+    carriers: [independent product-agent laws, unit-weight product-of-experts pool, specified two-agent stochastic update]
+    scale: [two-agent products and concrete iterative consensus]
+    topology: Product spaces and pointwise convergence describe the maintained update; no emergent collective manifold is constructed.
+    embedding: Agent product factorization is an explicit independence choice; consensus pools laws without identifying shared latent semantics.
+    statistics: Product-of-experts needs a positive normalizer; additivity relies on product laws and additive costs.
+    limits: Coupled-agent dependence, arbitrary networks, heterogeneous updates, and social-scientific validation require new models.
+  - family: learning-concentration-and-model-evidence
+    domains: [analysis, probability, information-theory, statistics, optimization]
+    carriers: [finite independent sub-Gaussian samples, finite alphabets and hypotheses, certified log-MGF budget, two-hypothesis likelihood gap]
+    scale: [finite samples and hypothesis classes, explicit exponential bounds]
+    topology: Concentration is a probability bound; it supplies no geometry of a learned representation.
+    embedding: Posterior odds and evidence compare declared hypotheses; a likelihood gap is a supplied premise rather than learned identification.
+    statistics: Population and empirical loss remain distinct; PAC-Bayes uses an explicit Gibbs and moment-generating-function certificate.
+    limits: These results do not establish dependent-data validity, universal generalization, or a true model in the hypothesis class.
+  - family: finite-sample-risk-and-calibration
+    domains: [algebra, probability, statistics]
+    carriers: [add-one Bernoulli forecast, normalized finite sampling law, Brier excess risk, deviation events]
+    scale: [positive finite sample size, exact pseudo-count transfer]
+    topology: Unit-interval smoothing moves forecasts to the interior; it does not alter the support assumptions of another theorem.
+    embedding: A smoothed forecast is an explicit statistic of successes and sample size; the map can discard sample-order information.
+    statistics: Pointwise error identities lift to finite expected risk; supplied empirical-event bounds transfer without proving the original concentration premise.
+    limits: Proper Brier scoring and risk transfer do not imply calibration on arbitrary held-out populations or asymptotic posterior consistency.
+  - family: closed-loop-policy-trees-and-efe
+    domains: [algebra, probability, information-theory, optimization, control]
+    carriers: [finite-depth observation-contingent trees, finite action minima, embedded open-loop plans, Boolean feedback witness]
+    scale: [finite depth, finite action and observation carriers]
+    topology: Recursion is finite combinatorial structure; no compactness or limiting infinite tree is used.
+    embedding: An open-loop plan embeds by repeating one continuation across observations, preserving value on the declared carrier.
+    statistics: Treewise EFE decomposition retains one-step full-support conditions at branches; feedback uses informative observations in a concrete model.
+    limits: Finite-tree dominance does not extend automatically to infinite horizons, partially observed continuous dynamics, or empirical agent behavior.
+  - family: finite-to-native-blanket-transfer
+    domains: [probability, measure-theory, information-theory, causal-inference]
+    carriers: [finite weighted Dirac measures, embedded finite kernels, blanket-factorized static and transition laws]
+    scale: [finite atom laws inside native measure theory]
+    topology: Measurable coarsening preserves the native independence predicate; finite embedding is not a continuum approximation limit.
+    embedding: Weighted Dirac embedding is injective and transfers expectations and prediction; native syntax does not increase source support.
+    statistics: Rectangle factorization supplies native conditional independence under the authored blanket law.
+    limits: Finite-to-native transfer does not derive a physical blanket, arbitrary continuous conditional laws, or identifiability from observations.
+  - family: finite-exponential-family-dual-geometry
+    domains: [analysis, probability, information-theory, statistics, differential-geometry, optimization]
+    carriers: [finite full-support scalar exponential family, real natural and mean parameters, log-partition potential]
+    scale: [finite sample alphabet, scalar parameter, closed parameter interval]
+    topology: Positive statistic variance gives a regular local information coordinate and injectivity on the stated interval; constant statistics have zero curvature.
+    embedding: Natural-to-mean coordinates are injective only under the variance premise; KL equals an oriented log-partition Bregman divergence on this supported family.
+    statistics: The score is centered and Fisher equals variance of the supplied sufficient statistic.
+    limits: This finite scalar family is not an arbitrary exponential family, multivariate dual manifold, or generic latent embedding.
+  - family: two-state-continuous-time-thermodynamics
+    domains: [algebra, analysis, probability, dynamical-systems, thermodynamics]
+    carriers: [Boolean state law, positive forward and backward rates, explicit real-time transition matrix]
+    scale: [two states, nonnegative continuous time]
+    topology: Time is continuous and transition entries differentiable; the state carrier is still finite.
+    embedding: The stationary law is explicit and can be nonuniform; the squared-deviation Lyapunov function is a declared scalar diagnostic.
+    statistics: Normalization, detailed balance, and exact relaxation are distributional laws under positive rates.
+    limits: Quadratic Lyapunov decay is not physical free-energy identification or a general CTMC existence theorem.
+  - family: standalone-efe-formalizations
+    domains: [algebra, analysis, probability, information-theory, optimization, control, dynamical-systems, thermodynamics]
+    carriers: [finite Boltzmann policy law, closed-loop finite kernel, masked model evidence, two-state rate law, stationary law-weighted split]
+    scale: [finite policies and states, fixed precision, two-state continuous time]
+    topology: Exact finite decompositions and rate limits remain attached to their specified carrier; they do not solve a continuum Fokker-Planck equation.
+    embedding: Law-weighted reversible and circulation parts are unique under their exact weighted symmetry constraints; signed circulation parts need not be Markov rates.
+    statistics: Policy posterior and evidence reduction retain model and support premises; a loop invariant alone does not identify a universal perception-action mechanism.
+    limits: A paired conjunction is distinct from a derivational theorem edge; entropy-production labels need the stated physical interpretation premises.
+  - family: geometric-mechanics-notation
+    domains: [algebra, analysis, graph-theory, optimization, dynamical-systems]
+    carriers: [finite real matrices, skew and symmetric forms, discrete Hessian symmetrizer, graph node divergence]
+    scale: [finite-dimensional matrix and finite-node carriers]
+    topology: Symmetrizing a finite matrix constructs a discrete Hessian; it does not prove smooth mixed-partial equality or continuum differential topology.
+    embedding: Frobenius projection onto symmetric matrices has a unique minimizer; plain skew symmetry and law-weighted skewness are different constraints.
+    statistics: Least-squares here is deterministic matrix geometry; no data noise distribution or estimator risk is supplied.
+    limits: Skew cancellation leaves a divergence remainder unless an extra premise holds; the explicit two-node witness refutes an unconditional solenoidal drop.
+continuous_scope:
+  - resource: gaussian_information_geometry.lean
+    domains: [analysis, probability, measure-theory, information-theory, statistics, differential-geometry]
+    carrier: Native scalar Gaussian location family at one fixed strictly positive variance.
+    scope: Derived density, normalization, absolute continuity, scores, and Fisher coordinates; zero variance and general manifolds remain outside this owner.
+  - resource: smooth_information_geometry.lean
+    domains: [algebra, analysis, differential-geometry]
+    carrier: Scalar Gaussian natural and mean charts with an explicit duplicated-coordinate pullback.
+    scope: Metric pairings and affine coordinate paths, including a rank-deficient countermodel; no connection, curvature, or tangent-bundle hierarchy.
+  - resource: scalar_gaussian_semigroup.lean
+    domains: [analysis, topology, probability, measure-theory, dynamical-systems]
+    carrier: Scalar real Gaussian transition kernel with explicit variance evolution.
+    scope: Native finite-time semigroup and weak-convergence laws; process existence and empirical interpretation are separate claims.
+  - resource: linear_gaussian_semigroup.lean
+    domains: [algebra, analysis, topology, probability, measure-theory, dynamical-systems]
+    carrier: Finite-dimensional Euclidean Gaussian kernels with declared linear drift and covariance.
+    scope: Finite-time native Gaussian composition, stationarity, and weak convergence on the authored symmetric-precision linear carrier, not arbitrary nonlinear diffusion.
+  - resource: fin4_gaussian_semigroup.lean
+    domains: [algebra, analysis, probability, measure-theory, dynamical-systems]
+    carrier: Exact four-axis Euclidean Gaussian carrier with named external, sensory, active, and internal coordinates.
+    scope: Native coordinate and Gaussian semigroup results do not identify a causal graph or a physical agent.
+  - resource: gaussian_precision_conditioning.lean
+    domains: [algebra, analysis, probability, measure-theory, statistics]
+    carrier: Native Gaussian precision blocks and their conditional-law construction.
+    scope: Conditioning belongs to the exact positive-definite Gaussian carrier; a block label does not supply causal or observational identifiability.
+  - resource: h3_reference_model.lean
+    domains: [algebra, analysis, topology, probability, measure-theory, dynamical-systems]
+    carrier: Frozen four-axis native Gaussian reference with positive affine calibration of tagged readings.
+    scope: Constructs finite-time laws and intrinsic recognition algebra; no stochastic-process existence, empirical validity, causal graph, or physical heat follows.
+
+# Common corpus coordinates: authored positive assignments, never theorem edges.
+cross_corpus:
+  schema_version: 1
+  coordinates:
+  - id: domain:algebra
+    axis_kind: domain
+    definition: finite sums, matrices, identities, and algebraic constructions; positive editorial
+      mathematical context.
+  - id: domain:analysis
+    axis_kind: domain
+    definition: real differentiation, integration, inequalities, and limits; positive editorial
+      mathematical context.
+  - id: domain:topology
+    axis_kind: domain
+    definition: compactness, closed feasible carriers, continuity, and weak convergence; positive
+      editorial mathematical context.
+  - id: domain:probability
+    axis_kind: domain
+    definition: normalized laws, kernels, independence, and stochastic evolution; positive
+      editorial mathematical context.
+  - id: domain:measure-theory
+    axis_kind: domain
+    definition: sigma-algebras, native measures, disintegration, and integration; positive
+      editorial mathematical context.
+  - id: domain:information-theory
+    axis_kind: domain
+    definition: entropy, relative entropy, information, and coding bounds; positive editorial
+      mathematical context.
+  - id: domain:statistics
+    axis_kind: domain
+    definition: estimation, scoring rules, concentration, and model evidence; positive editorial
+      mathematical context.
+  - id: domain:optimization
+    axis_kind: domain
+    definition: variational bounds, minimization, descent, and projection; positive editorial
+      mathematical context.
+  - id: domain:control
+    axis_kind: domain
+    definition: finite planning, feedback, decision rules, and policy recursion; positive
+      editorial mathematical context.
+  - id: domain:dynamical-systems
+    axis_kind: domain
+    definition: iterates, semigroups, stationarity, and convergence; positive editorial mathematical
+      context.
+  - id: domain:differential-geometry
+    axis_kind: domain
+    definition: Fisher pairings, coordinate pullbacks, and dual coordinates; positive editorial
+      mathematical context.
+  - id: domain:graph-theory
+    axis_kind: domain
+    definition: finite causal ordering, node divergence, and edge currents; positive editorial
+      mathematical context.
+  - id: domain:causal-inference
+    axis_kind: domain
+    definition: authored intervention mechanisms and conditional factorization; positive editorial
+      mathematical context.
+  - id: domain:thermodynamics
+    axis_kind: domain
+    definition: entropy-production and free-energy identities on explicit carriers; positive
+      editorial mathematical context.
+  - id: carrier:finite-discrete
+    axis_kind: carrier
+    definition: A selected law, chain, message, policy or map has a finite discrete carrier;
+      this is not inferred from finite storage of a continuous object.
+  - id: carrier:finite-dimensional-real
+    axis_kind: carrier
+    definition: The selected statement uses actual real scalar/vector/matrix data. This coordinate
+      alone does not imply a smooth manifold or identifiable parameters.
+  - id: carrier:general-measurable
+    axis_kind: carrier
+    definition: Native sigma-algebras, measures, kernels or Borel laws are explicit objects
+      in the selected contract, possibly together with finite carriers.
+  - id: carrier:euclidean-space
+    axis_kind: carrier
+    definition: An ambient Euclidean geometric carrier is explicitly used in the selected
+      result, beyond real-valued scalar arithmetic.
+  - id: carrier:function-space
+    axis_kind: carrier
+    definition: The selected result quantifies over functions, trial laws, controls, or an
+      infinite-dimensional normed carrier; no common Banach structure is implied.
+  - id: carrier:metric-space
+    axis_kind: carrier
+    definition: A declared metric/norm topology is part of the selected contract, with its
+      own distance; this is not the MDS feature-space metric.
+  - id: carrier:graph
+    axis_kind: carrier
+    definition: A finite graph, node/edge carrier or graph-realization state is explicit;
+      graphical conditional independence alone is insufficient.
+  - id: carrier:path-space
+    axis_kind: carrier
+    definition: Path laws, time-indexed protocols or progressively measurable controls are
+      explicit; this does not identify a common physical path carrier.
+  - id: hypothesis:normalization
+    axis_kind: hypothesis
+    definition: A normalized law/kernel or a normalization condition/conclusion is explicit
+      in the selected statement. It is not asserted to be a premise of every family theorem.
+  - id: hypothesis:full-support
+    axis_kind: hypothesis
+    definition: Strictly positive mass/density on the stated whole law carrier is explicit.
+      Local selected support and positive evidence at one event do not suffice.
+  - id: hypothesis:regularity
+    axis_kind: hypothesis
+    definition: An explicit measurable, continuous, differentiable, completeness or analytic
+      parameter regularity condition occurs; those distinct notions are not interchangeable.
+  - id: hypothesis:convexity
+    axis_kind: hypothesis
+    definition: Convex body, log-concavity or convex-potential curvature is explicit in the
+      selected contract; no shared uniform convexity hypothesis is inferred.
+  - id: hypothesis:compactness
+    axis_kind: hypothesis
+    definition: A compact carrier/feasible set or its compactness-based attainment argument
+      is explicit. Finite-dimensionality alone does not suffice.
+  - id: hypothesis:independence
+    axis_kind: hypothesis
+    definition: Independence, product-law structure or reversible conditional-factorization
+      inputs occur explicitly. This does not identify empirical or causal independence.
+  - id: hypothesis:finite-horizon
+    axis_kind: hypothesis
+    definition: A fixed finite time/horizon or finite-time bound is part of the selected contract.
+      It does not assert an infinite-horizon or stopping-time result.
+  - id: hypothesis:asymptotic-limit
+    axis_kind: hypothesis
+    definition: A convergence or dimension/system-size limit is a stated target or regime.
+      Despite this coordinate group name it is not a logical hypothesis by itself.
+  fep_family_features:
+  - family: core-free-energy
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:optimization
+    - domain:dynamical-systems
+    - carrier:general-measurable
+    - carrier:finite-dimensional-real
+    - carrier:metric-space
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:general-measurable: fep_fep001.FEP001.fep001_variationalUpperBound_eq_iff,
+      fep_fep015.FEP015.fep015_variationalIntegrand_measurable. carrier:finite-dimensional-real:
+      fep_fep032.FEP032.fep032_quadraticUpdate_tendsto, fep_fep043.FEP043.fep043_quadratic_critical_iff.
+      carrier:metric-space: fep_fep048.FEP048.fep048_contraction_unique. hypothesis:regularity:
+      fep_fep015.FEP015.fep015_variationalIntegrand_measurable, fep_fep043.FEP043.fep043_quadratic_critical_iff.'
+  - family: core-active-inference
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:optimization
+    - domain:control
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:finite-horizon
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep007.FEP007.fep007_normalizedMessage_sum_one,
+      fep_fep028.FEP028.fep028_softmax_sum_univ. carrier:general-measurable: fep_fep034.FEP034.fep034_filter_joint_reconstruction,
+      fep_fep041.FEP041.fep041_expectedInformationGain_zero. carrier:finite-dimensional-real:
+      fep_fep047.FEP047.fep047_forward_compose. hypothesis:normalization: fep_fep007.FEP007.fep007_normalizedMessage_sum_one,
+      fep_fep028.FEP028.fep028_softmax_sum_univ. hypothesis:regularity: fep_fep034.FEP034.fep034_filter_joint_reconstruction.
+      hypothesis:finite-horizon: fep_fep003.FEP003.fep003_pragmaticCost_succ, fep_fep033.FEP033.fep033_bellman.'
+  - family: core-bayesian-mechanics
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:measure-theory
+    - domain:statistics
+    - domain:dynamical-systems
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    - hypothesis:independence
+    - hypothesis:regularity
+    - hypothesis:asymptotic-limit
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep005.FEP005.fep005_existsUnique_block, fep_fep020.FEP020.fep020_tendsto_uniform,
+      fep_fep042.FEP042.fep042_likelihood_eq_of_stat_eq. carrier:general-measurable: fep_fep009.FEP009.fep009_condIndep_symm,
+      fep_fep017.FEP017.fep017_posterior_joint_reconstruction. carrier:finite-dimensional-real:
+      fep_fep040.FEP040.fep040_thermalEntropy_hasDerivAt. hypothesis:normalization: fep_fep019.FEP019.fep019_priorPredictive_assoc,
+      fep_fep022.FEP022.fep022_brier_eq_optimum_iff. hypothesis:independence: fep_fep009.FEP009.fep009_condIndep_symm.
+      hypothesis:regularity: fep_fep017.FEP017.fep017_posterior_joint_reconstruction, fep_fep040.FEP040.fep040_thermalEntropy_hasDerivAt.
+      hypothesis:asymptotic-limit: fep_fep020.FEP020.fep020_tendsto_uniform, fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate.'
+  - family: core-information-geometry
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:differential-geometry
+    - domain:optimization
+    - carrier:finite-dimensional-real
+    - carrier:general-measurable
+    - hypothesis:full-support
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-dimensional-real: fep_fep004.FEP004.fep004_fisherMetric_eq_zero_iff,
+      fep_fep038.FEP038.fep038_fisherInformation_eq. carrier:general-measurable: fep_fep014.FEP014.fep014_kl_chain_rule,
+      fep_fep024.FEP024.fep024_klRegularizedObjective_exact. hypothesis:full-support: fep_fep038.FEP038.fep038_fisherInformation_eq.
+      hypothesis:regularity: fep_fep038.FEP038.fep038_fisherInformation_eq.'
+  - family: core-thermodynamics
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:information-theory
+    - domain:optimization
+    - domain:dynamical-systems
+    - domain:thermodynamics
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - carrier:graph
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep031.FEP031.fep031_gibbsProbability_sum_one,
+      fep_fep049.FEP049.fep049_entropyProduction_eq_zero_iff. carrier:finite-dimensional-real:
+      fep_fep013.FEP013.fep013_helmholtz_derivative_eq_neg_entropy, fep_fep037.FEP037.fep037_response_eq.
+      carrier:graph: fep_fep025.FEP025.fep025_cycleCurrent_stationary. hypothesis:normalization:
+      fep_fep031.FEP031.fep031_gibbsProbability_sum_one. hypothesis:full-support: fep_fep049.FEP049.fep049_entropyProduction_eq_zero_iff.
+      hypothesis:regularity: fep_fep013.FEP013.fep013_helmholtz_derivative_eq_neg_entropy.'
+  - family: measure-bayesian-inversion
+    features:
+    - domain:probability
+    - domain:measure-theory
+    - domain:statistics
+    - carrier:general-measurable
+    - hypothesis:normalization
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:general-measurable: fep_fep051.FEP051.fep051_likelihoodRatio_reconstruction,
+      fep_fep053.FEP053.fep053_kernelBayes_joint_reconstruction, fep_fep056.FEP056.fep056_standardBorel_condKernel_reconstruction.
+      hypothesis:normalization: fep_fep053.FEP053.fep053_kernelBayes_joint_reconstruction.
+      hypothesis:regularity: fep_fep056.FEP056.fep056_standardBorel_condKernel_reconstruction.'
+  - family: variational-duality-and-information-bounds
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - domain:information-theory
+    - domain:statistics
+    - domain:optimization
+    - carrier:finite-discrete
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:compactness
+    - hypothesis:independence
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep058.FEP058.fep058_gibbsVariational_lower_bound,
+      fep_fep063.FEP063.fep063_finiteChannel_klDataProcessing, fep_fep064.FEP064.fep064_rateDistortion_weakDuality.
+      hypothesis:normalization: fep_fep058.FEP058.fep058_gibbsVariational_lower_bound, fep_fep063.FEP063.fep063_finiteChannel_klDataProcessing.
+      hypothesis:full-support: fep_fep058.FEP058.fep058_gibbsVariational_lower_bound, fep_fep059.FEP059.fep059_donskerVaradhan_equality_iff.
+      hypothesis:compactness: fep_fep064.FEP064.fep064_rateDistortion_exists_minimizer. hypothesis:independence:
+      fep_fep062.FEP062.fep062_iidProduct_importanceJensen.'
+  - family: control-and-planning-as-inference
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:information-theory
+    - domain:optimization
+    - domain:control
+    - carrier:finite-discrete
+    - hypothesis:normalization
+    - hypothesis:finite-horizon
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep065.FEP065.fep065_controlledKernel_normalization,
+      fep_fep066.FEP066.fep066_actionConditioned_bayes_reconstruction, fep_fep071.FEP071.fep071_sophisticatedEFE_backward_step.
+      hypothesis:normalization: fep_fep065.FEP065.fep065_controlledKernel_normalization, fep_fep066.FEP066.fep066_actionConditioned_bayes_reconstruction.
+      hypothesis:finite-horizon: fep_fep071.FEP071.fep071_sophisticatedEFE_backward_step.'
+  - family: temporal-and-hierarchical-inference
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:statistics
+    - carrier:finite-discrete
+    - hypothesis:normalization
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep074.FEP074.fep074_forwardBackward_smoothing_factorization,
+      fep_fep077.FEP077.fep077_hierarchical_predictive_factorization, fep_fep078.FEP078.fep078_modelAverage_predictive_law.
+      hypothesis:normalization: fep_fep074.FEP074.fep074_forwardBackward_smoothing_factorization,
+      fep_fep075.FEP075.fep075_smoothing_marginal_normalization.'
+  - family: causal-blankets-and-interventions
+    features:
+    - domain:probability
+    - domain:information-theory
+    - domain:graph-theory
+    - domain:causal-inference
+    - carrier:finite-discrete
+    - carrier:graph
+    - hypothesis:normalization
+    - hypothesis:independence
+    - hypothesis:full-support
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep079.FEP079.fep079_blanketFactorization_iff_conditionalMutualInformation_zero,
+      fep_fep082.FEP082.fep082_interventionKernel_normalization. carrier:graph: fep_fep084.FEP084.fep084_orderedFiniteCausal_factorization,
+      fep_fep085.FEP085.fep085_localMarkov_factorization_from_ordered. hypothesis:normalization:
+      fep_fep082.FEP082.fep082_interventionKernel_normalization. hypothesis:independence:
+      fep_fep079.FEP079.fep079_blanketFactorization_iff_conditionalMutualInformation_zero.
+      hypothesis:full-support: fep_fep079.FEP079.fep079_blanketFactorization_iff_conditionalMutualInformation_zero.'
+  - family: predictive-coding-and-generalized-coordinates
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:optimization
+    - domain:dynamical-systems
+    - carrier:finite-dimensional-real
+    - hypothesis:regularity
+    - hypothesis:asymptotic-limit
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-dimensional-real: fep_fep086.FEP086.fep086_precisionWeighted_zero_iff_exactPrediction,
+      fep_fep088.FEP088.fep088_predictionError_gradient_identity, fep_fep089.FEP089.fep089_finiteJet_shift_semigroup.
+      hypothesis:regularity: fep_fep088.FEP088.fep088_predictionError_gradient_identity. hypothesis:asymptotic-limit:
+      fep_fep092.FEP092.fep092_quadraticPredictiveCoding_error_tendsto_zero.'
+  - family: path-space-stochastic-thermodynamics
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:information-theory
+    - domain:dynamical-systems
+    - domain:thermodynamics
+    - carrier:finite-discrete
+    - carrier:path-space
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:finite-horizon
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep093.FEP093.fep093_forward_reverse_pathLaw_ratio,
+      fep_fep099.FEP099.fep099_reversibleChain_oneStep_KL_dissipation. carrier:path-space:
+      fep_fep093.FEP093.fep093_forward_reverse_pathLaw_ratio, fep_fep094.FEP094.fep094_entropyProduction_as_pathKL.
+      hypothesis:normalization: fep_fep093.FEP093.fep093_forward_reverse_pathLaw_ratio. hypothesis:full-support:
+      fep_fep093.FEP093.fep093_forward_reverse_pathLaw_ratio, fep_fep099.FEP099.fep099_reversibleChain_oneStep_KL_dissipation.
+      hypothesis:finite-horizon: fep_fep093.FEP093.fep093_forward_reverse_pathLaw_ratio.'
+  - family: information-geometry-and-geometric-optimization
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:statistics
+    - domain:differential-geometry
+    - domain:optimization
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    - hypothesis:full-support
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep100.FEP100.fep100_categoricalFisher_simplexTangent_positivity,
+      fep_fep102.FEP102.fep102_unbiasedScalar_cramerRao. carrier:finite-dimensional-real:
+      fep_fep101.FEP101.fep101_fisherPullback_reparameterization, fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity,
+      fep_fep105.FEP105.fep105_affineProjection_bregmanPythagorean. hypothesis:normalization:
+      fep_fep100.FEP100.fep100_categoricalFisher_simplexTangent_positivity. hypothesis:full-support:
+      fep_fep100.FEP100.fep100_categoricalFisher_simplexTangent_positivity.'
+  - family: collective-and-multiagent-active-inference
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:information-theory
+    - domain:optimization
+    - domain:dynamical-systems
+    - carrier:finite-discrete
+    - hypothesis:normalization
+    - hypothesis:independence
+    - hypothesis:asymptotic-limit
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep107.FEP107.fep107_productAgent_generative_mass,
+      fep_fep112.FEP112.fep112_consensus_converges. hypothesis:normalization: fep_fep107.FEP107.fep107_productAgent_generative_mass,
+      fep_fep110.FEP110.fep110_unitWeightProductOfExpertsPool_normalized. hypothesis:independence:
+      fep_fep107.FEP107.fep107_productAgent_generative_mass. hypothesis:asymptotic-limit:
+      fep_fep112.FEP112.fep112_consensus_converges.'
+  - family: learning-concentration-and-model-evidence
+    features:
+    - domain:analysis
+    - domain:probability
+    - domain:information-theory
+    - domain:statistics
+    - domain:optimization
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - carrier:finite-dimensional-real
+    - hypothesis:independence
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep115.FEP115.fep115_simultaneous_frequency_bound,
+      fep_fep116.FEP116.fep116_finitePACBayes_with_confidence. carrier:general-measurable:
+      fep_fep114.FEP114.fep114_subGaussian_empiricalMean_tail. carrier:finite-dimensional-real:
+      fep_fep118.FEP118.fep118_posteriorGap_concentration. hypothesis:independence: fep_fep114.FEP114.fep114_subGaussian_empiricalMean_tail.'
+  - family: finite-sample-risk-and-calibration
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:statistics
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep126.FEP126.fep126_laplaceBrierRisk_le, fep_fep127.FEP127.fep127_laplaceBadEvent_subset.
+      carrier:finite-dimensional-real: fep_fep121.FEP121.fep121_laplaceError_identity, fep_fep125.FEP125.fep125_brierExcess_eq_sqError.
+      hypothesis:normalization: fep_fep126.FEP126.fep126_laplaceBrierRisk_le.'
+  - family: closed-loop-policy-trees-and-efe
+    features:
+    - domain:algebra
+    - domain:probability
+    - domain:information-theory
+    - domain:optimization
+    - domain:control
+    - carrier:finite-discrete
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:finite-horizon
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep128.FEP128.fep128_policyTreeValue_node, fep_fep130.FEP130.fep130_exists_optimalPolicyTree.
+      hypothesis:normalization: fep_fep128.FEP128.fep128_policyTreeValue_node. hypothesis:full-support:
+      fep_fep133.FEP133.fep133_policyTree_efe_eq_risk_add_ambiguity. hypothesis:finite-horizon:
+      fep_fep128.FEP128.fep128_policyTreeValue_node, fep_fep130.FEP130.fep130_exists_optimalPolicyTree.'
+  - family: finite-to-native-blanket-transfer
+    features:
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:causal-inference
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - hypothesis:normalization
+    - hypothesis:independence
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep135.FEP135.fep135_embeddedLaw_apply_singleton,
+      fep_fep137.FEP137.fep137_embeddedPredictive_eq_comp. carrier:general-measurable: fep_fep135.FEP135.fep135_embeddedLaw_apply_singleton,
+      fep_fep139.FEP139.fep139_staticJoint_condIndepFun. hypothesis:normalization: fep_fep135.FEP135.fep135_embeddedLaw_apply_singleton,
+      fep_fep137.FEP137.fep137_embeddedPredictive_eq_comp. hypothesis:independence: fep_fep139.FEP139.fep139_staticJoint_condIndepFun.'
+  - family: finite-exponential-family-dual-geometry
+    features:
+    - domain:analysis
+    - domain:probability
+    - domain:information-theory
+    - domain:statistics
+    - domain:differential-geometry
+    - domain:optimization
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep142.FEP142.fep142_exponentialFamily_sum_one.
+      carrier:finite-dimensional-real: fep_fep144.FEP144.fep144_logPartition_hasDerivAt, fep_fep148.FEP148.fep148_meanParameter_strictMono.
+      hypothesis:normalization: fep_fep142.FEP142.fep142_exponentialFamily_sum_one. hypothesis:full-support:
+      fep_fep142.FEP142.fep142_exponentialFamily_sum_one, fep_fep143.FEP143.fep143_logDensityRatio_eq.
+      hypothesis:regularity: fep_fep144.FEP144.fep144_logPartition_hasDerivAt, fep_fep146.FEP146.fep146_logPartition_secondDeriv_eq_variance.'
+  - family: two-state-continuous-time-thermodynamics
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:dynamical-systems
+    - domain:thermodynamics
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - hypothesis:normalization
+    - hypothesis:regularity
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep149.FEP149.fep149_twoStateSemigroup_rowSum.
+      carrier:finite-dimensional-real: fep_fep152.FEP152.fep152_twoStateSemigroup_hasDerivAt,
+      fep_fep154.FEP154.fep154_twoStateRelaxation_exact. hypothesis:normalization: fep_fep149.FEP149.fep149_twoStateSemigroup_rowSum.
+      hypothesis:regularity: fep_fep152.FEP152.fep152_twoStateSemigroup_hasDerivAt.'
+  - family: standalone-efe-formalizations
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:probability
+    - domain:information-theory
+    - domain:optimization
+    - domain:control
+    - domain:dynamical-systems
+    - domain:thermodynamics
+    - carrier:finite-discrete
+    - carrier:finite-dimensional-real
+    - carrier:graph
+    - hypothesis:normalization
+    - hypothesis:full-support
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-discrete: fep_fep156.FEP156.fep156_boltzmann_control_posterior_minimizes_efe,
+      fep_fep160.FEP160.fep160_aoDecomposition. carrier:finite-dimensional-real: fep_fep159.FEP159.fep159_epistemic_gain_bounded_by_affinity,
+      fep_fep166.FEP166.fep166_split_unique. carrier:graph: fep_fep160.FEP160.fep160_aoDecomposition.
+      hypothesis:normalization: fep_fep156.FEP156.fep156_boltzmann_control_posterior_minimizes_efe.
+      hypothesis:full-support: fep_fep160.FEP160.fep160_aoDecomposition, fep_fep166.FEP166.fep166_split_unique.'
+  - family: geometric-mechanics-notation
+    features:
+    - domain:algebra
+    - domain:analysis
+    - domain:graph-theory
+    - domain:optimization
+    - domain:dynamical-systems
+    - carrier:finite-dimensional-real
+    - carrier:graph
+    scope: Positive union of selected owned statement contexts, not their conjunction or inherited
+      per-topic premises. Absence is unassigned. Domain context comes from the maintained
+      family profile.
+    rationale: 'carrier:finite-dimensional-real: fep_fep161.FEP161.fep161_skewTrace_eq_zero,
+      fep_fep167.FEP167.fep167_frobenius_pythagoras. carrier:graph: fep_fep164.FEP164.fep164_graphDecomposition,
+      fep_fep165.FEP165.fep165_witness_drop_fails.'
+  upstream_pin:
+    repository_url: https://github.com/openai/math
+    commit: adc7f1241b42e322a6451854ab7e4b4c146bf78a
+    license: Apache-2.0
+    review_status: Pinned public source statements reviewed on 2026-10-07. The upstream global
+      review remains unchecked; no solution compilation or Comparator run is claimed.
+  upstream_results:
+  - id: openai-math-093-dimension-free-lsi
+    title: A dimension-free logarithmic Sobolev inequality for subgaussian log-concave measures
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/build/sections/01-introduction.tex
+    source_path: preprints/A-dimension-free-logarithmic-Sobolev-inequality-for-subgaussian-log-concave-measures-September-23-2026/build/sections/01-introduction.tex
+    source_sha256: 6b737533c3be85eed78ccee2cc3503eb812ac746cac2a55147cb5d4f0b4324f4
+    status: reviewed_source_statement_uncompiled
+    statement: 'Dimension-free LSI: for every centered log-concave probability density on
+      R^n, n>=1, whose every unit linear marginal satisfies E exp(<X,theta>^2/a^2)<=2, an
+      absolute C gives Ent_mu(f^2)<=C a^2 integral|Df|^2 dmu for all compactly supported smooth
+      f.'
+    carriers:
+    - Euclidean R^n
+    - Lebesgue-density probability law
+    - Smooth compactly supported real test functions
+    hypotheses:
+    - n>=1; a>0
+    - Centered log-concave density
+    - Uniform linear subgaussian exponential-moment bound
+    features:
+    - domain:analysis
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:optimization
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:general-measurable
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:convexity
+    scope: Paper thm:main; cor:intro-transport additionally asserts W2(nu,mu)^2<=C a^2 H(nu|mu)
+      for nu in P2, with extended relative entropy. No linked Lean scope record was found.
+      Density smoothness and strictly positive Hessian curvature are not premises. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.
+    rationale: Relates native entropy and Dirichlet energy to transport distance; an FEP descent
+      statement needs a matching diffusion generator, density ratio, support convention and
+      functional-inequality constant before borrowing this route.
+  - id: openai-math-140-gaussian-replica-block
+    title: Posterior replicas and conditional information in Gaussian regression
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/00-introduction.tex
+    source_path: preprints/Posterior-replicas-and-conditional-information-in-Gaussian-regression-September-27-2026/build/sections/00-introduction.tex
+    source_sha256: b892d5e4eb9498a44f3838c5dff684c91b9c5f509d26c4ac70959bbbe5c57d5d
+    status: reviewed_source_statement_uncompiled
+    statement: 'Gaussian replica block bound: for large d, k=m=2 floor(d/16), t=m+1 and ell=4k,
+      a spherical prior p=f sigma_d with 0<=f<=L and a finite message W from k exact Gaussian
+      labels satisfies I(S;W|B,BS)<=H(W)/t+C d+C log(2+log L), for an independent ell-row
+      Gaussian matrix B.'
+    carriers:
+    - Unit sphere in R^d
+    - Bounded Borel prior density relative to uniform surface law
+    - Exact linear observations and finite message kernels
+    hypotheses:
+    - Large d and probability density 0<=f<=L<infinity
+    - Independent standard Gaussian A and B
+    - W drawn from a measurable data kernel, conditionally independent of S given (A,AS)
+    features:
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:statistics
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:general-measurable
+    - carrier:finite-discrete
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:compactness
+    - hypothesis:independence
+    scope: Paper thm:gaussian-block. lean/docs/140.md records replica/equal-label comparisons
+      and the streaming lower bound at success2/3. Streaming additionally requires a finite-state
+      learner, independent randomness and a deterministic stopping horizon; the stronger3/5
+      variant lies outside the recorded selection. The upstream catalogue review is unchecked;
+      no solution compilation or Comparator execution was performed here.
+    rationale: Compare posterior disintegration and information lost through observation fibers;
+      exact-label singular geometry, bounded prior density and message memory differ from
+      noisy Gaussian filtering or unrestricted recognition maps.
+  - id: openai-math-221-diluted-pressure-limit
+    title: The Mézard–Parisi formula for diluted spin glasses
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/model.tex
+    source_path: preprints/The-Mezard-Parisi-formula-for-diluted-spin-glasses-September-23-2026/build/sections/model.tex
+    source_sha256: 8794914e5e7dbe802de6ee006c5e398bdae2790be27898054e5ac4c20ec18487
+    status: reviewed_source_statement_uncompiled
+    statement: 'Diluted pressure limit: for fixed even arity p>=2 and alpha>0 in the stated
+      independent Poisson-diluted Ising model, first-moment integrability and Panchenko-Talagrand
+      factorization/positivity imply lim_N N^-1 E log Z_N = inf_{r>=0} Phi_r over finite hierarchy
+      depths and trial laws.'
+    carriers:
+    - Finite Ising spin configurations
+    - Poisson interaction disorder
+    - Nested Borel probability laws with weak-convergence topology
+    hypotheses:
+    - Mutually independent disorder and with-replacement uniform site indices
+    - E max_s|theta(s)|+E|h|<infinity
+    - exp(theta)=a(1+b product f_l), a>0, strict product bound and E[(-b)^n]>=0
+    features:
+    - domain:probability
+    - domain:measure-theory
+    - domain:thermodynamics
+    - domain:optimization
+    - domain:analysis
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - carrier:function-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:independence
+    - hypothesis:asymptotic-limit
+    scope: Paper main:theorem/main:formula and lean/docs/221.md. The formula takes an infimum,
+      with no claimed attaining trial law or constructed infinite-depth Gibbs state. Interaction/disorder
+      laws stay fixed as N varies. The upstream catalogue review is unchecked; no solution
+      compilation or Comparator execution was performed here.
+    rationale: A precise bridge from finite Gibbs normalization to asymptotic variational
+      pressure; product-agent additivity alone supplies neither random disorder, thermodynamic
+      scaling nor cavity hierarchy assumptions.
+  - id: openai-math-222-spherical-pressure-limit
+    title: The free energy of the spherical random perceptron
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/paper.tex
+    source_path: preprints/The-free-energy-of-the-spherical-random-perceptron-September-24-2026/build/paper.tex
+    source_sha256: 468da5cd5b5c74d92611a7e776a559a13a70359e3c6dbc22f7637d6bc381db6c
+    status: reviewed_source_statement_uncompiled
+    statement: 'Spherical pressure limit: for every alpha,beta>0 and bounded continuous phi,
+      independent standard Gaussian patterns on S_N={x:||x||^2=N}, with normalized surface
+      probability and M_N=floor(alpha N), yield expected pressure convergence and convergence
+      in probability to inf_m{alpha V_{beta phi}(m)+S(m)}.'
+    carriers:
+    - Growing Euclidean spheres
+    - Gaussian pattern disorder
+    - Overlap quantile functions
+    - Brownian progressively measurable variational controls
+    hypotheses:
+    - Fixed alpha,beta>0 and phi bounded continuous
+    - Independent standard Gaussian patterns
+    - Uniform sphere probability normalization
+    - Nondecreasing measurable trials; infinite entropy assigned positive infinity
+    features:
+    - domain:analysis
+    - domain:probability
+    - domain:measure-theory
+    - domain:thermodynamics
+    - domain:optimization
+    - domain:control
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:general-measurable
+    - carrier:function-space
+    - carrier:path-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:compactness
+    - hypothesis:independence
+    - hypothesis:asymptotic-limit
+    scope: Paper thm:main and lean/docs/222.md. Positive log-partition pressure p_N corresponds
+      to physical free energy -p_N/beta. The separate Ising selection proves variational finiteness
+      for continuous potentials only, not its broader paper pressure/Borel claims. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.
+    rationale: Shared variational syntax does not identify Bayesian free energy, thermodynamic
+      pressure and EFE; temperature, sphere normalization, system-size limit and Brownian
+      control functional must be matched.
+  - id: openai-math-360-uniform-bi-holder-transport
+    title: Uniform Bi-Hölder Transport from Weak MTW
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/build/sections/introduction.tex
+    source_path: preprints/Uniform-Bi-Holder-Transport-from-Weak-MTW-September-25-2026/build/sections/introduction.tex
+    source_sha256: 08e697324bf067dcc76fc938bb123919080b245e591ab40142c9bc9a3b6681b6
+    status: reviewed_source_statement_uncompiled
+    statement: 'Uniform bi-Holder transport: on one fixed compact connected smooth boundaryless
+      Riemannian manifold of dimension>=2 satisfying weak MTW, normalized measurable densities
+      between fixed positive lower and finite upper bounds have a.e.-unique quadratic-cost
+      optimal maps with homeomorphic representatives whose maps and inverses share one Holder
+      exponent and constant.'
+    carriers:
+    - Compact smooth Riemannian manifold
+    - Volume-density probability laws
+    - Homeomorphisms and squared-distance transport maps
+    hypotheses:
+    - Dimension>=2 and weak MTW at smooth cost pairs
+    - Fixed0<lambda<=Lambda with a nonempty density class
+    - lambda<=rho_i<=Lambda a.e. and integrals1
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - domain:measure-theory
+    - domain:optimization
+    - domain:differential-geometry
+    - carrier:general-measurable
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:full-support
+    - hypothesis:regularity
+    - hypothesis:compactness
+    scope: Paper thm:main and lean/docs/360.md. Constants depend on the fixed metric and density
+      bounds, not varying metrics. No explicit exponent, strict MTW, nonfocality or cut avoidance
+      is asserted. Companion convex-injectivity support is a separate result unit. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.
+    rationale: Transport topology needs an actual cost and density class. Fisher/KL identities
+      or a parameter chart do not establish MTW curvature, global homeomorphism or inverse-map
+      regularity.
+  - id: openai-math-374-one-third-map-stability
+    title: Sharp One-Third Stability of Brenier Maps
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/introduction.tex
+    source_path: preprints/Sharp-One-Third-Stability-of-Brenier-Maps-September-25-2026/build/source/sections/introduction.tex
+    source_sha256: 73d98e5f63dc7d89b91ccb5f47737458a84a463288651ca83ae02f930c9c8b60
+    status: reviewed_source_statement_uncompiled
+    statement: 'One-third Brenier stability: for uniform source rho on a fixed compact convex
+      body K with interior in R^d, d>=2, and arbitrary Borel targets mu,nu in a fixed nonempty
+      compact Y, quadratic optimal maps satisfy ||T_mu-T_nu||_{L2(rho)}<=C(K,Y) W2(mu,nu)^(1/3).'
+    carriers:
+    - Euclidean compact convex source body
+    - Arbitrary compactly supported probability targets
+    - Convex-gradient optimal maps in L2(rho)
+    hypotheses:
+    - d>=2; source body has nonempty interior
+    - Source law uniform on fixed K
+    - Targets supported on fixed nonempty compact Y
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - domain:measure-theory
+    - domain:optimization
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:general-measurable
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:convexity
+    - hypothesis:compactness
+    scope: 'Paper main:stability and lean/docs/374.md include sharpness: fixed-cube three-atom
+      targets refute every uniform exponent>1/3. Atomic/singular targets and vanishing masses
+      are allowed; no target density lower bound or site separation is required. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.'
+    rationale: 'Perturbing a target law is not perturbing a recognition chart: compare W2
+      on laws against L2 map error and retain the uniform-source/compact-target hypotheses;
+      a square-root map bound can fail.'
+  - id: openai-math-131-switch-chain-mixing
+    title: Polynomial mixing of the switch chain for every graphical degree sequence
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/build/sections/introduction.tex
+    source_path: preprints/Polynomial-Mixing-of-the-Switch-Chain-for-Every-Graphical-Degree-Sequence-September-25-2026/build/sections/introduction.tex
+    source_sha256: 7c4684d2d3b698bf2be17088c17575e72a4588faf667bd71e2743430911a106f
+    status: reviewed_source_statement_uncompiled
+    statement: 'Graph-switch mixing: for n>=4 and any graphical labeled degree vector, the
+      specified half-lazy simple-undirected switch chain has worst-case total-variation mixing
+      time at threshold1/4 at most2 n^8; a nontrivial state space has spectral gap at least[24
+      n^2 binom(n,4)]^-1.'
+    carriers:
+    - Finite degree-constrained simple graph realizations
+    - Uniform stationary graph law
+    - Discrete-time lazy reversible Markov kernel
+    hypotheses:
+    - Graphical labeled degrees and n>=4
+    - Uniform four-vertex proposals with specified six matching choices
+    - Half-laziness and rejected invalid switches
+    features:
+    - domain:probability
+    - domain:graph-theory
+    - domain:dynamical-systems
+    - domain:analysis
+    - carrier:finite-discrete
+    - carrier:graph
+    - carrier:general-measurable
+    - hypothesis:normalization
+    - hypothesis:finite-horizon
+    scope: Paper thm:main and lean/docs/131.md select connectivity, gap and TV mixing. Paper
+      cor:exact-sampling gives a separate exactly uniform unbiased-bit sampler with expected
+      polynomial runtime; that sampler lies outside the selected Lean chain scope. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.
+    rationale: Finite invariance, detailed balance, connectivity, spectral gap and TV mixing
+      are different obligations. FEP stationarity does not imply a mixing rate or an exactly
+      uniform algorithm.
+  - id: openai-math-139-exact-query-complexity
+    title: Subpolynomial query complexity for well-conditioned log-concave sampling
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/build/sections/introduction.tex
+    source_path: preprints/Subpolynomial-query-complexity-for-well-conditioned-log-concave-sampling-September-26-2026/build/sections/introduction.tex
+    source_sha256: b163dbf1f56f109ac7aad2e4efc4bab5294053b0f714723558ba826c40164ba2
+    status: reviewed_source_statement_uncompiled
+    statement: 'Exact-oracle sampling complexity: for C2 potentials V on R^d with V(0)=0,
+      gradV(0)=0 and I<=HessianV<=2I, the least every-run exact value-gradient query budget
+      for Gibbs sampling at TV error<=1/10 obeys Q(d)<=C_epsilon d^epsilon for every epsilon>0
+      and Q(d)>=c log d eventually.'
+    carriers:
+    - Euclidean Gibbs densities e^-V/Z
+    - Measurable adaptive randomized first-order algorithms
+    - Exact value and gradient oracle transcripts
+    hypotheses:
+    - d>=2; known normalized minimizer0
+    - Global Hessian bounds I and2I
+    - Every-run query cap, unrestricted computation between queries
+    features:
+    - domain:analysis
+    - domain:probability
+    - domain:statistics
+    - domain:optimization
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:general-measurable
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    - hypothesis:convexity
+    - hypothesis:asymptotic-limit
+    scope: Paper thm:main and lean/docs/139.md imply optimal polynomial dimension exponent0.
+      No polylogarithmic upper bound, arithmetic/bit-runtime guarantee, noisy-oracle result
+      or practical implementation is asserted. The upstream catalogue review is unchecked;
+      no solution compilation or Comparator execution was performed here.
+    rationale: Information/query complexity differs from sample, optimization-iteration and
+      physical-time complexity; compare oracle access and error topology before using computational
+      claims in an inference model.
+  - id: openai-math-145-all-finite-order-mixing
+    title: Rokhlin's multiple-mixing problem for one transformation
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/build/sections/01-introduction.tex
+    source_path: preprints/Rokhlins-multiple-mixing-problem-for-one-transformation-September-23-2026/build/sections/01-introduction.tex
+    source_sha256: 88914bccc2fac68b930898a6a5587287ad07d0be7fbec9423931f8f71ddea35a
+    status: reviewed_source_statement_uncompiled
+    statement: 'All finite-order mixing: an invertible measurable probability-preserving transformation
+      with measurable inverse and ordinary mixing has intersection probabilities tending to
+      the product for every fixed finite collection of measurable sets as all successive positive
+      integer time gaps diverge.'
+    carriers:
+    - General probability space
+    - One invertible measure-preserving time transformation
+    - Translated measurable sets and multi-time layouts
+    hypotheses:
+    - Probability preservation and measurable invertibility
+    - Ordinary two-set mixing
+    - Fixed finite order, all successive gaps tending to infinity
+    features:
+    - domain:probability
+    - domain:measure-theory
+    - domain:dynamical-systems
+    - domain:analysis
+    - carrier:general-measurable
+    - hypothesis:normalization
+    - hypothesis:asymptotic-limit
+    scope: Paper thm:main and lean/docs/145.md/ComparatorChallenges/Rokhlin.lean. The original
+      probability space needs no standardness assumption. This is one time generator, not
+      a general Z2 action; endomorphism/flow corollaries are separate paper units. The upstream
+      catalogue review is unchecked; no solution compilation or Comparator execution was performed
+      here.
+    rationale: One-time marginal independence, stationarity and multi-time mixing are distinct
+      statements. An OU or FEP kernel cannot inherit this conclusion without identification
+      of the transformation and its mixing premise.
+  - id: openai-math-148-entropy-rate-dimension
+    title: The entropy-rate dimension formula for self-similar measures on the line
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/build/sections/introduction.tex
+    source_path: preprints/The-entropy-rate-dimension-formula-for-self-similar-measures-on-the-line-September-24-2026/build/sections/introduction.tex
+    source_sha256: c2c501b0e3199a6b3b53a35699a3ecb6a4d3b7035791d4c2639cd36d0d0533e0
+    status: reviewed_source_statement_uncompiled
+    statement: 'Entropy-rate dimension: for finite indexed similarities phi_i(x)=r_i x+t_i
+      on R with0<|r_i|<1 and strictly positive probability weights, the self-similar law has
+      lower Hausdorff dimension min(1,h_RW/chi), where h_RW is entropy of exact random composed
+      affine maps and chi=-sum p_i log|r_i|.'
+    carriers:
+    - Real line with Euclidean metric
+    - Finite random affine maps and their invariant probability law
+    - Exact-map entropy rather than address entropy
+    hypotheses:
+    - Finite nonempty family and positive normalized weights
+    - Nonzero signed contraction ratios with absolute value<1
+    - Same logarithm base in entropy rate and Lyapunov exponent
+    features:
+    - domain:topology
+    - domain:probability
+    - domain:measure-theory
+    - domain:information-theory
+    - domain:dynamical-systems
+    - domain:analysis
+    - carrier:finite-dimensional-real
+    - carrier:euclidean-space
+    - carrier:finite-discrete
+    - carrier:general-measurable
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:asymptotic-limit
+    scope: Paper thm:main and lean/docs/148.md. Unequal signed ratios, exact overlaps and
+      repeated indexed generators are allowed. Measure dimension and attractor-dimension corollaries
+      are separate; absolute continuity is outside these statements. The upstream catalogue
+      review is unchecked; no solution compilation or Comparator execution was performed here.
+    rationale: Distinguish entropy of latent addresses from entropy after a many-to-one observation
+      map. Information loss can change dimension without a density or Fisher tensor, and dimension1
+      does not establish absolute continuity.
+  - id: openai-math-327-markov-type-superreflexivity
+    title: Nontrivial Markov Type Forces Superreflexivity
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/build/main.tex
+    source_path: preprints/Nontrivial-Markov-Type-Forces-Superreflexivity-September-23-2026/build/main.tex
+    source_sha256: 967be1ac13fe35f0a0dc48063d8bc9dc447163a3aaa86c793f924eef0b0c8ed4
+    status: reviewed_source_statement_uncompiled
+    statement: 'Markov type forces superreflexivity: a real Banach space with Markov type
+      p for some p>1 admits an equivalent uniformly convex norm; the Markov-type bound ranges
+      over every finite stationary reversible chain, every map into the space, and every positive
+      integer time.'
+    carriers:
+    - Real Banach space with norm-induced metric
+    - Finite stationary reversible chains
+    - Maps from chain states into the Banach space
+    hypotheses:
+    - Complete real normed linear space
+    - Existence of p>1 and one uniform finite Markov-type constant
+    - All finite reversible chains and all positive integer times
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - carrier:finite-discrete
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    - hypothesis:regularity
+    scope: Paper thm:main; lean/docs/327.md and MarkovType.lean record an iff with equivalent
+      uniformly convex norm, including the zero space. The norm, exponent and constants may
+      depend on the space; equivalent uniformly smooth renormings are separate consequences.
+      The upstream catalogue review is unchecked; no solution compilation or Comparator execution
+      was performed here.
+    rationale: A finite feature MDS display is not a Markov-type theorem about the mathematical
+      carrier. Renormability tests all reversible walks and concerns an equivalent norm, not
+      the Fisher metric in a chosen chart.
+  - id: openai-math-332-l1-markov-cotype
+    title: Metric Markov Cotype Two of ℓ₁
+    source_url: https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/build/main.tex
+    source_path: preprints/Metric-Markov-Cotype-Two-of-l1-October-5-2026/build/main.tex
+    source_sha256: 656a6f35bf6543ecf0cf2dbc38a83a7a05427592123a5eb817be24250e2e6953
+    status: reviewed_source_statement_uncompiled
+    statement: 'Metric Markov cotype2 of l1: for every finite reversible stochastic matrix
+      with stationary probability pi, positive integer time t and points x_i in real l1, points
+      y_i exist whose squared displacement plus t times one-step variation is at most3024
+      times the original Cesaro-averaged squared variation.'
+    carriers:
+    - Infinite-dimensional real l1
+    - Finite reversible stochastic matrices and stationary probability vectors
+    - Freely chosen modified points in the ambient l1 space
+    hypotheses:
+    - Positive integer state count and time
+    - Nonnegative normalized pi and stochastic reversible A
+    - Zero stationary masses allowed; y_i need not stay in a prescribed subspace
+    features:
+    - domain:analysis
+    - domain:topology
+    - domain:probability
+    - carrier:finite-discrete
+    - carrier:function-space
+    - carrier:metric-space
+    - hypothesis:normalization
+    scope: Paper thm:main gives N2(l1)<=12 sqrt21. The Hilbert-to-l1 Lipschitz extension is
+      a separate consequence. No linked Lean scope/catalogue record was found. Metric cotype
+      does not identify Ball linear-average cotype or the property of each l1 subspace. The
+      upstream catalogue review is unchecked; no solution compilation or Comparator execution
+      was performed here.
+    rationale: Compare smoothing or geometric embeddings only after declaring the norm and
+      allowed reconstruction points. Nonlinear modification in the full ambient space differs
+      from a fixed linear encoder or Fisher pullback.

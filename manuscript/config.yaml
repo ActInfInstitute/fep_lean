@@ -6,8 +6,8 @@
 paper:
   title: "Towards Lean 4 Formalization of the Free Energy Principle"
   subtitle: "AI-Driven Theorem Sketching and Verification for Active Inference and Bayesian Mechanics"
-  version: "1.5.0"
-  date: "2026-10-06"
+  version: "1.6.0"
+  date: "2026-10-07"
   # The template's title-page cover slot points at the published graphical
   # abstract, so the cover page and the Graphical Abstract section carry one
   # artifact. The alt text is a literal: a config token would reach the cover
@@ -21,9 +21,11 @@ paper:
       a fail-closed manuscript projection; a dashed optional full mode adds
       Hermes and OpenGauss evidence behind its own validated receipt.
 
+# The canonical cover author is projected from CITATION.cff during rendering.
+
 publication:
-  # Work-level concept DOI; individual archived versions have distinct DOIs.
-  doi: "10.5281/zenodo.19699233"
+  # Manuscript version DOI, reserved in its existing scholarly concept.
+  doi: "10.5281/zenodo.23220027"
   journal: "Active Inference Journal"
   volume: ""
   pages: ""

@@ -47,6 +47,31 @@ A release changes no scientific claim. Unrun lanes stay described as unrun.
      --notes-file /tmp/notes.md
    ```
 
-7. The Zenodo integration mints the immutable version DOI from the GitHub
-   release under the [concept DOI](https://doi.org/10.5281/zenodo.19699233);
-   add that DOI to the release notes once the record exists.
+7. Verify that the GitHub release was archived under the
+   [software concept DOI](https://doi.org/10.5281/zenodo.23196891). The v1.5.0
+   software version is [23196892](https://doi.org/10.5281/zenodo.23196892).
+   The GitHub integration archives the tagged repository ZIP; it does not
+   automatically include the PDF, wheel, sdist or release assets. Add the
+   immutable software version DOI to the release notes only after checking
+   the published record and its tagged source identity.
+8. Publish a new version of the separate
+   [scholarly concept](https://doi.org/10.5281/zenodo.19699233) from its latest
+   manuscript record in the owner's Zenodo account. At the v1.6.0 preparation
+   date, that latest record is [22072956](https://zenodo.org/records/22072956),
+   version 1.1.0. Preserve this concept's existing version history. Upload the
+   accepted PDF, offline companion, wheel, sdist, exact tagged source archive
+   and SHA-256 checksums. The offline companion must preserve the PDF's
+   relative explorer link: `pdf/fep_lean_combined.pdf` beside
+   `manuscript/assets/mathematical-map.html` and its referenced assets.
+   Keep current workstation paths, account information and private execution
+   logs out of new generated public artifacts. An exact tagged source archive
+   retains already-public historical custody records unchanged; compare those
+   bytes with the prior public release rather than silently scrubbing history.
+   Link the scholarly and software records, then verify
+   the published version, author, ORCID, license, file bytes and DOI resolution.
+
+`CITATION.cff` distinguishes software citation from its preferred scholarly
+citation. The manuscript DOI identifies its exact scholarly version under the
+scholarly concept. For v1.6.0 the reserved version is
+`10.5281/zenodo.23220027`. Keep the scholarly concept, scholarly version and
+software concept distinct; do not describe the two histories as one version chain.

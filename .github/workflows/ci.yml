@@ -111,6 +111,8 @@ jobs:
           uv run python scripts/_maint_build_lean_landscape.py --check
           uv run python scripts/build_formalism_atlas.py --check
           uv run python scripts/build_formal_kernel_dashboard.py --check
+          uv run python specs/openai-math-methods/generate_package_methods.py --check
+          uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
           uv run python scripts/build_render_fonts.py --check
           uv run python scripts/check_render_log.py --verify-receipt
           uv run python docs/theorem_ref_audit.py
@@ -143,6 +145,10 @@ jobs:
         env:
           FEP_DISTRIBUTION_PYTHON: ${{ matrix.python }}
         run: uv run --locked python -m pytest tests/test_distribution.py -q -s --no-cov
+      - name: Exercise portable mathematical methods in the installed wheel
+        env:
+          FEP_DISTRIBUTION_PYTHON: ${{ matrix.python }}
+        run: uv run --locked python -m pytest specs/openai-math-methods/test_distribution_methods.py -q -s --no-cov
 
   python:
     needs: changes
@@ -167,6 +173,8 @@ jobs:
           uv run python scripts/_maint_build_lean_landscape.py --check
           uv run python scripts/build_formalism_atlas.py --check
           uv run python scripts/build_formal_kernel_dashboard.py --check
+          uv run python specs/openai-math-methods/generate_package_methods.py --check
+          uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
       # The frozen-custody bridge gates from AGENTS.md's required checks:
       # both are --check validation of committed artifacts and pass on a
       # fresh checkout without any sibling repo.
@@ -197,7 +205,7 @@ jobs:
         run: |
           uv run python scripts/build_manuscript_figures.py
           uv run python scripts/build_manuscript_figures.py --check
-      # The shipped artifact is a 350-page PDF, and the defects that reached it
+      # Historical shipped manuscript defects
       # -- 162 dropped glyphs, one false printed theorem, a diagram shipped as
       # its own source, chapters the render predated -- are all invisible to
       # the shared template's success test. `scripts/check_render_log.py` is
@@ -207,7 +215,61 @@ jobs:
       # chapter edited without a fresh render fails here too.
       - name: Require the shipped render to have passed the acceptance
         run: uv run python scripts/check_render_log.py --verify-receipt
-      - run: uv run pytest tests/ -q -n auto --dist loadgroup --cov=src --cov-report=xml --cov-fail-under=89 -m "not serial_lean"
+      - name: Check Python acceptance membership controls
+        run: |
+          uv run pytest specs/publication-browser-acceptance/test_validate_acceptance.py -q --no-cov
+          uv run ruff check specs/publication-browser-acceptance
+          uv run ruff format --check specs/publication-browser-acceptance
+      - name: Record the complete non-serial Python test selection
+        run: uv run python specs/publication-browser-acceptance/validate_acceptance.py --collect output/python-acceptance-collection.json
+      # A loadgroup isolates the two Chrome probes from each other, but not
+      # from other workers. Execute each probe once after those workers have
+      # finished; retain the full selection and both components' results.
+      # This changes scheduling, not Chrome's deadline or launch behavior.
+      - name: Run the parallel Python acceptance component
+        id: python_remainder
+        run: >-
+          uv run pytest tests/ -q -n auto --dist loadgroup
+          --cov=src --cov-report=xml --cov-fail-under=89
+          -m "not serial_lean"
+          --deselect=tests/test_browser_capture.py::test_live_chrome_blocks_and_records_a_delayed_outbound_request
+          --deselect=tests/test_browser_capture.py::test_live_chrome_replay_terminates_every_profile_writer
+          --junitxml=output/python-acceptance.xml
+      - name: Run the isolated live Chrome acceptance component
+        id: live_chrome
+        if: ${{ !cancelled() && steps.python_remainder.outcome != 'skipped' }}
+        run: >-
+          uv run pytest
+          tests/test_browser_capture.py::test_live_chrome_blocks_and_records_a_delayed_outbound_request
+          tests/test_browser_capture.py::test_live_chrome_replay_terminates_every_profile_writer
+          -q -n 0 --cov=src --cov-append --cov-report=xml
+          --cov-fail-under=89 --junitxml=output/live-chrome-acceptance.xml
+      - name: Require complete Python membership and all live Chrome controls
+        if: ${{ !cancelled() && steps.python_remainder.outcome != 'skipped' && steps.live_chrome.outcome != 'skipped' }}
+        run: >-
+          uv run python specs/publication-browser-acceptance/validate_acceptance.py
+          --collection output/python-acceptance-collection.json
+          --parallel-junit output/python-acceptance.xml
+          --chrome-junit output/live-chrome-acceptance.xml
+          --coverage coverage.xml
+          --output output/python-acceptance-summary.json
+      - name: Retain actual Python acceptance results and coverage
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-acceptance
+          path: |
+            output/python-acceptance.xml
+            output/live-chrome-acceptance.xml
+            output/python-acceptance-collection.json
+            output/python-acceptance-summary.json
+            coverage.xml
+          if-no-files-found: error
+      - name: Check mathematical context and numerical visualization boundaries
+        run: |
+          uv run pytest specs/openai-math-methods/test_methods.py specs/openai-math-methods/test_upstream.py specs/openai-math-methods/test_visualization.py -q --no-cov
+          uv run ruff check specs/openai-math-methods
+          uv run ruff format --check specs/openai-math-methods
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v7
@@ -262,6 +324,7 @@ jobs:
           # rasterized PNGs under output/figures/.
           uv run python scripts/build_formalism_atlas.py
           uv run python scripts/build_formal_kernel_dashboard.py
+          uv run fep-lean --project-root . methods export --output-root docs/mathematical-positioning
           uv run python scripts/build_manuscript_figures.py
       - name: Verify the manuscript asset roster before upload
         run: |
@@ -299,6 +362,7 @@ jobs:
             docs/formalism-atlas.html
             docs/formal-kernel-dashboard.svg
             docs/formal-kernel-dashboard.html
+            docs/mathematical-positioning/
             output/figures/
 
   # FEP-CI-RENDER: this lane renders end-to-end behind the lean job (the
@@ -529,6 +593,10 @@ jobs:
               "output/formalism-audit.json",
               "docs/render-acceptance.json",
               "docs/render-fonts.json",
+              # These generated inputs have run-bound verification/source
+              # values. Retain their exact bytes beside their source hashes.
+              "manuscript/manuscript_vars.yaml",
+              "manuscript/09z_unified_formalism_catalogue.md",
           ]
           def artifact_bytes():
               result = {}

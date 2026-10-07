@@ -2,8 +2,8 @@
 
 The only public command is `fep-lean`.
 
-Every substantive command is source-checkout-bound. The wheel exposes package
-resources and help without a checkout, but the console command rejects a
+`methods` reads portable installed resources without a checkout. The other
+substantive commands are source-checkout-bound and reject a
 `site-packages` ancestor or incomplete directory with a structured error. Use
 `fep-lean --project-root /path/to/fep_lean COMMAND` when the current process is
 outside the checkout.
@@ -20,6 +20,7 @@ fep-lean topic ID    Execute one topic in full mode.
 fep-lean report      Generate the offline catalogue report.
 fep-lean bridge      Inspect, pin, emit, certify, or verify GNN bridge custody.
 fep-lean status      Read-only evidence-currency report over existing checks.
+fep-lean methods     Analyze portable mathematical contracts and visualizations.
 ```
 
 `bridge` operates on an explicit sibling GNN checkout (`--gnn-root PATH` is
@@ -95,3 +96,26 @@ topic warning, review failure, artifact failure, or unresolved report state
 returns non-zero. The exception is `status`, whose documented boundary is the
 report itself: it exits 0 whenever the report composes, even when sections
 report stale evidence.
+
+## Portable mathematical methods
+
+```bash
+fep-lean methods inspect --topic fep-001
+fep-lean methods inspect --family core-information-geometry
+fep-lean methods neighbors core-information-geometry --limit 5
+fep-lean methods probe
+fep-lean methods analyze fep-001
+fep-lean methods theorem fep_fep001.FEP001.fep001_variationalUpperBound_eq_iff
+fep-lean methods embedding
+fep-lean methods export --output-root ./mathematical-methods
+fep-lean methods check --output-root ./mathematical-methods
+```
+
+These commands work from the installed wheel without checkout markers. An
+explicit global `--project-root PATH` selects canonical checkout owners and
+rejects an invalid checkout. The API defaults to installed resources; the CLI
+also recognizes a valid current checkout. Inspect the reported origin before
+interpreting input hashes. `check` compares existing export bytes without
+repair; generation and probes establish neither native proof nor scientific
+acceptance. [The guide](mathematical-methods.md) explains the interfaces and
+mathematical transfer rules.

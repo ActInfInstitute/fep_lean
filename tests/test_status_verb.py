@@ -21,7 +21,7 @@ from fep_lean.cli import (
     render_receipt_section,
 )
 from fep_lean.output import manuscript as manuscript_module
-from fep_lean.output.render_log import manuscript_source_digest
+from fep_lean.output.render_log import RECEIPT_VERSION, manuscript_source_digest
 
 SECTION_NAMES = (
     "catalogue_build_products",
@@ -34,7 +34,7 @@ SECTION_NAMES = (
 def accepted_receipt_payload(manuscript_dir: Path) -> dict[str, object]:
     """Build the smallest render-acceptance receipt covering *manuscript_dir*."""
     return {
-        "receipt_version": 2,
+        "receipt_version": RECEIPT_VERSION,
         "accepted": True,
         "pages": 1,
         "checks": {
@@ -46,6 +46,7 @@ def accepted_receipt_payload(manuscript_dir: Path) -> dict[str, object]:
             "contents_number_overflows": [],
             "unresolved_references": [],
             "publication_cover": [],
+            "unnumbered_equations": [],
         },
         "manuscript_source_digest": manuscript_source_digest(manuscript_dir),
         "source_digests": {},

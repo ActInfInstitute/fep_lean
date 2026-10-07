@@ -1,0 +1,910 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="720pt" height="360pt" viewBox="0 0 720 360" version="1.1" role="img" aria-labelledby="panel-title panel-desc">
+ <ns0:title id="panel-title">Support controls the direction of KL convergence</ns0:title><ns0:desc id="panel-desc">pε=(1−ε,ε), δ=(1,0); 0&lt;ε≤0.1. Endpoint ε=0 has both KL values zero. TV(pε,δ)=ε; KL(δ||pε)=−log(1−ε); KL(pε||δ)=+∞ for every ε&gt;0. Native extended-real KL; null means +∞, never a plotted finite replacement. TV convergence does not imply KL convergence in both directions.</ns0:desc><ns0:defs>
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g id="figure_1">
+  <ns0:g id="patch_1">
+   <ns0:path d="M 0 360  L 720 360  L 720 0  L 0 0  z " style="fill: #ffffff" />
+  </ns0:g>
+  <ns0:g id="axes_1">
+   <ns0:g id="patch_2">
+    <ns0:path d="M 70.951568 308.934447  L 716.99976 308.934447  L 716.99976 26.002048  L 70.951568 26.002048  z " style="fill: #ffffff" />
+   </ns0:g>
+   <ns0:g id="matplotlib.axis_1">
+    <ns0:g id="xtick_1">
+     <ns0:g id="line2d_1">
+      <ns0:defs>
+       <ns0:path id="m1afa16c929" d="M 0 0  L 0 3.5  " style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="100.317395" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_1">
+      
+      <ns0:g transform="translate(80.342395 331.914447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">6</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_2">
+     <ns0:g id="line2d_2">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="217.780703" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_2">
+      
+      <ns0:g transform="translate(197.805703 331.744447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">5</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_3">
+     <ns0:g id="line2d_3">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="335.24401" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_3">
+      
+      <ns0:g transform="translate(315.26901 331.744447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">4</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_4">
+     <ns0:g id="line2d_4">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="452.707318" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_4">
+      
+      <ns0:g transform="translate(432.732318 331.914447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">3</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_5">
+     <ns0:g id="line2d_5">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="570.170625" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_5">
+      
+      <ns0:g transform="translate(550.195625 331.914447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">2</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_6">
+     <ns0:g id="line2d_6">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="687.633933" y="308.934447" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_6">
+      
+      <ns0:g transform="translate(667.658933 331.744447)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_7">
+     <ns0:g id="line2d_7">
+      <ns0:defs>
+       <ns0:path id="m076f9ca79f" d="M 0 0  L 0 2  " style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="74.258307" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_8">
+     <ns0:g id="line2d_8">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="82.122098" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_9">
+     <ns0:g id="line2d_9">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="88.934024" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_10">
+     <ns0:g id="line2d_10">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="94.942569" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_11">
+     <ns0:g id="line2d_11">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="135.677374" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_12">
+     <ns0:g id="line2d_12">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="156.361636" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_13">
+     <ns0:g id="line2d_13">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="171.037353" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_14">
+     <ns0:g id="line2d_14">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="182.420724" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_15">
+     <ns0:g id="line2d_15">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="191.721615" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_16">
+     <ns0:g id="line2d_16">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="199.585406" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_17">
+     <ns0:g id="line2d_17">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="206.397332" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_18">
+     <ns0:g id="line2d_18">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="212.405876" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_19">
+     <ns0:g id="line2d_19">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="253.140682" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_20">
+     <ns0:g id="line2d_20">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="273.824943" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_21">
+     <ns0:g id="line2d_21">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="288.500661" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_22">
+     <ns0:g id="line2d_22">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="299.884031" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_23">
+     <ns0:g id="line2d_23">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="309.184922" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_24">
+     <ns0:g id="line2d_24">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="317.048714" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_25">
+     <ns0:g id="line2d_25">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="323.86064" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_26">
+     <ns0:g id="line2d_26">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="329.869184" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_27">
+     <ns0:g id="line2d_27">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="370.603989" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_28">
+     <ns0:g id="line2d_28">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="391.288251" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_29">
+     <ns0:g id="line2d_29">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="405.963968" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_30">
+     <ns0:g id="line2d_30">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="417.347339" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_31">
+     <ns0:g id="line2d_31">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="426.64823" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_32">
+     <ns0:g id="line2d_32">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="434.512021" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_33">
+     <ns0:g id="line2d_33">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="441.323947" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_34">
+     <ns0:g id="line2d_34">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="447.332492" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_35">
+     <ns0:g id="line2d_35">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="488.067297" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_36">
+     <ns0:g id="line2d_36">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="508.751559" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_37">
+     <ns0:g id="line2d_37">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="523.427276" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_38">
+     <ns0:g id="line2d_38">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="534.810647" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_39">
+     <ns0:g id="line2d_39">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="544.111538" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_40">
+     <ns0:g id="line2d_40">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="551.975329" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_41">
+     <ns0:g id="line2d_41">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="558.787255" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_42">
+     <ns0:g id="line2d_42">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="564.795799" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_43">
+     <ns0:g id="line2d_43">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="605.530604" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_44">
+     <ns0:g id="line2d_44">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="626.214866" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_45">
+     <ns0:g id="line2d_45">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="640.890583" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_46">
+     <ns0:g id="line2d_46">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="652.273954" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_47">
+     <ns0:g id="line2d_47">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="661.574845" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_48">
+     <ns0:g id="line2d_48">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="669.438637" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_49">
+     <ns0:g id="line2d_49">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="676.250562" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_50">
+     <ns0:g id="line2d_50">
+      <ns0:g>
+       <ns0:use ns1:href="#m076f9ca79f" x="682.259107" y="308.934447" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="text_7">
+     <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="393.975664" y="352.915776" transform="rotate(-0 393.975664 352.915776)">ε (positive support outside δ)</ns0:text>
+    </ns0:g>
+   </ns0:g>
+   <ns0:g id="matplotlib.axis_2">
+    <ns0:g id="ytick_1">
+     <ns0:g id="line2d_51">
+      <ns0:defs>
+       <ns0:path id="m76c1e50c7b" d="M 0 0  L -3.5 0  " style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="296.073884" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_8">
+      
+      <ns0:g transform="translate(24.001568 304.063884)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">6</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_2">
+     <ns0:g id="line2d_52">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="244.863896" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_9">
+      
+      <ns0:g transform="translate(24.001568 252.768896)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">5</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_3">
+     <ns0:g id="line2d_53">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="193.653909" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_10">
+      
+      <ns0:g transform="translate(24.001568 201.558909)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">4</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_4">
+     <ns0:g id="line2d_54">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="142.443921" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_11">
+      
+      <ns0:g transform="translate(24.001568 150.433921)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">3</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_5">
+     <ns0:g id="line2d_55">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="91.233934" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_12">
+      
+      <ns0:g transform="translate(24.001568 99.223934)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.1415" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.1625" style="font-size: 11.9px; font-family: 'DejaVu Sans'">2</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_6">
+     <ns0:g id="line2d_56">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="70.951568" y="40.023946" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_13">
+      
+      <ns0:g transform="translate(24.001568 47.928946)">
+       <ns0:text>
+        <ns0:tspan x="0" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+        <ns0:tspan x="10.815918" y="-0.305563" style="font-size: 17px; font-family: 'DejaVu Sans'">0</ns0:tspan>
+        <ns0:tspan x="21.794531" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">−</ns0:tspan>
+        <ns0:tspan x="31.76543" y="-7.326563" style="font-size: 11.9px; font-family: 'DejaVu Sans'">1</ns0:tspan>
+       </ns0:text>
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_7">
+     <ns0:g id="line2d_57">
+      <ns0:defs>
+       <ns0:path id="mf56fe06cfd" d="M 0 0  L -2 0  " style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="307.434756" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_8">
+     <ns0:g id="line2d_58">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="304.006411" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_9">
+     <ns0:g id="line2d_59">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="301.036644" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_10">
+     <ns0:g id="line2d_60">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="298.417124" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_11">
+     <ns0:g id="line2d_61">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="280.658142" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_12">
+     <ns0:g id="line2d_62">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="271.64051" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_13">
+     <ns0:g id="line2d_63">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="265.242399" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_14">
+     <ns0:g id="line2d_64">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="260.279639" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_15">
+     <ns0:g id="line2d_65">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="256.224768" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_16">
+     <ns0:g id="line2d_66">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="252.796424" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_17">
+     <ns0:g id="line2d_67">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="249.826657" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_18">
+     <ns0:g id="line2d_68">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="247.207137" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_19">
+     <ns0:g id="line2d_69">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="229.448154" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_20">
+     <ns0:g id="line2d_70">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="220.430523" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_21">
+     <ns0:g id="line2d_71">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="214.032412" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_22">
+     <ns0:g id="line2d_72">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="209.069651" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_23">
+     <ns0:g id="line2d_73">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="205.01478" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_24">
+     <ns0:g id="line2d_74">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="201.586436" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_25">
+     <ns0:g id="line2d_75">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="198.616669" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_26">
+     <ns0:g id="line2d_76">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="195.997149" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_27">
+     <ns0:g id="line2d_77">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="178.238166" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_28">
+     <ns0:g id="line2d_78">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="169.220535" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_29">
+     <ns0:g id="line2d_79">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="162.822424" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_30">
+     <ns0:g id="line2d_80">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="157.859664" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_31">
+     <ns0:g id="line2d_81">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="153.804793" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_32">
+     <ns0:g id="line2d_82">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="150.376449" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_33">
+     <ns0:g id="line2d_83">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="147.406682" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_34">
+     <ns0:g id="line2d_84">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="144.787162" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_35">
+     <ns0:g id="line2d_85">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="127.028179" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_36">
+     <ns0:g id="line2d_86">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="118.010548" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_37">
+     <ns0:g id="line2d_87">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="111.612437" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_38">
+     <ns0:g id="line2d_88">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="106.649676" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_39">
+     <ns0:g id="line2d_89">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="102.594805" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_40">
+     <ns0:g id="line2d_90">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="99.166461" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_41">
+     <ns0:g id="line2d_91">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="96.196694" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_42">
+     <ns0:g id="line2d_92">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="93.577174" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_43">
+     <ns0:g id="line2d_93">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="75.818191" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_44">
+     <ns0:g id="line2d_94">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="66.80056" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_45">
+     <ns0:g id="line2d_95">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="60.402449" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_46">
+     <ns0:g id="line2d_96">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="55.439688" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_47">
+     <ns0:g id="line2d_97">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="51.384818" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_48">
+     <ns0:g id="line2d_98">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="47.956474" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_49">
+     <ns0:g id="line2d_99">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="44.986707" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_50">
+     <ns0:g id="line2d_100">
+      <ns0:g>
+       <ns0:use ns1:href="#mf56fe06cfd" x="70.951568" y="42.367187" style="stroke: #000000; stroke-width: 0.6" />
+      </ns0:g>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="text_14">
+     <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="15.917584" y="167.468248" transform="rotate(-90 15.917584 167.468248)">Finite value</ns0:text>
+    </ns0:g>
+   </ns0:g>
+   <ns0:g id="line2d_101">
+    <ns0:path d="M 100.317395 296.073884  L 115.000308 289.672635  L 129.683222 283.271387  L 144.366135 276.870139  L 159.049049 270.46889  L 173.731962 264.067642  L 188.414876 257.666393  L 203.097789 251.265145  L 217.780703 244.863896  L 232.463616 238.462648  L 247.14653 232.061399  L 261.829443 225.660151  L 276.512356 219.258903  L 291.19527 212.857654  L 305.878183 206.456406  L 320.561097 200.055157  L 335.24401 193.653909  L 349.926924 187.25266  L 364.609837 180.851412  L 379.292751 174.450163  L 393.975664 168.048915  L 408.658578 161.647667  L 423.341491 155.246418  L 438.024404 148.84517  L 452.707318 142.443921  L 467.390231 136.042673  L 482.073145 129.641424  L 496.756058 123.240176  L 511.438972 116.838927  L 526.121885 110.437679  L 540.804799 104.036431  L 555.487712 97.635182  L 570.170625 91.233934  L 584.853539 84.832685  L 599.536452 78.431437  L 614.219366 72.030188  L 628.902279 65.62894  L 643.585193 59.227691  L 658.268106 52.826443  L 672.95102 46.425195  L 687.633933 40.023946  " clip-path="url(#pd51109bbfc)" style="fill: none; stroke: #1f77b4; stroke-width: 3; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="line2d_102">
+    <ns0:path d="M 100.317395 296.073873  L 115.000308 289.672621  L 129.683222 283.271367  L 144.366135 276.870112  L 159.049049 270.468855  L 173.731962 264.067595  L 188.414876 257.666331  L 203.097789 251.265061  L 217.780703 244.863785  L 232.463616 238.4625  L 247.14653 232.061202  L 261.829443 225.659887  L 276.512356 219.258551  L 291.19527 212.857185  L 305.878183 206.45578  L 320.561097 200.054323  L 335.24401 193.652797  L 349.926924 187.251177  L 364.609837 180.849434  L 379.292751 174.447526  L 393.975664 168.045398  L 408.658578 161.642976  L 423.341491 155.240163  L 438.024404 148.836828  L 452.707318 142.432796  L 467.390231 136.027836  L 482.073145 129.621635  L 496.756058 123.21378  L 511.438972 116.803716  L 526.121885 110.390703  L 540.804799 103.973751  L 555.487712 97.551531  L 570.170625 91.122266  L 584.853539 84.683566  L 599.536452 78.232209  L 614.219366 71.763846  L 628.902279 65.272568  L 643.585193 58.750306  L 658.268106 52.185947  L 672.95102 45.564011  L 687.633933 38.862612  " clip-path="url(#pd51109bbfc)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #ff7f0e; stroke-width: 1.5" />
+   </ns0:g>
+   <ns0:g id="patch_3">
+    <ns0:path d="M 70.951568 308.934447  L 70.951568 26.002048  " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="patch_4">
+    <ns0:path d="M 70.951568 308.934447  L 716.99976 308.934447  " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="text_15">
+    <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: start" x="90.333014" y="68.441908" transform="rotate(-0 90.333014 68.441908)">KL(pε || δ) = +∞ for all plotted ε</ns0:text>
+   </ns0:g>
+   <ns0:g id="legend_1">
+    <ns0:g id="patch_5">
+     <ns0:path d="M 575.57976 302.934447  L 708.59976 302.934447  Q 710.99976 302.934447 710.99976 300.534447  L 710.99976 265.680072  Q 710.99976 263.280072 708.59976 263.280072  L 575.57976 263.280072  Q 573.17976 263.280072 573.17976 265.680072  L 573.17976 300.534447  Q 573.17976 302.934447 575.57976 302.934447  z " style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />
+    </ns0:g>
+    <ns0:g id="line2d_103">
+     <ns0:path d="M 577.97976 272.998198  L 589.97976 272.998198  L 601.97976 272.998198  " style="fill: none; stroke: #1f77b4; stroke-width: 3; stroke-linecap: square" />
+    </ns0:g>
+    <ns0:g id="text_16">
+     <ns0:text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="611.57976" y="277.198197" transform="rotate(-0 611.57976 277.198197)">total variation ε</ns0:text>
+    </ns0:g>
+    <ns0:g id="line2d_104">
+     <ns0:path d="M 577.97976 291.051635  L 589.97976 291.051635  L 601.97976 291.051635  " style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #ff7f0e; stroke-width: 1.5" />
+    </ns0:g>
+    <ns0:g id="text_17">
+     <ns0:text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="611.57976" y="295.251635" transform="rotate(-0 611.57976 295.251635)">KL(δ || pε), nats</ns0:text>
+    </ns0:g>
+   </ns0:g>
+  </ns0:g>
+  <ns0:g id="text_18">
+   <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="360" y="15.917584" transform="rotate(-0 360 15.917584)">Support controls the direction of KL convergence</ns0:text>
+  </ns0:g>
+ </ns0:g>
+ <ns0:defs>
+  <ns0:clipPath id="pd51109bbfc">
+   <ns0:rect x="70.951568" y="26.002048" width="646.048192" height="282.932399" />
+  </ns0:clipPath>
+ </ns0:defs>
+</ns0:svg>

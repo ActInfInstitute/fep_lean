@@ -31,15 +31,19 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from bisect import bisect_right
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
+from itertools import accumulate, groupby
 from pathlib import Path
 from typing import Any
 
 from fep_lean.output.rendering import (
+    PLACEHOLDER_RE,
     SOURCE_EXCLUDES,
     VERBATIM_SOURCES,
+    _asset_reference_rewrites,
     substitute_placeholders,
 )
 
@@ -286,7 +290,52 @@ _MERMAID_SOURCE_RE = re.compile(
     r"|journey|gantt|pie|gitGraph|mindmap|timeline|quadrantChart|C4Context)\b",
     re.IGNORECASE,
 )
+# The pinned producer can discard a fallback rewrite when its success counter
+# is zero, leaving the original fence for Pandoc. Inspect complete code
+# environments as well as the legacy figure/verbatim shape. Prose and Pandoc
+# macro definitions are outside this line-anchored environment matcher.
+_PANDOC_HIGHLIGHTING_RE = re.compile(
+    r"^[ \t]*\\begin\{Highlighting\}(?:\[[^\]\r\n]*\])?[ \t]*\r?\n"
+    r"(?P<body>.*?)^[ \t]*\\end\{Highlighting\}[ \t]*(?:\r?\n|$)",
+    re.DOTALL | re.MULTILINE,
+)
+# These are the token commands declared by the reviewed Pandoc preamble.
+# Unwrap their payloads only; unknown TeX commands must not become headers.
+_PANDOC_TOKEN_RE = re.compile(
+    r"\\(?:Alert|Annotation|Attribute|BaseN|BuiltIn|Char|Comment|CommentVar|Constant"
+    r"|ControlFlow|DataType|DecVal|Documentation|Error|Extension|Float|Function|Import"
+    r"|Information|Keyword|Normal|Operator|Other|Preprocessor|RegionMarker|SpecialChar"
+    r"|SpecialString|String|Variable|VerbatimString|Warning)Tok"
+    r"\{(?P<text>(?:\\[{}]|[^{}])*)\}"
+)
+# Unlike the legacy Mermaid-only figure, Highlighting also contains ordinary
+# Python and Lean. Require the complete opening header, so ``graph = ...``,
+# ``flowchart(...)`` and similarly named identifiers do not qualify.
+_HIGHLIGHTED_MERMAID_HEADER_RE = re.compile(
+    r"(?:(?:flowchart|graph)[ \t]+(?:TB|TD|BT|RL|LR)(?:[ \t]*;.*)?"
+    r"|sequenceDiagram|classDiagram|stateDiagram(?:-v2)?|erDiagram|journey|gantt"
+    r"|gitGraph|mindmap|timeline|quadrantChart|C4Context"
+    r"|pie(?:[ \t]+showData)?(?:[ \t]+title[ \t]+.+)?)",
+    re.IGNORECASE,
+)
 DEFAULT_TEX_NAME = "_combined_manuscript.tex"
+
+
+def _highlighted_mermaid_header(body: str) -> str | None:
+    """Read an opening Mermaid header through reviewed Pandoc token wrappers."""
+
+    for raw_line in body.splitlines():
+        line = raw_line.replace("{-}", "-")
+        while True:
+            unwrapped = _PANDOC_TOKEN_RE.sub(lambda match: match.group("text"), line)
+            if unwrapped == line:
+                break
+            line = unwrapped
+        line = line.replace(r"\%", "%").replace(r"\{", "{").replace(r"\}", "}").strip()
+        if not line or line.startswith("%%"):
+            continue
+        return line if _HIGHLIGHTED_MERMAID_HEADER_RE.fullmatch(line) else None
+    return None
 
 
 def mermaid_fallback_defects(
@@ -296,14 +345,16 @@ def mermaid_fallback_defects(
 
     The rendered LaTeX is the evidence: a rasterized diagram is an
     ``\\includegraphics`` of a PNG under ``figures/mermaid_inline/``, while a
-    failed one is a ``verbatim`` block containing the fence's own source.
+    failed one retains the fence's own source in a ``verbatim`` figure or a
+    Pandoc ``Highlighting`` code environment. A generated PNG alone cannot
+    establish that the final document actually contains the rasterized diagram.
     """
 
     tex_path = Path(pdf_dir) / tex_name
     if not tex_path.is_file():
         return ()
     content = tex_path.read_text(encoding="utf-8", errors="replace")
-    failures: list[str] = []
+    failures: list[tuple[int, str]] = []
     for match in _MERMAID_FALLBACK_RE.finditer(content):
         body = match.group("body")
         caption = match.group("caption").strip()
@@ -311,12 +362,24 @@ def mermaid_fallback_defects(
             continue
         line_number = content.count("\n", 0, match.start()) + 1
         first_line = body.strip().splitlines()[0].strip()
-        failures.append(
+        message = (
             f"{tex_path}:{line_number}: mermaid diagram shipped as verbatim source "
             f"(caption {caption!r}, first line {first_line!r}) -- the renderer fell "
             f"back instead of rasterizing it"
         )
-    return tuple(failures)
+        failures.append((match.start(), message))
+    for match in _PANDOC_HIGHLIGHTING_RE.finditer(content):
+        header = _highlighted_mermaid_header(match.group("body"))
+        if header is None:
+            continue
+        line_number = content.count("\n", 0, match.start()) + 1
+        message = (
+            f"{tex_path}:{line_number}: mermaid diagram shipped as highlighted source "
+            f"(first line {header!r}) -- the renderer retained raw diagram code "
+            f"instead of rasterizing it"
+        )
+        failures.append((match.start(), message))
+    return tuple(message for _offset, message in sorted(failures))
 
 
 DEFAULT_COMBINED_MARKDOWN = "_combined_manuscript.md"
@@ -329,24 +392,6 @@ DEFAULT_COMBINED_MARKDOWN = "_combined_manuscript.md"
 _NON_RENDERED_MANUSCRIPT_FILES = frozenset(SOURCE_EXCLUDES) - frozenset(
     VERBATIM_SOURCES
 )
-
-
-def _significant_lines(text: str) -> list[str]:
-    """Return the lines of a manuscript source that must survive a render.
-
-    Short lines (headings, table rules, list bullets) repeat across chapters and
-    would match anywhere, so they carry no evidence. Image lines are excluded
-    because the renderer legitimately rewrites their paths -- an audit that
-    counted those reported drift on two lines that had not drifted.
-    """
-
-    lines: list[str] = []
-    for raw in text.splitlines():
-        line = raw.strip()
-        if len(line) <= 60 or line.startswith("!["):
-            continue
-        lines.append(line)
-    return lines
 
 
 # The source stamp names the commit the render was computed from and the date
@@ -362,6 +407,127 @@ def _comparable(raw_line: str, variables: Mapping[str, Any] | None) -> bool:
     if _PER_RENDER_TOKEN in raw_line:
         return False
     return variables is not None or "{{" not in raw_line
+
+
+def _replace_with_provenance(
+    text: str,
+    origins: list[int],
+    pattern: re.Pattern[str],
+    replace: Callable[[re.Match[str]], str],
+) -> tuple[str, list[int]]:
+    """Replace whole-text matches, retaining each character's source-line owner.
+
+    A replacement inherits the line where its match starts. In particular, a
+    multiline value remains owned by its ordinary opening line when the token's
+    closing line also contains exempt per-render metadata.
+    """
+
+    parts: list[str] = []
+    retained: list[int] = []
+    cursor = 0
+    for match in pattern.finditer(text):
+        parts.append(text[cursor : match.start()])
+        retained.extend(origins[cursor : match.start()])
+        replacement = replace(match)
+        parts.append(replacement)
+        retained.extend([origins[match.start()]] * len(replacement))
+        cursor = match.end()
+    parts.append(text[cursor:])
+    retained.extend(origins[cursor:])
+    return "".join(parts), retained
+
+
+def _project_with_provenance(
+    text: str,
+    variables: Mapping[str, Any] | None,
+    destination: Path,
+    *,
+    verbatim: bool = False,
+) -> tuple[str, list[int]]:
+    """Project the writer's complete accepted text with raw physical-line owners."""
+
+    origins = [
+        index for index, line in enumerate(text.splitlines(keepends=True)) for _ in line
+    ]
+    if verbatim:
+        return text, origins
+    text, origins = _replace_with_provenance(
+        text,
+        origins,
+        PLACEHOLDER_RE,
+        lambda match: (
+            substitute_placeholders(match.group(0), variables, strict=False)
+            if variables is not None
+            else match.group(0)
+        ),
+    )
+    for reference, target in _asset_reference_rewrites(destination):
+
+        def replace_reference(_match: re.Match[str], target: str = target) -> str:
+            return target
+
+        text, origins = _replace_with_provenance(
+            text,
+            origins,
+            re.compile(re.escape(reference)),
+            replace_reference,
+        )
+    return text, origins
+
+
+def _comparison_lines(
+    text: str,
+    variables: Mapping[str, Any] | None,
+    destination: Path,
+    *,
+    verbatim: bool = False,
+) -> tuple[str, ...]:
+    """Keep significant exact comparison segments without crossing exempt owners.
+
+    A token spanning physical source lines joins those lines into one comparison
+    unit. Stamp, unknown-token and image owners split that unit after projection,
+    so exempt content cannot hide an ordinary neighbor. Significance uses the
+    constituent raw and expected physical lines, never their summed block length.
+    """
+
+    raw_lines = text.splitlines(keepends=True)
+    line_ends = list(accumulate(map(len, raw_lines)))
+    units = list(range(len(raw_lines)))
+    for match in PLACEHOLDER_RE.finditer(text):
+        first = bisect_right(line_ends, match.start())
+        last = bisect_right(line_ends, match.end() - 1)
+        units[first : last + 1] = [units[first]] * (last - first + 1)
+    expected, origins = _project_with_provenance(
+        text, variables, destination, verbatim=verbatim
+    )
+    comparable = [
+        _comparable(raw, variables) and not raw.lstrip().startswith("![")
+        for raw in raw_lines
+    ]
+    projected_images: list[bool] = []
+    for physical_line in expected.splitlines(keepends=True):
+        projected_images.extend(
+            [physical_line.lstrip().startswith("![")] * len(physical_line)
+        )
+    lines: list[str] = []
+    for (_unit, retained), positions in groupby(
+        range(len(expected)),
+        key=lambda offset: (
+            units[origins[offset]],
+            comparable[origins[offset]] and not projected_images[offset],
+        ),
+    ):
+        offsets = list(positions)
+        if not retained:
+            continue
+        segment = expected[offsets[0] : offsets[-1] + 1]
+        source_lines = {origins[offset] for offset in offsets}
+        physical_lines = [
+            raw_lines[index] for index in source_lines
+        ] + segment.splitlines()
+        if any(len(line.strip()) > 60 for line in physical_lines):
+            lines.append(segment.strip())
+    return tuple(dict.fromkeys(lines))
 
 
 # Markdown emphasis is markup the renderer may consume rather than carry: the
@@ -388,6 +554,8 @@ def stale_render_defects(
     combined_name: str = DEFAULT_COMBINED_MARKDOWN,
     variables: Mapping[str, Any] | None = None,
     max_lines: int = 3,
+    *,
+    rendered_manuscript_dir: Path | None = None,
 ) -> tuple[str, ...]:
     """Return every authored source whose text is not in the combined render.
 
@@ -404,11 +572,18 @@ def stale_render_defects(
     too: regenerating two files to byte-identical content moved their mtimes
     and failed the render they describe exactly. So no source is skipped and no
     mtime is read. A source is stale when a line of it, substituted the way the
-    renderer substitutes it, is not a line of the combined document.
+    renderer substitutes it and rewrites its asset references, is not a line
+    of the combined document. Whole-content substitutions retain their original
+    physical-line owners before significance is decided, including multiline
+    tokens and source lines whose replacements are short.
 
     ``variables`` is the render's own variable mapping. Without it, lines
     carrying ``{{placeholder}}`` tokens cannot be compared and are skipped, so
     pass it wherever it is available.
+
+    The production rendered tree is the sibling ``manuscript`` directory.
+    Callers rendering to a different directory name can supply that destination
+    through ``rendered_manuscript_dir`` without changing the authored input root.
     """
 
     combined = Path(pdf_dir) / combined_name
@@ -417,28 +592,23 @@ def stale_render_defects(
     rendered_text = combined.read_text(encoding="utf-8", errors="replace")
     rendered_lines = {line.strip() for line in rendered_text.splitlines()}
     manuscript = Path(manuscript_dir)
+    destination = (
+        Path(rendered_manuscript_dir)
+        if rendered_manuscript_dir is not None
+        else Path(pdf_dir).parent / "manuscript"
+    ).resolve()
     stale: list[str] = []
     for source in sorted(manuscript.glob("*.md")):
         if source.name in _NON_RENDERED_MANUSCRIPT_FILES:
             continue
         text = source.read_text(encoding="utf-8", errors="replace")
-        authored = {
-            authored_line.strip(): raw_line.strip()
-            for authored_line, raw_line in zip(
-                _significant_lines(
-                    substitute_placeholders(text, variables, strict=False)
-                    if variables is not None
-                    else text
-                ),
-                _significant_lines(text),
-                strict=False,
-            )
-        }
+        authored = _comparison_lines(
+            text, variables, destination, verbatim=source.name in VERBATIM_SOURCES
+        )
         missing = [
             line
-            for line, raw in authored.items()
-            if _comparable(raw, variables)
-            and not _is_rendered(line, rendered_lines, rendered_text)
+            for line in authored
+            if not _is_rendered(line, rendered_lines, rendered_text)
         ]
         if not missing:
             continue
@@ -546,6 +716,79 @@ def contents_number_overflow_defects(
     return absent + scanned
 
 
+_TEX_CODE_OPEN_RE = re.compile(
+    r"\\begin\{(?P<env>verbatim\*?|Verbatim\*?|lstlisting|minted|Highlighting)\}"
+)
+_UNNUMBERED_MATH_RE = re.compile(
+    r"(?<!\\)\\\[|(?<!\\)\$\$|"
+    r"\\begin\{(?:equation\*|align\*|alignat\*|flalign\*|gather\*|"
+    r"multline\*|displaymath|eqnarray\*)\}|"
+    r"\\(?:nonumber|notag)\b"
+)
+
+
+def equation_numbering_defects(
+    pdf_dir: Path, tex_name: str = DEFAULT_TEX_NAME
+) -> tuple[str, ...]:
+    """Reject unnumbered display math in the actual combined LaTeX body.
+
+    Pandoc-crossref's ``autoEqnLabels`` sends both labelled and unlabelled
+    display nodes to numbered equation environments. Audit the output rather
+    than assuming that configuration reached the filter. Code environments,
+    comments, preamble definitions and ``\\\\[spacing]`` are not equations.
+    """
+    tex_path = Path(pdf_dir) / tex_name
+    if not tex_path.is_file():
+        return (f"{tex_path}: equation-numbering acceptance requires combined LaTeX",)
+    content = tex_path.read_text(encoding="utf-8", errors="replace")
+
+    # Determine real comments and code openers together. A commented opener
+    # must never conceal later math, while percent signs inside actual code
+    # are literal. TeX escapes depend on the parity of preceding backslashes.
+    projected_chars = list(content)
+    index = 0
+    while index < len(content):
+        slash_count = 0
+        previous = index - 1
+        while previous >= 0 and content[previous] == "\\":
+            slash_count += 1
+            previous -= 1
+        active = slash_count % 2 == 0
+        end: int | None = None
+        if content[index] == "%" and active:
+            newline = content.find("\n", index)
+            end = len(content) if newline < 0 else newline
+        elif content[index] == "\\" and active:
+            opener = _TEX_CODE_OPEN_RE.match(content, index)
+            if opener:
+                closer = re.compile(
+                    r"(?m)^[ \t]*\\end\{"
+                    + re.escape(opener["env"])
+                    + r"\}[ \t]*(?:\r?\n|$)"
+                ).search(content, opener.end())
+                if closer is None:
+                    return (
+                        f"{tex_path}: unterminated code environment blocks equation audit",
+                    )
+                end = closer.end()
+        if end is not None:
+            for position in range(index, end):
+                if content[position] != "\n":
+                    projected_chars[position] = " "
+            index = end
+        else:
+            index += 1
+    projected = "".join(projected_chars)
+    document = projected.find(r"\begin{document}")
+    if document >= 0:
+        projected = " " * document + projected[document:]
+    return tuple(
+        f"{tex_path}:{content.count(chr(10), 0, match.start()) + 1}: "
+        f"display equation disables automatic numbering ({match.group()})"
+        for match in _UNNUMBERED_MATH_RE.finditer(projected)
+    )
+
+
 # The acceptance above needs a real render to judge. Continuous integration
 # produces one: the ``render`` job in ``.github/workflows/ci.yml`` checks out
 # the shared template at its pinned ref -- a separate repository this project
@@ -580,6 +823,7 @@ _RECEIPT_CHECKS = (
     "contents_number_overflows",
     "unresolved_references",
     "publication_cover",
+    "unnumbered_equations",
 )
 _PAGES_RE = re.compile(r"Output written on \S+ \((?P<pages>\d+) pages?")
 
@@ -615,6 +859,7 @@ def manuscript_source_digests(manuscript_dir: Path) -> dict[str, str]:
             *rendered_manuscript_sources(manuscript),
             manuscript / "preamble.md",
             manuscript / "config.yaml",
+            manuscript / "references.bib",
         )
     }
     # The cover projects its author from CFF rather than duplicating identity

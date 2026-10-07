@@ -16,7 +16,26 @@ Subpackages
 
 from __future__ import annotations
 
-__version__ = "1.5.0"
+__version__ = "1.6.0"
+
+# Capture the installed/source package before importing any subpackage. The
+# mathematical methods use this immutable identity to reject edited sources
+# behind already cached Python modules. This is an import-consistency check;
+# the explicit report/native owner roster and custody policy remain separate.
+import hashlib as _runtime_hashlib
+from pathlib import Path as _RuntimePath
+from types import MappingProxyType as _RuntimeMappingProxyType
+
+_runtime_package_root = _RuntimePath(__file__).resolve().parent
+_SOURCE_RUNTIME_SHA256 = _RuntimeMappingProxyType(
+    {
+        path.relative_to(_runtime_package_root).as_posix(): _runtime_hashlib.sha256(
+            path.read_bytes()
+        ).hexdigest()
+        for path in sorted(_runtime_package_root.rglob("*.py"))
+        if path.is_file()
+    }
+)
 
 from fep_lean._paths import project_root
 from fep_lean.catalogue import (

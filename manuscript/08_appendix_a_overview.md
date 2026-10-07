@@ -1,5 +1,12 @@
 # Appendix A: Formalisms Overview {#sec:appendix_comprehensive_formalisms_overview}
 
+This catalogue index is Appendix A. The separate **Supplement A**
+([@sec:math_positioning_supplement]) develops the mathematical
+positioning, exact Lean-to-language analysis and selected OpenAI-result
+comparisons behind the portable methods interface. Its corpus feature map is
+an interpretive comparison; the canonical declarations indexed here retain
+their own carriers, assumptions and semantic reviews.
+
 **Appendices B and C (material)** are one auto-generated file, `09z_unified_formalism_catalogue.md`, produced during Manuscript Artifacts. It juxtaposes, per `fep-NNN` topic, the fenced Lean body and the typeset display-math blocks (former appendices B and C). Stable descriptive metadata comes from `config/catalogue_metadata.yaml`, semantic review from `config/theorem_maturity.yaml`, canonical Lean bodies from family modules under `src/fep_lean/catalogue/bodies/`, and equation signatures from `src/fep_lean/catalogue/latex.py`; `scripts/_maint_build_topics_catalogue.py` joins them into the generated catalogue. Each topic has one display-math **block** per `theorem` (typically `aligned`), with a unique stable id `eq:fep-NNN-k`. Counts and validated evidence projections come from `manuscript_vars.yaml`.
 
 ## Complete Topic Catalogue {#sec:complete_topic_catalogue}

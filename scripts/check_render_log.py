@@ -40,6 +40,7 @@ from fep_lean.output.publication_metadata import publication_cover_defects
 from fep_lean.output.render_log import (
     build_acceptance_receipt,
     contents_number_overflow_defects,
+    equation_numbering_defects,
     mermaid_fallback_defects,
     receipt_defects,
     reference_render_defects,
@@ -150,6 +151,11 @@ def main(argv: list[str] | None = None) -> int:
     cover = publication_cover_defects(manuscript_dir, pdf_dir)
     for line in cover:
         print(f"FAIL: {line}")
+    unnumbered = equation_numbering_defects(pdf_dir)
+    for line in unnumbered:
+        print(f"FAIL: {line}")
+    if not unnumbered:
+        print("OK: every displayed equation uses automatic numbering")
     status = (
         1
         if failed
@@ -159,6 +165,7 @@ def main(argv: list[str] | None = None) -> int:
         or overflowed
         or references
         or cover
+        or unnumbered
         else 0
     )
     if args.receipt is not None:
@@ -173,6 +180,7 @@ def main(argv: list[str] | None = None) -> int:
             "contents_number_overflows": len(overflowed),
             "unresolved_references": len(references),
             "publication_cover": len(cover),
+            "unnumbered_equations": len(unnumbered),
         }
         receipt = build_acceptance_receipt(manuscript_dir, pdf_dir, counts=counts)
         path = (

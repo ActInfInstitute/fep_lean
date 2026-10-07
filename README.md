@@ -14,16 +14,29 @@ standalone EFE and geometric-mechanics families.
 
 ## Release
 
-The current release is [`v1.5.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.5.0)
-(2026-10-06): the 168-topic catalogue in 22 families on Lean/Mathlib `v4.34.1`.
-It supersedes the [`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
-(159 topics); the `1.4.0` candidate was never tagged and ships within 1.5.0.
+The **v1.6.0 release line** (2026-10-07) retains the 168-topic catalogue in
+22 families on Lean/Mathlib `v4.34.1` and extends its mathematical methods and
+manuscript. The previous published release is
+[`v1.5.0`](https://github.com/ActiveInferenceInstitute/fep_formal/releases/tag/v1.5.0)
+(2026-10-06). It superseded the
+[`v1.3.0` tag](https://github.com/ActiveInferenceInstitute/fep_formal/tree/v1.3.0)
+(159 topics); the untagged `1.4.0` candidate shipped within 1.5.0.
 Releases follow the short [release procedure](docs/release.md): one version
 and date everywhere, a dated changelog section and a green hosted CI run on
 the exact `main` commit, checked by `docs/release_check.py`.
-The evolving scholarly record is identified by the
-[Zenodo concept DOI](https://doi.org/10.5281/zenodo.19699233); the Zenodo
-integration mints each immutable version DOI from the GitHub release.
+The package and manuscript metadata identify **1.6.0**, with portable
+mathematical methods, source-grounded Lean statement analysis, shared FEP/OpenAI
+feature coordinates, an offline explorer, publication panels and an extended
+[Supplement A](manuscript/08b_mathematical_positioning_supplement.md).
+[The integration guide](docs/mathematical-methods.md) records the interfaces and
+mathematical transfer rules. Publication is bound to the release gate on the final integrated commit.
+
+The evolving manuscript is identified by the
+[scholarly concept DOI](https://doi.org/10.5281/zenodo.19699233). GitHub releases
+are archived separately under the
+[software concept DOI](https://doi.org/10.5281/zenodo.23196891); each history
+has its own immutable version DOIs. See the [release procedure](docs/release.md)
+for publication and file verification.
 A release changes no evidence boundary below: unrun research lanes (the H3
 study, full publication capture, installed-wheel matrix, provider runs) stay
 described as unrun.
@@ -32,6 +45,13 @@ The [upcoming improvement scopes](docs/design/fep-research-program/next-improvem
 define minor, medium and major work for the core package and formalizations,
 with named owners, dependencies, acceptance probes and failure boundaries.
 The open-only [backlog](TODO.md) owns open research and evidence work.
+
+The [mathematical positioning supplement](manuscript/08b_mathematical_positioning_supplement.md)
+locates the formal methods within probability, topology, information geometry,
+statistics, and control. The accompanying
+[modular analysis slice](specs/openai-math-methods/README.md) joins canonical
+contracts with authored family context and reviews the pinned `openai/math`
+research corpus without adding a runtime dependency.
 
 ## Contract
 

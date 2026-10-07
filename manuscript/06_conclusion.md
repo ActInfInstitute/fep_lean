@@ -2,6 +2,16 @@
 
 This work turns a broad FEP-facing catalogue into an auditable Lean package with explicit semantic maturity, composition, provenance, and visual diagnostics. Its principal result is inspectable semantic reach: {{semantic_dispositions.formalized}} of {{total_topics}} rows directly formalize their deliberately bounded claims, while the remaining rows retain explicit conditional or structural classifications rather than inheriting strength from compilation. The {{formalism.metrics.theorem_witnessed_relations}} authored cross-topic theorems make reuse inspectable, while the graph distinguishes {{formalism.metrics.formal_relation_witnesses}} derivations or identifications from {{formalism.metrics.formal_pairing_witnesses}} checked pairings. Capability status totals remain visible in the same generated graph. A manifested reusable kernel spans normalized finite and measure-theoretic probability, Bayesian inversion, variational and expected free energy, controlled and temporal inference, finite policy trees, causal interventions, native finite blankets, predictive coding, finite path and finite-state continuous-time thermodynamics, categorical and scalar exponential-family geometry, collective inference, finite risk, and learning/model evidence. H1 composes one selected subset into a single model-specific theorem: an exact learned and further-updated posterior, an asymmetric one-step decision, its emitted action and refresh transition, a full-support factorized invariant blanket law, and strict repository-real and Mathlib-native KL decrease on the same lifted posterior. It still does not supply generic blanket existence, transition-aware or EFE-optimal planning on that carrier, causal identification, unrestricted continuous-state active inference, multidimensional smooth-manifold geometry with dual connections, physical thermodynamic dissipation, or empirical validation of a biological model. This is not a proof of a universal FEP; it is a deep, inspectable library of exact finite, measure-theoretic, geometric, dynamical, learning-theoretic, and thermodynamic instances.
 
+The mathematical supplement (Section @sec:math_positioning_supplement) makes this library's
+location and transfer requirements explicit. Compact finite-law topology,
+positive statistical charts, native measurable kernels and projected process
+laws contribute different parts of the theory. Worked passports connect exact
+results to proof routes and obstruction examples; the portable methods and
+shared visual model preserve their canonical contracts. The next mathematical
+step is a reviewed commuting bridge or substantive theorem under declared
+conditions, with its failure cases retained, rather than a semantic promotion
+from vocabulary or proximity in a feature representation.
+
 ## Theoretical Synthesis: What Machine-Checked FEP Establishes {#sec:theoretical_synthesis}
 
 ### Formal Adequacy as a Distinct Dimension of Theory Evaluation {#sec:formal_adequacy}

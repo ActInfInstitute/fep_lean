@@ -10,8 +10,10 @@ owns the current execution sequence, and the
 retains all nine original acceptance criteria. Future work cannot substitute
 for an unfinished criterion.
 
-The [package metadata](../../../pyproject.toml) identifies release `1.5.0`,
-dated 2026-10-06, published through the [release procedure](../../release.md).
+The [package metadata](../../../pyproject.toml) prepares the `1.6.0` candidate,
+dated 2026-10-06, with the [mathematical methods integration](../../mathematical-methods.md).
+The published release remains `v1.5.0` until the final candidate passes the
+[release procedure](../../release.md).
 A version number, source publication or green CI run does not establish a
 completed scientific study.
 

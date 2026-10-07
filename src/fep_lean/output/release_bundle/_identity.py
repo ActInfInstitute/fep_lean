@@ -29,9 +29,11 @@ from fep_lean.output.release_bundle._constants import (
     _CANONICAL_LICENSE,
     _CANONICAL_PUBLICATION_DOI,
     _CANONICAL_PUBLICATION_JOURNAL,
+    _CANONICAL_PUBLICATION_VERSION_DOI,
     _CANONICAL_RELEASE_DATE,
     _CANONICAL_RELEASE_VERSION,
     _CANONICAL_REPOSITORY_URL,
+    _CANONICAL_SOFTWARE_CONCEPT_DOI,
     _MANUSCRIPT_FIGURE_REFERENCES,
     _MINIMUM_SPDX_SETUPTOOLS_REQUIREMENT,
     NUMERICAL_RECEIPT,
@@ -106,7 +108,7 @@ def _theorem_maturity_projection_errors(project_root: Path) -> tuple[str, ...]:
 
 
 def _license_metadata_errors(project_root: Path) -> tuple[str, ...]:
-    """Require one publication identity across every bundled metadata plane."""
+    """Require the exact software, scholarly concept and manuscript identities."""
     root = Path(project_root).resolve()
     errors: list[str] = []
     try:
@@ -139,6 +141,13 @@ def _license_metadata_errors(project_root: Path) -> tuple[str, ...]:
             _CANONICAL_LICENSE
         ):
             errors.append(f"CITATION.cff license must be {_CANONICAL_LICENSE}")
+        if not isinstance(citation, dict) or citation.get("doi") != (
+            _CANONICAL_SOFTWARE_CONCEPT_DOI
+        ):
+            errors.append(
+                "CITATION.cff software concept DOI must be "
+                f"{_CANONICAL_SOFTWARE_CONCEPT_DOI}"
+            )
         if not isinstance(citation, dict) or citation.get("version") != (
             _CANONICAL_RELEASE_VERSION
         ):
@@ -163,11 +172,16 @@ def _license_metadata_errors(project_root: Path) -> tuple[str, ...]:
             citation.get("preferred-citation") if isinstance(citation, dict) else None
         )
         if not isinstance(preferred, dict) or preferred.get("doi") != (
-            _CANONICAL_PUBLICATION_DOI
+            _CANONICAL_PUBLICATION_VERSION_DOI
         ):
             errors.append(
                 "CITATION.cff preferred-citation DOI must be "
-                f"{_CANONICAL_PUBLICATION_DOI}"
+                f"{_CANONICAL_PUBLICATION_VERSION_DOI}"
+            )
+        preferred_url = f"https://doi.org/{_CANONICAL_PUBLICATION_VERSION_DOI}"
+        if not isinstance(preferred, dict) or preferred.get("url") != preferred_url:
+            errors.append(
+                f"CITATION.cff preferred-citation URL must be {preferred_url}"
             )
         if not isinstance(preferred, dict) or preferred.get("journal") != (
             _CANONICAL_PUBLICATION_JOURNAL
@@ -188,10 +202,11 @@ def _license_metadata_errors(project_root: Path) -> tuple[str, ...]:
             manuscript.get("publication") if isinstance(manuscript, dict) else None
         )
         if not isinstance(publication, dict) or publication.get("doi") != (
-            _CANONICAL_PUBLICATION_DOI
+            _CANONICAL_PUBLICATION_VERSION_DOI
         ):
             errors.append(
-                f"manuscript publication DOI must be {_CANONICAL_PUBLICATION_DOI}"
+                "manuscript publication DOI must be "
+                f"{_CANONICAL_PUBLICATION_VERSION_DOI}"
             )
         if not isinstance(publication, dict) or publication.get("journal") != (
             _CANONICAL_PUBLICATION_JOURNAL

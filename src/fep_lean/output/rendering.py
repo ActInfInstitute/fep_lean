@@ -18,6 +18,7 @@ from fep_lean.output.publication_metadata import (
     load_publication_author,
     project_cover_author,
 )
+from fep_lean.output.svg_raster import MATHEMATICAL_POSITIONING_SVG_FIGURES
 from fep_lean.verification._subprocess import run_process_group
 
 PLACEHOLDER_RE = re.compile(r"\{\{([^}]+)\}\}")
@@ -125,6 +126,23 @@ MANUSCRIPT_ASSETS: dict[str, tuple[Path, Path]] = {
         Path("assets/formal-kernel-dashboard.png"),
     ),
 }
+MANUSCRIPT_ASSETS["../docs/mathematical-positioning/mathematical-map.html"] = (
+    Path("docs/mathematical-positioning/mathematical-map.html"),
+    Path("assets/mathematical-map.html"),
+)
+MANUSCRIPT_ASSETS["../docs/mathematical-positioning/visual-model.json"] = (
+    Path("docs/mathematical-positioning/visual-model.json"),
+    Path("assets/visual-model.json"),
+)
+for _png_name, _svg_relative in MATHEMATICAL_POSITIONING_SVG_FIGURES.items():
+    MANUSCRIPT_ASSETS[f"../{_svg_relative}"] = (
+        Path(_svg_relative),
+        Path("assets/panels") / Path(_svg_relative).name,
+    )
+    MANUSCRIPT_ASSETS[f"../output/figures/{_png_name}"] = (
+        Path("output/figures") / _png_name,
+        Path("assets") / _png_name,
+    )
 
 
 class ManuscriptRenderError(ValueError):
@@ -277,6 +295,36 @@ def substitute_placeholders(
     return PLACEHOLDER_RE.sub(replace, content)
 
 
+def _asset_reference_rewrites(destination_dir: Path) -> tuple[tuple[str, str], ...]:
+    """Return the canonical ordered asset rewrites for one destination.
+
+    This pure policy is shared by the writer and its source-freshness
+    guard. Images retain tree-local ``assets/`` paths. HTML and JSON hyperlinks
+    survive Pandoc unchanged, so their targets also resolve from sibling PDF
+    and web output directories. No filesystem content is read or written.
+    """
+
+    destination = Path(destination_dir)
+    rewrites: list[tuple[str, str]] = []
+    for reference, (
+        _source_relative,
+        destination_relative,
+    ) in MANUSCRIPT_ASSETS.items():
+        target = destination_relative
+        if destination_relative.suffix in {".html", ".json"}:
+            target = Path("..") / destination.name / destination_relative
+        rewrites.append((reference, target.as_posix()))
+    return tuple(rewrites)
+
+
+def _rewrite_asset_references(content: str, destination_dir: Path) -> str:
+    """Apply the canonical ordered asset rewrites without filesystem access."""
+
+    for reference, target in _asset_reference_rewrites(destination_dir):
+        content = content.replace(reference, target)
+    return content
+
+
 def _replace_render_tree(staged: Path, destination: Path) -> None:
     """Replace one renderer-owned destination tree, restoring it on failure."""
     backup: Path | None = None
@@ -403,14 +451,9 @@ def render_manuscript(
         asset_contents[Path(graphical_abstract.render_path)] = graphical_abstract.data
 
     for source_path, rendered_content in rendered_contents.items():
-        for reference, (
-            _source_relative,
-            destination_relative,
-        ) in MANUSCRIPT_ASSETS.items():
-            rendered_content = rendered_content.replace(
-                reference, destination_relative.as_posix()
-            )
-        rendered_contents[source_path] = rendered_content
+        rendered_contents[source_path] = _rewrite_asset_references(
+            rendered_content, destination
+        )
 
     # Verbatim generated appendices: no substitution, but they must ship.
     for verbatim_name in VERBATIM_SOURCES:

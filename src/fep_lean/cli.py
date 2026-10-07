@@ -956,6 +956,46 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--verbose", action="store_true")
     sub = parser.add_subparsers(dest="command", required=True)
+    methods = sub.add_parser(
+        "methods", help="portable offline mathematical positioning and visual analysis"
+    )
+    methods_sub = methods.add_subparsers(dest="methods_operation", required=True)
+    inspect = methods_sub.add_parser(
+        "inspect", help="read exact topic or authored family contracts"
+    )
+    selection = inspect.add_mutually_exclusive_group()
+    selection.add_argument("--topic")
+    selection.add_argument("--family")
+    neighbors = methods_sub.add_parser(
+        "neighbors", help="read editorial incidence comparison candidates"
+    )
+    neighbors.add_argument("family")
+    neighbors.add_argument("--limit", type=int, default=3)
+    probe = methods_sub.add_parser(
+        "probe", help="evaluate deterministic non-proof boundary probes"
+    )
+    probe.add_argument("name", nargs="?")
+    analysis = methods_sub.add_parser(
+        "analyze", help="read source-grounded Lean statement and maintained prose"
+    )
+    analysis.add_argument("topic")
+    theorem = methods_sub.add_parser(
+        "theorem", help="inspect one exact qualified Lean declaration contract"
+    )
+    theorem.add_argument("qualified_name")
+    methods_sub.add_parser(
+        "embedding", help="inspect interpretable FEP/OpenAI corpus coordinates"
+    )
+    for operation in ("export", "check"):
+        export = methods_sub.add_parser(
+            operation,
+            help="write visual methods artifacts"
+            if operation == "export"
+            else "read-only artifact and resource freshness check",
+        )
+        export.add_argument(
+            "--output-root", type=Path, default=Path("output/mathematical-methods")
+        )
     from fep_lean.bridge.cli import add_arguments
 
     add_arguments(sub.add_parser("bridge", help="source-bound GNN bridge operations"))
@@ -1046,6 +1086,91 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _methods(args: argparse.Namespace, root: Path | None) -> int:
+    """Portable methods branch; no checkout is required for installed resources."""
+    from fep_lean.methods import (
+        analyze_topic,
+        build_mathematical_positioning,
+        cross_corpus_embedding,
+        evaluate_boundary_probes,
+        export_mathematical_positioning,
+        inspect_family,
+        inspect_theorem,
+        inspect_topic,
+        mathematical_positioning_drift,
+        package_resource_drift,
+        positioning_neighbors,
+    )
+
+    try:
+        if root is not None and args.methods_operation == "check":
+            resources = package_resource_drift(root)
+            if resources:
+                raise ValueError(
+                    "generated methods resource drift: "
+                    + ", ".join(_display(root, path) for path in resources)
+                )
+        model = build_mathematical_positioning(root)
+        data = model.as_dict()
+        payload: Any
+        if args.methods_operation == "inspect":
+            payload = (
+                inspect_topic(model, args.topic)
+                if args.topic
+                else inspect_family(model, args.family)
+                if args.family
+                else data["counts"]
+            )
+        elif args.methods_operation == "neighbors":
+            payload = positioning_neighbors(model, args.family, args.limit)
+        elif args.methods_operation == "analyze":
+            payload = analyze_topic(model, args.topic)
+        elif args.methods_operation == "theorem":
+            payload = inspect_theorem(model, args.qualified_name)
+        elif args.methods_operation == "embedding":
+            payload = cross_corpus_embedding(model)
+        elif args.methods_operation == "probe":
+            probes = evaluate_boundary_probes()
+            payload = [
+                probe
+                for probe in probes
+                if args.name is None or probe["id"] == args.name
+            ]
+            if not payload:
+                raise ValueError(f"unknown numerical probe: {args.name}")
+        elif args.methods_operation == "export":
+            payload = {
+                "artifacts": [
+                    str(path)
+                    for path in export_mathematical_positioning(model, args.output_root)
+                ]
+            }
+        else:
+            drift = mathematical_positioning_drift(model, args.output_root)
+            if drift:
+                raise ValueError(
+                    "methods artifact drift: " + ", ".join(str(path) for path in drift)
+                )
+            payload = {"fresh": True}
+        print(
+            json.dumps(
+                {
+                    "status": "ok",
+                    "package_version": data["package_version"],
+                    "source_origin": model.origin.value,
+                    "evidence_boundary": data["evidence_boundary"],
+                    "result": payload,
+                },
+                indent=2,
+                allow_nan=False,
+            )
+        )
+        return 0
+    except (OSError, ValueError) as exc:
+        print(json.dumps({"status": "error", "failure_reason": str(exc)}))
+        return 1
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -1055,6 +1180,17 @@ def main(argv: Sequence[str] | None = None) -> int:
         os.environ["FEP_LEAN_PROJECT_ROOT"] = str(args.project_root.resolve())
     try:
         root = project_root()
+        if args.command == "methods":
+            selected = (
+                root
+                if (
+                    args.project_root is not None
+                    or previous_project_dir
+                    or not project_root_errors(root)
+                )
+                else None
+            )
+            return _methods(args, selected)
         missing = project_root_errors(root)
         if missing:
             print(

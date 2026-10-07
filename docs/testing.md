@@ -13,6 +13,17 @@ integration tests; they do not manufacture successful execution results.
 Local checks are below; hosted `ci.yml` runs them, and a green hosted run on
 the exact commit is the release gate (see the [release procedure](release.md)):
 
+Hosted Python acceptance records the complete non-serial test selection, runs
+the remainder in parallel, then runs the two real Chrome probes once with no
+other pytest workers active. Both components retain the 89% coverage floor;
+the Chrome component appends its coverage. A separate membership gate checks
+the two JUnit files against a fresh collection, rejects omitted or duplicate
+cases, and requires both Chrome probes and all six diagnostic/grouping
+controls to pass without skips. Both results, the collection and aggregate
+coverage are retained even when a component fails. This scheduling policy
+preserves the browser startup deadline and does not diagnose the historical
+startup timeouts. See the [acceptance validator](../specs/publication-browser-acceptance/README.md).
+
 ```bash
 uv lock --check && uv pip check
 uv run python scripts/_maint_build_topics_catalogue.py --check

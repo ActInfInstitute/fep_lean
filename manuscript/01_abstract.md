@@ -8,4 +8,12 @@ Verification evidence is fail-closed. Native compilation claims are populated on
 
 This work does not prove the empirical FEP, the existence of Markov blankets for generic dynamics, or the equivalence of the catalogue's many motivating formalisms. It contributes a reproducible formal-review substrate with **{{semantic_dispositions.formalized}}** directly formalized rows and explicit conditional/structural proxies; a manifested kernel spanning Bayesian inversion, variational and active inference, finite policy trees, temporal and causal structure, native finite blankets, path and exact two-state continuous-time thermodynamics, categorical and scalar exponential-family geometry, collective inference, finite risk, and learning; **{{formalism.metrics.theorem_witnessed_relations}}** checked cross-topic witnesses, separated into **{{formalism.metrics.formal_relation_witnesses}}** derivational relations and **{{formalism.metrics.formal_pairing_witnesses}}** non-implicational pairings; a warning-free acceptance target; and an explicit separation between locally satisfied capability contracts and stronger empirical or system-level claims.
 
+An extended mathematical supplement organizes the formal results by carrier,
+topology, representation and evidence, following the result-family discipline
+of a pinned mathematics research corpus. Portable methods expose the exact
+contracts and authored associations; offline visualizations make support,
+identifiability and decision-alignment obstructions inspectable. These additions
+provide a mathematical transfer methodology without promoting semantic
+classifications or treating numerical illustrations as proof.
+
 **Keywords:** Free Energy Principle; Active Inference; Lean 4; Mathlib4; formal verification; variational inference; Bayesian mechanics; information geometry; theorem maturity; reproducible research.
