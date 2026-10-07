@@ -11,22 +11,23 @@ implementation scope, not a version or schedule promise.
 Releases follow the short [release procedure](docs/release.md): one version
 and date across version-bearing files, a dated changelog section, and a
 successful hosted `ci.yml` run on the exact `main` commit, all checked by
-`docs/release_check.py`. `v1.5.0` (2026-10-06) is the current release; the
-untagged `1.4.0` candidate shipped within it. Nothing below blocks a release.
+`docs/release_check.py`. The untagged `1.4.0` candidate shipped in
+`v1.5.0` (2026-10-06). Nothing below blocks a release.
 
 ## Evidence and research lanes
 
 These keep their own acceptance probes and are reported in release notes, not
-claimed. Hosted Chrome startup (CUR-01) and the closed production DOM rejection
-(CUR-15) remain the entry points for full capture. H3 primary seeds remain
-unopened; Q7 generated-runner execution remains unverified. The
+claimed. Hosted Chrome startup (CUR-01) passed its eight required cases on the
+[accepted exact-source PR run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37682721329).
+Fresh full capture and the closed production DOM rejection (CUR-15) retain
+their own acceptance gates. H3 primary seeds remain unopened; Q7
+generated-runner execution remains unverified. The
 [locked protocol](specs/comprehensive-science-improvement/PROTOCOL.md) retains
 all nine original criteria; the [execution sequence](specs/comprehensive-science-improvement/NEXT.md)
 orders this work.
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
-| [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46) — Diagnose hosted live Chrome startup and review conditional grouping | Minor | Independent repair | Actual two-Chrome acceptance and meaningful xdist controls; fresh exact-SHA Python passes without retries/skips/cap changes. |
 | [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) — Diagnose noncanonical live DOM rejection in the closed production capture | Minor | Independent repair | Explain and repair the actual noncanonical DOM rejection; real browser receipt passes, with old output hashes kept historical. |
 | [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) — Seal complete approved tests membership in the successor source freeze | Minor | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | Exact approved full tests membership enforced before imports/planning/dispatch and at closure; nonauthor source review passes. |
 | [CUR-05](https://github.com/ActiveInferenceInstitute/fep_formal/issues/53) — Accept a fresh full seven-stage capture and identical package archives | Medium | [CUR-01](https://github.com/ActiveInferenceInstitute/fep_formal/issues/46), [CUR-02](https://github.com/ActiveInferenceInstitute/fep_formal/issues/47), [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52), [CUR-04](https://github.com/ActiveInferenceInstitute/fep_formal/issues/48), [CUR-15](https://github.com/ActiveInferenceInstitute/fep_formal/issues/51) | All seven actual stages and closing guards pass; two identical package archives independently claim-ready. |

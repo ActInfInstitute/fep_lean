@@ -481,3 +481,202 @@ def test_real_collection_output_replaces_source_hardlink_without_writing_through
     ) == before
     assert not output.samefile(source)
     assert json.loads(output.read_text())["status"] == "collected"
+
+
+# These controls execute the actual CI guards with real Git repositories.
+# The source-stamp producer remains unfiltered; placement fixes the dependency
+# layout rather than relabeling a dirty source checkout.
+_RENDER_GUARD_STEPS = (
+    "Require a clean source checkout before catalogue projection",
+    "Render the publication and accept it fail-closed",
+)
+
+
+def _init_render_fixture_repository(root: Path) -> None:
+    subprocess.run(
+        ["git", "-c", "core.fsmonitor=false", "init", "-q", str(root)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(root), "config", "--local", "core.fsmonitor", "false"],
+        check=True,
+        capture_output=True,
+    )
+
+
+def _render_source_fixture(tmp_path: Path) -> Path:
+    root = (tmp_path / "publication").resolve()
+    root.mkdir()
+    _init_render_fixture_repository(root)
+    # A cached legacy-directory listing can survive the control's rename.
+    # Configure this disposable fixture before any status query; the actual
+    # source stamp and CI guards still inspect unfiltered Git status.
+    subprocess.run(
+        ["git", "config", "--local", "core.untrackedCache", "false"],
+        cwd=root,
+        check=True,
+        capture_output=True,
+    )
+    project_root = HELPER.parents[2]
+    (root / ".gitignore").write_bytes((project_root / ".gitignore").read_bytes())
+    (root / "README.md").write_text("Committed publication source.\n")
+    (root / "docs").mkdir()
+    (root / "docs/render-acceptance.json").write_text("{}\n")
+    subprocess.run(["git", "add", "."], cwd=root, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-c", "commit.gpgsign=false", "commit", "-qm", "fixture source"],
+        cwd=root,
+        env={
+            **os.environ,
+            "GIT_AUTHOR_NAME": "Test",
+            "GIT_AUTHOR_EMAIL": "test@example.invalid",
+            "GIT_COMMITTER_NAME": "Test",
+            "GIT_COMMITTER_EMAIL": "test@example.invalid",
+        },
+        check=True,
+        capture_output=True,
+    )
+    return root
+
+
+def _actual_render_guard(root: Path, step_name: str) -> subprocess.CompletedProcess:
+    import yaml
+
+    workflow = yaml.safe_load(
+        (HELPER.parents[2] / ".github/workflows/ci.yml").read_text()
+    )
+    step = next(
+        step
+        for step in workflow["jobs"]["render"]["steps"]
+        if step.get("name") == step_name
+    )
+    guard = step["run"].split("<<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+    return subprocess.run(
+        [sys.executable, "-B", "-c", guard],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=90,
+    )
+
+
+@pytest.mark.parametrize("step_name", _RENDER_GUARD_STEPS)
+def test_ci_template_placement_preserves_actual_clean_source_stamp(
+    tmp_path: Path, step_name: str
+) -> None:
+    import yaml
+
+    from fep_lean.output.manuscript import _source_stamp_vars
+
+    root = _render_source_fixture(tmp_path)
+    source_commit = _source_stamp_vars(root)["commit"]
+    assert _source_stamp_vars(root)["dirty"] == "false"
+    legacy_template = root / "render-template"
+    legacy_template.mkdir()
+    _init_render_fixture_repository(legacy_template)
+    (legacy_template / "README.md").write_text("Acquired template dependency.\n")
+    assert _source_stamp_vars(root)["dirty"] == "true"
+    rejected = _actual_render_guard(root, step_name)
+    assert rejected.returncode == 1
+    assert "source checkout is not clean" in rejected.stderr
+
+    workflow = yaml.safe_load(
+        (HELPER.parents[2] / ".github/workflows/ci.yml").read_text()
+    )
+    steps = workflow["jobs"]["render"]["steps"]
+    checkout = next(
+        step
+        for step in steps
+        if step.get("name")
+        == "Check out the shared rendering template at its pinned ref"
+    )
+    assert checkout["with"]["path"] == "output/render-template"
+    assert checkout["with"]["ref"] == "5b3c0f43940f0322fbc6205b3be4c2854f99329d"
+    template = root / checkout["with"]["path"]
+    template.parent.mkdir()
+    legacy_template.rename(template)
+    registration = next(
+        step
+        for step in steps
+        if step.get("name")
+        == "Register this repository as the template's active project"
+    )
+    registered = subprocess.run(
+        ["bash", "-e", "-c", registration["run"]],
+        cwd=root,
+        env={**os.environ, "GITHUB_WORKSPACE": str(root)},
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert registered.returncode == 0, registered.stderr
+    assert (template / "projects/active/fep_lean").resolve() == root
+    render = next(step for step in steps if step.get("name") == _RENDER_GUARD_STEPS[1])
+    assert render["env"]["FEP_LEAN_TEMPLATE_DIR"] == (
+        "${{ github.workspace }}/output/render-template"
+    )
+    source = _source_stamp_vars(root)
+    assert source["commit"] == source_commit
+    assert source["dirty"] == "false"
+    assert "uncommitted changes" not in source["stamp"]
+    accepted = _actual_render_guard(root, step_name)
+    assert accepted.returncode == 0, accepted.stderr
+    assert "source checkout is clean" in accepted.stdout
+
+
+@pytest.mark.parametrize("step_name", _RENDER_GUARD_STEPS)
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "tracked_source",
+        "staged_source",
+        "untracked_source",
+        "tracked_receipt",
+        "staged_receipt",
+        "legacy_template",
+        "untracked_whitespace",
+    ],
+)
+def test_ci_hydration_guards_refuse_unfiltered_git_drift_without_path_disclosure(
+    tmp_path: Path, step_name: str, mutation: str
+) -> None:
+    from fep_lean.output.manuscript import _source_stamp_vars
+
+    root = _render_source_fixture(tmp_path)
+    if mutation in {"tracked_source", "staged_source"}:
+        changed = root / "README.md"
+        changed.write_text("Uncommitted scientific source.\n")
+    elif mutation in {"tracked_receipt", "staged_receipt"}:
+        changed = root / "docs/render-acceptance.json"
+        changed.write_text('{"uncommitted":true}\n')
+    elif mutation == "legacy_template":
+        changed = root / "render-template"
+        changed.mkdir()
+        _init_render_fixture_repository(changed)
+        (changed / "README.md").write_text("Untracked dependency.\n")
+    else:
+        changed = root / (
+            "untracked DO-NOT-DISCLOSE source.txt"
+            if mutation == "untracked_whitespace"
+            else "untracked-DO-NOT-DISCLOSE-source.txt"
+        )
+        changed.write_text("Untracked source.\n")
+    if mutation.startswith("staged_"):
+        subprocess.run(
+            ["git", "add", str(changed.relative_to(root))],
+            cwd=root,
+            check=True,
+            capture_output=True,
+        )
+    before = subprocess.check_output(["git", "status", "--porcelain"], cwd=root)
+    assert before and _source_stamp_vars(root)["dirty"] == "true"
+    result = _actual_render_guard(root, step_name)
+    assert result.returncode == 1
+    assert "source checkout is not clean before manuscript hydration" in result.stderr
+    assert not result.stdout
+    assert changed.name not in result.stderr
+    assert "DO-NOT-DISCLOSE" not in result.stderr
+    assert subprocess.check_output(["git", "status", "--porcelain"], cwd=root) == before
+    assert _source_stamp_vars(root)["dirty"] == "true"
