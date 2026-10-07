@@ -282,3 +282,38 @@ reserved v1.6.0 manuscript version DOI is `10.5281/zenodo.23220027` under schola
 concept `10.5281/zenodo.19699233`, and software releases are archived under
 concept `10.5281/zenodo.23196891`. See [the release procedure](../../docs/release.md)
 for the exact artifact and DOI verification requirements.
+
+The integrated local non-serial suite passed 2,801 cases with ten disclosed
+skips and 91.48% coverage. Fresh local native verification compiled all 168
+canonical bodies without errors, warnings or `sorry`, followed by warning-free
+aggregate and fifteen orphan-module builds. The accepted integrated local PDF
+has 385 pages, 1,315 numbered equations and all nine render defect counts zero.
+These local results remain distinct from hosted and published artifact evidence.
+
+[PR run 37675584432](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37675584432)
+on `1e2ec2385a10ecd32c252f535785ec1064ff8fbf` passed all fifteen installed
+distribution jobs: 1,275 cases, with no skips. Its actual Python regression
+failed one real Chrome startup probe; 2,790 cases passed, twenty skipped and
+coverage was 91.59%. The other real Chrome probe and six diagnostic/grouping
+controls passed. Failure-time stderr and JUnit evidence are retained privately;
+two DBus warnings and the process status after cleanup do not diagnose the
+startup timeout. That run supplies no Python or release acceptance.
+
+Hosted Python acceptance now schedules the two disjoint Chrome probes once
+after the remaining parallel workers finish. Both components enforce the
+unchanged 89% coverage floor, and a fresh-collection gate requires complete
+JUnit membership, no duplicate execution and all eight browser controls to
+pass without skips. The production launch, fifteen-second startup deadline,
+cleanup, diagnostic fixture and test bodies are unchanged. This is an explicit
+execution policy; the historical startup cause remains unknown. See the
+[validator and controls](../publication-browser-acceptance/README.md).
+
+The local macOS split subsequently passed 2,803 cases with eight optional
+skips: 2,801 passes in the parallel remainder and two passes in the isolated
+Chrome component. Both commands exited zero; their coverage floors passed
+at 91.48% and 92.03%, respectively. The actual JUnit union matched all 2,811
+freshly collected identities, all eight required browser controls passed
+without skips, and independent review confirmed unchanged production/test
+source bytes. Sixty-three focused validator controls passed separately.
+These results establish the local execution policy and validator behavior;
+the required fresh Linux and exact-main release runs remain separate.
