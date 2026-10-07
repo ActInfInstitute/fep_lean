@@ -431,7 +431,7 @@ jobs:
           # fresh local render whenever the template moves.
           repository: docxology/template
           ref: 5b3c0f43940f0322fbc6205b3be4c2854f99329d
-          path: render-template
+          path: output/render-template
       - name: Register this repository as the template's active project
         run: |
           # The template's render stage resolves projects/active/<name>
@@ -439,8 +439,8 @@ jobs:
           # symlink in real checkouts and is gitignored in the template, so
           # CI must register this checkout the same way before the render
           # stage runs.
-          mkdir -p render-template/projects/active
-          ln -s "$GITHUB_WORKSPACE" render-template/projects/active/fep_lean
+          mkdir -p output/render-template/projects/active
+          ln -s "$GITHUB_WORKSPACE" output/render-template/projects/active/fep_lean
       - name: Install the XeLaTeX toolchain, Pandoc, pandoc-crossref, and the SVG rasterizer
         shell: bash
         run: |
@@ -517,11 +517,41 @@ jobs:
       # The glyph projection and the manuscript hydration both read the
       # generated appendix (a gitignored build product), so the catalogue
       # materializes it before anything below runs.
+      # Keep the acquired template in the existing ignored output tree.
+      # The source stamp reads unfiltered Git status; dependency placement
+      # must not make an unchanged source checkout appear dirty.
+      - name: Require a clean source checkout before catalogue projection
+        run: |
+          uv run python - <<'PY'
+          import subprocess
+
+          status = subprocess.check_output(
+              ["git", "-c", "core.fsmonitor=false", "--no-optional-locks", "status", "--porcelain"],
+              stderr=subprocess.PIPE,
+              timeout=60,
+          )
+          if status:
+              raise SystemExit("publication source checkout is not clean before manuscript hydration")
+          print("publication source checkout is clean before manuscript hydration")
+          PY
       - run: uv run fep-lean catalogue
       - name: Render the publication and accept it fail-closed
         env:
-          FEP_LEAN_TEMPLATE_DIR: ${{ github.workspace }}/render-template
-        run: uv run python scripts/render_publication.py
+          FEP_LEAN_TEMPLATE_DIR: ${{ github.workspace }}/output/render-template
+        run: |
+          uv run python - <<'PY'
+          import subprocess
+
+          status = subprocess.check_output(
+              ["git", "-c", "core.fsmonitor=false", "--no-optional-locks", "status", "--porcelain"],
+              stderr=subprocess.PIPE,
+              timeout=60,
+          )
+          if status:
+              raise SystemExit("publication source checkout is not clean before manuscript hydration")
+          print("publication source checkout is clean before manuscript hydration")
+          PY
+          uv run python scripts/render_publication.py
       - name: Validate the fresh render receipts against the same sources
         run: |
           uv run python scripts/build_render_fonts.py
@@ -635,7 +665,7 @@ jobs:
               return result
 
           sources = source_manifest()
-          template = root / "render-template"
+          template = root / "output/render-template"
           template_sha = subprocess.check_output(["git", "-C", str(template), "rev-parse", "HEAD"], text=True).strip()
           if template_sha != os.environ.get("EXPECTED_TEMPLATE_SHA"):
               raise SystemExit("template checkout differs from the workflow template pin")

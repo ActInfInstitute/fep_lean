@@ -24,7 +24,7 @@ The 17-product export includes thirteen SVGs. Focused mathematical
 tests passed 112 cases, and isolated installed methods checks passed on local
 macOS Python 3.10.20, 3.11.15, 3.12.13, 3.13.16 and 3.14.4 with identical MDS
 projection hashes. The original candidate, before integration with newer GitHub main, has
-independently validated 168-topic native evidence. The final 385-page PDF passed the version-2 receipt and
+independently validated 168-topic native evidence. That candidate's 385-page PDF passed the version-2 receipt and
 independent publication reviews, with twelve Supplement A figures, six tables
 and 55 numbered supplement equations. The complete non-serial Python suite
 passed 2,707 tests with nine skips in 777.82 seconds and 91.50% coverage.
@@ -139,8 +139,8 @@ summarizing scientific completeness.
 ## Current source and evidence state
 
 Daniel resumed implementation on 2026-10-05 and authorized updating the scoped
-work and pushing verified versioned changes to main. The [30-item open
-backlog](TODO.md) records current release blockers, separately governed lanes
+work and pushing verified versioned changes to main. The [open
+backlog](TODO.md) records separately governed evidence and research lanes
 and minor/medium/major future improvements. Each item retains its dependencies,
 acceptance criteria and claim boundary; resumption supplies no new acceptance.
 
@@ -196,8 +196,18 @@ PDF renders produced byte-identical PDF and provenance. The guidance corrections
 passed independent source review and strict links, hygiene and xrefs. CUR-02
 and CUR-04 leave the open backlog; their delivery is recorded in CHANGELOG.md.
 The browser repairs passed 82 local cases without skips and independent source
-review, but fresh production browser capture and hosted startup acceptance
-remain open. Do not blindly merge substantive PR44/45.
+review. Hosted startup subsequently passed all eight required JUnit cases,
+including both real Chrome tests, in the
+[accepted exact-source PR run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37682721329)
+for head `996ca58bb3ea128b8bdb77b13df329896852c482`. Its actual tested checkout
+`73eaf8bffddc4a35040d647003a775a239ebdc41` has the same complete Git tree
+`8595c6070ad54c7eb662a8f38831dd720ecd87fb` as that head. The independently reviewed
+execution policy isolates the two Chrome probes after the parallel component;
+every selected case appears exactly once. This acceptance does not establish
+the cause of retained earlier startup failures. Fresh production browser
+capture remains open. The final release still requires full CI on its exact
+main commit and review of its actual artifacts. Do not blindly merge
+substantive PR44/45.
 
 Release `v1.5.0` publishes the 168-topic tree. H3 primary output
 has not been opened and its seeds remain unused. The

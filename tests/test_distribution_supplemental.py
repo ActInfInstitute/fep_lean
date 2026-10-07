@@ -158,7 +158,7 @@ def _exercise_render_artifact_staging(
     sha = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=tmp_path, text=True
     ).strip()
-    template = tmp_path / "render-template"
+    template = tmp_path / "output/render-template"
     template.mkdir()
     _init_fixture_repository(template)
     template_files = {"README.md": b"Pinned template source.\n"}
@@ -407,8 +407,8 @@ def _exercise_render_artifact_staging(
         "during_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed during provenance discovery.\\n')",
         "during_chapter_addition": "Path('manuscript/02_extra.md').write_text('Added during provenance discovery.\\n')",
         "during_pdf_drift": "Path('output/pdf/fep_lean_combined.pdf').write_bytes(b'%PDF-unaccepted replacement')",
-        "during_template_drift": "Path('render-template/README.md').write_text('Uncommitted template mutation.\\n')",
-        "during_template_mode_drift": "Path('render-template/README.md').chmod(0o755); assert not _real_check_output(['git', '-C', 'render-template', 'diff', '--ignore-submodules=all', '--name-only', 'HEAD', '-z'])",
+        "during_template_drift": "Path('output/render-template/README.md').write_text('Uncommitted template mutation.\\n')",
+        "during_template_mode_drift": "Path('output/render-template/README.md').chmod(0o755); assert not _real_check_output(['git', '-C', 'output/render-template', 'diff', '--ignore-submodules=all', '--name-only', 'HEAD', '-z'])",
     }.get(failure, "pass")
     staged_mutation = {
         "while_staging_source_drift": "Path('manuscript/01_abstract.md').write_text('Changed while retaining evidence.\\n')",
@@ -416,15 +416,15 @@ def _exercise_render_artifact_staging(
         "retained_pdf_drift": "_real_write_bytes(path, b'%PDF-corrupted retained artifact')",
     }.get(failure, "pass")
     template_mutations = {
-        "template_source": "Path('render-template/README.md').write_bytes(b'Changed template source.\\n')",
-        "template_link": "Path('render-template/file-link').unlink(); Path('render-template/file-link').symlink_to('resources/other.txt')",
-        "template_referent": "Path('render-template/resources/data.txt').write_bytes(b'Changed template referent.\\n')",
-        "registration": "Path('render-template/projects/active/fep_lean').unlink(); Path('render-template/projects/active/fep_lean').symlink_to('../../README.md')",
+        "template_source": "Path('output/render-template/README.md').write_bytes(b'Changed template source.\\n')",
+        "template_link": "Path('output/render-template/file-link').unlink(); Path('output/render-template/file-link').symlink_to('resources/other.txt')",
+        "template_referent": "Path('output/render-template/resources/data.txt').write_bytes(b'Changed template referent.\\n')",
+        "registration": "Path('output/render-template/projects/active/fep_lean').unlink(); Path('output/render-template/projects/active/fep_lean').symlink_to('../../README.md')",
     }
     gitlink_mutation = (
-        f"Path('render-template/{_TEMPLATE_GITLINK[0]}/unexpected').write_text('changed gitlink')"
+        f"Path('output/render-template/{_TEMPLATE_GITLINK[0]}/unexpected').write_text('changed gitlink')"
         if gitlink_case is not None and gitlink_case.endswith("nonempty")
-        else f"_gitlink = Path('render-template/{_TEMPLATE_GITLINK[0]}'); _before = _gitlink.stat(); os.utime(_gitlink, ns=(_before.st_atime_ns, _before.st_mtime_ns + 1))"
+        else f"_gitlink = Path('output/render-template/{_TEMPLATE_GITLINK[0]}'); _before = _gitlink.stat(); os.utime(_gitlink, ns=(_before.st_atime_ns, _before.st_mtime_ns + 1))"
     )
     if template_case is not None and template_case.startswith("discovery_"):
         version_mutation = template_mutations[template_case.removeprefix("discovery_")]
@@ -448,7 +448,7 @@ def _exercise_render_artifact_staging(
         "    global _link_read_mutated\n"
         "    data = _real_readlink(path, **kwargs)\n"
         f"    if {template_case == 'during_link_read'!r} and kwargs.get('dir_fd') is not None and os.fsdecode(path) == 'file-link' and not _link_read_mutated:\n"
-        "        owner = Path('render-template/file-link')\n"
+        "        owner = Path('output/render-template/file-link')\n"
         "        owner.unlink()\n"
         "        owner.symlink_to('resources/other.txt')\n"
         "        _link_read_mutated = True\n"

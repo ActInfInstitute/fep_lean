@@ -37,6 +37,29 @@ series with disclosed display serialization, so macOS/Linux elementary
 function differences cannot change generated artifacts. Generic diagnostic
 inputs, arithmetic thresholds and exact-byte freshness remain unchanged.
 
+Hosted Chrome startup (CUR-01) passed all eight required cases, including
+both real Chrome tests without skips, in the independently reviewed
+[exact-source PR run](https://github.com/ActiveInferenceInstitute/fep_formal/actions/runs/37682721329)
+for head `996ca58bb3ea128b8bdb77b13df329896852c482`. The actual tested checkout
+`73eaf8bffddc4a35040d647003a775a239ebdc41` and that head share the complete tree
+`8595c6070ad54c7eb662a8f38831dd720ecd87fb`. Python recorded 2,791 passed,
+20 optional skips, zero failures/errors and 91.56% combined coverage across
+all 2,811 selected cases. The parallel component passed the unchanged 89%
+coverage floor at 91.01%; the isolated two-case Chrome component ran once
+and appended coverage. Existing absent/present xdist controls and
+failure-time diagnostic controls passed. Startup deadlines, test bodies and
+retry policy remain unchanged. Earlier failures and their unresolved causes
+remain historical. This PR acceptance is separate from the exact-main
+release gate, fresh production capture, CUR-15 and other governed lanes.
+
+Publication CI now acquires the pinned render template under the existing
+ignored `output/` directory and checks unfiltered Git status before catalogue
+projection and manuscript hydration. A real Git fixture demonstrated that
+the former untracked root-level template made the otherwise unchanged source
+stamp dirty; relocating the dependency preserves a clean stamp. The actual
+PR render retained its dirty cover and remains historical. Source stamping,
+template custody and all nine render checks retain their original contracts.
+
 The original local candidate, before integration with newer GitHub main,
 completed a coordinated source-owner refresh from version 24 to 25: five methods modules, four generated package YAML
 resources and the authored positioning policy join the explicit owner roster.
