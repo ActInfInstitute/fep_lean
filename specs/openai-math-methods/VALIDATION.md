@@ -1,6 +1,10 @@
-# Local 1.6.0 integration evidence
+# Mathematical integration validation record
 
-This record concerns a local, unpublished candidate. The integration compares
+## Historical local candidate before GitHub integration
+
+The local results below concern the original unpublished candidate, before
+integration with newer GitHub main and the publication metadata/numerical
+producer corrections. Their exact artifacts remain historical. The integration compares
 FEP Formal with the immutable OpenAI mathematics corpus at
 `adc7f1241b42e322a6451854ab7e4b4c146bf78a`. It imports no upstream proof and
 executes no upstream research code. Hosted CI, provider execution, empirical
@@ -55,7 +59,7 @@ eight conceptual associations. Canonical Lean bodies, semantic records,
 mathematical pins and frozen H2/H3/Q7 records retain their starting bytes.
 The existing coordinated source-owner manifest remains version 25.
 
-## Current evidence
+## Historical candidate evidence
 
 | Lane | Confirmed outcome or pending result | Boundary |
 | --- | --- | --- |
@@ -246,3 +250,35 @@ Superseded receipts, logs and the prior accepted manuscript are retained in
 Markdown producer repair and the first floor collector's extraction failure
 are unaccepted evidence. The final source was frozen before native, Python,
 package and publication checks; each lane retains its own result and scope.
+
+## Integrated publication evidence
+
+The integrated cover follows the current canonical CITATION.cff record for
+Daniel Ari Friedman, Active Inference Institute,
+daniel@activeinference.institute and ORCID 0000-0001-6232-9096. The
+earlier candidate cover details above remain historical.
+
+The publication branch integrates the reviewed newer main source, preserves
+its custody protections, distinguishes scholarly concept, manuscript version
+and software concept DOI identities, and makes the four explanatory
+numerical grids independent of platform libm. The producer uses explicit
+80-digit Decimal arithmetic, bounded alternating series and half-even
+24-place display serialization; rational grid indices and coefficients are
+distinguished from evaluated pi-dependent angles and logarithmic epsilon.
+Generic probe contracts, arithmetic thresholds, the exact-byte freshness
+comparator and the cross-corpus MDS projection are unchanged. Independent
+reconstruction matched all 1,133 finite display values and 41 reverse-KL
+infinity markers. All thirteen canonical SVGs retain their prior bytes.
+
+The historical candidate receipts above do not establish acceptance for
+these changed executable/configuration owners. Publication requires fresh
+source-bound native compilation, accepted manuscript render evidence,
+regression results and the exact-main hosted release gate. The public GitHub
+release must link the final commit, workflow and downloadable artifacts with
+checksums. Its validation manifest must identify the accepted evidence without
+exporting workstation paths, account data or private execution records.
+Zenodo retains separate scholarly and software version histories; the
+reserved v1.6.0 manuscript version DOI is `10.5281/zenodo.23220027` under scholarly
+concept `10.5281/zenodo.19699233`, and software releases are archived under
+concept `10.5281/zenodo.23196891`. See [the release procedure](../../docs/release.md)
+for the exact artifact and DOI verification requirements.

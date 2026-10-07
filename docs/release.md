@@ -63,8 +63,11 @@ A release changes no scientific claim. Unrun lanes stay described as unrun.
    and SHA-256 checksums. The offline companion must preserve the PDF's
    relative explorer link: `pdf/fep_lean_combined.pdf` beside
    `manuscript/assets/mathematical-map.html` and its referenced assets.
-   Keep workstation paths, account information and private execution logs
-   out of public files. Link the scholarly and software records, then verify
+   Keep current workstation paths, account information and private execution
+   logs out of new generated public artifacts. An exact tagged source archive
+   retains already-public historical custody records unchanged; compare those
+   bytes with the prior public release rather than silently scrubbing history.
+   Link the scholarly and software records, then verify
    the published version, author, ORCID, license, file bytes and DOI resolution.
 
 `CITATION.cff` distinguishes software citation from its preferred scholarly

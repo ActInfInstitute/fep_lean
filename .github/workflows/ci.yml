@@ -553,6 +553,10 @@ jobs:
               "output/formalism-audit.json",
               "docs/render-acceptance.json",
               "docs/render-fonts.json",
+              # These generated inputs have run-bound verification/source
+              # values. Retain their exact bytes beside their source hashes.
+              "manuscript/manuscript_vars.yaml",
+              "manuscript/09z_unified_formalism_catalogue.md",
           ]
           def artifact_bytes():
               result = {}
