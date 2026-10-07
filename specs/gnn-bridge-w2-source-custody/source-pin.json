@@ -1,6 +1,6 @@
 {
   "fep_lean": {
-    "commit": "63b4d071a98fe3a1b78872cbf6fd615eb6b52309",
+    "commit": "1df88146764be4348a205afe8f376434585566cc",
     "owners": {
       "docs/design/gnn-bridge/bridge-contract.md": "61102fa2602c482106365b1eb655c34f3d55ad5fc481637dbc6d0d6777612c53",
       "lean/lake-manifest.json": "855273bd3ee957c16c4fc1f854bcf9c0e25f883fda5174eadbda60140eec397e",
@@ -196,11 +196,11 @@
     }
   },
   "gnn": {
-    "commit": "dbba3d0b9f5d9cb36052b604f27e28b79aa8ead7",
+    "commit": "f1a494bcc2af4972259690374e11705e440e3050",
     "owners": {
       "docs/gnn/gnn_syntax.md": "1a1feaaee71c12c384babcdbb752711453c03204ff443ed0579c9cc644bd557c",
       "docs/other/fep_lean/bridge-contract.md": "07ff3f32f82e5788e2669cb5401b6557be763010165ca2512e3ed522f79810dc",
-      "pyproject.toml": "5ce98dfd32b819e7484b24c37b1f04826aa222a7820e08fd33de20783de17c23",
+      "pyproject.toml": "e64c333a0ea7b5dabdc21356803a0ea14ac3dee77503adbe8e3a64a753016ed1",
       "src/gnn/0_template.py": "88773455461192c3bd20a1d477ba42082fc0525236eae8c52284d3910b720bbb",
       "src/gnn/10_ontology.py": "ccbfd4a328cf50d16b840f51fbb5c3d44b0e2468c0778ea7158ad7c29cb17101",
       "src/gnn/11_render.py": "604f2bc29d1f5bb3b491988337d6e5781b606d266b3c92f41465e0b7f4a9b0ca",
@@ -226,7 +226,7 @@
       "src/gnn/7_export.py": "9e6eaa507529963a29fc50388ddf1db49d34d7f41e50cd5ab5570ba3f227d53c",
       "src/gnn/8_visualization.py": "1d106e4cc4ebc40c8b2e9cf1be822a946e3f916085bbaa65427fb6ec3f531c9d",
       "src/gnn/9_advanced_viz.py": "4075a72b77f750cad9a6e8d952abab1e1145202065d400df81900d37db248314",
-      "src/gnn/__init__.py": "8d0006764412e9fc1e5f23787abbc19c5e811040616c78bf7c6618f0ecba4a60",
+      "src/gnn/__init__.py": "295d94bb8b088cf3682473e1908dcef73f0c00301fbf4ccb2311ca8d8df4933e",
       "src/gnn/advanced_visualization/__init__.py": "4a01ece62af204fdbc76310bb94f4f53bf008bbf79b7c4d0c11731ccb4f29540",
       "src/gnn/advanced_visualization/_shared.py": "7b5e1d349f9e2171ae70b20fe1a51b6668bba92e79dee741579decbe5d0a3862",
       "src/gnn/advanced_visualization/_theme.py": "514448ceed632b22cc87b9885e85c3bbddf7fde205e392c2c959c280557a18fe",
@@ -402,7 +402,7 @@
       "src/gnn/execute/security_gate.py": "35557ee078442d8909085475a27887255fb3fcdba11c1dfc698080de839434c8",
       "src/gnn/execute/stan/__init__.py": "93976e5ddfd1ccc9f0fbc70790a82eff374b52a1d63018e8de9ee1a6de797da1",
       "src/gnn/execute/stan/stan_runner.py": "3e87dfe4ef7ea3dab9ddc3bf286602410b24a9f048f85477762bbfc52e2f99e6",
-      "src/gnn/execute/subprocess_envelope.py": "b481f452cc7b03530ce08831944ac15eac88ecf219a96f9463157ee0a7d54c2d",
+      "src/gnn/execute/subprocess_envelope.py": "503de48dfc58337b4497a14a37c749531b720fb76431bf8a2a7a551da3f45a69",
       "src/gnn/execute/thrml/__init__.py": "f2c2d2990c4dea7b375e6938fa6d93b443dc0bd94a2f4b63f4cbaec672b2d6f8",
       "src/gnn/execute/thrml/thrml_runner.py": "ec99851329c09b4619733c568d444cabc7ff73f49b2af0e995c1173813b1ad8f",
       "src/gnn/execute/types.py": "10f4bae2188a8e3fd350ac06ce2c218ade5766cf5b774a1df1026d3516af1d56",
@@ -435,10 +435,10 @@
       "src/gnn/gui/__init__.py": "011a805315fd8b256dc4b90567678fa4602b07d4574eeb81776e191610f014b5",
       "src/gnn/gui/backend.py": "f9ecfcdcefd50f23beb149cd3429c56ac9a6480908e9ae2c0baab78e608dde07",
       "src/gnn/gui/gui_1/__init__.py": "3e7ba1739b1ea4b33ed99da956da2ecb0fbc998e0a68b23d84c70fd84a8ef5a3",
-      "src/gnn/gui/gui_1/markdown.py": "08a907c7270e1fb05114aeed5541aca9057fd76e8942af9faec662e1ab09f75f",
+      "src/gnn/gui/gui_1/markdown.py": "a4aead7b77047676a451723278d22cb8aab780ca97cb768545d91f99cb6bd889",
       "src/gnn/gui/gui_1/mcp.py": "da52524d4df18b528ad92efe083d7e4b97761204526f093bad6fe479e885559e",
       "src/gnn/gui/gui_1/processor.py": "b8ce783238928944baa7e7f9957aa7081c3d753f10ba25f9eda21431f334720d",
-      "src/gnn/gui/gui_1/ui.py": "d8baa721a5e6981138e4334afbe10d7d47a92e0e1c4f093f2cd62823e03993ab",
+      "src/gnn/gui/gui_1/ui.py": "4d5bb040a88b610958121e0f9ad0adc739a36bcfc712d18280a2dfbc195ab5e7",
       "src/gnn/gui/gui_2/__init__.py": "a656b35cb59db6f98aa880b0021604051db128084de3f6967b15a2cf394d2cf3",
       "src/gnn/gui/gui_2/matrix_editor.py": "dbc4e8dafe466b34f05bb83733f961105bf6612ac8e59ecbf9edea21017a92cf",
       "src/gnn/gui/gui_2/processor.py": "ab8b70b57f964650d76b663c1c64314118d6da70f8dfb137f8c0d6bbcec8daae",
@@ -484,7 +484,7 @@
       "src/gnn/llm/cache.py": "81e71210dec0ab05f0b49adc6c90246b6ddbd74d427f9a3c7ae90a0f3429d699",
       "src/gnn/llm/corpus_runner.py": "b3edfe6240cc4be1976e6a2f90bc863dff7a5bc2856c7b50958f67c699cbd1ad",
       "src/gnn/llm/defaults.py": "6a9839938a5cbabe03890ddbe28470d6c234b69d32979b53a33f2e1951fa1d5f",
-      "src/gnn/llm/generator.py": "6368a674da3bc4e54bd42c6bd0133490d54b7b054bdf57fc8e369929b5fb1703",
+      "src/gnn/llm/generator.py": "199f89d5ac07d3ad25fc1328cb3d1edc02df7637395c5ecc0a3243d7915462ce",
       "src/gnn/llm/llm_operations.py": "35723791dfadfcb7d0a670e702597ed901d39dde12a31b067022206bf258d73c",
       "src/gnn/llm/llm_processor.py": "fd508e53347314581d27a054d0a4af50d9e4d75d147822794edfd6c69b78c996",
       "src/gnn/llm/mcp.py": "57deed0917038f3fcca57fe778cd26c1b30ab3e825610114c229f40478513024",
@@ -945,7 +945,7 @@
       "src/gnn/website/serve.py": "2328a2c36632c0df4006dff28027dd5586e6543e8b6b238f99fa89887ec5bd9b",
       "src/gnn/website/source_collection.py": "a5fe1fbe4280564087d3ac3761a67e6f62f00a312c393777192039853bd3c9d1",
       "src/gnn/website/steps.py": "3b6a08f261cf1f287cacacf926dcca73b66df5a43c2fdc05da6140ddcd6a3a91",
-      "uv.lock": "f6b149107495b04952ede0c19bd2eefb81d4eea2891f036af64d31813c3a3123"
+      "uv.lock": "6d8779a6796021a24d38d1ff2d4ab0ca19d9ffa3464db7dc98044d65811f55ff"
     }
   },
   "schema_version": 1
