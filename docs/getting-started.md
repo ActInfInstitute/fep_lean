@@ -10,6 +10,15 @@ Outside that checkout, put the global option before the subcommand:
 fep-lean --project-root /path/to/fep_formal catalogue
 ```
 
+## Portable mathematical inspection
+
+The installed package can inspect and export mathematical contracts without a
+checkout. Start with `fep-lean methods inspect --topic fep-001` and
+`fep-lean methods export --output-root ./mathematical-methods`. The
+[mathematical methods guide](mathematical-methods.md) explains the API, offline
+explorer, numerical boundaries and canonical-source option. Native verification
+and publication still require the checkout assets described below.
+
 ## Portable checkout kit
 
 On macOS or Linux, install Bash, Git, uv, elan (the pinned installer below),

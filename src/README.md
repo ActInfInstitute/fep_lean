@@ -1,8 +1,8 @@
 # fep_lean/src/
 
-**Version**: v1.5.0 | **Status**: Active | **Last Updated**: October 2026
+**Version**: v1.6.0 | **Status**: Active | **Last Updated**: October 2026
 
-This directory contains the installable `fep_lean` package. Its ten domain subpackages drive the FEP Lean
+This directory contains the installable `fep_lean` package. Its eleven domain subpackages drive the FEP Lean
 pipeline. The layer runs end-to-end per-topic formalization sessions (LLM
 explanation + Lean 4 compilation + SQLite session capture), and emits the
 artifacts consumed by the manuscript stage (`manuscript_vars.yaml`, figures,
@@ -13,6 +13,7 @@ per-topic markdown reports).
 | Subpackage | Role | Key public API |
 | ---------- | ---- | -------------- |
 | [`fep_lean/catalogue/`](fep_lean/catalogue/) | Load the packaged sealed roster, family-owned bodies, and semantic review. | `FEPTopicCatalogue`, `TopicEntry`, `SemanticDisposition` |
+| [`fep_lean/methods/`](fep_lean/methods/) | Portable mathematical contracts, taxonomy, numerical boundaries and visual projections. | `build_mathematical_positioning`, `inspect_topic`, `export_mathematical_positioning` |
 | [`fep_lean/formal/`](fep_lean/formal/) | Manifested FEP/active-inference foundations, leaf composition proofs, import aggregate, and Lake projection. | `FORMAL_MODULES`, `formal_projection_drift`, `write_formal_projections` |
 | [`fep_lean/verification/`](fep_lean/verification/) | Lean 4 toolchain, workspace, declaration, and axiom checks. | `LeanVerifier`, `run_validation_checks`, `run_formalism_audit` |
 | [`fep_lean/llm/`](fep_lean/llm/) | Hermes LLM explainer (OpenRouter / Anthropic) with a configured fallback chain. | `HermesConfig`, `HermesExplainer`, `HermesResult`, `HermesAPIError` |

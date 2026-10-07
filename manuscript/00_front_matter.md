@@ -1,4 +1,5 @@
 ---
+autoEqnLabels: true
 author:
   - {{publication.author.name}}
 ---

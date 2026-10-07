@@ -61,9 +61,6 @@ def _project(tmp_path: Path, log: str) -> Path:
     pdf = tmp_path / "output" / "pdf"
     manuscript.mkdir(parents=True)
     pdf.mkdir(parents=True)
-    (pdf / "_combined_manuscript.tex").write_text(
-        "A clean document.\n", encoding="utf-8"
-    )
     (pdf / "_combined_manuscript.log").write_text(log, encoding="utf-8")
     (pdf / "_latex_stdout.log").write_text(log, encoding="utf-8")
     (pdf / "_combined_manuscript.md").write_text(
@@ -77,6 +74,9 @@ def _project(tmp_path: Path, log: str) -> Path:
         encoding="utf-8",
     )
     _cover_fixture(tmp_path)
+    (manuscript / "references.bib").write_text(
+        "% Test bibliography\n", encoding="utf-8"
+    )
     return tmp_path
 
 
@@ -114,6 +114,7 @@ def _cover_fixture(root: Path) -> None:
 \vspace{0.08em}
 \end{titlepage}
 A clean document.
+\begin{equation}\label{eq:fixture}x=y\end{equation}
 \end{document}
 """,
         encoding="utf-8",
@@ -425,6 +426,17 @@ def test_a_clean_render_writes_the_committed_receipt(tmp_path: Path) -> None:
     receipt = json.loads((project / driver.RECEIPT_PATH).read_text(encoding="utf-8"))
     assert receipt["accepted"] is True
     assert receipt["pages"] == 350
+    assert receipt["checks"] == {
+        "tex_errors": 0,
+        "missing_characters": 0,
+        "mermaid_fallbacks": 0,
+        "stale_sources": 0,
+        "uncaptioned_tables": 0,
+        "contents_number_overflows": 0,
+        "unresolved_references": 0,
+        "publication_cover": 0,
+        "unnumbered_equations": 0,
+    }
     assert receipt["manuscript_source_digest"] == manuscript_source_digest(
         project / "manuscript"
     )
@@ -433,6 +445,7 @@ def test_a_clean_render_writes_the_committed_receipt(tmp_path: Path) -> None:
         "02b_background.md",
         "config.yaml",
         "preamble.md",
+        "references.bib",
     ]
 
 
@@ -547,6 +560,30 @@ def test_unresolved_references_reject_successful_template(tmp_path: Path) -> Non
     (project / "output/pdf/_combined_manuscript.tex").write_text(
         r"\citep{eq:lost} \{\#eq:lost\}", encoding="utf-8"
     )
+    assert (
+        driver.render_publication(
+            project,
+            tmp_path,
+            runner=_successful_template,
+            hydrator=_hydrated,
+            skip_probe=True,
+        )
+        == 1
+    )
+    assert not (project / driver.RECEIPT_PATH).exists()
+
+
+def test_unnumbered_equations_reject_successful_template(tmp_path: Path) -> None:
+    driver = _driver()
+    project = _project(tmp_path, CLEAN_LOG)
+    tex = project / "output/pdf/_combined_manuscript.tex"
+    tex.write_text(
+        tex.read_text()
+        .replace(r"\begin{equation}", r"\begin{equation*}")
+        .replace(r"\end{equation}", r"\end{equation*}"),
+        encoding="utf-8",
+    )
+    assert publication_cover_defects(project / "manuscript", tex.parent) == ()
     assert (
         driver.render_publication(
             project,

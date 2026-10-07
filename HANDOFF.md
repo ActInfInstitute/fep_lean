@@ -1,11 +1,45 @@
 # fep_lean formalism and publication handoff
 
-**Date:** 2026-10-06
+**Date:** 2026-10-07
 **Repository:** `ActiveInferenceInstitute/fep_formal`
 **Checkout:** this repository checkout (see the `origin` remote)
 **Release line:** current release `v1.5.0` (2026-10-06), which ships the
 untagged `1.4.0` candidate. Releases follow the short
 [release procedure](docs/release.md); research lanes below do not block them.
+
+## Mathematical methods release line
+
+The `1.6.0` release line adds a portable `fep_lean.methods` API and CLI,
+a greatly extended mathematical supplement, and an offline explorer with
+publication panels. [Integration ownership and acceptance](specs/openai-math-methods/INTEGRATION.md)
+define this scope; [the guide](docs/mathematical-methods.md) explains its use.
+The authored positioning policy is interpretive family context. Exact topic
+contracts and typed theorem relations retain their canonical owners. The
+OpenAI mathematics corpus is a pinned comparison source; none of its research
+code is executed by this integration. The model retains 1,946 lexical Lean
+declarations and twelve upstream statement passports against 82 locked file
+identities. Its common comparison has 34 rows in 30 authored coordinates;
+family context unions and individual upstream results retain distinct scope.
+The 17-product export includes thirteen SVGs. Focused mathematical
+tests passed 112 cases, and isolated installed methods checks passed on local
+macOS Python 3.10.20, 3.11.15, 3.12.13, 3.13.16 and 3.14.4 with identical MDS
+projection hashes. The original candidate, before integration with newer GitHub main, has
+independently validated 168-topic native evidence. The final 385-page PDF passed the version-2 receipt and
+independent publication reviews, with twelve Supplement A figures, six tables
+and 55 numbered supplement equations. The complete non-serial Python suite
+passed 2,707 tests with nine skips in 777.82 seconds and 91.50% coverage.
+The first full Python run failed with 78 failures, 2,626 passes and nine skips;
+its fixture repairs passed focused controls before the successful final run.
+That candidate wheel's 193 package resources match its source; its source
+archive has 338 checked regular members. That exact wheel passed isolated
+Python 3.14.4 installation, all 17 API/CLI exports, nonmutating checks and the
+reference MDS digest. The original 80-case distribution matrix and security
+assertions remain; its shared fixture producers were migrated to receipt
+version 2. Prior accepted artifacts remain historical.
+[The validation record](specs/openai-math-methods/VALIDATION.md)
+binds those local lanes. Reacquire evidence after source changes, and apply
+the separate hosted release gate to the final committed source. Historical
+custody and scientific-study records retain their scope.
 
 ## Mission and evidence boundary
 

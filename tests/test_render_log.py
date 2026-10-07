@@ -14,11 +14,14 @@ from typing import Any
 
 import pytest
 
+from fep_lean.output import rendering as rendering_module
 from fep_lean.output.render_log import (
     RECEIPT_VERSION,
     RenderLogDefects,
+    _project_with_provenance,
     build_acceptance_receipt,
     contents_number_overflow_defects,
+    equation_numbering_defects,
     manuscript_source_digest,
     manuscript_source_digests,
     mermaid_fallback_defects,
@@ -29,6 +32,7 @@ from fep_lean.output.render_log import (
     stale_render_defects,
     uncaptioned_table_defects,
 )
+from fep_lean.output.rendering import _rewrite_asset_references, substitute_placeholders
 
 CLEAN_LOG = """This is XeTeX, Version 3.141592653
 (./_combined_manuscript.tex
@@ -214,6 +218,139 @@ theorem fep001_union_bound : True := trivial
 """
 
 
+# Exact opening and first edge from the failed pinned-template render. Pandoc
+# preserves the discarded Mermaid fence as highlighted code rather than the
+# legacy figure/verbatim fallback above.
+HIGHLIGHTED_MERMAID_FALLBACK = r"""\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{flowchart} \ConstantTok{LR}
+    \DataTypeTok{source}\NormalTok{[}\VerbatimStringTok{canonical TopicEntry}\NormalTok{] }\PreprocessorTok{{-}{-}\textgreater{}} \DataTypeTok{session}\NormalTok{[}\VerbatimStringTok{SQLite session}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+"""
+
+
+@pytest.mark.parametrize(
+    "header",
+    [
+        r"\KeywordTok{flowchart} \ConstantTok{LR}",
+        r"\NormalTok{flowchart LR}",
+        r"\NormalTok{flow}\KeywordTok{chart} \ConstantTok{LR}",
+    ],
+)
+def test_pandoc_highlighted_raw_mermaid_is_reported(
+    tmp_path: Path, header: str
+) -> None:
+    specimen = HIGHLIGHTED_MERMAID_FALLBACK.replace(
+        r"\KeywordTok{flowchart} \ConstantTok{LR}", header
+    )
+    _write(tmp_path, "_combined_manuscript.tex", RASTERIZED_FIGURE + specimen)
+
+    defects = mermaid_fallback_defects(tmp_path)
+
+    assert len(defects) == 1
+    assert "mermaid diagram shipped as highlighted source" in defects[0]
+    assert "'flowchart LR'" in defects[0]
+
+
+@pytest.mark.parametrize(
+    "header",
+    [
+        r"\KeywordTok{theorem}\NormalTok{ graph : True := trivial}",
+        r"\KeywordTok{def}\NormalTok{ flowchart(x):}",
+        r"\NormalTok{graph = build_graph()}",
+        r"\NormalTok{flowchart_result = 1}",
+        r"\NormalTok{flowchart(LR)}",
+        r'\StringTok{"flowchart LR"}',
+        r"\NormalTok{sequenceDiagram = renderer}",
+        r"\CommentTok{\# flowchart LR}",
+        r"\UnknownTok{flowchart LR}",
+        r"\NormalTok{flowchart LR",  # Unclosed token wrapper is not a decoded header.
+    ],
+)
+def test_ordinary_highlighted_code_and_similar_words_are_not_mermaid(
+    tmp_path: Path, header: str
+) -> None:
+    specimen = HIGHLIGHTED_MERMAID_FALLBACK.replace(
+        r"\KeywordTok{flowchart} \ConstantTok{LR}", header
+    )
+    _write(tmp_path, "_combined_manuscript.tex", specimen)
+
+    assert mermaid_fallback_defects(tmp_path) == ()
+
+
+def test_mermaid_words_outside_highlighted_environment_are_not_reported(
+    tmp_path: Path,
+) -> None:
+    _write(
+        tmp_path,
+        "_combined_manuscript.tex",
+        "A prose description of flowchart LR is not a failed diagram.\n"
+        r"\NormalTok{flowchart LR}"
+        "\n"
+        r"\newcommand{\NormalTok}[1]{#1}"
+        "\n",
+    )
+
+    assert mermaid_fallback_defects(tmp_path) == ()
+
+
+@pytest.mark.parametrize(
+    "header",
+    [
+        r"\KeywordTok{graph} \ConstantTok{TD}",
+        r"\KeywordTok{sequenceDiagram}",
+        r"\NormalTok{stateDiagram{-}v2}",
+        r"\KeywordTok{pie}\NormalTok{ showData title Finite risk}",
+    ],
+)
+def test_other_reviewed_highlighted_mermaid_headers_are_reported(
+    tmp_path: Path, header: str
+) -> None:
+    specimen = HIGHLIGHTED_MERMAID_FALLBACK.replace(
+        r"\KeywordTok{flowchart} \ConstantTok{LR}", header
+    )
+    _write(tmp_path, "_combined_manuscript.tex", specimen)
+
+    assert len(mermaid_fallback_defects(tmp_path)) == 1
+
+
+def test_highlighted_mermaid_accepts_pandoc_options_and_skips_mermaid_comments(
+    tmp_path: Path,
+) -> None:
+    specimen = HIGHLIGHTED_MERMAID_FALLBACK.replace("\\begin{Shaded}\n", "").replace(
+        "\\end{Shaded}\n", ""
+    )
+    specimen = specimen.replace(
+        r"\begin{Highlighting}[]",
+        "\\begin{Highlighting}[numbers=left]\n"
+        r"\CommentTok{\%\% Render this source as a diagram}",
+    )
+    _write(tmp_path, "_combined_manuscript.tex", specimen)
+
+    defects = mermaid_fallback_defects(tmp_path)
+
+    assert len(defects) == 1
+    assert "'flowchart LR'" in defects[0]
+    assert ":1:" in defects[0]
+
+
+def test_mixed_fallback_formats_report_each_diagram_in_document_order(
+    tmp_path: Path,
+) -> None:
+    _write(
+        tmp_path,
+        "_combined_manuscript.tex",
+        HIGHLIGHTED_MERMAID_FALLBACK + RASTERIZED_FIGURE + MERMAID_FALLBACK,
+    )
+
+    defects = mermaid_fallback_defects(tmp_path)
+
+    assert len(defects) == 2
+    assert "highlighted source" in defects[0]
+    assert "verbatim source" in defects[1]
+
+
 def test_rasterized_diagram_is_accepted(tmp_path: Path) -> None:
     _write(tmp_path, "_combined_manuscript.tex", RASTERIZED_FIGURE)
     assert mermaid_fallback_defects(tmp_path) == ()
@@ -375,6 +512,354 @@ def test_image_lines_are_not_drift(tmp_path: Path) -> None:
     assert stale_render_defects(manuscript, pdf) == ()
 
 
+@pytest.mark.parametrize(
+    ("reference", "target"),
+    [
+        (
+            "../docs/mathematical-positioning/mathematical-map.html",
+            "../manuscript/assets/mathematical-map.html",
+        ),
+        (
+            "../docs/mathematical-positioning/visual-model.json",
+            "../manuscript/assets/visual-model.json",
+        ),
+        ("../docs/formalism-atlas.html", "../manuscript/assets/formalism-atlas.html"),
+    ],
+)
+def test_exact_rewritten_companion_targets_are_not_stale(
+    tmp_path: Path, reference: str, target: str
+) -> None:
+    prefix = "Read the interactive companion with its full maintained model: "
+    manuscript, pdf = _stale_tree(
+        tmp_path,
+        f"{prefix}[companion]({reference})\n",
+        f"{prefix}[companion]({target})\n",
+    )
+
+    assert stale_render_defects(manuscript, pdf) == ()
+
+
+@pytest.mark.parametrize(
+    "rendered_link",
+    [
+        "[map](../pdf/assets/mathematical-map.html)",
+        "[different map](../manuscript/assets/mathematical-map.html)",
+    ],
+)
+def test_wrong_companion_target_or_link_text_is_stale(
+    tmp_path: Path, rendered_link: str
+) -> None:
+    prefix = "Inspect the interactive mathematical explorer with its full model: "
+    manuscript, pdf = _stale_tree(
+        tmp_path,
+        f"{prefix}[map](../docs/mathematical-positioning/mathematical-map.html)\n",
+        f"{prefix}{rendered_link}\n",
+    )
+
+    defects = stale_render_defects(manuscript, pdf)
+
+    assert len(defects) == 1
+    assert "1 line(s) absent" in defects[0]
+
+
+def test_custom_render_destination_requires_its_explicit_freshness_target(
+    tmp_path: Path,
+) -> None:
+    prefix = "Read the interactive companion with its full maintained model: "
+    manuscript, pdf = _stale_tree(
+        tmp_path,
+        f"{prefix}[map](../docs/mathematical-positioning/mathematical-map.html)\n",
+        f"{prefix}[map](../build/assets/mathematical-map.html)\n",
+    )
+
+    assert len(stale_render_defects(manuscript, pdf)) == 1
+    assert (
+        stale_render_defects(
+            manuscript, pdf, rendered_manuscript_dir=tmp_path / "output/build"
+        )
+        == ()
+    )
+
+
+def test_verbatim_appendix_asset_references_are_not_rewritten(
+    tmp_path: Path,
+) -> None:
+    appendix = (
+        "A generated appendix retains its companion reference verbatim: "
+        "[map](../docs/mathematical-positioning/mathematical-map.html)\n"
+    )
+    manuscript, pdf = _stale_tree(tmp_path, CHAPTER, f"{RENDERED}\n{appendix}")
+    (manuscript / "09z_unified_formalism_catalogue.md").write_text(
+        appendix, encoding="utf-8"
+    )
+
+    assert stale_render_defects(manuscript, pdf) == ()
+
+
+@pytest.mark.parametrize("rendered_link", [None, "[Wrong map]"])
+def test_significant_link_shortened_below_threshold_still_compares(
+    tmp_path: Path, rendered_link: str | None
+) -> None:
+    original = "[Explorer](../docs/mathematical-positioning/mathematical-map.html)"
+    rewritten = "[Explorer](../manuscript/assets/mathematical-map.html)"
+    assert len(original) > 60 >= len(rewritten)
+    rendered = (
+        rewritten
+        if rendered_link is None
+        else rewritten.replace("[Explorer]", rendered_link)
+    )
+    manuscript, pdf = _stale_tree(tmp_path, f"{original}\n", f"{rendered}\n")
+
+    defects = stale_render_defects(manuscript, pdf)
+
+    if rendered_link is None:
+        assert defects == ()
+    else:
+        assert len(defects) == 1
+        assert "1 line(s) absent" in defects[0]
+
+
+def test_shortened_variable_line_does_not_mispair_with_a_source_stamp(
+    tmp_path: Path,
+) -> None:
+    token = "a_variable_name_long_enough_to_exceed_the_source_significance_threshold"
+    chapter = (
+        f"The result is {{{{{token}}}}}.\n"
+        "This source stamp is {{source.short_commit}} and belongs only to the "
+        "current render, rather than to a previous generated projection.\n"
+    )
+    rendered = (
+        "The result is wrong.\n"
+        "This source stamp is abc123 and belongs only to the current render, "
+        "rather than to a previous generated projection.\n"
+    )
+    manuscript, pdf = _stale_tree(tmp_path, chapter, rendered)
+
+    defects = stale_render_defects(
+        manuscript,
+        pdf,
+        variables={token: "correct", "source": {"short_commit": "abc123"}},
+    )
+
+    assert len(defects) == 1
+    assert "1 line(s) absent" in defects[0]
+    assert "The result is correct." in defects[0]
+
+
+@pytest.mark.parametrize("actual_value", ["correct", "wrong"])
+def test_multiline_placeholder_preserves_whole_content_substitution(
+    tmp_path: Path, actual_value: str
+) -> None:
+    prefix = "This maintained mathematical statement has a sufficiently long explanatory prefix: "
+    manuscript, pdf = _stale_tree(
+        tmp_path, f"{prefix}{{{{value\n}}}}.\n", f"{prefix}{actual_value}.\n"
+    )
+
+    defects = stale_render_defects(manuscript, pdf, variables={"value": "correct"})
+
+    assert bool(defects) is (actual_value != "correct")
+
+
+@pytest.mark.parametrize("changed", [None, "prefix", "value"])
+def test_multiline_token_beside_stamp_keeps_ordinary_source_obligation(
+    tmp_path: Path, changed: str | None
+) -> None:
+    prefix = (
+        "This accepted authored mathematical statement has a sufficiently long "
+        "explanatory prefix to make it significant: "
+    )
+    chapter = (
+        f"{prefix}{{{{value\n"
+        "}}; the render metadata is {{source.short_commit}} and may legitimately change.\n"
+    )
+    rendered = (
+        f"{prefix}correct; the render metadata is new and may legitimately change.\n"
+    )
+    if changed == "prefix":
+        rendered = rendered.replace("accepted authored", "different authored")
+    elif changed == "value":
+        rendered = rendered.replace("correct", "wrong")
+    manuscript, pdf = _stale_tree(tmp_path, chapter, rendered)
+
+    defects = stale_render_defects(
+        manuscript,
+        pdf,
+        variables={"value": "correct", "source": {"short_commit": "old"}},
+    )
+
+    assert bool(defects) is (changed is not None)
+    if defects:
+        assert "1 line(s) absent" in defects[0]
+
+
+@pytest.mark.parametrize("actual_value", ["correct", "wrong"])
+def test_multiline_token_retains_significant_original_when_output_is_short(
+    tmp_path: Path, actual_value: str
+) -> None:
+    key = "a_variable_name_long_enough_to_exceed_the_source_significance_threshold"
+    chapter = "{{" + key + "\n}}.\n"
+    assert len(chapter.splitlines()[0]) > 60 >= len("correct.")
+    manuscript, pdf = _stale_tree(tmp_path, chapter, f"{actual_value}.\n")
+
+    defects = stale_render_defects(manuscript, pdf, variables={key: "correct"})
+
+    assert bool(defects) is (actual_value != "correct")
+
+
+def test_multiline_unit_length_does_not_sum_short_physical_lines(
+    tmp_path: Path,
+) -> None:
+    key = "\n".join(f"short_piece_{index}" for index in range(8))
+    chapter = "{{" + key + "}}.\n"
+    assert len(chapter) > 60 >= max(map(len, chapter.splitlines()))
+    manuscript, pdf = _stale_tree(tmp_path, chapter, "different short output.\n")
+
+    assert stale_render_defects(manuscript, pdf, variables={key: "short"}) == ()
+
+
+def test_multiline_replacement_length_does_not_sum_short_physical_lines(
+    tmp_path: Path,
+) -> None:
+    value = "\n".join(f"short replacement {index}" for index in range(8))
+    assert len(value) > 60 >= max(map(len, value.splitlines()))
+    manuscript, pdf = _stale_tree(tmp_path, "{{value}}\n", "different short output.\n")
+
+    assert stale_render_defects(manuscript, pdf, variables={"value": value}) == ()
+
+
+def test_unknown_multiline_token_does_not_exempt_an_ordinary_neighbor(
+    tmp_path: Path,
+) -> None:
+    chapter = (
+        "This significant placeholder-dependent statement cannot be compared "
+        "without its own values: {{value\n}}.\n"
+        f"{CHAPTER}"
+    )
+    rendered = (
+        "This significant placeholder-dependent statement cannot be compared "
+        "without its own values: actual.\n"
+        f"{RENDERED.replace('The table below reports', 'A different table reports')}"
+    )
+    manuscript, pdf = _stale_tree(tmp_path, chapter, rendered)
+
+    defects = stale_render_defects(manuscript, pdf)
+
+    assert len(defects) == 1
+    assert "1 line(s) absent" in defects[0]
+    assert "The table below reports" in defects[0]
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_verbatim_multiline_placeholder_is_not_substituted(
+    tmp_path: Path, changed: bool
+) -> None:
+    appendix = (
+        "A verbatim generated mathematical appendix retains its sufficiently "
+        "long statement and literal token: {{value\n}}.\n"
+    )
+    rendered = appendix.replace("{{value\n}}", "correct") if changed else appendix
+    manuscript, pdf = _stale_tree(tmp_path, CHAPTER, f"{RENDERED}\n{rendered}")
+    (manuscript / "09z_unified_formalism_catalogue.md").write_text(
+        appendix, encoding="utf-8"
+    )
+
+    defects = stale_render_defects(manuscript, pdf, variables={"value": "correct"})
+
+    assert bool(defects) is changed
+
+
+@pytest.mark.parametrize(
+    "variables",
+    [None, {"value": "correct\ncontinued", "asset": "mathematical-map.html"}],
+)
+def test_provenance_projection_equals_canonical_whole_content_transforms(
+    variables: dict[str, str] | None,
+) -> None:
+    text = (
+        "First {{value\n}} and repeated {{value}}.\n"
+        "[companion](../docs/mathematical-positioning/{{asset\n}})\n"
+        "[model](../docs/mathematical-positioning/visual-model.json)\n"
+        "An unresolved {{unknown\n}} remains literal.\n"
+    )
+    destination = Path("output/manuscript")
+    canonical = (
+        substitute_placeholders(text, variables, strict=False)
+        if variables is not None
+        else text
+    )
+    canonical = _rewrite_asset_references(canonical, destination)
+
+    projected, owners = _project_with_provenance(text, variables, destination)
+
+    assert projected == canonical
+    assert len(owners) == len(projected)
+    assert all(0 <= owner < len(text.splitlines()) for owner in owners)
+    if variables is not None:
+        assert owners[projected.index("correct")] == 0
+        assert "../manuscript/assets/mathematical-map.html" in projected
+
+
+def test_provenance_projection_retains_ordered_cascading_asset_rewrites(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        rendering_module,
+        "MANUSCRIPT_ASSETS",
+        {
+            "first": (Path("first.html"), Path("assets/first.html")),
+            "../manuscript/assets/first.html": (
+                Path("second.json"),
+                Path("assets/second.json"),
+            ),
+        },
+    )
+    destination = Path("output/manuscript")
+
+    projected, owners = _project_with_provenance("first", {}, destination)
+
+    assert projected == _rewrite_asset_references("first", destination)
+    assert projected == "../manuscript/assets/second.json"
+    assert owners == [0] * len(projected)
+
+
+def test_variable_expanded_image_retains_downstream_path_exclusion(
+    tmp_path: Path,
+) -> None:
+    key = "an_image_variable_name_long_enough_to_make_this_authored_line_significant"
+    value = "![Geometry](../output/figures/mathematical-fisher-geometry.png)"
+    manuscript, pdf = _stale_tree(
+        tmp_path,
+        "{{" + key + "}}\n",
+        "![Geometry](../figures/mathematical-fisher-geometry.png)\n",
+    )
+
+    assert stale_render_defects(manuscript, pdf, variables={key: value}) == ()
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_variable_expanded_image_does_not_exempt_ordinary_projected_neighbor(
+    tmp_path: Path, changed: bool
+) -> None:
+    key = "an_image_variable_name_long_enough_to_make_this_authored_line_significant"
+    ordinary = (
+        "The maintained mathematical statement uses its exact original carrier "
+        "and hypotheses across the complete formal comparison."
+    )
+    value = (
+        f"![Geometry](../output/figures/mathematical-fisher-geometry.png)\n{ordinary}\n"
+    )
+    rendered = f"![Geometry](../figures/mathematical-fisher-geometry.png)\n{ordinary}\n"
+    if changed:
+        rendered = rendered.replace("exact original carrier", "different carrier")
+    manuscript, pdf = _stale_tree(tmp_path, "{{" + key + "}}\n", rendered)
+
+    defects = stale_render_defects(manuscript, pdf, variables={key: value})
+
+    assert bool(defects) is changed
+    if defects:
+        assert "1 line(s) absent" in defects[0]
+
+
 def test_an_absent_combined_render_is_a_defect(tmp_path: Path) -> None:
     manuscript = tmp_path / "manuscript"
     manuscript.mkdir()
@@ -498,7 +983,90 @@ CLEAN_COUNTS = {
     "contents_number_overflows": 0,
     "unresolved_references": 0,
     "publication_cover": 0,
+    "unnumbered_equations": 0,
 }
+
+
+@pytest.mark.parametrize(
+    "math",
+    (
+        r"\[x=y\]",
+        r"\begin{equation*}x=y\end{equation*}",
+        r"\begin{align*}x&=y\end{align*}",
+        r"\begin{displaymath}x=y\end{displaymath}",
+        r"\begin{equation}x=y\notag\end{equation}",
+        "$$x=y$$",
+    ),
+)
+def test_acceptance_rejects_unnumbered_display_math(tmp_path: Path, math: str) -> None:
+    _write(tmp_path, "_combined_manuscript.tex", math)
+    assert equation_numbering_defects(tmp_path)
+
+
+def test_equation_acceptance_ignores_code_comments_and_spacing(tmp_path: Path) -> None:
+    tex = r"""\newcommand{\example}{\[a=b\]}
+\begin{document}
+\begin{equation}x=y\end{equation}
+\begin{equation}\label{eq:kept}\begin{aligned}a&=b\\c&=d\end{aligned}\end{equation}
+% \[commented math\]
+\begin{verbatim}
+\[documented syntax\]
+\end{verbatim}
+\begin{Highlighting}[]
+\NormalTok{\begin{align*}code\end{align*}}
+\end{Highlighting}
+author\\[0.5em]
+\end{document}
+"""
+    _write(tmp_path, "_combined_manuscript.tex", tex)
+    assert equation_numbering_defects(tmp_path) == ()
+
+
+def test_equation_acceptance_requires_actual_tex(tmp_path: Path) -> None:
+    assert "requires combined LaTeX" in equation_numbering_defects(tmp_path)[0]
+
+
+def test_commented_code_opener_cannot_conceal_display_math(tmp_path: Path) -> None:
+    tex = r"""\begin{document}
+% \begin{verbatim}
+\[x=y\]
+\begin{verbatim}
+ordinary code
+\end{verbatim}
+\end{document}
+"""
+    _write(tmp_path, "_combined_manuscript.tex", tex)
+    assert len(equation_numbering_defects(tmp_path)) == 1
+
+
+def test_tex_comment_escape_parity_and_literal_code_percent(tmp_path: Path) -> None:
+    tex = r"""\begin{document}
+line ends\\% comment \[x=y\]
+escaped\% text \begin{equation}x=y\end{equation}
+\begin{verbatim}
+% literal code \[not math\]
+\end{verbatim}
+\end{document}
+"""
+    _write(tmp_path, "_combined_manuscript.tex", tex)
+    assert equation_numbering_defects(tmp_path) == ()
+
+
+def test_unterminated_code_cannot_hide_equations(tmp_path: Path) -> None:
+    _write(tmp_path, "_combined_manuscript.tex", "\\begin{verbatim}\n\\[x=y\\]\n")
+    assert "unterminated code" in equation_numbering_defects(tmp_path)[0]
+
+
+@pytest.mark.parametrize("metadata", ("config.yaml", "references.bib"))
+def test_cover_and_bibliography_changes_invalidate_acceptance(
+    tmp_path: Path, metadata: str
+) -> None:
+    manuscript = _manuscript(tmp_path)
+    before = manuscript_source_digest(manuscript)
+    (manuscript / metadata).write_text(
+        "Changed publication metadata\n", encoding="utf-8"
+    )
+    assert manuscript_source_digest(manuscript) != before
 
 
 def _manuscript(tmp_path: Path) -> Path:
@@ -554,6 +1122,7 @@ def test_every_covered_file_carries_its_own_digest(tmp_path: Path) -> None:
         "09z_unified_formalism_catalogue.md",
         "config.yaml",
         "preamble.md",
+        "references.bib",
     ]
 
 
@@ -658,7 +1227,15 @@ def test_a_receipt_from_a_future_schema_is_a_defect(tmp_path: Path) -> None:
     assert any("receipt_version" in line for line in receipt_defects(path, manuscript))
 
 
-@pytest.mark.parametrize("check", ["mermaid_fallbacks", "publication_cover"])
+@pytest.mark.parametrize(
+    "check",
+    [
+        "mermaid_fallbacks",
+        "publication_cover",
+        "unresolved_references",
+        "unnumbered_equations",
+    ],
+)
 def test_a_receipt_missing_a_check_is_not_accepted(tmp_path: Path, check: str) -> None:
     """A receipt written by an older acceptance cannot vouch for a newer one."""
     manuscript = _manuscript(tmp_path)
@@ -855,7 +1432,11 @@ def test_absent_manuscript_vars_prints_a_degraded_staleness_line(
     _write(pdf, "_latex_stdout.log", CLEAN_LOG)
     (manuscript / "01_abstract.md").write_text("An abstract.\n", encoding="utf-8")
     _write(pdf, "_combined_manuscript.md", "An abstract.\n")
-    _write(pdf, "_combined_manuscript.tex", "An abstract.\n")
+    _write(
+        pdf,
+        "_combined_manuscript.tex",
+        "\\begin{document}An abstract.\\end{document}\n",
+    )
     module = _check_render_log_module()
     status = module.main(["--pdf-dir", str(pdf), "--manuscript-dir", str(manuscript)])
     out = capsys.readouterr().out

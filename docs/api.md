@@ -1,6 +1,6 @@
 # Public Python API
 
-**Version:** 1.5.0
+**Version:** 1.6.0
 **Last reviewed:** 2026-10-05
 
 The installed distribution exposes one root namespace, `fep_lean`. Generic
@@ -68,9 +68,39 @@ require qualified composition-leaf declarations that use both endpoints;
 capability nodes retain an
 `open`/`partial`/`satisfied` status and declaration evidence when resolved.
 
-Only the generated topic catalogue is a default wheel resource. Metadata,
-semantic review, novelty, and relation YAML are publication-authoring inputs in a source
-checkout; callers must pass their paths explicitly.
+The metadata, semantic review and relation sources remain authored in the
+checkout. The methods module packages byte-identical generated copies for
+portable mathematical inspection; novelty remains a checkout authoring input.
+These low-level loaders still take explicit paths. The portable default is the
+validated `fep_lean.methods` join documented below.
+
+## Mathematical methods
+
+```python
+from fep_lean.methods import (
+    build_mathematical_positioning,
+    inspect_topic,
+    analyze_topic,
+    inspect_theorem,
+    cross_corpus_embedding,
+)
+
+model = build_mathematical_positioning()
+contract = inspect_topic(model, "fep-001")
+analysis = analyze_topic(model, "fep-001")
+statement = inspect_theorem(model, contract["primary_theorem_qualified"])
+embedding = cross_corpus_embedding(model)
+```
+
+`build_mathematical_positioning()` validates the installed metadata, semantic
+contracts, authored relations, family positioning policy and packaged Lean
+resources. Pass an explicit checkout path to inspect its canonical owners.
+The model labels its origin; source resolution supplies no native receipt.
+Family features are inherited context. Neighbor queries use explicit binary
+features, and bounded probes make failed transfers visible. Export/check
+interfaces produce/read exactly the same JSON, Markdown, HTML and SVG model;
+checks do not repair drift. See [mathematical methods](mathematical-methods.md)
+for all public commands, mathematical scope and maintenance ownership.
 
 ## Pipeline
 

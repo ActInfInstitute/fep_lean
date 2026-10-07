@@ -1,3 +1,64 @@
+## 1.6.0 — 2026-10-07 — mathematical methods, positioning and manuscript supplement
+
+Mathematical integration with the pinned
+[OpenAI mathematics corpus](https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a).
+The corpus supplies research-result organization and selected comparisons;
+it is not added as a runtime dependency or an imported proof authority.
+The 168-topic roster, semantic dispositions, Lean bodies, and declared
+Lean/Mathlib pin retain their existing scientific scope.
+
+The new mathematical methods surface preserves each topic's carrier,
+invariant, assumptions, non-vacuity, acceptance requirement and qualified
+witnesses. Portable package resources support installed-wheel use without a
+checkout. The supplementary manuscript develops topology, law and parameter
+embeddings, information geometry, statistics, control and thermodynamics
+through worked result contracts, commuting-transfer requirements,
+countermodels and precise future proof obligations. Offline interactive
+and publication figures expose those associations and their boundaries.
+
+Source-grounded analysis retains 1,946 lexical Lean declarations with exact
+statements, binder syntax, namespace context, conclusions and mention roles;
+it does not certify translations or kernel dependencies. Twelve selected
+upstream statements retain reviewed source passports against 82 locked file
+identities. A shared binary representation places 22 FEP family context
+unions and those twelve result units in 30 authored coordinates. Its
+deterministic Decimal MDS reports distances, spectrum, stress and axis
+ambiguity without creating theorem relations.
+
+The original local candidate, before integration with newer GitHub main,
+completed a coordinated source-owner refresh from version 24 to 25: five methods modules, four generated package YAML
+resources and the authored positioning policy join the explicit owner roster.
+Fresh native verification passed all 168 canonical bodies without warnings,
+errors or `sorry`; the original receipt independently validates against its reviewed source. Current methods exports contain 17 products and thirteen
+SVGs, including three additional panels for theorem contracts and cross-corpus
+coordinates. The focused mathematical tests passed 112 cases. Isolated
+installed-wheel API and CLI checks passed on local macOS Python 3.10.20,
+3.11.15, 3.12.13, 3.13.16 and 3.14.4; all five produced the same MDS projection
+hash. That candidate publication render accepted a 385-page PDF with a version-2
+receipt, 1,315 numbered equation environments and independent page review.
+Supplement A has twelve cited figures, six captioned tables and 55 numbered
+equations. The complete non-serial Python suite passed 2,707 tests with nine
+skips in 777.82 seconds and 91.50% coverage. The first full Python run failed with 78
+failures, 2,626 passes and nine skips; obsolete fixture schemas, metadata and
+import expectations were repaired and passed focused controls. The original
+80-case distribution matrix and security assertions remain, with shared
+render fixtures migrated to receipt version 2. The final wheel's 193 package
+resources match the checkout, and the source archive's 338 regular members
+passed exact source and metadata checks. Installation of that specific wheel
+on local Python 3.14.4 passed all 17 API/CLI exports, nonmutating checks and the
+reference MDS digest. Prior accepted artifacts remain historical. Hosted
+matrix results remain separate.
+[The validation record](specs/openai-math-methods/VALIDATION.md)
+retains exact evidence boundaries and superseded attempts.
+Further source-owner changes require a new coordinated evidence refresh.
+Historical receipts keep their original bytes and scope. The frozen H2.7-R0
+validator remains unchanged; its test-only release-lineage adapter explicitly
+recognizes the 1.6.0 metadata token and still checks every other bound byte.
+H3 primary seeds, empirical acceptance, Q7 generated-runner execution and
+Hermes/OpenGauss execution remain separate research lanes. Publication requires fresh integrated-source validation and the exact-commit
+hosted release gate. The scholarly and software Zenodo concept DOI histories
+are maintained separately in citation metadata and release guidance.
+
 ## 1.5.0 — 2026-10-06 — 168-topic catalogue, finite information program and streamlined release gate
 
 First published release since `v1.3.0` (the `1.4.0` candidate prepared on

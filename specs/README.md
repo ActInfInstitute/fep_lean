@@ -8,6 +8,12 @@ annotated, never rewritten.
 
 ## Acceptance-artifact conventions
 
+[`openai-math-methods`](openai-math-methods/README.md) is an active, slice-local
+research analysis module. It owns a pinned upstream source review, authored
+mathematical family context, deterministic canonical contract projections,
+and numerical boundary diagnostics. Its artifacts are analysis evidence;
+native or scientific acceptance remains separate.
+
 Future spec acceptance artifacts MUST use bundle-backed durable copies and/or
 the `local_gitignored_path` field naming. Pointing a curated spec asset at a
 mutable gitignored `output/` path as if its current content were the accepted

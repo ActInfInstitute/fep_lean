@@ -198,6 +198,40 @@ snapshots. They cannot close ISA-06 or the provider-backed portion of ISA-07
 for today's roster. A new full Hermes/OpenGauss receipt requires explicit
 credential/spend authorization and independent live-source validation.
 
+## Mathematical methods integration
+
+The `1.6.0` candidate makes mathematical location operational: an
+installed wheel can inspect every canonical topic contract, distinguish typed
+relations from editorial affinities, query explicit family features, evaluate
+bounded counterexamples, and export the same readable and visual model offline.
+The manuscript must explain the carriers and transfer obligations behind those
+associations, and publication figures must have deterministic producers and
+build-local asset custody. Source-owner growth requires a coordinated roster
+refresh; native/render receipts are acquired after the final source changes.
+[The slice acceptance criteria](specs/openai-math-methods/INTEGRATION.md) own
+concrete probes and failure cases. Topic count, semantic promotion, unchecked
+upstream proofs and the unopened H3 study are outside this integration.
+The current model retains 1,946 lexical declarations, twelve upstream source
+statements against 82 locked identities, and 34 comparison rows in 30 authored
+coordinates. Its export has 17 products and thirteen SVGs. Confirmed local
+evidence includes 112 focused mathematical tests, the final 168-topic native
+receipt, and isolated installed-method checks on macOS Python 3.10.20,
+3.11.15, 3.12.13, 3.13.16 and 3.14.4 with identical MDS projection hashes.
+The final 385-page PDF passed version-2 receipt checks and independent
+publication reviews. Supplement A has twelve cited figures, six captioned
+tables and 55 numbered equations; all 1,315 manuscript display equations are
+numbered. The complete non-serial Python suite passed 2,707 tests with nine
+skips in 777.82 seconds and 91.50% coverage. The first full Python run
+failed with 78 failures, 2,626 passes and nine skips. Focused fixture repairs
+passed, retaining the original 80-case distribution matrix and security
+assertions while migrating shared render fixtures to receipt version 2.
+The final wheel's 193 package resources and the source archive's 338 regular
+members passed source/metadata comparison. That exact wheel passed isolated
+Python 3.14.4 installation, all 17 API/CLI exports, nonmutating checks and the
+reference MDS digest. Prior acceptance retains its historical scope. The
+[validation record](specs/openai-math-methods/VALIDATION.md) retains scope and
+source identity; version publication still requires the separate hosted gate.
+
 ## Release boundary
 
 `v1.5.0` (2026-10-06) is the current release of the 168-topic tree; the

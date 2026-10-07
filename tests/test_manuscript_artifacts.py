@@ -24,6 +24,7 @@ from fep_lean.output.manuscript import (
     _count_test_cases,
     _get_latest_verification_manifest,
     _hermes_block_from_summary,
+    _mathematical_methods_vars,
     _read_toolchain_vars,
     _test_collection_fingerprint,
     _test_collection_input_paths,
@@ -140,6 +141,34 @@ def test_build_manuscript_vars_shape(monkeypatch: pytest.MonkeyPatch) -> None:
     assert v["mathlib_tag"] == f"v{v['lean_version']}"
 
 
+def test_corpus_print_keys_cover_both_source_rosters_and_every_coordinate() -> None:
+    tables = _mathematical_methods_vars(PROJ)["cross_corpus"]
+    rows = tables["row_key_table"]
+    coordinates = tables["coordinate_key_table"]
+    assert len(rows.splitlines()) - 2 == 34
+    assert len(coordinates.splitlines()) - 2 == 30
+    assert "| F01 | core free energy |" in rows
+    assert "| U12 | Metric Markov Cotype Two of $\\ell_1$ |" in rows
+    assert "| C30 | hypothesis | asymptotic-limit |" in coordinates
+    assert tables == _mathematical_methods_vars(PROJ)["cross_corpus"]
+
+
+def test_corpus_print_keys_reject_a_drifted_coordinate(tmp_path: Path) -> None:
+    policy_source = PROJ / "specs/openai-math-methods/positioning.yaml"
+    policy_path = tmp_path / "specs/openai-math-methods/positioning.yaml"
+    policy_path.parent.mkdir(parents=True)
+    policy = yaml.safe_load(policy_source.read_text(encoding="utf-8"))
+    policy["cross_corpus"]["fep_family_features"][0]["features"].append(
+        "carrier:invented"
+    )
+    policy_path.write_text(yaml.safe_dump(policy), encoding="utf-8")
+    metadata = tmp_path / "config/catalogue_metadata.yaml"
+    metadata.parent.mkdir()
+    shutil.copy2(PROJ / "config/catalogue_metadata.yaml", metadata)
+    with pytest.raises(ValueError, match="unknown family or feature"):
+        _mathematical_methods_vars(tmp_path)
+
+
 def test_build_manuscript_vars_projects_the_canonical_citation_author(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -160,6 +189,12 @@ def test_build_manuscript_vars_projects_the_canonical_citation_author(
         "orcid": author["orcid"],
     }
     assert "authors" not in manuscript_config
+    projected = yaml.safe_load(
+        project_cover_author((PROJ / "manuscript/config.yaml").read_bytes(), PROJ)
+    )
+    assert projected["authors"] == [
+        {**variables["publication"]["author"], "orcid": "0000-0001-6232-9096"}
+    ]
 
 
 def test_cover_author_projects_citation_without_changing_authored_metadata(

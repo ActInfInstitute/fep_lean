@@ -1,0 +1,51 @@
+"""Offline portable mathematical positioning, exact contracts, and visual methods."""
+
+from .model import (
+    MathematicalPositioning,
+    PositioningError,
+    SourceOrigin,
+    analyze_topic,
+    build_mathematical_positioning,
+    cross_corpus_embedding,
+    inspect_family,
+    inspect_theorem,
+    inspect_topic,
+    package_resource_drift,
+    positioning_neighbors,
+)
+from .probes import (
+    BoundaryProbeError,
+    bernoulli_fisher,
+    classical_mds,
+    evaluate_boundary_probes,
+    extended_kl,
+    finite_kl_totalized,
+)
+from .projection import (
+    export_mathematical_positioning,
+    mathematical_positioning_bytes,
+    mathematical_positioning_drift,
+)
+
+__all__ = [
+    "BoundaryProbeError",
+    "MathematicalPositioning",
+    "PositioningError",
+    "SourceOrigin",
+    "analyze_topic",
+    "bernoulli_fisher",
+    "build_mathematical_positioning",
+    "classical_mds",
+    "cross_corpus_embedding",
+    "evaluate_boundary_probes",
+    "export_mathematical_positioning",
+    "extended_kl",
+    "finite_kl_totalized",
+    "inspect_family",
+    "inspect_theorem",
+    "inspect_topic",
+    "mathematical_positioning_bytes",
+    "mathematical_positioning_drift",
+    "package_resource_drift",
+    "positioning_neighbors",
+]

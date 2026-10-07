@@ -111,6 +111,8 @@ jobs:
           uv run python scripts/_maint_build_lean_landscape.py --check
           uv run python scripts/build_formalism_atlas.py --check
           uv run python scripts/build_formal_kernel_dashboard.py --check
+          uv run python specs/openai-math-methods/generate_package_methods.py --check
+          uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
           uv run python scripts/build_render_fonts.py --check
           uv run python scripts/check_render_log.py --verify-receipt
           uv run python docs/theorem_ref_audit.py
@@ -143,6 +145,10 @@ jobs:
         env:
           FEP_DISTRIBUTION_PYTHON: ${{ matrix.python }}
         run: uv run --locked python -m pytest tests/test_distribution.py -q -s --no-cov
+      - name: Exercise portable mathematical methods in the installed wheel
+        env:
+          FEP_DISTRIBUTION_PYTHON: ${{ matrix.python }}
+        run: uv run --locked python -m pytest specs/openai-math-methods/test_distribution_methods.py -q -s --no-cov
 
   python:
     needs: changes
@@ -167,6 +173,8 @@ jobs:
           uv run python scripts/_maint_build_lean_landscape.py --check
           uv run python scripts/build_formalism_atlas.py --check
           uv run python scripts/build_formal_kernel_dashboard.py --check
+          uv run python specs/openai-math-methods/generate_package_methods.py --check
+          uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
       # The frozen-custody bridge gates from AGENTS.md's required checks:
       # both are --check validation of committed artifacts and pass on a
       # fresh checkout without any sibling repo.
@@ -208,6 +216,11 @@ jobs:
       - name: Require the shipped render to have passed the acceptance
         run: uv run python scripts/check_render_log.py --verify-receipt
       - run: uv run pytest tests/ -q -n auto --dist loadgroup --cov=src --cov-report=xml --cov-fail-under=89 -m "not serial_lean"
+      - name: Check mathematical context and numerical visualization boundaries
+        run: |
+          uv run pytest specs/openai-math-methods/test_methods.py specs/openai-math-methods/test_upstream.py specs/openai-math-methods/test_visualization.py -q --no-cov
+          uv run ruff check specs/openai-math-methods
+          uv run ruff format --check specs/openai-math-methods
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v7
@@ -262,6 +275,7 @@ jobs:
           # rasterized PNGs under output/figures/.
           uv run python scripts/build_formalism_atlas.py
           uv run python scripts/build_formal_kernel_dashboard.py
+          uv run fep-lean --project-root . methods export --output-root docs/mathematical-positioning
           uv run python scripts/build_manuscript_figures.py
       - name: Verify the manuscript asset roster before upload
         run: |
@@ -299,6 +313,7 @@ jobs:
             docs/formalism-atlas.html
             docs/formal-kernel-dashboard.svg
             docs/formal-kernel-dashboard.html
+            docs/mathematical-positioning/
             output/figures/
 
   # FEP-CI-RENDER: this lane renders end-to-end behind the lean job (the

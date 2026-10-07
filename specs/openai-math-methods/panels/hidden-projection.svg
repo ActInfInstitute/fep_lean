@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ns0:svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" width="720pt" height="360pt" viewBox="0 0 720 360" version="1.1" role="img" aria-labelledby="panel-title panel-desc">
+ <ns0:title id="panel-title">Equal observed laws retain unequal hidden laws</ns0:title><ns0:desc id="panel-desc">Independent elementary two-coordinate Gaussian OU obstruction (not the native H3 model), rates (1,2), stationary covariance I, initial means (1,0) and (1,3); t≥0. μ1(t)=(e^(−t),0); μ2(t)=(e^(−t),3e^(−2t)); KL(full1||full2)=9e^(−4t)/2; KL(observed1||observed2)=0. Projection retains only coordinate 1. These displayed values concern one-time Gaussian laws; no sampled paths, process-existence receipt, or hidden-state identification is supplied.</ns0:desc><ns0:defs>
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g id="figure_1">
+  <ns0:g id="patch_1">
+   <ns0:path d="M 0 360  L 720 360  L 720 0  L 0 0  z " style="fill: #ffffff" />
+  </ns0:g>
+  <ns0:g id="axes_1">
+   <ns0:g id="patch_2">
+    <ns0:path d="M 41.81649 311.998432  L 716.99976 311.998432  L 716.99976 26.002048  L 41.81649 26.002048  z " style="fill: #ffffff" />
+   </ns0:g>
+   <ns0:g id="matplotlib.axis_1">
+    <ns0:g id="xtick_1">
+     <ns0:g id="line2d_1">
+      <ns0:defs>
+       <ns0:path id="m1afa16c929" d="M 0 0  L 0 3.5  " style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="72.506639" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_1">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="72.506639" y="331.914447" transform="rotate(-0 72.506639 331.914447)">0.0</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_2">
+     <ns0:g id="line2d_2">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="174.807134" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_2">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="174.807134" y="331.914447" transform="rotate(-0 174.807134 331.914447)">0.5</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_3">
+     <ns0:g id="line2d_3">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="277.10763" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_3">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="277.10763" y="331.914447" transform="rotate(-0 277.10763 331.914447)">1.0</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_4">
+     <ns0:g id="line2d_4">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="379.408125" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_4">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="379.408125" y="331.914447" transform="rotate(-0 379.408125 331.914447)">1.5</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_5">
+     <ns0:g id="line2d_5">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="481.70862" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_5">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="481.70862" y="331.914447" transform="rotate(-0 481.70862 331.914447)">2.0</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_6">
+     <ns0:g id="line2d_6">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="584.009116" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_6">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="584.009116" y="331.914447" transform="rotate(-0 584.009116 331.914447)">2.5</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="xtick_7">
+     <ns0:g id="line2d_7">
+      <ns0:g>
+       <ns0:use ns1:href="#m1afa16c929" x="686.309611" y="311.998432" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_7">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="686.309611" y="331.914447" transform="rotate(-0 686.309611 331.914447)">3.0</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="text_8">
+     <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="379.408125" y="352.915776" transform="rotate(-0 379.408125 352.915776)">t ≥ 0 (specified OU rates 1 and 2)</ns0:text>
+    </ns0:g>
+   </ns0:g>
+   <ns0:g id="matplotlib.axis_2">
+    <ns0:g id="ytick_1">
+     <ns0:g id="line2d_8">
+      <ns0:defs>
+       <ns0:path id="m76c1e50c7b" d="M 0 0  L -3.5 0  " style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:defs>
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="41.81649" y="298.998596" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_9">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: end" x="34.81649" y="305.456604" transform="rotate(-0 34.81649 305.456604)">0</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_2">
+     <ns0:g id="line2d_9">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="41.81649" y="241.221549" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_10">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: end" x="34.81649" y="247.679557" transform="rotate(-0 34.81649 247.679557)">1</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_3">
+     <ns0:g id="line2d_10">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="41.81649" y="183.444502" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_11">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: end" x="34.81649" y="189.90251" transform="rotate(-0 34.81649 189.90251)">2</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_4">
+     <ns0:g id="line2d_11">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="41.81649" y="125.667455" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_12">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: end" x="34.81649" y="132.125462" transform="rotate(-0 34.81649 132.125462)">3</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="ytick_5">
+     <ns0:g id="line2d_12">
+      <ns0:g>
+       <ns0:use ns1:href="#m76c1e50c7b" x="41.81649" y="67.890407" style="stroke: #000000; stroke-width: 0.8" />
+      </ns0:g>
+     </ns0:g>
+     <ns0:g id="text_13">
+      <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: end" x="34.81649" y="74.348415" transform="rotate(-0 34.81649 74.348415)">4</ns0:text>
+     </ns0:g>
+    </ns0:g>
+    <ns0:g id="text_14">
+     <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="15.916256" y="169.00024" transform="rotate(-90 15.916256 169.00024)">KL, nats</ns0:text>
+    </ns0:g>
+   </ns0:g>
+   <ns0:g id="line2d_13">
+    <ns0:path d="M 72.506639 39.001884  L 82.736688 86.131292  L 92.966738 124.717588  L 103.196787 156.309375  L 113.426837 182.174543  L 123.656886 203.351151  L 133.886936 220.689091  L 144.116985 234.884196  L 154.347035 246.506165  L 164.577085 256.021429  L 174.807134 263.811868  L 185.037184 270.190139  L 195.267233 275.412227  L 205.497283 279.68771  L 215.727332 283.18818  L 225.957382 286.054122  L 236.187431 288.400557  L 246.417481 290.321656  L 256.64753 291.894518  L 266.87758 293.182269  L 277.10763 294.23659  L 287.337679 295.099796  L 297.567729 295.806528  L 307.797778 296.385152  L 318.027828 296.858889  L 328.257877 297.246752  L 338.487927 297.564308  L 348.717976 297.8243  L 358.948026 298.037164  L 369.178075 298.211442  L 379.408125 298.354129  L 389.638175 298.470951  L 399.868224 298.566597  L 410.098274 298.644905  L 420.328323 298.709018  L 430.558373 298.76151  L 440.788422 298.804486  L 451.018472 298.839673  L 461.248521 298.868481  L 471.478571 298.892067  L 481.70862 298.911377  L 491.93867 298.927187  L 502.16872 298.940131  L 512.398769 298.950729  L 522.628819 298.959406  L 532.858868 298.96651  L 543.088918 298.972326  L 553.318967 298.977088  L 563.549017 298.980987  L 573.779066 298.984179  L 584.009116 298.986792  L 594.239165 298.988932  L 604.469215 298.990684  L 614.699265 298.992118  L 624.929314 298.993292  L 635.159364 298.994254  L 645.389413 298.995041  L 655.619463 298.995685  L 665.849512 298.996213  L 676.079562 298.996645  L 686.309611 298.996999  " clip-path="url(#pb92987f8d1)" style="fill: none; stroke: #1f77b4; stroke-width: 1.5; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="line2d_14">
+    <ns0:path d="M 72.506639 298.998596  L 82.736688 298.998596  L 92.966738 298.998596  L 103.196787 298.998596  L 113.426837 298.998596  L 123.656886 298.998596  L 133.886936 298.998596  L 144.116985 298.998596  L 154.347035 298.998596  L 164.577085 298.998596  L 174.807134 298.998596  L 185.037184 298.998596  L 195.267233 298.998596  L 205.497283 298.998596  L 215.727332 298.998596  L 225.957382 298.998596  L 236.187431 298.998596  L 246.417481 298.998596  L 256.64753 298.998596  L 266.87758 298.998596  L 277.10763 298.998596  L 287.337679 298.998596  L 297.567729 298.998596  L 307.797778 298.998596  L 318.027828 298.998596  L 328.257877 298.998596  L 338.487927 298.998596  L 348.717976 298.998596  L 358.948026 298.998596  L 369.178075 298.998596  L 379.408125 298.998596  L 389.638175 298.998596  L 399.868224 298.998596  L 410.098274 298.998596  L 420.328323 298.998596  L 430.558373 298.998596  L 440.788422 298.998596  L 451.018472 298.998596  L 461.248521 298.998596  L 471.478571 298.998596  L 481.70862 298.998596  L 491.93867 298.998596  L 502.16872 298.998596  L 512.398769 298.998596  L 522.628819 298.998596  L 532.858868 298.998596  L 543.088918 298.998596  L 553.318967 298.998596  L 563.549017 298.998596  L 573.779066 298.998596  L 584.009116 298.998596  L 594.239165 298.998596  L 604.469215 298.998596  L 614.699265 298.998596  L 624.929314 298.998596  L 635.159364 298.998596  L 645.389413 298.998596  L 655.619463 298.998596  L 665.849512 298.998596  L 676.079562 298.998596  L 686.309611 298.998596  " clip-path="url(#pb92987f8d1)" style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #ff7f0e; stroke-width: 1.5" />
+   </ns0:g>
+   <ns0:g id="patch_3">
+    <ns0:path d="M 41.81649 311.998432  L 41.81649 26.002048  " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="patch_4">
+    <ns0:path d="M 41.81649 311.998432  L 716.99976 311.998432  " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square" />
+   </ns0:g>
+   <ns0:g id="legend_1">
+    <ns0:g id="patch_5">
+     <ns0:path d="M 510.995385 71.603923  L 708.59976 71.603923  Q 710.99976 71.603923 710.99976 69.203923  L 710.99976 34.402048  Q 710.99976 32.002048 708.59976 32.002048  L 510.995385 32.002048  Q 508.595385 32.002048 508.595385 34.402048  L 508.595385 69.203923  Q 508.595385 71.603923 510.995385 71.603923  z " style="fill: #ffffff; opacity: 0.8; stroke: #cccccc; stroke-linejoin: miter" />
+    </ns0:g>
+    <ns0:g id="line2d_15">
+     <ns0:path d="M 513.395385 41.720173  L 525.395385 41.720173  L 537.395385 41.720173  " style="fill: none; stroke: #1f77b4; stroke-width: 1.5; stroke-linecap: square" />
+    </ns0:g>
+    <ns0:g id="text_15">
+     <ns0:text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="546.995385" y="45.920173" transform="rotate(-0 546.995385 45.920173)">full Gaussian KL</ns0:text>
+    </ns0:g>
+    <ns0:g id="line2d_16">
+     <ns0:path d="M 513.395385 59.721111  L 525.395385 59.721111  L 537.395385 59.721111  " style="fill: none; stroke-dasharray: 5.55,2.4; stroke-dashoffset: 0; stroke: #ff7f0e; stroke-width: 1.5" />
+    </ns0:g>
+    <ns0:g id="text_16">
+     <ns0:text style="font-size: 12px; font-family: 'DejaVu Sans'; text-anchor: start" x="546.995385" y="63.921111" transform="rotate(-0 546.995385 63.921111)">projected Gaussian KL = 0</ns0:text>
+    </ns0:g>
+   </ns0:g>
+  </ns0:g>
+  <ns0:g id="text_17">
+   <ns0:text style="font-size: 17px; font-family: 'DejaVu Sans'; text-anchor: middle" x="360" y="15.917584" transform="rotate(-0 360 15.917584)">Equal observed laws retain unequal hidden laws</ns0:text>
+  </ns0:g>
+ </ns0:g>
+ <ns0:defs>
+  <ns0:clipPath id="pb92987f8d1">
+   <ns0:rect x="41.81649" y="26.002048" width="675.18327" height="285.996384" />
+  </ns0:clipPath>
+ </ns0:defs>
+</ns0:svg>

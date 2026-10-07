@@ -310,3 +310,23 @@ overrides). Focused suites for in-lane work:
 
 Focused gates run in-lane; the coordinator owns commit/push/bridge-seal and
 the full gate battery.
+
+## Mathematical supplement figures
+
+The 1.6.0 methods export owns thirteen mathematical SVG panels and a standalone
+explorer in `docs/mathematical-positioning/`. Generate that model before
+`build_manuscript_figures.py`; its existing figure roster now rasterizes every
+cited panel and its check rejects missing or stale PNGs:
+
+```bash
+uv run fep-lean --project-root . methods export --output-root docs/mathematical-positioning
+uv run fep-lean --project-root . methods check --output-root docs/mathematical-positioning
+uv run python scripts/build_manuscript_figures.py
+uv run python scripts/build_manuscript_figures.py --check
+```
+
+[Mathematical methods](../docs/mathematical-methods.md) documents the portable
+API and evidence limits. The methods resource projection is maintained by the
+slice-local `specs/openai-math-methods/generate_package_methods.py`; ordinary
+package and CI checks reject byte drift rather than regenerating authored
+metadata or scientific records.

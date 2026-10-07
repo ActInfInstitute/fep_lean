@@ -24,6 +24,7 @@ from fep_lean.output.manuscript import (
     write_manuscript_vars,
     write_unified_formalism_appendix_markdown,
 )
+from fep_lean.output.render_log import stale_render_defects
 from fep_lean.output.rendering import (
     MANUSCRIPT_ASSETS,
     ManuscriptRenderError,
@@ -180,7 +181,8 @@ def test_all_authored_manuscript_placeholders_are_in_typed_projection() -> None:
     )
 
     assert source_names[0] == "00_front_matter.md"
-    assert source_names[-1] == "08_appendix_a_overview.md"
+    assert source_names[-1] == "08b_mathematical_positioning_supplement.md"
+    assert "08_appendix_a_overview.md" in source_names
     assert all(name[0].isdigit() for name in source_names)
     assert "preamble.md" not in source_names
     assert unresolved_placeholders(PROJ / "manuscript", variables) == ()
@@ -342,9 +344,9 @@ def test_render_manuscript_copies_and_rewrites_visual_assets(
     assert len(rendered) == 1
     assert rendered[0].read_text(encoding="utf-8") == (
         "![Atlas](assets/formalism-atlas.svg)\n"
-        "[Interactive](assets/formalism-atlas.html)\n"
+        "[Interactive](../build/assets/formalism-atlas.html)\n"
         "![Dashboard](assets/formal-kernel-dashboard.svg)\n"
-        "[Dashboard data](assets/formal-kernel-dashboard.html)\n"
+        "[Dashboard data](../build/assets/formal-kernel-dashboard.html)\n"
     )
     assert (destination / "assets" / "formalism-atlas.svg").read_text(
         encoding="utf-8"
@@ -358,6 +360,190 @@ def test_render_manuscript_copies_and_rewrites_visual_assets(
     assert (destination / "assets" / "formal-kernel-dashboard.html").read_text(
         encoding="utf-8"
     ) == '<html id="dashboard"/>\n'
+    for reading_directory in (destination, tmp_path / "pdf", tmp_path / "web"):
+        for filename in ("formalism-atlas.html", "formal-kernel-dashboard.html"):
+            assert (reading_directory / "../build/assets" / filename).resolve() == (
+                destination / "assets" / filename
+            ).resolve()
+
+
+@pytest.mark.parametrize("reading_format", ["manuscript", "pdf", "web"])
+def test_mathematical_explorer_exports_a_closed_local_asset_tree(
+    tmp_path: Path,
+    reading_format: str,
+) -> None:
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    _stage_asset_roster(tmp_path)
+    (source / "01_chapter.md").write_text(
+        "[Explorer](../docs/mathematical-positioning/mathematical-map.html)\n"
+        "![Geometry](../output/figures/mathematical-fisher-geometry.png)\n",
+        encoding="utf-8",
+    )
+    explorer = tmp_path / "docs/mathematical-positioning/mathematical-map.html"
+    explorer.write_text(
+        '<html><img src="panels/fisher-geometry.svg">'
+        '<a href="panels/authored-relations-formal.svg">Formal print layer</a>'
+        '<a href="panels/authored-relations-formal-pairing.svg">Pairing print layer</a>'
+        '<a href="panels/authored-relations-conceptual.svg">Conceptual print layer</a>'
+        '<a href="visual-model.json">Data</a></html>\n',
+        encoding="utf-8",
+    )
+    destination = tmp_path / "output/manuscript"
+    render_manuscript(source, destination, {})
+
+    assert (destination / "01_chapter.md").read_text(encoding="utf-8") == (
+        "[Explorer](../manuscript/assets/mathematical-map.html)\n"
+        "![Geometry](assets/mathematical-fisher-geometry.png)\n"
+    )
+    assert (destination / "assets/mathematical-map.html").read_bytes() == (
+        explorer.read_bytes()
+    )
+    assert (destination / "assets/panels/fisher-geometry.svg").is_file()
+    assert (destination / "assets/visual-model.json").is_file()
+    assert (destination / "assets/mathematical-fisher-geometry.png").is_file()
+    for panel in (
+        "authored-relations-formal",
+        "authored-relations-formal-pairing",
+        "authored-relations-conceptual",
+    ):
+        assert (destination / f"assets/panels/{panel}.svg").is_file()
+        assert (destination / f"assets/mathematical-{panel}.png").is_file()
+    reading_directory = tmp_path / "output" / reading_format
+    generated_link = (
+        ((destination / "01_chapter.md").read_text(encoding="utf-8").splitlines()[0])
+        .removeprefix("[Explorer](")
+        .removesuffix(")")
+    )
+    assert (reading_directory / generated_link).resolve() == (
+        destination / "assets/mathematical-map.html"
+    ).resolve()
+
+
+def test_rendered_companion_links_pass_the_source_freshness_guard(
+    tmp_path: Path,
+) -> None:
+    """The writer and guard agree on exact production companion targets."""
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    _stage_asset_roster(tmp_path)
+    chapter = (
+        "Inspect the interactive mathematical explorer at "
+        "[map](../docs/mathematical-positioning/mathematical-map.html).\n"
+        "Download the full retained mathematical model from "
+        "[data](../docs/mathematical-positioning/visual-model.json).\n"
+        "![Geometry](../output/figures/mathematical-fisher-geometry.png)\n"
+    )
+    (source / "01_chapter.md").write_text(chapter, encoding="utf-8")
+    destination = tmp_path / "output/manuscript"
+    render_manuscript(source, destination, {})
+    rendered = (destination / "01_chapter.md").read_text(encoding="utf-8")
+    assert rendered == (
+        "Inspect the interactive mathematical explorer at "
+        "[map](../manuscript/assets/mathematical-map.html).\n"
+        "Download the full retained mathematical model from "
+        "[data](../manuscript/assets/visual-model.json).\n"
+        "![Geometry](assets/mathematical-fisher-geometry.png)\n"
+    )
+    pdf = tmp_path / "output/pdf"
+    pdf.mkdir()
+    (pdf / "_combined_manuscript.md").write_text(rendered, encoding="utf-8")
+
+    assert stale_render_defects(source, pdf, variables={}) == ()
+
+
+def test_multiline_placeholder_companion_agrees_with_actual_writer_and_guard(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    _stage_asset_roster(tmp_path)
+    prefix = "Read the mathematical explorer with its complete retained source model: "
+    (source / "01_chapter.md").write_text(
+        f"{prefix}[map](../docs/mathematical-positioning/{{{{asset\n}}}}).\n",
+        encoding="utf-8",
+    )
+    variables = {"asset": "mathematical-map.html"}
+    destination = tmp_path / "output/manuscript"
+    render_manuscript(source, destination, variables)
+    rendered = (destination / "01_chapter.md").read_text(encoding="utf-8")
+    assert rendered == f"{prefix}[map](../manuscript/assets/mathematical-map.html).\n"
+    pdf = tmp_path / "output/pdf"
+    pdf.mkdir()
+    (pdf / "_combined_manuscript.md").write_text(rendered, encoding="utf-8")
+
+    assert stale_render_defects(source, pdf, variables=variables) == ()
+
+
+@pytest.mark.parametrize("alias", ["parent", "dot"])
+def test_custom_destination_alias_agrees_with_actual_writer_and_guard(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, alias: str
+) -> None:
+    source = tmp_path / "authored/manuscript"
+    source.mkdir(parents=True)
+    _stage_asset_roster(source.parent)
+    prefix = (
+        "Inspect the mathematical explorer with its complete retained source model: "
+    )
+    (source / "01_chapter.md").write_text(
+        f"{prefix}[map](../docs/mathematical-positioning/mathematical-map.html).\n",
+        encoding="utf-8",
+    )
+    nested = tmp_path / "output/custom-build"
+    nested.mkdir(parents=True)
+    if alias == "parent":
+        render_target = nested / ".."
+    else:
+        monkeypatch.chdir(nested)
+        render_target = Path(".")
+    destination = render_target.resolve()
+    render_manuscript(source, render_target, {})
+    if alias == "dot":
+        # The atomic tree replacement replaced the original working directory.
+        monkeypatch.chdir(destination)
+    rendered = (destination / "01_chapter.md").read_text(encoding="utf-8")
+    assert (
+        rendered
+        == f"{prefix}[map](../{destination.name}/assets/mathematical-map.html).\n"
+    )
+    pdf = destination.parent / "pdf"
+    pdf.mkdir()
+    (pdf / "_combined_manuscript.md").write_text(rendered, encoding="utf-8")
+
+    assert (
+        stale_render_defects(
+            source, pdf, variables={}, rendered_manuscript_dir=render_target
+        )
+        == ()
+    )
+
+
+@pytest.mark.parametrize(
+    "missing",
+    [
+        "docs/mathematical-positioning/visual-model.json",
+        "docs/mathematical-positioning/panels/fisher-geometry.svg",
+        "output/figures/mathematical-fisher-geometry.png",
+    ],
+)
+def test_missing_mathematical_asset_preserves_the_previous_build(
+    tmp_path: Path, missing: str
+) -> None:
+    source = tmp_path / "manuscript"
+    source.mkdir()
+    _stage_asset_roster(tmp_path)
+    (source / "01_chapter.md").write_text("New chapter\n", encoding="utf-8")
+    destination = tmp_path / "build"
+    destination.mkdir()
+    old_chapter = destination / "01_chapter.md"
+    old_chapter.write_text("Accepted previous chapter\n", encoding="utf-8")
+    (tmp_path / missing).unlink()
+
+    with pytest.raises(ManuscriptRenderError, match="asset roster sources are missing"):
+        render_manuscript(source, destination, {})
+
+    assert old_chapter.read_text(encoding="utf-8") == "Accepted previous chapter\n"
+    assert set(destination.iterdir()) == {old_chapter}
 
 
 def test_render_projects_canonical_cover_author_and_rejects_stale_variables(
@@ -590,6 +776,17 @@ def test_a_pushed_commit_links_to_the_exact_tree(tmp_path: Path) -> None:
     assert stamp["published"] == "true"
     assert stamp["published_ref"] == stamp["commit"]
     assert "is on the public repository" in stamp["published_note"]
+
+
+def test_local_candidate_links_disclose_uncommitted_source(tmp_path: Path) -> None:
+    repository = _repository_with_a_commit(tmp_path)
+    (repository / "README.md").write_text("local candidate\n", encoding="utf-8")
+    stamp = manuscript_module._source_stamp_vars(repository)
+    assert stamp["dirty"] == "true"
+    assert "includes uncommitted local changes" in stamp["published_note"]
+    assert "do not reproduce the local candidate" in stamp["published_note"]
+    assert "`main` fallback reference" in stamp["published_note"]
+    assert "exact tree described here" not in stamp["published_note"]
 
 
 def test_substitution_stays_fail_closed_for_the_renderer() -> None:

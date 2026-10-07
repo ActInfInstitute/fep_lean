@@ -29,6 +29,7 @@ from pathlib import Path
 __all__ = [
     "MANUSCRIPT_COPIED_FIGURES",
     "MANUSCRIPT_SVG_FIGURES",
+    "MATHEMATICAL_POSITIONING_SVG_FIGURES",
     "RasterizedFigure",
     "SvgRasterError",
     "manuscript_png_drift",
@@ -40,9 +41,29 @@ __all__ = [
 # Every SVG projection a manuscript chapter cites as a PNG, keyed by the PNG
 # name written under ``output/figures/``.  Adding a chapter figure means adding
 # a row here, not adding a file by hand.
+MATHEMATICAL_POSITIONING_SVG_FIGURES: Mapping[str, str] = {
+    f"mathematical-{name}.png": f"docs/mathematical-positioning/panels/{name}.svg"
+    for name in (
+        "family-domains",
+        "semantic-layers",
+        "authored-relations",
+        "authored-relations-formal",
+        "authored-relations-formal-pairing",
+        "authored-relations-conceptual",
+        "support-convergence",
+        "fisher-geometry",
+        "hidden-projection",
+        "risk-preference",
+        "cross-corpus-embedding",
+        "cross-corpus-features",
+        "theorem-contracts",
+    )
+}
+
 MANUSCRIPT_SVG_FIGURES: Mapping[str, str] = {
     "formalism-atlas.png": "docs/formalism-atlas.svg",
     "formal-kernel-dashboard.png": "docs/formal-kernel-dashboard.svg",
+    **MATHEMATICAL_POSITIONING_SVG_FIGURES,
 }
 # Authored image assets a chapter cites that must also be published under
 # ``output/figures/``. The combined renderer flattens an ``assets/<name>``

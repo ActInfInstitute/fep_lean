@@ -16,7 +16,7 @@ from pathlib import Path
 from fep_lean.catalogue.registry import body_source_relative_paths
 from fep_lean.formal.manifest import FORMAL_MODULES, formal_resource_relative_paths
 
-OWNER_MANIFEST_VERSION = 24
+OWNER_MANIFEST_VERSION = 25
 
 # Globs are discovery rules only. They must never define the digest roster:
 # deleting a source file would otherwise silently delete it from the claimed
@@ -91,6 +91,11 @@ SOURCE_OWNER_ROSTER: tuple[str, ...] = (
     "src/fep_lean/gauss/runner.py",
     "src/fep_lean/llm/__init__.py",
     "src/fep_lean/llm/hermes.py",
+    "src/fep_lean/methods/__init__.py",
+    "src/fep_lean/methods/model.py",
+    "src/fep_lean/methods/probes.py",
+    "src/fep_lean/methods/projection.py",
+    "src/fep_lean/methods/visualization.py",
     "src/fep_lean/output/__init__.py",
     "src/fep_lean/output/browser_capture.py",
     "src/fep_lean/output/evidence.py",
@@ -159,6 +164,11 @@ CONFIG_OWNER_FILES: tuple[str, ...] = (
     "config/theorem_maturity.yaml",
     "config/topics.yaml",
     "src/fep_lean/data/topics.yaml",
+    "src/fep_lean/data/catalogue_metadata.yaml",
+    "src/fep_lean/data/theorem_maturity.yaml",
+    "src/fep_lean/data/formalism_relations.yaml",
+    "src/fep_lean/data/positioning.yaml",
+    "specs/openai-math-methods/positioning.yaml",
     "manuscript/config.yaml",
     "lean/lean-toolchain",
     "lean/lakefile.lean",
@@ -264,6 +274,7 @@ def report_owner_errors(project_root: Path) -> tuple[str, ...]:
         )
         from fep_lean.catalogue.topics import FEPTopicCatalogue
         from fep_lean.formal import formal_aggregate_drift, formal_projection_drift
+        from fep_lean.methods import package_resource_drift
 
         FEPTopicCatalogue.from_yaml(root / "config" / "topics.yaml")
         drift = (
@@ -271,6 +282,7 @@ def report_owner_errors(project_root: Path) -> tuple[str, ...]:
             *fep_all_projection_drift(root),
             *formal_aggregate_drift(root),
             *formal_projection_drift(root),
+            *package_resource_drift(root),
         )
         errors.extend(
             f"canonical projection is stale: {path.relative_to(root)}" for path in drift

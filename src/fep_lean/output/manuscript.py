@@ -25,6 +25,7 @@ from fep_lean.catalogue.coverage import (
 )
 from fep_lean.catalogue.novelty import load_formalism_novelty
 from fep_lean.catalogue.relations import EdgeKind
+from fep_lean.catalogue.schema import load_catalogue_metadata
 from fep_lean.catalogue.topics import FEPTopicCatalogue
 from fep_lean.output.evidence import (
     latest_claim_ready_full_report,
@@ -167,6 +168,21 @@ def _source_stamp_vars(project_root: Path) -> dict[str, str]:
     porcelain = _git_output(root, ["status", "--porcelain"])
     commit_date = _git_output(root, ["log", "-1", "--format=%cI"])
     dirty = bool(porcelain)
+    if dirty:
+        link_note = (
+            "The committed base appears in local remote-tracking state; source "
+            "links target that base reference. "
+            if published
+            else f"Source links follow the `{published_ref}` fallback reference "
+            "and may differ from the local committed base. "
+        )
+        published_note = (
+            "This render includes uncommitted local changes. "
+            + link_note
+            + "They may omit candidate additions and do not reproduce the local "
+            "candidate. Its native and publication "
+            "receipts bind the reviewed source bytes."
+        )
     stamp = short_commit or "unknown"
     if dirty:
         stamp = f"{stamp} (uncommitted changes present)"
@@ -1196,11 +1212,77 @@ def build_manuscript_vars(
         },
         "hermes": _hermes_block_from_summary(summary_path),
         "tests": {"collected": test_count},
+        "methods": _mathematical_methods_vars(root),
         "publication": {
             "author": publication_author.manuscript_variables(),
             "graphical_abstract": graphical_abstract.manuscript_variables(),
             "repository_url": repository_url,
         },
+    }
+
+
+def _mathematical_methods_vars(project_root: Path) -> dict[str, Any]:
+    """Project printed corpus keys from the same validated authored coordinates.
+
+    Key tables need no numerical eigensolver or theorem-index construction.
+    Minimal callers without this optional policy receive no methods variables;
+    a manuscript requesting absent variables still fails strict substitution.
+    """
+    from fep_lean.formal.manifest import FORMAL_MODULES
+    from fep_lean.methods.model import load_yaml, validate_policy
+
+    root = Path(project_root)
+    path = root / "specs/openai-math-methods/positioning.yaml"
+    if not path.is_file():
+        return {}
+    before = path.read_bytes()
+    policy = load_yaml(path)
+    metadata = load_catalogue_metadata(root / "config/catalogue_metadata.yaml")
+    validate_policy(
+        policy, metadata.families, {module.resource for module in FORMAL_MODULES}
+    )
+    if path.read_bytes() != before:
+        raise ValueError("positioning policy changed during manuscript key projection")
+    table = policy.get("cross_corpus")
+    if table is None:
+        return {}
+
+    def cell(value: str) -> str:
+        return value.replace("|", r"\|").replace("\n", " ").replace("ℓ₁", r"$\ell_1$")
+
+    coordinates = table["coordinates"]
+    coordinate_lines = [
+        "| Code | Context group | Assigned coordinate |",
+        "| --- | --- | --- |",
+    ]
+    coordinate_lines.extend(
+        f"| C{index:02d} | {row['axis_kind']} | {cell(row['id'].split(':', 1)[1])} |"
+        for index, row in enumerate(coordinates, 1)
+    )
+    rows = table["fep_family_features"] + table["upstream_results"]
+    groups: dict[tuple[int, ...], int] = {}
+    row_lines = [
+        "| Point group | Incidence row | Family context or selected result |",
+        "| --- | --- | --- |",
+    ]
+    family_count = len(table["fep_family_features"])
+    for index, row in enumerate(rows):
+        vector = tuple(
+            int(coordinate["id"] in row["features"]) for coordinate in coordinates
+        )
+        group = groups.setdefault(vector, len(groups) + 1)
+        if index < family_count:
+            key = f"F{index + 1:02d}"
+            title = row["family"].replace("-", " ")
+        else:
+            key = f"U{index - family_count + 1:02d}"
+            title = row["title"]
+        row_lines.append(f"| G{group:02d} | {key} | {cell(title)} |")
+    return {
+        "cross_corpus": {
+            "coordinate_key_table": "\n".join(coordinate_lines),
+            "row_key_table": "\n".join(row_lines),
+        }
     }
 
 

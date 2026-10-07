@@ -88,14 +88,16 @@
     },
     "main": {
       "family": "FreeSerif",
-      "codepoint_count": 31,
+      "codepoint_count": 33,
       "codepoints": [
         "U+00B2",
         "U+00B7",
+        "U+00E0",
         "U+00E1",
         "U+00E8",
         "U+00E9",
         "U+00F4",
+        "U+00F6",
         "U+0119",
         "U+0142",
         "U+03B1",

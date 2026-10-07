@@ -58,6 +58,35 @@ def test_verification_imports():
     assert LeanVerifier is not None
 
 
+def test_mathematical_methods_public_import_surface():
+    from fep_lean import methods
+
+    expected = {
+        "BoundaryProbeError",
+        "MathematicalPositioning",
+        "PositioningError",
+        "SourceOrigin",
+        "analyze_topic",
+        "bernoulli_fisher",
+        "build_mathematical_positioning",
+        "classical_mds",
+        "cross_corpus_embedding",
+        "evaluate_boundary_probes",
+        "export_mathematical_positioning",
+        "extended_kl",
+        "finite_kl_totalized",
+        "inspect_family",
+        "inspect_topic",
+        "inspect_theorem",
+        "mathematical_positioning_bytes",
+        "mathematical_positioning_drift",
+        "package_resource_drift",
+        "positioning_neighbors",
+    }
+    assert set(methods.__all__) == expected
+    assert all(callable(getattr(methods, name)) for name in expected)
+
+
 def test_gauss_imports():
     from fep_lean.gauss.client import OpenGaussClient
 

@@ -1590,8 +1590,13 @@ def _render_candidate(root: Path) -> Path:
     manuscript.mkdir()
     (manuscript / "01_abstract.md").write_text("A named scientific model.\n")
     (manuscript / "09z_unified_formalism_catalogue.md").write_text("# Catalogue\n")
+    (manuscript / "config.yaml").write_text("title: Render barrier fixture\n")
+    (manuscript / "references.bib").write_text("% Render barrier reference input.\n")
     pdf = root / "output/pdf"
     pdf.mkdir(parents=True)
+    (pdf / "_combined_manuscript.tex").write_text(
+        "\\begin{document}\n\\begin{equation}\nx=y\n\\end{equation}\n\\end{document}\n"
+    )
     counts = dict.fromkeys(
         (
             "tex_errors",
@@ -1602,6 +1607,7 @@ def _render_candidate(root: Path) -> Path:
             "contents_number_overflows",
             "unresolved_references",
             "publication_cover",
+            "unnumbered_equations",
         ),
         0,
     )
@@ -1616,7 +1622,18 @@ def _render_candidate(root: Path) -> Path:
     return receipt
 
 
-@pytest.mark.parametrize("defect", ("missing", "rejected", "stale", "malformed"))
+@pytest.mark.parametrize(
+    "defect",
+    (
+        "missing",
+        "rejected",
+        "stale",
+        "malformed",
+        "stale_config",
+        "stale_references",
+        "unnumbered_equations",
+    ),
+)
 def test_render_barrier_rejects_invalid_receipts_before_reproduction(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, defect: str
 ) -> None:
@@ -1631,6 +1648,16 @@ def test_render_barrier_rejects_invalid_receipts_before_reproduction(
         receipt.write_text(json.dumps(payload))
     elif defect == "malformed":
         receipt.write_text("invalid JSON")
+    elif defect == "stale_config":
+        (tmp_path / "manuscript/config.yaml").write_text("title: Changed fixture\n")
+    elif defect == "stale_references":
+        (tmp_path / "manuscript/references.bib").write_text(
+            "% Changed reference input.\n"
+        )
+    elif defect == "unnumbered_equations":
+        payload = json.loads(receipt.read_text())
+        payload["checks"]["unnumbered_equations"] = 1
+        receipt.write_text(json.dumps(payload))
     else:
         (tmp_path / "manuscript/01_abstract.md").write_text("Changed model.\n")
 

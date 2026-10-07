@@ -1,18 +1,19 @@
 # fep_lean/src/
 
-**Version**: v1.5.0 | **Status**: Active | **Last Updated**: October 2026
+**Version**: v1.6.0 | **Status**: Active | **Last Updated**: October 2026
 
 The installable package is rooted at `src/fep_lean/`; `src/` is only the
 standard packaging layout and is not itself importable.
 
 ## Directory Structure
-The package is divided into ten domain subpackages. The public root
+The package is divided into eleven domain subpackages. The public root
 `fep_lean/__init__.py` re-exports the stable high-level entrypoints. There are
 no compatibility modules named `catalogue`, `pipeline`, or `output`.
 
 | Subpackage | Responsibility | Key Exports |
 |---|---|---|
 | `fep_lean/catalogue/` | Typed semantic and catalogue model | `FEPTopicCatalogue`, `SemanticDisposition` |
+| `fep_lean/methods/` | Portable mathematical positioning and boundary diagnostics | `build_mathematical_positioning`, `inspect_topic` |
 | `fep_lean/formal/` | Packaged cross-topic Lean resources | `formal_projection_drift` |
 | `fep_lean/verification/` | Lean 4 / Lake verification and declaration audit | `LeanVerifier`, `run_formalism_audit` |
 | `fep_lean/gauss/` | OpenGauss SQLite & Runner | `OpenGaussClient`, `GaussRunner` |

@@ -785,6 +785,12 @@ def _exercise_render_artifact_staging(
     (manuscript / "preamble.md").write_text("\\setmainfont{TestFont}\n")
     (manuscript / "09z_unified_formalism_catalogue.md").write_text("Appendix.\n")
     (manuscript / "manuscript_vars.yaml").write_text("{}\n")
+    (manuscript / "config.yaml").write_text(
+        "title: Fixture publication\npublication:\n  number_unlabeled_equations: true\n"
+    )
+    (manuscript / "references.bib").write_text(
+        "@misc{fixture, title={Fixture source}}\n"
+    )
     for source, _destination in MANUSCRIPT_ASSETS.values():
         path = tmp_path / source
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -797,6 +803,9 @@ def _exercise_render_artifact_staging(
         "_latex_stdout.log",
     ):
         (pdf / name).write_text("fixture render\n")
+    (pdf / "_combined_manuscript.tex").write_text(
+        "\\begin{equation}\\label{eq:fixture}x=x\\end{equation}\n"
+    )
     (pdf / "fep_lean_combined.pdf").write_bytes(b"%PDF-fixture")
     (pdf / "_combined_manuscript.log").write_text(
         "Output written on fep_lean_combined.pdf (1 page).\n"
@@ -816,6 +825,7 @@ def _exercise_render_artifact_staging(
                 "contents_number_overflows",
                 "unresolved_references",
                 "publication_cover",
+                "unnumbered_equations",
             ),
             0,
         ),
