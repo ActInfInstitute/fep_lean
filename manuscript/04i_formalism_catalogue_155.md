@@ -1,4 +1,4 @@
-# From {{topics_before_second_expansion}} to {{topics_before_third_expansion}}: Risk, Feedback, Native Blankets, Dual Geometry, and Continuous Time {#sec:formalism_catalogue_155}
+# From {{topics_before_second_expansion}} to {{total_topics}}: Risk, Feedback, Native Blankets, Dual Geometry, and Continuous Time {#sec:formalism_catalogue_155}
 
 The second catalogue expansion adds {{expansion_second_topics}} stable rows, `fep-121` through
 `fep-155`, in {{expansion_second_families}} families of {{expansion_family_size}} topics each. Its purpose is not numerical growth.
@@ -11,10 +11,6 @@ semigroup. The maintained novelty ledger requires every new row to consume at
 least one earlier topic through a named `FEPComposed` theorem. The result is a
 directed extension of the existing kernel rather than a second list of
 similarly named lemmas.
-
-The later third-expansion rows (`fep-156` through `fep-{{total_topics}}`, {{expansion_third_topics}} topics in
-{{expansion_third_families}} families) lie outside this chapter; the live catalogue holds {{total_topics}} topics
-and is indexed in `docs/topics-reference.md`.
 
 The five carriers remain deliberately narrow. Sampling laws, action spaces,
 blanket coordinates, and exponential-family outcomes are finite. The
