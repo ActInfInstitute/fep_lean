@@ -1,0 +1,143 @@
+name: Lean latest compile (non-gating)
+
+# Advisory early warning: compiles the Lean catalogue against the newest
+# stable Lean/Mathlib pair on a scratch copy of lean/, so maintainers see the
+# upgrade's warnings/errors before scheduling the deliberate toolchain
+# refresh (docs/lean4.md#deliberate-toolchain-upgrades). It never gates, never
+# opens issues, and never modifies the pinned files in the checkout: the
+# pinned lean/ tree is copied and only the copy is rewritten.
+#
+# The newest pair is derived by docs/pin_audit.py (audit_latest_stable), the
+# same lookup as `pin_audit.py --check-latest`.
+
+on:
+  schedule:
+    - cron: "43 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  compile-latest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    # Non-gating by construction: a failure here is information, not a red
+    # required check.
+    continue-on-error: true
+    env:
+      SCRATCH: ${{ github.workspace }}/.scratch-lean-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.0"
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Resolve the newest stable Lean-Mathlib pair
+        id: pair
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          uv run python - <<'PY'
+          import importlib.util, os, sys
+          spec = importlib.util.spec_from_file_location("pin_audit", "docs/pin_audit.py")
+          mod = importlib.util.module_from_spec(spec)
+          sys.modules["pin_audit"] = mod  # dataclasses need the module registered
+          spec.loader.exec_module(mod)
+          # Pin values are irrelevant here; only the resolved newest pair is used.
+          pins = mod.CanonicalPins("", "", "", "", "")
+          audit = mod.audit_latest_stable(pins)
+          if not audit.latest_compatible_tag:
+              print("::error::no newest stable pair resolved: " + "; ".join(audit.errors))
+              sys.exit(1)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"tag={audit.latest_compatible_tag}\n")
+              out.write(f"revision={audit.mathlib_revision}\n")
+          PY
+      - name: Install elan
+        shell: bash
+        run: |
+          # Same pinned elan-init as ci.yml's lean job.
+          curl https://raw.githubusercontent.com/leanprover/elan/0e36a07b9bbcc5381fa6250df109f9a4f94d7bac/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prepare a scratch copy of lean/ at the newest pair
+        shell: bash
+        env:
+          TAG: ${{ steps.pair.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$SCRATCH"
+          cp -R lean/. "$SCRATCH/"
+          rm -rf "$SCRATCH/.lake" "$SCRATCH/lake-manifest.json"
+          echo "leanprover/lean4:${TAG}" > "$SCRATCH/lean-toolchain"
+          sed -i -E "s#(mathlib4\.git\"[[:space:]]*@[[:space:]]*\")v[0-9]+\.[0-9]+\.[0-9]+(\")#\1${TAG}\2#" "$SCRATCH/lakefile.lean"
+          grep -F "@ \"${TAG}\"" "$SCRATCH/lakefile.lean"
+          elan toolchain install "$(cat "$SCRATCH/lean-toolchain")"
+      - name: Resolve dependencies and fetch the Mathlib cache
+        working-directory: ${{ env.SCRATCH }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake update
+          # A missing cache means a from-source Mathlib build that cannot
+          # finish in the budget; fail rather than time out.
+          lake exe cache get
+      - name: Compile the catalogue against the newest pair
+        id: build
+        working-directory: ${{ env.SCRATCH }}
+        shell: bash
+        run: |
+          set +e
+          set -o pipefail
+          lake build FepSketches 2>&1 | tee "$RUNNER_TEMP/build.log"
+          status=${PIPESTATUS[0]}
+          echo "status=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Collect warnings and errors
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          TAG: ${{ steps.pair.outputs.tag }}
+          REVISION: ${{ steps.pair.outputs.revision }}
+          BUILD_STATUS: ${{ steps.build.outputs.status }}
+        run: |
+          set +e
+          log="$RUNNER_TEMP/build.log"
+          out="$RUNNER_TEMP/lean-latest-report"
+          mkdir -p "$out"
+          if [ -f "$log" ]; then
+            grep -E '^(warning|error):' "$log" > "$out/diagnostics.txt"
+            cp "$log" "$out/build.log"
+          else
+            : > "$out/diagnostics.txt"
+          fi
+          warnings=$(grep -c '^warning:' "$out/diagnostics.txt")
+          errors=$(grep -c '^error:' "$out/diagnostics.txt")
+          {
+            echo "## Lean latest stable compile (advisory)"
+            echo
+            echo "- Newest stable pair: Lean/Mathlib \`${TAG}\` (Mathlib revision \`${REVISION}\`)"
+            echo "- \`lake build FepSketches\` exit status: \`${BUILD_STATUS:-did not run}\`"
+            echo "- Warnings: ${warnings:-0}; errors: ${errors:-0}"
+            echo "- Pinned files in this repository were not modified; the build ran on a scratch copy."
+            echo
+            echo '<details><summary>Diagnostics (first 200 lines)</summary>'
+            echo
+            echo '```text'
+            head -n 200 "$out/diagnostics.txt"
+            echo '```'
+            echo '</details>'
+          } | tee "$out/summary.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload the warnings and errors list
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: lean-latest-diagnostics
+          path: ${{ runner.temp }}/lean-latest-report
+          if-no-files-found: warn
+          retention-days: 30
