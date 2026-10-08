@@ -9,8 +9,8 @@ actually ships, and it is fully checked by
 
 | Requirement | Checked by |
 | --- | --- |
-| One version across `pyproject.toml`, `src/fep_lean/__init__.py`, `CITATION.cff`, `manuscript/config.yaml`, `config/settings.yaml`, `uv.lock` and the release-bundle constants | `release_check.py` |
-| One release date across `CITATION.cff`, `manuscript/config.yaml` and the release-bundle constants | `release_check.py` |
+| One version across `pyproject.toml`, `src/fep_lean/__init__.py`, `CITATION.cff`, `manuscript/config.yaml`, `config/settings.yaml`, `.aii/config.yaml`, `uv.lock` and the release-bundle constants | `release_check.py` |
+| One release date across `CITATION.cff`, `manuscript/config.yaml`, `.aii/config.yaml` and the release-bundle constants | `release_check.py` |
 | A `## X.Y.Z — YYYY-MM-DD — title` section in `CHANGELOG.md` | `release_check.py` |
 | Clean working tree; `HEAD` equals `origin/main` | `release_check.py --hosted` |
 | The newest hosted `ci.yml` run on that exact commit succeeded, and its `python`, `lean`, `render-deps`, `render` and every `distribution` matrix job each succeeded (none skipped) | `release_check.py --hosted` |
@@ -31,8 +31,14 @@ A release changes no scientific claim. Unrun lanes stay described as unrun.
 
 ## Steps
 
-1. Bump the version and date in every file listed above, add the dated
-   `CHANGELOG.md` section, and run `uv lock`.
+1. Bump with
+   `uv run python docs/release_check.py --bump X.Y.Z --date YYYY-MM-DD`. It
+   rewrites the version and date in every file listed above plus the
+   InstituteOS sidecar (`.aii/config.yaml`: `meta.updated` and the
+   `Release vX.Y.Z (date; ...)` description, which must be reworded by hand if
+   the release is not yet tagged). Then add the dated `CHANGELOG.md` section
+   and run the printed `uv lock` (the bump never touches `uv.lock` or the
+   changelog).
 2. `uv run python docs/release_check.py` — fix every reported mismatch.
 3. Run the local suite and audits (see [development](development.md)), commit
    and push to `main`.
@@ -75,3 +81,9 @@ citation. The manuscript DOI identifies its exact scholarly version under the
 scholarly concept. For v1.6.0 the reserved version is
 `10.5281/zenodo.23220027`. Keep the scholarly concept, scholarly version and
 software concept distinct; do not describe the two histories as one version chain.
+
+## Deferred
+
+Publication is a maintainer action: there is intentionally no publishing
+workflow. Automating tag, GitHub release and Zenodo upload is deferred until a
+maintainer decides to delegate that authority.

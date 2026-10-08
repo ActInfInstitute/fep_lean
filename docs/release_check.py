@@ -27,6 +27,9 @@ WORKFLOW = "ci.yml"
 #: conclusion alone is not enough.
 REQUIRED_JOBS = ("python", "lean", "render-deps", "render")
 DISTRIBUTION_PREFIX = "distribution ("
+#: InstituteOS sidecar: ``repo.description`` names ``Release vX.Y.Z`` and the
+#: date; ``meta.updated`` carries the release date.
+SIDECAR = ".aii/config.yaml"
 
 
 @dataclass(frozen=True)
@@ -66,6 +69,14 @@ def _lock_version(root: Path) -> str | None:
     return versions[0] if len(versions) == 1 else None
 
 
+def _sidecar_release(root: Path) -> str | None:
+    """The release version the InstituteOS sidecar description names."""
+    repo = _yaml(root, SIDECAR).get("repo")
+    description = str(repo.get("description", "")) if isinstance(repo, dict) else ""
+    match = re.search(r"Release v(\d+\.\d+\.\d+\S*)", description)
+    return match.group(1) if match else None
+
+
 def read_versions(root: Path) -> dict[str, str | None]:
     """Every version-bearing source, keyed by the file a maintainer edits."""
     pyproject = tomllib.loads(_text(root, "pyproject.toml"))
@@ -86,6 +97,7 @@ def read_versions(root: Path) -> dict[str, str | None]:
         "config/settings.yaml": _nested(
             _yaml(root, "config/settings.yaml"), "project", "version"
         ),
+        SIDECAR: _sidecar_release(root),
         "uv.lock": _lock_version(root),
     }
 
@@ -101,6 +113,7 @@ def read_dates(root: Path) -> dict[str, str | None]:
             "src/fep_lean/output/release_bundle/_constants.py",
             "_CANONICAL_RELEASE_DATE",
         ),
+        SIDECAR: _nested(_yaml(root, SIDECAR), "meta", "updated"),
     }
 
 
@@ -109,6 +122,72 @@ def read_release(root: Path) -> Release:
     return Release(
         version=versions["pyproject.toml"] or "", date=dates["CITATION.cff"] or ""
     )
+
+
+_VERSION_RE = re.compile(r"\d+\.\d+\.\d+")
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+_CONSTANTS = "src/fep_lean/output/release_bundle/_constants.py"
+
+
+def _sub_once(text: str, pattern: str, replacement: str) -> str:
+    new, count = re.subn(pattern, replacement, text, count=1, flags=re.MULTILINE)
+    if count != 1:
+        raise ValueError(f"pattern not found: {pattern}")
+    return new
+
+
+def bump(root: Path, version: str, date: str) -> tuple[str, ...]:
+    """Rewrite the version and date in every file the gate reads.
+
+    Edits are line-local regex substitutions so quoting and comments survive.
+    ``uv.lock`` and ``CHANGELOG.md`` are deliberately left to the maintainer
+    (``uv lock``; a dated section); returns the files rewritten.
+    """
+    if not _VERSION_RE.fullmatch(version):
+        raise ValueError(f"version must look like X.Y.Z, got {version!r}")
+    if not _DATE_RE.fullmatch(date):
+        raise ValueError(f"date must look like YYYY-MM-DD, got {date!r}")
+    qv, qd = f'"{version}"', f'"{date}"'
+    edits: dict[str, list[tuple[str, str]]] = {
+        "pyproject.toml": [(r'^version\s*=\s*"[^"]+"', f"version = {qv}")],
+        "src/fep_lean/__init__.py": [
+            (r'^__version__\s*=\s*"[^"]+"', f"__version__ = {qv}")
+        ],
+        _CONSTANTS: [
+            (
+                r'^_CANONICAL_RELEASE_VERSION\s*=\s*"[^"]+"',
+                f"_CANONICAL_RELEASE_VERSION = {qv}",
+            ),
+            (
+                r'^_CANONICAL_RELEASE_DATE\s*=\s*"[^"]+"',
+                f"_CANONICAL_RELEASE_DATE = {qd}",
+            ),
+        ],
+        "CITATION.cff": [
+            (r"^version:.*$", f"version: {qv}"),
+            (r"^date-released:.*$", f"date-released: {qd}"),
+        ],
+        "manuscript/config.yaml": [
+            (r"^(  version:\s*).*$", rf"\g<1>{qv}"),
+            (r"^(  date:\s*).*$", rf"\g<1>{qd}"),
+        ],
+        "config/settings.yaml": [(r"^(  version:\s*).*$", rf"\g<1>{qv}")],
+        SIDECAR: [
+            (r"Release v\d+\.\d+\.\d+\S*", f"Release v{version}"),
+            (r"(?<=\()\d{4}-\d{2}-\d{2}", date),
+            (r"^(  updated:\s*).*$", rf"\g<1>'{date}'"),
+        ],
+    }
+    # Compute everything first so a failed pattern leaves the tree untouched.
+    rewritten: dict[str, str] = {}
+    for relative, subs in edits.items():
+        text = _text(root, relative)
+        for pattern, replacement in subs:
+            text = _sub_once(text, pattern, replacement)
+        rewritten[relative] = text
+    for relative, text in rewritten.items():
+        (root / relative).write_text(text, encoding="utf-8")
+    return tuple(rewritten)
 
 
 def _heading(release: Release) -> str:
@@ -223,10 +302,34 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="also require a clean HEAD equal to origin/main with green hosted CI",
     )
+    parser.add_argument(
+        "--bump",
+        metavar="X.Y.Z",
+        help="rewrite the version in every gated file (requires --date), then exit",
+    )
+    parser.add_argument("--date", metavar="YYYY-MM-DD", help="release date for --bump")
     parser.add_argument("--notes", type=Path, help="write the release notes here")
     parser.add_argument("--json", action="store_true", help="print a JSON report")
     args = parser.parse_args(argv)
     root = args.root.resolve()
+    if args.bump or args.date:
+        if not (args.bump and args.date):
+            parser.error("--bump and --date must be given together")
+        try:
+            changed = bump(root, args.bump, args.date)
+        except ValueError as exc:
+            print(f"FAIL: {exc}", file=sys.stderr)
+            return 1
+        print(f"Bumped {len(changed)} files to {args.bump} ({args.date}):")
+        for relative in changed:
+            print(f"  {relative}")
+        print("Remaining manual steps:")
+        print(
+            f"  1. add a '## {args.bump} — {args.date} — title' section to CHANGELOG.md"
+        )
+        print("  2. uv lock   # refreshes the fep-lean entry in uv.lock")
+        print("  3. uv run python docs/release_check.py")
+        return 0
     release = read_release(root)
     errors = list(metadata_errors(root))
     if args.hosted:
