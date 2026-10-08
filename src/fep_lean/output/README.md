@@ -16,7 +16,7 @@ scientific dependency from imports. Use `write_formalism_atlas` to generate and
 `atlas_projection_drift` to validate the tracked views.
 
 The dashboard also consumes the coverage metrics, but its curves are numerical
-diagnostics rather than theorem evidence. Each of the fifteen family witnesses
+diagnostics rather than theorem evidence. Each of the seventeen family witnesses
 owns typed equality, inequality, or predicate checks with per-check tolerances;
 a panel passes only when their conjunction and its boundary observation pass.
 Use `write_formal_kernel_dashboard` to generate the SVG/HTML pair and

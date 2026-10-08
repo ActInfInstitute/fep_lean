@@ -77,7 +77,7 @@ See the local [agent contract](AGENTS.md) and the package-level
 ## Scoped numerical diagnostics
 
 `evaluate_numerical_witnesses(project_root, scope=None)` evaluates the shared
-typed registry. `scope="catalogue"` selects the existing 15 family witnesses;
+typed registry. `scope="catalogue"` selects the existing 17 family witnesses;
 `scope="horizon2"` selects the scalar terminal and Fin4 blanket diagnostics.
 The atlas/dashboard and release witness receipt explicitly select catalogue
 scope. H2 acceptance consumes the two horizon witnesses through the same
