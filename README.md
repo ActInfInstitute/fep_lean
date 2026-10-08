@@ -277,7 +277,8 @@ The operator command quick reference lives at
 - [`CHANGELOG.md`](CHANGELOG.md) records release changes and their evidence
   boundary.
 - [`manuscript/04i_formalism_catalogue_155.md`](manuscript/04i_formalism_catalogue_155.md)
-  states the five new families, theorem assumptions, non-vacuity witnesses,
+  states the five second-expansion families (`fep-121` to `fep-155`), theorem
+  assumptions, non-vacuity witnesses,
   and evidence boundaries in one authored chapter.
 - [`HANDOFF.md`](HANDOFF.md) gives the next reviewer the operating protocol,
   evidence pointers, and extension backlog.
