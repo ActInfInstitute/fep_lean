@@ -217,6 +217,18 @@ def _print_result(result: object) -> int:
     return 0 if getattr(result, "complete", False) else 1
 
 
+def _emit_failure(reason: str, *, indent: int | None = None, **extra: object) -> int:
+    """Print the canonical error JSON and return exit status 1.
+
+    Key order is ``status``, then *extra* in call order, then
+    ``failure_reason``; every verb's failure path goes through here so the
+    schema cannot drift between verbs.
+    """
+    payload = {"status": "error", **extra, "failure_reason": reason}
+    print(json.dumps(payload, indent=indent))
+    return 1
+
+
 def _display(root: Path, path: Path) -> str:
     """Render *path* for display, relative to *root* when possible."""
     try:
@@ -270,17 +282,7 @@ def _verify(
         if not topics:
             raise ValueError("no catalogue topics matched the requested filters")
     except (OSError, KeyError, TypeError, ValueError) as exc:
-        print(
-            json.dumps(
-                {
-                    "status": "error",
-                    "mode": "lean-only",
-                    "complete": False,
-                    "failure_reason": str(exc),
-                }
-            )
-        )
-        return 1
+        return _emit_failure(str(exc), mode="lean-only", complete=False)
 
     verifier = LeanVerifier(lean_dir=root / "lean", project_root=root)
     mathlib_ok, mathlib_message = verifier.check_mathlib_built()
@@ -1167,8 +1169,7 @@ def _methods(args: argparse.Namespace, root: Path | None) -> int:
         )
         return 0
     except (OSError, ValueError) as exc:
-        print(json.dumps({"status": "error", "failure_reason": str(exc)}))
-        return 1
+        return _emit_failure(str(exc))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -1193,22 +1194,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             return _methods(args, selected)
         missing = project_root_errors(root)
         if missing:
-            print(
-                json.dumps(
-                    {
-                        "status": "error",
-                        "complete": False,
-                        "project_root": str(root),
-                        "failure_reason": (
-                            "substantive fep-lean commands require a source checkout; "
-                            "pass --project-root /path/to/fep_lean. Missing: "
-                            + ", ".join(missing)
-                        ),
-                    },
-                    indent=2,
-                )
+            return _emit_failure(
+                "substantive fep-lean commands require a source checkout; "
+                "pass --project-root /path/to/fep_lean. Missing: " + ", ".join(missing),
+                indent=2,
+                complete=False,
+                project_root=str(root),
             )
-            return 1
         if args.command == "setup":
             return _setup(root)
         if args.command == "bridge":
@@ -1280,16 +1272,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     plan, args.journal, resume=args.resume
                 )
             except (OSError, release_bundle.ReleaseBundleError) as exc:
-                print(
-                    json.dumps(
-                        {
-                            "status": "error",
-                            "complete": False,
-                            "failure_reason": str(exc),
-                        }
-                    )
-                )
-                return 1
+                return _emit_failure(str(exc), complete=False)
             print(
                 json.dumps(
                     {

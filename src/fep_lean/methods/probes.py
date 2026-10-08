@@ -6,8 +6,10 @@ import math
 from collections.abc import Sequence
 from typing import Any
 
+from fep_lean._paths import FepLeanError
 
-class BoundaryProbeError(ValueError):
+
+class BoundaryProbeError(ValueError, FepLeanError):
     """A probability, support, or floating-point range contract failed."""
 
 

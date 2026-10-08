@@ -18,6 +18,7 @@ from typing import Any, cast
 import yaml
 
 from fep_lean import _SOURCE_RUNTIME_SHA256, __version__
+from fep_lean._paths import FepLeanError
 from fep_lean.catalogue import registry as _registry
 from fep_lean.catalogue.registry import (
     BODY_MODULE_MANIFEST,
@@ -91,7 +92,7 @@ EVIDENCE_BOUNDARY = (
 )
 
 
-class PositioningError(ValueError):
+class PositioningError(ValueError, FepLeanError):
     """An input or projection failed the slice's bounded contract."""
 
 

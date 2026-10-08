@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from types import MappingProxyType, ModuleType
 from typing import TYPE_CHECKING
 
+from fep_lean._paths import FepLeanError
 from fep_lean.lean_source import LEAN_THEOREM_RE, lean_code_without_comments
 
 from .bodies import (
@@ -48,7 +49,7 @@ _DECLARATION_RE = re.compile(
 _THEOREM_RE = LEAN_THEOREM_RE
 
 
-class RegistryValidationError(ValueError):
+class RegistryValidationError(ValueError, FepLeanError):
     """Raised when a body module cannot participate in the canonical registry."""
 
 

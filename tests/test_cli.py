@@ -754,3 +754,98 @@ def test_main_returns_2_for_unsupported_command(monkeypatch, tmp_path: Path) -> 
         assert False, "expected SystemExit"
     except SystemExit as exc:
         assert exc.code == 2
+
+
+def test_emit_failure_is_byte_stable(capsys) -> None:
+    """The shared emitter reproduces each historical error payload exactly."""
+    assert cli._emit_failure("boom") == 1
+    assert capsys.readouterr().out == (
+        '{"status": "error", "failure_reason": "boom"}\n'
+    )
+    assert cli._emit_failure("boom", mode="lean-only", complete=False) == 1
+    assert capsys.readouterr().out == (
+        '{"status": "error", "mode": "lean-only", "complete": false, '
+        '"failure_reason": "boom"}\n'
+    )
+    assert cli._emit_failure("boom", indent=2, complete=False, project_root="/x") == 1
+    assert capsys.readouterr().out == (
+        '{\n  "status": "error",\n  "complete": false,\n'
+        '  "project_root": "/x",\n  "failure_reason": "boom"\n}\n'
+    )
+
+
+def _failing_argv(tmp_path: Path, monkeypatch) -> list[list[str]]:
+    class Topic:
+        id = "fep-001"
+        area = "FEP"
+        lean_sketch = "theorem fixture : True := True.intro"
+
+    class Catalogue:
+        topics = (Topic(),)
+
+    root = tmp_path / "checkout"
+    root.mkdir()
+    _make_checkout_root(root)
+    monkeypatch.setattr(
+        cli.FEPTopicCatalogue, "from_yaml", staticmethod(lambda _path: Catalogue())
+    )
+    pr = ["--project-root", str(root)]
+    outside = ["--project-root", str(tmp_path)]
+    return [
+        [*outside, "catalogue"],
+        [*pr, "verify", "--topic", "fep-999"],
+        [*pr, "verify", "--area", "AI"],
+        [*pr, "methods", "probe", "no-such-probe"],
+        [*pr, "publication-capture", "--plan", "--template", str(tmp_path / "missing")],
+    ]
+
+
+@pytest.mark.parametrize("index", range(5))
+def test_every_verb_failure_shares_one_error_schema(
+    index: int, monkeypatch, tmp_path: Path, capsys
+) -> None:
+    argv = _failing_argv(tmp_path, monkeypatch)[index]
+    assert cli.main(argv) == 1
+    payload = json.loads(capsys.readouterr().out)
+    keys = list(payload)
+    assert keys[0] == "status" and payload["status"] == "error"
+    assert keys[-1] == "failure_reason"
+    assert isinstance(payload["failure_reason"], str) and payload["failure_reason"]
+    assert set(keys) <= {
+        "status",
+        "mode",
+        "complete",
+        "project_root",
+        "failure_reason",
+    }
+
+
+def test_every_package_exception_is_a_fep_lean_error() -> None:
+    import importlib
+    import inspect
+    import pkgutil
+
+    import fep_lean
+    from fep_lean import FepLeanError
+
+    assert "FepLeanError" in fep_lean.__all__
+    # These two modules are hash-pinned by the Q5/Q6/Q7 artifact-proof manifests
+    # and retained native receipts; adopting the base needs a coordinated
+    # evidence refresh, so they are tracked here rather than silently skipped.
+    pinned = {
+        "fep_lean.verification.gnn_artifact_proof",
+        "fep_lean.verification.gnn_continuous_artifact_proof",
+    }
+    found = 0
+    for info in pkgutil.walk_packages(fep_lean.__path__, "fep_lean."):
+        module = importlib.import_module(info.name)
+        for name, obj in vars(module).items():
+            if (
+                inspect.isclass(obj)
+                and issubclass(obj, Exception)
+                and obj.__module__ == info.name
+                and info.name not in pinned
+            ):
+                found += 1
+                assert issubclass(obj, FepLeanError), f"{info.name}.{name}"
+    assert found >= 20

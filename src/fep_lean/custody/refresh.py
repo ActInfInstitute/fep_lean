@@ -72,6 +72,7 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
 from fep_lean.custody.apply import (
     MATRIX,
     ApplyReport,
@@ -131,7 +132,7 @@ PLAN_PIN_CHECK = (
 )
 
 
-class RefreshRefused(RuntimeError):
+class RefreshRefused(RuntimeError, FepLeanError):
     """A stop-gate, verify-set, or native-capture boundary refused the refresh."""
 
 

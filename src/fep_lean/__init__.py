@@ -40,7 +40,7 @@ _SOURCE_RUNTIME_SHA256 = _RuntimeMappingProxyType(
 import importlib as _importlib
 from typing import TYPE_CHECKING
 
-from fep_lean._paths import project_root
+from fep_lean._paths import FepLeanError, project_root
 
 if TYPE_CHECKING:
     from fep_lean.catalogue import (
@@ -211,6 +211,7 @@ __all__ = [
     "EdgeKind",
     "FEPPipeline",
     "FEPTopicCatalogue",
+    "FepLeanError",
     "FormalKernelDashboard",
     "FormalismAtlas",
     "FormalismAuditResult",

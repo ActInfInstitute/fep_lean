@@ -26,6 +26,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from fep_lean._paths import FepLeanError
 from fep_lean.output.formalism_presentation import build_formalism_presentation
 from fep_lean.output.fsutil import sha256_bytes, sha256_file
 
@@ -77,7 +78,7 @@ _CDP_COMMAND_TIMEOUT_SECONDS = 120.0
 _NETWORK_QUIET_SECONDS = 0.25
 
 
-class BrowserCaptureError(RuntimeError):
+class BrowserCaptureError(RuntimeError, FepLeanError):
     """Raised when canonical browser evidence cannot be captured faithfully."""
 
 

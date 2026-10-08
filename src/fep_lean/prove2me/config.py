@@ -15,13 +15,15 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from fep_lean._paths import FepLeanError
+
 DEFAULT_BASE_URL = "https://prove2.me/api/v1"
 ENV_VAR = "PROVE2ME_API_KEY"
 CREDENTIALS_ENV_VAR = "PROVE2ME_CREDENTIALS"  # value = path to a credentials.json file
 CREDENTIALS_FILENAME = "credentials.json"
 
 
-class Prove2meError(Exception):
+class Prove2meError(FepLeanError):
     """Base class for every Prove2me integration error.
 
     The message must never contain secret material: raise sites must redact
