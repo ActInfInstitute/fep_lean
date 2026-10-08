@@ -69,8 +69,7 @@ source = ["src"]
 concurrency = ["multiprocessing"]
 
 [tool.coverage.report]
-# The gate is line coverage only (--cov-fail-under=89 in CI); branch coverage is
-# a separate, ungated diagnostic (see docs/coverage-branch.md).
+# Line coverage ~91%; combined line+branch ~89.6% with current Hermes/network branches.
 fail_under = 89
 
 [tool.mypy]
