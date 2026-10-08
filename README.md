@@ -12,6 +12,22 @@ finite-sample risk, closed-loop policy trees, native blanket transfer, finite
 exponential-family dual geometry, and exact two-state continuous time, plus
 standalone EFE and geometric-mechanics families.
 
+## First run
+
+Python 3.14 is the only accepted validator environment (see `.python-version`);
+[uv](https://docs.astral.sh/uv/) provisions it.
+
+```bash
+uv sync --locked --extra dev
+uv run fep-lean catalogue
+```
+
+`uv run fep-lean catalogue` is explicit offline mode. It creates deterministic
+catalogue artifacts and reports zero verified topics. For native Lean
+verification (`setup`, `verify`) and the strict full pipeline, follow
+[`docs/getting-started.md`](docs/getting-started.md); the complete command list
+is under [Quick start](#quick-start) below.
+
 ## Release
 
 The **v1.6.0 release line** (2026-10-07) retains the 168-topic catalogue in
@@ -200,7 +216,6 @@ workspace, and manuscript assets. From another directory, pass
 
 ```bash
 uv sync --locked --extra dev
-uv run python docs/pin_audit.py --check-latest
 uv run fep-lean catalogue
 uv run fep-lean atlas
 uv run fep-lean dashboard
@@ -276,6 +291,7 @@ The complete release-gate list is maintained as "Required release gates" in
 uv run pytest tests/ -q --cov=src --cov-fail-under=89 -m "not serial_lean"
 uv run mypy src
 uv run ruff check src tests scripts docs
+uv run python docs/pin_audit.py --check-latest  # networked: queries upstream for newer pins
 ```
 
 The reproducible build and publication gates (release-bundle determinism,
