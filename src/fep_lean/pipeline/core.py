@@ -5,13 +5,14 @@ from __future__ import annotations
 import logging
 import os
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 from fep_lean._paths import resolve_output_root
 from fep_lean.catalogue.topics import FEPTopicCatalogue
-from fep_lean.gauss.runner import GaussRunner
+from fep_lean.gauss.runner import GaussRunner, TopicRunResult
 from fep_lean.output.figures import write_all_catalogue_figures
 from fep_lean.output.manuscript import (
     UNIFIED_FORMALISM_CATALOGUE_FILENAME,
@@ -21,6 +22,11 @@ from fep_lean.verification.environment import run_validation_checks
 
 log = logging.getLogger(__name__)
 PipelineMode = Literal["full", "catalogue"]
+#: Outcome of one stage. ``not_run`` marks a stage a mode never performs.
+StepStatus = Literal["ok", "error", "not_run"]
+#: Outcome of a whole run; a run is either complete (``ok``) or ``error``.
+PipelineStatus = Literal["ok", "error"]
+_T = TypeVar("_T")
 
 
 def _max_topics_from_env() -> int | None:
@@ -39,7 +45,7 @@ def _max_topics_from_env() -> int | None:
 @dataclass
 class StepResult:
     name: str
-    status: str
+    status: StepStatus
     message: str = ""
     duration_s: float = 0.0
     payload: Any = None
@@ -48,7 +54,7 @@ class StepResult:
 
 @dataclass
 class PipelineResult:
-    status: str
+    status: PipelineStatus
     mode: PipelineMode = "full"
     complete: bool = False
     total_duration: float = 0.0
@@ -59,34 +65,28 @@ class PipelineResult:
     verified_topics: int = 0
     capabilities: dict[str, bool] = field(default_factory=dict)
     failure_reason: str = ""
-    _topic_results: list[Any] = field(default_factory=list)
+    _topic_results: list[TopicRunResult] = field(default_factory=list)
 
     @property
-    def topic_results(self) -> list[Any]:
+    def topic_results(self) -> list[TopicRunResult]:
         return self._topic_results
 
     @topic_results.setter
-    def topic_results(self, value: list[Any]) -> None:
+    def topic_results(self, value: list[TopicRunResult]) -> None:
         self._topic_results = value
 
     @property
     def hermes_count(self) -> int:
-        return sum(
-            bool(getattr(item, "hermes_success", False)) for item in self._topic_results
-        )
+        return sum(item.hermes_success for item in self._topic_results)
 
     @property
     def lean_verified_count(self) -> int:
-        return sum(
-            bool(getattr(item, "lean_compiles", False)) for item in self._topic_results
-        )
+        return sum(item.lean_compiles for item in self._topic_results)
 
     @property
     def lean_compile_ok(self) -> int:
         return sum(
-            bool(getattr(item, "lean_compiles", False))
-            and not bool(getattr(item, "lean_has_sorry", True))
-            and not bool(getattr(item, "lean_warnings", []))
+            item.lean_compiles and not item.lean_has_sorry and not item.lean_warnings
             for item in self._topic_results
         )
 
@@ -157,8 +157,9 @@ class FEPPipeline:
         started = time.perf_counter()
         stages: list[StepResult] = []
 
-        def stage(name: str, action: Any) -> tuple[StepResult, Any]:
+        def stage(name: str, action: Callable[[], _T]) -> tuple[StepResult, _T | None]:
             t0 = time.perf_counter()
+            payload: _T | None
             try:
                 payload = action()
                 result = StepResult(
@@ -194,7 +195,17 @@ class FEPPipeline:
                 self.project_root, mode=mode, output_root=self.output_root
             ),
         )
-        if validation_stage.status != "ok" or validation.get("status") != "ok":
+        if validation_stage.status != "ok" or validation is None:
+            return PipelineResult(
+                "error",
+                mode=mode,
+                total_duration=time.perf_counter() - started,
+                stages=stages,
+                catalogue_topics=len(self._topics_to_run),
+                failure_reason=validation_stage.error
+                or "environment validation produced no result",
+            )
+        if validation.get("status") != "ok":
             reason = (
                 validation_stage.error
                 or f"{validation.get('failed_count', 0)} required capability checks failed"
@@ -215,7 +226,7 @@ class FEPPipeline:
             )
             return result
 
-        raw_results: list[Any] = []
+        raw_results: list[TopicRunResult] = []
         if mode == "full":
             gauss_stage, gauss_payload = stage(
                 "Gauss Sessions", lambda: self._run_gauss(workflow)
@@ -229,7 +240,7 @@ class FEPPipeline:
                     catalogue_topics=len(self._topics_to_run),
                     failure_reason=gauss_stage.error or "verification stage failed",
                 )
-            raw_results = gauss_payload.get("results", [])
+            raw_results = (gauss_payload or {}).get("results", [])
         else:
             stages.append(
                 StepResult(
@@ -256,17 +267,17 @@ class FEPPipeline:
         self._run_topic_results = [item.as_dict() for item in raw_results]
         stats = self._compute_lean_stats()
         verified = sum(
-            bool(getattr(item, "success", False))
-            and bool(getattr(item, "lean_compiles", False))
-            and not bool(getattr(item, "lean_has_sorry", True))
-            and not bool(getattr(item, "lean_warnings", []))
+            item.success
+            and item.lean_compiles
+            and not item.lean_has_sorry
+            and not item.lean_warnings
             for item in raw_results
         )
         complete = mode == "catalogue" or (
             len(raw_results) == len(self._topics_to_run)
             and verified == len(self._topics_to_run)
         )
-        status = "ok" if complete else "error"
+        status: PipelineStatus = "ok" if complete else "error"
         capability_rows = {
             str(check["name"]): bool(check["ok"])
             for check in validation.get("checks", [])
