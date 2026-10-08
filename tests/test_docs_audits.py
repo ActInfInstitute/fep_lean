@@ -157,6 +157,32 @@ def test_xref_audit_flags_unresolved_crossref(
     assert code == 1
     assert "unresolved" in out
     assert "sec:ghost" in out
+    assert "fep-lean catalogue" in out
+
+
+def test_xref_audit_omits_the_catalogue_hint_when_generated_inputs_exist(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    root = tmp_path / "manuscript"
+    root.mkdir()
+    (root / "chapter.md").write_text(
+        "# Chapter\n\nSee [@sec:ghost].\n", encoding="utf-8"
+    )
+    for name in (
+        "09z_unified_formalism_catalogue.md",
+        "09z_appendix_b_lean_catalogue.md",
+        "09zc_appendix_c_lean_equations.md",
+    ):
+        (root / name).write_text("# Generated\n", encoding="utf-8")
+    code, out = _run_script(
+        tmp_path, monkeypatch, capsys, "xref_audit", ["--root", str(root)]
+    )
+
+    assert code == 1
+    assert "sec:ghost" in out
+    assert "fep-lean catalogue" not in out
 
 
 def test_xref_audit_passes_resolved_crossref(

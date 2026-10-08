@@ -323,12 +323,13 @@ assert formal_kernel_dashboard_drift(project_root) == ()
 ```
 
 The immutable dashboard model binds summary metrics to canonical formalism
-coverage and evaluates one deterministic witness for each of the fifteen
+coverage and evaluates one deterministic witness for each of the seventeen
 expansion families: Bayesian reconstruction, variational duality, control,
 temporal inference, causal intervention, generalized predictive coding, path
 thermodynamics, categorical Fisher geometry, consensus, concentration,
 Laplace/Brier risk, policy-tree feedback, native blanket transfer,
-exponential-family duality, and the two-state master equation. Every witness
+exponential-family duality, the two-state master equation, the standalone
+expected-free-energy floor, and geometric-mechanics skew cancellation. Every witness
 owns typed equality, inequality, or predicate checks with per-check tolerances;
 acceptance is their conjunction plus the boundary observation. The SVG and
 HTML are offline projections of the same source data. They are explanatory

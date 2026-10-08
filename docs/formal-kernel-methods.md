@@ -332,14 +332,16 @@ which qualified declarations witness the formal ones? Its static
 
 The [formal-kernel dashboard](formal-kernel-dashboard.html) answers a different
 question: do deterministic numerical witnesses exhibit the qualitative shape
-of selected checked laws? Its fifteen panels cover one diagnostic for each
+of selected checked laws? Its seventeen panels cover one diagnostic for each
 expansion family: finite posterior reconstruction, Gibbs variational duality,
 soft Bellman/desirability consistency, forward--backward smoothing,
 intervention invariance, generalized prediction-error descent, a finite
 fluctuation identity, categorical Fisher rank, consensus contraction, a
 sub-Gaussian envelope, Laplace/Brier risk transfer, policy-tree feedback,
-native blanket transfer, exponential-family KL/Bregman duality, and a
-two-state master equation. The static
+native blanket transfer, exponential-family KL/Bregman duality, a
+two-state master equation, the Boltzmann expected-free-energy floor, and
+geometric-mechanics skew cancellation with its failing unconditional
+solenoidal drop. The static
 [dashboard SVG](formal-kernel-dashboard.svg) is the manuscript-safe projection.
 
 Dashboard values come from closed finite formulas and coverage-derived summary

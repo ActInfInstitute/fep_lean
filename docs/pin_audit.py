@@ -56,10 +56,12 @@ Usage
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -155,6 +157,10 @@ class LatestStableAudit:
         }
 
 
+_FETCH_ATTEMPTS = 3
+_FETCH_BACKOFF_SEC = 2.0
+
+
 def _fetch_json(url: str) -> Any:
     headers = {
         "Accept": "application/vnd.github+json",
@@ -164,8 +170,25 @@ def _fetch_json(url: str) -> Any:
     if token := os.environ.get("GITHUB_TOKEN", "").strip():
         headers["Authorization"] = f"Bearer {token}"
     request = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(request, timeout=15) as response:
-        return json.loads(response.read().decode("utf-8"))
+    for attempt in range(1, _FETCH_ATTEMPTS + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=15) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            # A 404 is an answer (no matching Mathlib tag), not a transient
+            # failure; only server-side errors are retried.
+            if exc.code < 500 or attempt == _FETCH_ATTEMPTS:
+                raise
+        except (http.client.HTTPException, urllib.error.URLError, TimeoutError) as exc:
+            # IncompleteRead and other HTTPException subclasses are not
+            # OSError; surface them as OSError so callers report a readable
+            # lookup failure instead of a traceback. The gate stays fail-closed.
+            if attempt == _FETCH_ATTEMPTS:
+                if isinstance(exc, OSError):
+                    raise
+                raise OSError(f"{type(exc).__name__}: {exc}") from exc
+        time.sleep(_FETCH_BACKOFF_SEC * attempt)
+    raise AssertionError("unreachable")  # pragma: no cover
 
 
 def audit_latest_stable(

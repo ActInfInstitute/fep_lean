@@ -16,7 +16,7 @@ The generated catalogue in `config/topics.yaml` joins maintained metadata,
 semantic review, and canonical Lean bodies. Agents use `fep-lean catalogue` for
 offline artifacts, `fep-lean atlas` to inspect or drift-check authored
 formalism relations, `fep-lean dashboard --check` to validate the deterministic
-fifteen-family witness projection, and `fep-lean preflight` before full
+seventeen-family witness projection, and `fep-lean preflight` before full
 execution. Dashboard acceptance is the conjunction of typed equality,
 inequality, and predicate checks with per-check tolerances; it is numerical
 diagnostic evidence, not a Lean proof or an empirical result. A native

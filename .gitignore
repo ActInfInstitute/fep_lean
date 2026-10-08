@@ -64,3 +64,6 @@ manuscript/09zc_appendix_c_lean_equations.md
 gauss_pf2/
 gauss_prefetch/
 gauss_grace/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
