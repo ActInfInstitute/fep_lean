@@ -118,7 +118,7 @@ jobs:
           uv run python docs/theorem_ref_audit.py
           uv run python docs/citation_audit.py
           uv run python docs/check_links.py --strict --include-root
-          uv run python docs/md_hygiene.py --strict
+          uv run python docs/md_hygiene.py --strict --include-root
           uv run python docs/xref_audit.py
           git diff --check
 
@@ -277,7 +277,7 @@ jobs:
           name: coverage-report
           path: coverage.xml
       - run: uv run python docs/check_links.py --strict --include-root
-      - run: uv run python docs/md_hygiene.py --strict
+      - run: uv run python docs/md_hygiene.py --strict --include-root
       - name: Require the newest stable Lean-Mathlib release pair
         env:
           GITHUB_TOKEN: ${{ github.token }}

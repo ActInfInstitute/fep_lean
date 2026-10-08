@@ -56,7 +56,7 @@ This delivery establishes bridge custody and deterministic operations. It does
 not verify arbitrary Python extraction, execute the retained PyMDP runner,
 establish C/EFE equivalence, or accept continuous dynamics. ActiveInference.jl
 artifact proofs follow separate backend work. The
-[H2 terminal audit](../horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md)
+[H2 terminal audit](../done/horizon-2-smooth-stochastic/readiness/07-terminal-audit-20260904.md)
 does not close wider H2 acceptance or open H3.
 
 The pre-existing W1 REPORT was preserved byte-for-byte. No baseline files were

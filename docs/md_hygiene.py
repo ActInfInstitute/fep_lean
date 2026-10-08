@@ -30,7 +30,7 @@ Usage
     uv run python md_hygiene.py                      # default checks
     uv run python md_hygiene.py --max-line 120       # also warn on lines >120 chars
     uv run python md_hygiene.py --strict             # include orphan brackets, trailing WS, tabs
-    uv run python md_hygiene.py --include-root       # also lint ../README.md, ../AGENTS.md, ../SPEC.md
+    uv run python md_hygiene.py --include-root       # also lint the repo-wide Markdown scope (see check_links.py)
 """
 
 from __future__ import annotations
@@ -42,6 +42,71 @@ from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = DOCS_DIR.parent
+
+# --- Scan scope (kept identical in ``check_links.py`` and ``md_hygiene.py``) ---
+# ``--include-root`` widens the scan from ``docs/**`` to the whole repository's
+# authored Markdown: every root ``*.md``, every ``AGENTS.md`` / ``README.md``
+# under the subtrees below, and the non-historical documents under ``specs/``.
+CONTRACT_SUBTREES = ("src", "tests", "config", "scripts", "lean", "manuscript")
+CONTRACT_NAMES = frozenset({"AGENTS.md", "README.md"})
+# Historical / retained trees: ``specs/done/**`` and per-spec ``evidence/**``
+# are frozen receipts (their bytes may be hashed), and ``gnn_output*`` /
+# ``gnn-input`` / ``fixtures`` are tool outputs or tool inputs. They are never
+# scanned and never rewritten; a link broken there is annotated, not edited.
+HISTORICAL_DIR_NAMES = frozenset({"done", "evidence", "gnn-input", "fixtures"})
+HISTORICAL_DIR_PREFIXES = ("gnn_output",)
+# Vendored / build directories that can hold third-party Markdown.
+_SKIP_DIR_NAMES = frozenset({"node_modules", "build", "__pycache__", "site-packages"})
+
+
+def _label(path: Path) -> str:
+    """Repo-relative path for messages (falls back to the bare name outside the repo)."""
+    try:
+        return path.relative_to(DOCS_DIR.parent).as_posix()
+    except ValueError:
+        return path.name
+
+
+def _skip_dir(name: str) -> bool:
+    return name.startswith(".") or name in _SKIP_DIR_NAMES
+
+
+def _is_historical(rel_parts: tuple[str, ...]) -> bool:
+    return any(
+        part in HISTORICAL_DIR_NAMES or part.startswith(HISTORICAL_DIR_PREFIXES)
+        for part in rel_parts[:-1]
+    )
+
+
+def _walk_md(base: Path, *, names: frozenset[str] | None) -> list[Path]:
+    found: list[Path] = []
+    if not base.is_dir():
+        return found
+    for path in base.rglob("*.md"):
+        rel = path.relative_to(base).parts
+        if any(_skip_dir(p) for p in rel[:-1]):
+            continue
+        if names is not None and path.name not in names:
+            continue
+        found.append(path)
+    return found
+
+
+def discover_files(docs_dir: Path, *, include_root: bool) -> list[Path]:
+    """Return the Markdown files in scope (``docs/**``, plus the repo with ``include_root``)."""
+    files = sorted(docs_dir.glob("**/*.md"))
+    if not include_root:
+        return files
+    root = docs_dir.parent
+    extra: set[Path] = set(root.glob("*.md"))
+    for sub in CONTRACT_SUBTREES:
+        extra.update(_walk_md(root / sub, names=CONTRACT_NAMES))
+    specs = root / "specs"
+    for path in _walk_md(specs, names=None):
+        if not _is_historical(path.relative_to(specs).parts):
+            extra.add(path)
+    return files + sorted(extra - set(files))
+
 
 # Fenced-code boundaries (```lang  …  ```)
 _FENCE = re.compile(r"^\s*```")
@@ -76,7 +141,7 @@ def lint_file(
         return [f"cannot read {path}: {exc}"]
 
     if not content.endswith("\n"):
-        issues.append(f"{path.name}: file does not end with a newline")
+        issues.append(f"{_label(path)}: file does not end with a newline")
 
     lines = content.splitlines()
     h1_count = 0
@@ -103,19 +168,19 @@ def lint_file(
             rest = line[len(m.group(1)) :]
             if rest and not rest.startswith(" ") and not rest.startswith("#"):
                 issues.append(
-                    f"{path.name}:{i}: header missing space after '{m.group(1)}': {line.rstrip()}"
+                    f"{_label(path)}:{i}: header missing space after '{m.group(1)}': {line.rstrip()}"
                 )
 
         # List marker spacing (skip HTML comments)
         if "<!--" not in line and _LIST_BAD.match(line):
             issues.append(
-                f"{path.name}:{i}: list marker missing trailing space: {line.rstrip()}"
+                f"{_label(path)}:{i}: list marker missing trailing space: {line.rstrip()}"
             )
 
         # Line length — tolerant of table rows (pipe tables have long rows
         # by design) and of lines that are essentially one long link.
         if max_line is not None and len(line) > max_line and not _TABLE_ROW.match(line):
-            issues.append(f"{path.name}:{i}: line length {len(line)} > {max_line}")
+            issues.append(f"{_label(path)}:{i}: line length {len(line)} > {max_line}")
 
         if strict:
             # Orphan reference brackets (likely broken link). Strip inline
@@ -141,23 +206,28 @@ def lint_file(
                 if "(" in inner and ")" in inner:
                     # Looks like a function expression: log p(o), x(t), etc.
                     continue
+                # Skip numeric index/interval/vector notation: [0], [1, 1/10], [0.25, 0.5]
+                if re.fullmatch(r"[\[\d\s,./+\-]+", inner):
+                    continue
                 # Skip math tuples / function arguments: [q,p], [x, y, z]
                 if "," in inner and not any(c in inner for c in ".:/"):
                     continue
                 issues.append(
-                    f"{path.name}:{i}: orphan bracket (likely broken link): {token}"
+                    f"{_label(path)}:{i}: orphan bracket (likely broken link): {token}"
                 )
 
             # Trailing whitespace
             if _TRAILING_WS.search(line):
-                issues.append(f"{path.name}:{i}: trailing whitespace")
+                issues.append(f"{_label(path)}:{i}: trailing whitespace")
 
             # Tabs outside code blocks
             if "\t" in line:
-                issues.append(f"{path.name}:{i}: tab character (use spaces)")
+                issues.append(f"{_label(path)}:{i}: tab character (use spaces)")
 
     if h1_count > 1:
-        issues.append(f"{path.name}: {h1_count} top-level '# …' headings (expected 1)")
+        issues.append(
+            f"{_label(path)}: {h1_count} top-level '# …' headings (expected 1)"
+        )
 
     return issues
 
@@ -179,7 +249,7 @@ def main() -> int:
     parser.add_argument(
         "--include-root",
         action="store_true",
-        help="Also lint sibling files (../README.md, ../AGENTS.md, ../SPEC.md, ../PAI.md).",
+        help="Also lint repo-root *.md, every AGENTS.md/README.md under src/ tests/ config/ scripts/ lean/ manuscript/, and non-historical specs/ docs.",
     )
     parser.add_argument(
         "-v",
@@ -189,12 +259,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    files = sorted(DOCS_DIR.glob("**/*.md"))
-    if args.include_root:
-        for name in ("README.md", "AGENTS.md", "SPEC.md", "PAI.md"):
-            p = PROJECT_ROOT / name
-            if p.exists():
-                files.append(p)
+    files = discover_files(DOCS_DIR, include_root=args.include_root)
 
     total = 0
     scanned = 0

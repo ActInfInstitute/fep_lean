@@ -33,8 +33,8 @@ section and mirrored in the spec's no-go register.
   (rank-strictly-increasing = order + at-most-once), `declWellFormed` /
   `noDuplicateNames` (GNN-E004), `connectionWellFormed` (token grammar),
   `dimRefsResolve` (dimension references resolve to declared variables or
-  `ModelParameters` keys — the decidable mechanical fragment), 
-  `connectionsReferenceDecls` (GNN-E003 strict), 
+  `ModelParameters` keys — the decidable mechanical fragment),
+  `connectionsReferenceDecls` (GNN-E003 strict),
   `parameterizationVarsDeclared` (GNN-W003 strict),
   `ontologyVarsDeclared`.
 - Exemplar smoke values transcribed from all four exemplars:
@@ -78,7 +78,7 @@ section and mirrored in the spec's no-go register.
   replaced `subprocess.run` with `run_process_group`, which the module's
   hermetic tests do not intercept (they monkeypatch only
   `formalism_audit.subprocess.run` and `find_executable`). Proof: running
-  `tests/test_formalism_audit.py` with an out-of-repo pytest plugin that
+  `tests/test_formalism_audit.py` with an out-of-repo pytest plugin tha
   shims `formalism_audit.run_process_group` back through `subprocess.run`
   passes all 25 tests. The Q1 declaration closure is theorem-free-module
   safe: `test_probe_resolves_primaries_and_prints_evidence_axioms` (which

@@ -2,8 +2,9 @@
 
 Each script is loaded from ``docs/`` via the importlib-spec pattern used by
 ``tests/test_pin_audit_latest.py``. ``check_links`` and ``md_hygiene`` scan
-``DOCS_DIR`` (a module global derived from ``__file__``) and expose no root
-flag, so each test redirects that single global to a tmp fixture tree.
+``DOCS_DIR`` (a module global derived from ``__file__``); ``--include-root``
+widens the scan to ``DOCS_DIR.parent``. Each test redirects that single global
+to a tmp fixture tree.
 ``xref_audit`` takes ``--root`` and needs no redirection. ``theorem_ref_audit``
 derives its root inline from ``__file__``, so redirecting it means patching
 that one module attribute; its canonical-name surfaces are read from packaged
@@ -251,3 +252,129 @@ def test_theorem_ref_audit_passes_manuscript_without_references(
 
     assert code == 0
     assert "references resolve" in out
+
+
+def _make_repo(tmp_path: Path) -> Path:
+    """Build a minimal repo-shaped tree; returns its ``docs/`` directory."""
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "index.md").write_text("# Index\n", encoding="utf-8")
+    return docs
+
+
+def _run_wide(
+    docs: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    stem: str,
+    argv: list[str],
+) -> tuple[int, str]:
+    module = _load_docs_script(stem)
+    monkeypatch.setattr(module, "DOCS_DIR", docs)
+    monkeypatch.setattr(sys, "argv", [stem, "--include-root", *argv])
+    code: int = module.main()
+    return code, capsys.readouterr().out
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "HANDOFF.md",
+        "src/fep_lean/custody/README.md",
+        "src/fep_lean/custody/AGENTS.md",
+        "tests/AGENTS.md",
+        "config/README.md",
+        "scripts/AGENTS.md",
+        "lean/README.md",
+        "manuscript/AGENTS.md",
+        "specs/some-spec/README.md",
+    ],
+)
+def test_check_links_include_root_catches_broken_link_everywhere(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    rel: str,
+) -> None:
+    docs = _make_repo(tmp_path)
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("# T\n\n[gone](missing-file.md)\n", encoding="utf-8")
+
+    code, out = _run_wide(docs, monkeypatch, capsys, "check_links", [])
+
+    assert code == 1
+    assert "missing-file.md" in out
+    assert rel in out
+
+
+@pytest.mark.parametrize(
+    "rel",
+    [
+        "specs/done/old-run/NOTES.md",
+        "specs/live/evidence/journal/README.md",
+        "specs/live/gnn_output/PIPELINE_REPORT.md",
+        "specs/live/gnn-input/Model.md",
+        "specs/live/fixtures/Model.md",
+        "src/fep_lean/custody/NOTES.md",  # only AGENTS.md / README.md in src
+        "lean/.lake/packages/dep/README.md",
+    ],
+)
+def test_include_root_excludes_historical_and_vendored_trees(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    rel: str,
+) -> None:
+    docs = _make_repo(tmp_path)
+    target = tmp_path / rel
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("# T\n\n[gone](missing-file.md)  \n", encoding="utf-8")
+
+    for stem in ("check_links", "md_hygiene"):
+        code, out = _run_wide(docs, monkeypatch, capsys, stem, ["--strict"])
+        assert code == 0, out
+
+
+def test_check_links_without_include_root_ignores_non_docs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    docs = _make_repo(tmp_path)
+    (tmp_path / "HANDOFF.md").write_text("# H\n\n[x](nope.md)\n", encoding="utf-8")
+    module = _load_docs_script("check_links")
+    monkeypatch.setattr(module, "DOCS_DIR", docs)
+    monkeypatch.setattr(sys, "argv", ["check_links"])
+    assert module.main() == 0
+    capsys.readouterr()
+
+
+def test_md_hygiene_include_root_flags_trailing_whitespace_in_src_readme(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    docs = _make_repo(tmp_path)
+    readme = tmp_path / "src" / "fep_lean" / "custody" / "README.md"
+    readme.parent.mkdir(parents=True)
+    readme.write_text("# Custody\n\ntrailing   \n", encoding="utf-8")
+
+    code, out = _run_wide(docs, monkeypatch, capsys, "md_hygiene", ["--strict"])
+
+    assert code == 1
+    assert "src/fep_lean/custody/README.md:3: trailing whitespace" in out
+
+
+def test_md_hygiene_numeric_brackets_are_not_orphans(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    docs = _make_repo(tmp_path)
+    (docs / "math.md").write_text(
+        "# M\n\nindex [0] and interval [1, 1/10] and vector [0.25, 0.5].\n",
+        encoding="utf-8",
+    )
+    code, out = _run_wide(docs, monkeypatch, capsys, "md_hygiene", ["--strict"])
+    assert code == 0, out
