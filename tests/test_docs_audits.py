@@ -378,3 +378,17 @@ def test_md_hygiene_numeric_brackets_are_not_orphans(
     )
     code, out = _run_wide(docs, monkeypatch, capsys, "md_hygiene", ["--strict"])
     assert code == 0, out
+
+
+def test_every_docs_markdown_page_is_linked_from_docs_readme() -> None:
+    """Each ``docs/*.md`` page (bar README/AGENTS) must be reachable from the index."""
+    docs = PROJECT_ROOT / "docs"
+    index = (docs / "README.md").read_text(encoding="utf-8")
+    missing = sorted(
+        page.name
+        for page in docs.glob("*.md")
+        if page.name not in {"README.md", "AGENTS.md"}
+        and f"({page.name})" not in index
+        and f"({page.name}#" not in index
+    )
+    assert not missing, f"docs/README.md does not link: {missing}"
