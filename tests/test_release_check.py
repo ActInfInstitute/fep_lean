@@ -110,7 +110,7 @@ def test_hosted_ci_requires_successful_run_on_exact_commit() -> None:
 
 
 def _jobs(**overrides: str) -> list[dict[str, str]]:
-    names = ["changes", "python", "lean", "render-deps", "render"] + [
+    names = ["changes", "python", "static", "lean", "render-deps", "render"] + [
         f"distribution ({os}, 3.{minor})"
         for os in ("ubuntu-latest", "macos-latest", "windows-latest")
         for minor in range(10, 15)
