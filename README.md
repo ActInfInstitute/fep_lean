@@ -269,8 +269,9 @@ The operator command quick reference lives at
 
 ## Development checks
 
-The complete release-gate list is maintained as "Required release gates" in
-[`docs/testing.md`](docs/testing.md); the quick local dev checks are:
+The complete required-check list is maintained once, in the "Required checks"
+block of [`AGENTS.md`](AGENTS.md#required-checks); the quick local dev checks
+are:
 
 ```bash
 uv run pytest tests/ -q --cov=src --cov-fail-under=89 -m "not serial_lean"

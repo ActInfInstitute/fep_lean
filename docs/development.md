@@ -43,42 +43,16 @@ uv run python scripts/theorem_maturity_audit.py
 uv run python scripts/build_formalism_coverage.py
 uv run fep-lean atlas
 uv run fep-lean dashboard
-
-uv run python scripts/_maint_build_topics_catalogue.py --check
-uv run python scripts/_maint_build_fep_all_lean.py --check
-uv run python scripts/_maint_build_formal_modules.py --check
-uv run python scripts/theorem_maturity_audit.py --check
-uv run python scripts/build_formalism_coverage.py --check
-uv run python scripts/_maint_build_lean_landscape.py --check
-uv run fep-lean atlas --check
-uv run fep-lean dashboard --check
-uv run python specs/geo-infer-notation-bridge/check_geo_notation_bridge.py --check
-uv run python docs/theorem_ref_audit.py
-uv run python docs/citation_audit.py
-uv run fep-lean catalogue
-uv run python scripts/render_manuscript.py --check
-
-uv run ruff check src tests scripts docs
-uv run ruff format --check src tests scripts docs
-uv run mypy src
-uv run pytest tests/ -q --cov=src --cov-fail-under=89 -m "not serial_lean"
-uv run python docs/check_links.py --strict --include-root
-uv run python docs/md_hygiene.py --strict
-uv run python docs/pin_audit.py --check-latest
-uv run python docs/xref_audit.py
 ```
 
-Run native Lean acceptance separately because it is the expensive semantic
-compiler boundary:
+The required verification list (`--check` gates, audits, tests, lint, native
+Lean) is owned by the "Required checks" block in
+[`AGENTS.md`](../AGENTS.md#required-checks); it is not repeated here, and
+`tests/test_check_inventory.py` keeps it in step with `.github/workflows/ci.yml`.
 
-```bash
-uv run fep-lean verify \
-  --fail-on-warnings \
-  --receipt output/native-verification.json
-cd lean && lake build FepSketches
-cd .. && uv run python scripts/audit_formalisms.py \
-  --receipt output/formalism-audit.json
-```
+Native Lean acceptance (`lake build FepSketches`, `fep-lean verify`, the
+formalism audit) is the expensive semantic compiler boundary; its commands are in the same
+[required-checks block](../AGENTS.md#required-checks).
 
 The native receipt establishes exact-source compilation for the stable topic
 roster; the formalism audit separately covers the maintained formal modules
