@@ -25,7 +25,7 @@ WORKFLOW = "ci.yml"
 #: Jobs whose success the release table in release.md promises. A dispatch
 #: run may skip Lean or render and still conclude ``success``, so the run
 #: conclusion alone is not enough.
-REQUIRED_JOBS = ("python", "lean", "render-deps", "render")
+REQUIRED_JOBS = ("python", "static", "lean", "render-deps", "render")
 DISTRIBUTION_PREFIX = "distribution ("
 #: InstituteOS sidecar: ``repo.description`` names ``Release vX.Y.Z`` and the
 #: date; ``meta.updated`` carries the release date.
