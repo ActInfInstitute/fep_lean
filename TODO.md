@@ -6,6 +6,11 @@ Each linked GitHub Issue contains its owner, detailed scope, dependencies,
 positive acceptance, failure controls and claim boundary. Size means
 implementation scope, not a version or schedule promise.
 
+Unfiled improvement candidates (package, tooling, docs, Lean layer and
+formalism strengthening briefs) are scoped in
+[SCOPE-2026-10-08.md](SCOPE-2026-10-08.md); a candidate joins this table
+only once it has an Issue.
+
 ## Release gate
 
 Releases follow the short [release procedure](docs/release.md): one version
