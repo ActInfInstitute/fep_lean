@@ -34,8 +34,8 @@ concurrency:
   # near-complete lean run loses its minutes) while main runs never cancel,
   # protecting landing evidence.
   #
-  # The dispatch inputs only toggle the lean and render lanes. The python and
-  # render-deps jobs are the custody-gate carriers and are NOT toggleable:
+  # The dispatch inputs only toggle the lean and render lanes. The python,
+  # static and render-deps jobs are the custody-gate carriers and are NOT toggleable:
   # every dispatch run still executes pin_audit --check-latest,
   # check_orphan_compiles, theorem_ref_audit, xref_audit, the frozen-custody
   # bridge checks, catalogue regeneration checks, mypy/ruff -- a cache hit
@@ -51,6 +51,8 @@ jobs:
         with:
           fetch-depth: 0
       - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.0"
       - id: classify
         name: Classify documentation-only pull requests
         env:
@@ -97,6 +99,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       - run: uv sync --locked --extra dev
       - name: Materialize the generated manuscript inputs
@@ -136,6 +139,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       # The harness remains a 3.14 validator. Only the fresh wheel environment
       # exercises the packaging floor; no Lean/provider evidence is claimed.
@@ -160,6 +164,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       - run: uv sync --locked --extra dev
       - run: uv lock --check && uv pip check
@@ -276,17 +281,47 @@ jobs:
         with:
           name: coverage-report
           path: coverage.xml
-      - run: uv run python docs/check_links.py --strict --include-root
-      - run: uv run python docs/md_hygiene.py --strict
+      # Link/hygiene/xref/mypy/ruff/whitespace checks run in the parallel
+      # `static` job so they report in minutes and are not skipped when a
+      # test fails; each check lives in exactly one job.
       - name: Require the newest stable Lean-Mathlib release pair
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: uv run python docs/pin_audit.py --check-latest
+
+  # Fast static and documentation checks, split out of `python` so a
+  # style/type/link failure is visible without waiting for the full pytest run
+  # and still reports when a test fails. Same gating and setup as `python`.
+  # The catalogue is materialized first because the link, hygiene and
+  # cross-reference checks scan the generated manuscript inputs (without them
+  # xref_audit reports false unresolved references).
+  static:
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "0.12.0"
+          enable-cache: true
+      - run: uv sync --locked --extra dev
+      - run: uv run fep-lean catalogue
+      - run: uv run python docs/check_links.py --strict --include-root
+        if: ${{ !cancelled() }}
+      - run: uv run python docs/md_hygiene.py --strict
+        if: ${{ !cancelled() }}
       - run: uv run python docs/xref_audit.py
+        if: ${{ !cancelled() }}
       - run: uv run mypy src
+        if: ${{ !cancelled() }}
       - run: uv run ruff check src tests scripts docs
+        if: ${{ !cancelled() }}
       - run: uv run ruff format --check src tests scripts docs
+        if: ${{ !cancelled() }}
       - run: git diff --check
+        if: ${{ !cancelled() }}
 
   # The figure assets the render consumes (atlas/dashboard SVG+HTML
   # projections under docs/ and the rasterized PNGs under output/figures/)
@@ -303,6 +338,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       - name: Install the SVG rasterizer
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends librsvg2-bin
@@ -386,6 +422,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       - name: Cache the elan toolchain
         uses: actions/cache@v6
@@ -874,6 +911,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.0.1
         with:
+          version: "0.12.0"
           enable-cache: true
       - name: Cache the elan toolchain
         uses: actions/cache@v6
