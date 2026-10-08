@@ -318,14 +318,6 @@ def _check_catalogue_import(project_root: Path) -> tuple[bool, str]:
     return _check_topics_yaml(project_root)
 
 
-def _check_python_numpy_matplotlib() -> tuple[bool, str]:
-    return _check_python_stack()
-
-
-def _check_manuscript_config(project_root: Path) -> tuple[bool, str]:
-    return _check_file(project_root, "manuscript/config.yaml")
-
-
 def run_validation_checks(
     project_root: Path, *, mode: str = "full", output_root: Path | None = None
 ) -> dict[str, Any]:
