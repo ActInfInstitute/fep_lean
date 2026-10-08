@@ -11,13 +11,9 @@ import yaml
 
 from fep_lean.lean_source import lean_code_without_comments
 
+from . import registry as _registry
 from .novelty import load_formalism_novelty
-from .registry import (
-    BODIES,
-    LATEX_EQUATIONS,
-    assert_roster,
-    validate_body_family_ownership,
-)
+from .registry import assert_roster, validate_body_family_ownership
 from .schema import load_catalogue_metadata
 from .semantics import load_theorem_maturity, render_proxy_statement
 
@@ -112,7 +108,7 @@ def topic_id_to_namespace(topic_id: str) -> str:
 
 def render_fep_all_lean(sketches: Mapping[str, str] | None = None) -> str:
     """Render the canonical whole-catalogue Lean projection."""
-    source = dict(BODIES) if sketches is None else dict(sketches)
+    source = dict(_registry.BODIES) if sketches is None else dict(sketches)
     if not source:
         raise ValueError(
             "body registry is empty — refusing to write a degenerate aggregate"
@@ -195,8 +191,8 @@ def build_topics_data(project_root: Path) -> dict[str, Any]:
                 "assumption_review": review.assumption_review,
                 "non_vacuity": review.non_vacuity,
                 "acceptance_probe": review.acceptance_probe,
-                "lean_sketch": BODIES[meta.id],
-                "latex_equations": list(LATEX_EQUATIONS[meta.id]),
+                "lean_sketch": _registry.BODIES[meta.id],
+                "latex_equations": list(_registry.LATEX_EQUATIONS[meta.id]),
             }
         )
     return {

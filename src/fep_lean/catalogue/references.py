@@ -9,8 +9,8 @@ from pathlib import Path
 
 from fep_lean.lean_source import lean_code_without_comments
 
+from . import registry as _registry
 from .coverage import topic_import_modules
-from .registry import BODIES
 from .topics import TopicEntry
 
 _DECLARATION_RE = re.compile(
@@ -158,8 +158,10 @@ _EXCLUDED_MANUSCRIPT_FILES = frozenset(
 )
 
 
-def declaration_names(bodies: Mapping[str, str] = BODIES) -> frozenset[str]:
+def declaration_names(bodies: Mapping[str, str] | None = None) -> frozenset[str]:
     """Return every named declaration in the canonical topic bodies."""
+    if bodies is None:
+        bodies = _registry.BODIES
     return frozenset(
         name
         for body in bodies.values()
@@ -333,7 +335,7 @@ def unknown_topic_import_modules(mathlib_root: Path) -> tuple[str, ...]:
 
     index = mathlib_module_index(mathlib_root)
     failures: list[str] = []
-    for topic_id in BODIES:
+    for topic_id in _registry.BODIES:
         for module in topic_import_modules(topic_id):
             if not module.startswith("Mathlib"):
                 continue

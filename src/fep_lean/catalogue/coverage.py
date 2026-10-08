@@ -26,7 +26,8 @@ from fep_lean.lean_source import (
     lean_declaration_conclusion,
 )
 
-from .registry import BODIES, validate_body_family_ownership
+from . import registry as _registry
+from .registry import validate_body_family_ownership
 from .relations import CapabilityStatus, EdgeKind, load_formalism_graph
 from .schema import load_catalogue_metadata
 from .semantics import SemanticDisposition, load_theorem_maturity
@@ -58,7 +59,7 @@ def topic_import_modules(topic_id: str) -> tuple[str, ...]:
     import.
     """
 
-    body = BODIES[topic_id]
+    body = _registry.BODIES[topic_id]
     return tuple(dict.fromkeys(_IMPORT_RE.findall(lean_code_without_comments(body))))
 
 
@@ -180,7 +181,7 @@ def build_formalism_coverage(project_root: Path) -> dict[str, Any]:
     total_import_edges = 0
 
     for meta in metadata.records:
-        body = BODIES[meta.id]
+        body = _registry.BODIES[meta.id]
         code = lean_code_without_comments(body)
         theorem_names = _THEOREM_RE.findall(code)
         definition_names = _DEFINITION_RE.findall(code)

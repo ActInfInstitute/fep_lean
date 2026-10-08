@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from fep_lean.catalogue.registry import BODIES
+from fep_lean.catalogue import registry as _registry
 from fep_lean.lean_source import (
     LEAN_ATTRIBUTE_PREFIX,
     LEAN_THEOREM_RE,
@@ -35,7 +35,7 @@ def _qualified_theorems(source: str) -> tuple[str, ...]:
 def topic_theorem_declarations() -> frozenset[str]:
     """Return qualified theorem declarations from generated aggregate namespaces."""
     declarations: set[str] = set()
-    for topic_id, body in BODIES.items():
+    for topic_id, body in _registry.BODIES.items():
         digits = topic_id.removeprefix("fep-")
         prefix = f"fep_fep{digits}.FEP{digits}"
         code = lean_code_without_comments(body)

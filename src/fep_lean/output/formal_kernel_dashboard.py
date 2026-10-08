@@ -8,9 +8,6 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal, TypeAlias
 
-from matplotlib.font_manager import FontProperties
-from matplotlib.textpath import TextToPath
-
 from fep_lean.output.formalism_presentation import (
     FormalismPresentation,
     build_formalism_presentation,
@@ -56,6 +53,9 @@ def _text_width(value: str, size: int, weight: int) -> float:
     Browser system-ui metrics vary; this deterministic offline budget is not a
     browser measurement. SVG font sizes and these measurements both use pixels.
     """
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.textpath import TextToPath
+
     font = FontProperties(family="DejaVu Sans", size=size, weight=weight)
     width, _, _ = TextToPath().get_text_width_height_descent(value, font, False)
     return float(width) * 1.15
