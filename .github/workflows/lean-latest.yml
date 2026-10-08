@@ -55,5 +55,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title,
-              body: `The scheduled \`docs/pin_audit.py --check-latest\` run failed: a newer stable Lean/Mathlib pair exists than the pinned \`lean/lean-toolchain\`. See ${runUrl}.\n\nScope the upgrade as a native-evidence refresh before bumping (see the \`FEP-LEAN-UPGRADE\` row in TODO.md).`,
+              body: `The scheduled \`docs/pin_audit.py --check-latest\` run failed. Either a newer stable Lean/Mathlib pair exists than the pinned \`lean/lean-toolchain\`, or the release lookup itself failed after retries; the run log distinguishes the two. See ${runUrl}.\n\nScope any upgrade as a native-evidence refresh before bumping: see [Deliberate toolchain upgrades](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/blob/main/docs/lean4.md#deliberate-toolchain-upgrades).`,
             });

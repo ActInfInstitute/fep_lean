@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import importlib.util
+import io
 import sys
 from pathlib import Path
 
@@ -305,3 +307,68 @@ def test_local_mathlib_revision_owner_is_bound_to_the_pinned_tag(
 
     with pytest.raises(SystemExit, match="inputRev does not match"):
         audit._read_mathlib_revision(tmp_path, "v4.33.0")
+
+
+def test_fetch_json_retries_a_truncated_response(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import http.client
+
+    audit = _audit_module()
+    outcomes: list[object] = [
+        http.client.IncompleteRead(b"partial"),
+        contextlib.nullcontext(io.BytesIO(b'{"ok": true}')),
+    ]
+
+    def fake_urlopen(*_args: object, **_kwargs: object) -> object:
+        outcome = outcomes.pop(0)
+        if isinstance(outcome, BaseException):
+            raise outcome
+        return outcome
+
+    monkeypatch.setattr(audit.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(audit.time, "sleep", lambda _seconds: None)
+    assert audit._fetch_json("https://example.invalid") == {"ok": True}
+    assert outcomes == []
+
+
+def test_fetch_json_exhausted_transient_failure_is_a_readable_oserror(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import http.client
+
+    audit = _audit_module()
+    calls = 0
+
+    def fake_urlopen(*_args: object, **_kwargs: object) -> object:
+        nonlocal calls
+        calls += 1
+        raise http.client.IncompleteRead(b"partial")
+
+    monkeypatch.setattr(audit.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(audit.time, "sleep", lambda _seconds: None)
+    with pytest.raises(OSError, match="IncompleteRead"):
+        audit._fetch_json("https://example.invalid")
+    assert calls == audit._FETCH_ATTEMPTS
+
+
+def test_fetch_json_does_not_retry_a_not_found_answer(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import urllib.error
+
+    audit = _audit_module()
+    calls = 0
+
+    def fake_urlopen(*_args: object, **_kwargs: object) -> object:
+        nonlocal calls
+        calls += 1
+        raise urllib.error.HTTPError(
+            "https://example.invalid", 404, "Not Found", None, None
+        )
+
+    monkeypatch.setattr(audit.urllib.request, "urlopen", fake_urlopen)
+    monkeypatch.setattr(audit.time, "sleep", lambda _seconds: None)
+    with pytest.raises(urllib.error.HTTPError):
+        audit._fetch_json("https://example.invalid")
+    assert calls == 1

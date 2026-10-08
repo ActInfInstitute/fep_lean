@@ -76,6 +76,15 @@ _RE_HAND_NUMBER = re.compile(r"\b(?:Figure|Table|Section|Equation|Appendix)\s+\d
 #: Prefixes pandoc-crossref owns. Other anchors (plain ids) are not audited.
 _CROSSREF_PREFIXES = ("sec", "eq", "fig", "tbl", "lst")
 
+#: Git-ignored manuscript inputs written by ``uv run fep-lean catalogue``. On a
+#: fresh clone they are absent, so references into them cannot resolve; the
+#: audit still fails, but names the missing step instead of only listing refs.
+_GENERATED_INPUTS = (
+    "09z_unified_formalism_catalogue.md",
+    "09z_appendix_b_lean_catalogue.md",
+    "09zc_appendix_c_lean_equations.md",
+)
+
 
 class Finding(tuple[str, Path, int, str]):
     """``(kind, path, line, detail)`` -- a tuple subclass for stable sorting."""
@@ -193,6 +202,13 @@ def main(argv: list[str] | None = None) -> int:
             f"[{breakdown}]; {len(defined)} anchors defined, "
             f"{len(referenced)} crossref reference(s)."
         )
+        missing = [name for name in _GENERATED_INPUTS if not (root / name).is_file()]
+        if counts.get("unresolved") and missing:
+            print(
+                "NOTE: generated manuscript input(s) absent: "
+                f"{', '.join(missing)}. Run `uv run fep-lean catalogue` first; "
+                "references into them cannot resolve until then."
+            )
         return 1
 
     if args.verbose:

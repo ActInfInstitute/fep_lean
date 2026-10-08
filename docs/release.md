@@ -13,7 +13,7 @@ actually ships, and it is fully checked by
 | One release date across `CITATION.cff`, `manuscript/config.yaml` and the release-bundle constants | `release_check.py` |
 | A `## X.Y.Z — YYYY-MM-DD — title` section in `CHANGELOG.md` | `release_check.py` |
 | Clean working tree; `HEAD` equals `origin/main` | `release_check.py --hosted` |
-| The newest hosted `ci.yml` run on that exact commit succeeded (Python, distribution matrix, Lean, render) | `release_check.py --hosted` |
+| The newest hosted `ci.yml` run on that exact commit succeeded, and its `python`, `lean`, `render-deps`, `render` and every `distribution` matrix job each succeeded (none skipped) | `release_check.py --hosted` |
 
 ## What does not block a release
 

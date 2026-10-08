@@ -109,6 +109,36 @@ def test_hosted_ci_requires_successful_run_on_exact_commit() -> None:
     assert check.hosted_errors(sha, failed + ok) != ()
 
 
+def _jobs(**overrides: str) -> list[dict[str, str]]:
+    names = ["changes", "python", "lean", "render-deps", "render"] + [
+        f"distribution ({os}, 3.{minor})"
+        for os in ("ubuntu-latest", "macos-latest", "windows-latest")
+        for minor in range(10, 15)
+    ]
+    jobs = [{"name": name, "conclusion": "success"} for name in names]
+    jobs.append({"name": "documentation", "conclusion": "skipped"})
+    for job in jobs:
+        job["conclusion"] = overrides.get(job["name"], job["conclusion"])
+    return jobs
+
+
+def test_hosted_jobs_require_every_promised_lane_to_succeed() -> None:
+    check = _module()
+    assert check.job_errors(_jobs()) == ()
+    # A dispatch run can skip Lean and render yet conclude success.
+    skipped = check.job_errors(_jobs(lean="skipped", render="skipped"))
+    assert any("'lean': skipped" in e for e in skipped)
+    assert any("'render': skipped" in e for e in skipped)
+    failed_cell = check.job_errors(
+        _jobs(**{"distribution (windows-latest, 3.10)": "failure"})
+    )
+    assert any("windows-latest, 3.10" in e for e in failed_cell)
+    only_python = [{"name": "python", "conclusion": "success"}]
+    errors = check.job_errors(only_python)
+    assert any("'lean': missing" in e for e in errors)
+    assert any("no distribution matrix" in e for e in errors)
+
+
 def test_release_notes_extract_only_the_version_section(tmp_path: Path) -> None:
     check = _module()
     root = _copy_sources(tmp_path)

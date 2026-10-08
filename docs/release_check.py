@@ -22,6 +22,11 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 WORKFLOW = "ci.yml"
+#: Jobs whose success the release table in release.md promises. A dispatch
+#: run may skip Lean or render and still conclude ``success``, so the run
+#: conclusion alone is not enough.
+REQUIRED_JOBS = ("python", "lean", "render-deps", "render")
+DISTRIBUTION_PREFIX = "distribution ("
 
 
 @dataclass(frozen=True)
@@ -153,6 +158,25 @@ def hosted_errors(sha: str, runs: list[dict[str, Any]]) -> tuple[str, ...]:
     return ()
 
 
+def job_errors(jobs: list[dict[str, Any]]) -> tuple[str, ...]:
+    """Every promised job must have run and succeeded, none skipped."""
+    conclusions = {str(job.get("name")): job.get("conclusion") for job in jobs}
+    errors = [
+        f"hosted {WORKFLOW} job {name!r}: {conclusions.get(name) or 'missing'}"
+        for name in REQUIRED_JOBS
+        if conclusions.get(name) != "success"
+    ]
+    cells = {n: c for n, c in conclusions.items() if n.startswith(DISTRIBUTION_PREFIX)}
+    if not cells:
+        errors.append(f"hosted {WORKFLOW} run has no distribution matrix jobs")
+    errors += [
+        f"hosted {WORKFLOW} job {name!r}: {conclusion}"
+        for name, conclusion in sorted(cells.items())
+        if conclusion != "success"
+    ]
+    return tuple(errors)
+
+
 def _git(root: Path, *args: str) -> str:
     return subprocess.run(
         ["git", *args], cwd=root, check=True, capture_output=True, text=True
@@ -181,6 +205,16 @@ def fetch_runs(root: Path, sha: str) -> list[dict[str, Any]]:
     return runs if isinstance(runs, list) else []
 
 
+def fetch_jobs(root: Path, run_id: int) -> list[dict[str, Any]]:
+    output = subprocess.run(
+        ["gh", "run", "view", str(run_id), "--json", "jobs"],
+        cwd=root, check=True, capture_output=True, text=True,
+    ).stdout  # fmt: skip
+    payload = json.loads(output)
+    jobs = payload.get("jobs") if isinstance(payload, dict) else None
+    return jobs if isinstance(jobs, list) else []
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=PROJECT_ROOT)
@@ -198,7 +232,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.hosted:
         errors += repository_errors(root)
         sha = _git(root, "rev-parse", "HEAD")
-        errors += hosted_errors(sha, fetch_runs(root, sha))
+        runs = fetch_runs(root, sha)
+        run_errors = hosted_errors(sha, runs)
+        errors += run_errors
+        if not run_errors:
+            newest = next(run for run in runs if run.get("headSha") == sha)
+            errors += job_errors(fetch_jobs(root, int(newest["databaseId"])))
     if args.notes and not errors:
         args.notes.write_text(release_notes(root, release), encoding="utf-8")
     if args.json:
