@@ -89,6 +89,7 @@ from fep_lean.output.provenance import (
     report_owner_errors,
     source_owner_paths,
 )
+from fep_lean.verification._subprocess import run_process_group
 
 #: Receipt path for the optional native capture (cwd-relative convention).
 NATIVE_RECEIPT = "output/native-verification.json"
@@ -147,15 +148,30 @@ class RefreshReport:
     native: dict[str, Any] = field(default_factory=dict)
 
 
-def _run(*command: str, root: Path) -> dict[str, Any]:
-    """Run one fixed project command; never a mutation of custody surfaces."""
-    result = subprocess.run(
-        command,
-        cwd=str(root),
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+#: Bound on one verify-set / native-capture command (seconds).
+COMMAND_TIMEOUT_S = 7200.0
+#: Bound on one git helper call (seconds).
+GIT_TIMEOUT_S = 60.0
+#: Exit code reported when a command exceeds its bound (``timeout(1)`` value).
+TIMEOUT_EXIT_CODE = 124
+
+
+def _run(
+    *command: str, root: Path, timeout: float = COMMAND_TIMEOUT_S
+) -> dict[str, Any]:
+    """Run one fixed project command; never a mutation of custody surfaces.
+
+    The command runs in a supervised process group, so a timeout reaps
+    grandchildren too and is reported as a failing exit code.
+    """
+    try:
+        result = run_process_group(command, cwd=str(root), timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {
+            "command": list(command),
+            "exit_code": TIMEOUT_EXIT_CODE,
+            "tail": f"timed out after {timeout:g}s",
+        }
     tail = "\n".join(((result.stdout or "") + (result.stderr or "")).splitlines()[-20:])
     return {"command": list(command), "exit_code": result.returncode, "tail": tail}
 
@@ -848,15 +864,26 @@ def _verify_failures(verify_set: dict[str, Any]) -> list[str]:
     return failures
 
 
+def _git(command: list[str], root: Path) -> subprocess.CompletedProcess[str]:
+    """Run one short git helper; a timeout is a failing, not a hanging, result."""
+    try:
+        return subprocess.run(
+            command,
+            cwd=str(root),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(
+            command, TIMEOUT_EXIT_CODE, "", f"timed out after {GIT_TIMEOUT_S:g}s"
+        )
+
+
 def _git_dirty(root: Path) -> list[str]:
     """The porcelain dirty list; the native receipt binds live source bytes."""
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=str(root),
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    result = _git(["git", "status", "--porcelain"], root)
     if result.returncode != 0:
         return [f"git status failed: {result.stderr.strip()[:200]}"]
     return result.stdout.splitlines()
@@ -864,13 +891,7 @@ def _git_dirty(root: Path) -> list[str]:
 
 def _git_head(root: Path) -> str:
     """The committed HEAD sha; the capture must observe one unmoved tip."""
-    result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=str(root),
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    result = _git(["git", "rev-parse", "HEAD"], root)
     if result.returncode != 0:
         return f"git rev-parse failed: {result.stderr.strip()[:200]}"
     return result.stdout.strip()
@@ -878,12 +899,16 @@ def _git_head(root: Path) -> str:
 
 def _git_show(root: Path, path: str) -> bytes | None:
     """The committed bytes of ``path`` at HEAD; ``None`` when untracked/absent."""
-    result = subprocess.run(
-        ["git", "show", f"HEAD:{path}"],
-        cwd=str(root),
-        check=False,
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "show", f"HEAD:{path}"],
+            cwd=str(root),
+            check=False,
+            capture_output=True,
+            timeout=GIT_TIMEOUT_S,
+        )
+    except subprocess.TimeoutExpired:
+        return None
     if result.returncode != 0:
         return None
     return result.stdout
