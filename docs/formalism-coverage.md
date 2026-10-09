@@ -14,12 +14,12 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1541 |
-| Foundation theorem declarations | 1205 |
-| Total theorem declarations | 2125 |
+| Formal-resource theorem declarations | 1562 |
+| Foundation theorem declarations | 1226 |
+| Total theorem declarations | 2146 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 865 |
-| Total definitions | 960 |
+| Formal-resource definitions | 875 |
+| Total definitions | 970 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
@@ -251,7 +251,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.geometric_optimization` | `foundation` | 25 | 17 | 3 | `FepSketches.information_geometry` |
 | `FepSketches.collective_inference` | `foundation` | 41 | 26 | 0 | `FepSketches.finite_information` |
 | `FepSketches.learning_theory` | `foundation` | 12 | 9 | 0 | `FepSketches.variational_duality` |
-| `FepSketches.empirical_risk` | `foundation` | 17 | 9 | 0 | `FepSketches.learning_theory` |
+| `FepSketches.empirical_risk` | `foundation` | 38 | 19 | 0 | `FepSketches.learning_theory` |
 | `FepSketches.policy_tree` | `foundation` | 13 | 13 | 2 | `FepSketches.controlled_markov` |
 | `FepSketches.native_blanket` | `foundation` | 26 | 8 | 0 | `FepSketches.markov_blanket` |
 | `FepSketches.exponential_family` | `foundation` | 23 | 14 | 1 | `FepSketches.finite_information` |
