@@ -5,12 +5,24 @@ disposition changes: each new statement awaits independent review against its
 theorem proxy, and compilation establishes only the exact Lean statements.
 Every addition builds warning-free at the pin (Lean v4.34.1) and depends only on
 `propext`, `Classical.choice` and `Quot.sound`. Lexical Lean declarations grow
-from 1,946 to 2,053.
+from 1,946 to 2,125.
 
 - Path thermodynamics: the Jarzynski normalisation follows from a pathwise
   Crooks relation and is strictly weaker than it ([#87](https://github.com/ActiveInferenceInstitute/fep_formal/issues/87)); Markov-chain path
   laws for general horizons, the Schnakenberg entropy-production form and
   reversed-kernel duality ([#89](https://github.com/ActiveInferenceInstitute/fep_formal/issues/89)).
+- Landauer: a generalized bound for erasure of a biased bit follows from local
+  detailed balance and path-space entropy production, with no second-law
+  hypothesis; reset, fair-bit and reversible-attainment cases are witnessed
+  ([#88](https://github.com/ActiveInferenceInstitute/fep_formal/issues/88)).
+- Continuous-time Markov chains: a finite generator's exponential is
+  stochastic, via uniformisation ([#90](https://github.com/ActiveInferenceInstitute/fep_formal/issues/90)).
+- Temporal inference: sum-product messages give exact marginals on finite
+  trees, with a numeric star witness and a cycle countermodel for the naive
+  message product ([#93](https://github.com/ActiveInferenceInstitute/fep_formal/issues/93)).
+- NESS flow: the Helmholtz-decomposed stationary current is divergence-free,
+  so the Fokker–Planck rate vanishes; non-skew and rotation countermodels mark
+  the hypotheses ([#98](https://github.com/ActiveInferenceInstitute/fep_formal/issues/98)).
 - Variational free energy: general finite maximum entropy and the constrained
   Gibbs maximiser ([#85](https://github.com/ActiveInferenceInstitute/fep_formal/issues/85)); Helmholtz free energy as the unique variational
   minimum with `dF/dT = −H` derived ([#86](https://github.com/ActiveInferenceInstitute/fep_formal/issues/86)).
