@@ -11,15 +11,26 @@ import os
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
-
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.figure import Figure
+from typing import TYPE_CHECKING, Any
 
 from fep_lean.catalogue.topics import FEPTopicCatalogue
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
+
+def _pyplot() -> Any:
+    """Import pyplot lazily, selecting the headless Agg backend first.
+
+    matplotlib/numpy cost ~180 ms to import, so they load on first plot rather
+    than at ``import fep_lean``.
+    """
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    return plt
 
 
 def _save(fig: Figure, path: Path) -> Path:
@@ -35,7 +46,7 @@ def _save(fig: Figure, path: Path) -> Path:
     finally:
         if os.path.exists(raw_path):
             os.unlink(raw_path)
-    plt.close(fig)
+    _pyplot().close(fig)
     return path
 
 
@@ -49,7 +60,7 @@ def _write_bar_chart(
 ) -> Path:
     labels = list(values)
     nums = [int(values[k]) for k in labels]
-    fig, ax = plt.subplots(figsize=(7, 4.2))
+    fig, ax = _pyplot().subplots(figsize=(7, 4.2))
     bars = ax.bar(labels, nums, color="#315f8c")
     # Display line breaks only; category identities, order and counts stay intact.
     area_labels = {
@@ -77,10 +88,12 @@ def _write_maturity_heatmap(
 ) -> Path:
     areas = list(area_maturity)
     statuses = ["real", "partial", "aspirational"]
+    import numpy as np
+
     data = np.array(
         [[int(area_maturity[a].get(s, 0)) for s in statuses] for a in areas]
     )
-    fig, ax = plt.subplots(figsize=(7, max(3.5, len(areas) * 0.55)))
+    fig, ax = _pyplot().subplots(figsize=(7, max(3.5, len(areas) * 0.55)))
     image = ax.imshow(
         data, cmap="Greens" if np.all(data[:, 1:] == 0) else "Blues", aspect="auto"
     )
@@ -97,7 +110,7 @@ def _write_maturity_heatmap(
 def _write_status_distribution(values: Mapping[str, int], out: Path) -> Path:
     labels = [k for k, v in values.items() if int(v) > 0]
     nums = [int(values[k]) for k in labels]
-    fig, ax = plt.subplots(figsize=(5.2, 4.4))
+    fig, ax = _pyplot().subplots(figsize=(5.2, 4.4))
     if nums:
         palette = ["#2f855a", "#d69e2e", "#c53030", "#3182ce"]
         # A fourth status used to silently cycle to the first color; a new
@@ -117,7 +130,7 @@ def _write_status_distribution(values: Mapping[str, int], out: Path) -> Path:
 
 
 def _write_pipeline_dag(out: Path) -> Path:
-    fig, ax = plt.subplots(figsize=(9, 2.4))
+    fig, ax = _pyplot().subplots(figsize=(9, 2.4))
     names = ["Catalogue", "Validation", "Hermes + Lean", "Artifacts", "Report"]
     xs = range(len(names))
     ax.plot(list(xs), [0] * len(names), "o-", color="#315f8c", linewidth=2)
@@ -131,7 +144,7 @@ def _write_pipeline_dag(out: Path) -> Path:
 
 
 def _write_sequence_diagram(out: Path) -> Path:
-    fig, ax = plt.subplots(figsize=(8, 4.5))
+    fig, ax = _pyplot().subplots(figsize=(8, 4.5))
     actors = ["CLI", "Pipeline", "Hermes", "Lean", "SQLite"]
     for i, actor in enumerate(actors):
         ax.plot([i, i], [0, 4], linestyle="--", color="#9aa5b1", linewidth=0.8)

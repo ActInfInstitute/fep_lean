@@ -12,8 +12,10 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
 
-class PublicationMetadataError(ValueError):
+
+class PublicationMetadataError(ValueError, FepLeanError):
     """Raised when publication metadata cannot be consumed unambiguously."""
 
 

@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from fep_lean._paths import FepLeanError
 from fep_lean.output.fsutil import atomic_write_bytes, atomic_write_text
 from fep_lean.output.publication_metadata import (
     PublicationMetadataError,
@@ -145,7 +146,7 @@ for _png_name, _svg_relative in MATHEMATICAL_POSITIONING_SVG_FIGURES.items():
     )
 
 
-class ManuscriptRenderError(ValueError):
+class ManuscriptRenderError(ValueError, FepLeanError):
     """Raised before output is written when manuscript variables are unresolved."""
 
 

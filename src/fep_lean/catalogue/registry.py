@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import re
+import sys
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from types import MappingProxyType, ModuleType
+from typing import TYPE_CHECKING
 
+from fep_lean._paths import FepLeanError
 from fep_lean.lean_source import LEAN_THEOREM_RE, lean_code_without_comments
 
 from .bodies import (
@@ -46,7 +49,7 @@ _DECLARATION_RE = re.compile(
 _THEOREM_RE = LEAN_THEOREM_RE
 
 
-class RegistryValidationError(ValueError):
+class RegistryValidationError(ValueError, FepLeanError):
     """Raised when a body module cannot participate in the canonical registry."""
 
 
@@ -263,7 +266,7 @@ def validate_body_family_ownership(
 
 def assert_roster(topic_ids: Sequence[str]) -> None:
     """Validate the canonical registry against an externally sealed roster."""
-    validate_body_roster(BODIES, topic_ids)
+    validate_body_roster(sys.modules[__name__].BODIES, topic_ids)
 
 
 def body_source_relative_paths(
@@ -273,14 +276,38 @@ def body_source_relative_paths(
     return tuple(entry.source_relative_path for entry in manifest)
 
 
-BODIES: Mapping[str, str] = build_body_registry(BODY_MODULE_MANIFEST)
-THEOREM_LATEX = MappingProxyType(build_theorem_latex(BODIES))
-LATEX_EQUATIONS = MappingProxyType(
-    {
-        topic_id: tuple(rows)
-        for topic_id, rows in build_topic_latex_equations(BODIES, THEOREM_LATEX).items()
-    }
-)
+if TYPE_CHECKING:
+    BODIES: Mapping[str, str]
+    THEOREM_LATEX: Mapping[tuple[str, str], str]
+    LATEX_EQUATIONS: Mapping[str, tuple[str, ...]]
+
+_DERIVED_NAMES = frozenset({"BODIES", "THEOREM_LATEX", "LATEX_EQUATIONS"})
+
+
+def __getattr__(name: str) -> object:
+    """Build the validated registry and derived LaTeX maps on first access.
+
+    Constructing ``BODIES``/``THEOREM_LATEX``/``LATEX_EQUATIONS`` costs ~300 ms,
+    so ``import fep_lean`` and verbs that never read bodies skip it (PEP 562).
+    ``from fep_lean.catalogue.registry import BODIES`` still works unchanged.
+    """
+    if name not in _DERIVED_NAMES:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    bodies = build_body_registry(BODY_MODULE_MANIFEST)
+    theorem_latex = MappingProxyType(build_theorem_latex(bodies))
+    latex_equations = MappingProxyType(
+        {
+            topic_id: tuple(rows)
+            for topic_id, rows in build_topic_latex_equations(
+                bodies, theorem_latex
+            ).items()
+        }
+    )
+    globals().update(
+        BODIES=bodies, THEOREM_LATEX=theorem_latex, LATEX_EQUATIONS=latex_equations
+    )
+    return globals()[name]
+
 
 __all__ = [
     "BODIES",

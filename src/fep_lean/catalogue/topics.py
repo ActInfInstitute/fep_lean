@@ -14,6 +14,8 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
+
 from .schema import (
     AREAS,
     GENERATED_TOPIC_FIELDS,
@@ -30,7 +32,7 @@ from .semantics import (
 _MATURITY_ORDER = ("real", "partial", "aspirational")
 
 
-class CatalogueValidationError(ValueError):
+class CatalogueValidationError(ValueError, FepLeanError):
     """Raised when the catalogue cannot be trusted as a verification input."""
 
 

@@ -36,6 +36,25 @@
 - [Quality-gate decision](quality.md) — blocking Ruff lint and formatting policy.
 - [Publication](development.md) — documentation, rendered-artifact, and projection-freshness gates (release-bundle and receipt validation live in `../HANDOFF.md`).
 
+## Reference
+
+- [Documentation specification](SPEC.md) — what the documentation set must cover and how it is kept self-contained.
+- [Architecture](architecture.md) — package layout and the data flow between catalogue, Lean, Hermes, and OpenGauss.
+- [Python API](api.md) — public package surface.
+- [Formalism authorship guide](authorship-guide.md) — strengthening a reviewed topic and deciding when a new formalism is warranted.
+- [Branch coverage](coverage-branch.md) — the declared coverage configuration and what the gate measures.
+- [Scaffold portability](scaffold-portability.md) — carrying the checkout kit and scaffold into another repository.
+- [Troubleshooting](troubleshooting.md) — preflight, setup, and run failures with their remedies.
+
+## Historical reviews
+
+Dated snapshots and adjudications. Counts and verdicts reflect the date they
+were written; current evidence lives in the generated reports above.
+
+- [Mahakala adversarial review](mahakala-review.md) — 2026-07-31 external-style review of the repository.
+- [Test suite review](test-suite-review.md) — 2026-07-31 snapshot of suite structure and gaps.
+- [Relations endpoint adjudication](relations-endpoint-adjudication.md) — coverage-gate verdict on the reviewed-primary-qualified endpoint rule.
+
 All paths in this directory resolve within this repository. Catalogue-derived
 manuscript inputs are created by `uv run fep-lean catalogue`; coverage, atlas,
 dashboard, and manuscript-render checks each retain a separate freshness gate.

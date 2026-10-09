@@ -44,6 +44,7 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
 from fep_lean.custody.census import census as census_from_tree
 from fep_lean.custody.model import Census
 from fep_lean.custody.verify import Expectations, gate_expectations
@@ -82,7 +83,7 @@ _INSERTION_ORDER_FILES = frozenset(
 )
 
 
-class ApplyRefused(RuntimeError):
+class ApplyRefused(RuntimeError, FepLeanError):
     """A gate or fail-closed check refused the refresh; nothing has been written."""
 
 

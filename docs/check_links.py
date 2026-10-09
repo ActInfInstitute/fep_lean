@@ -10,8 +10,12 @@ Features
 - **New**: ``--strict`` validates that a ``#anchor`` actually exists in the
   target markdown (heading slugs and explicit HTML ``id="..."`` attributes).
 - **New**: exits with code ``1`` if any issue is found (suitable for CI).
-- ``--include-root`` also scans repository-root documents (``README.md``,
-  ``AGENTS.md``, ``SPEC.md``, ``PAI.md``) to catch link rot at the project level.
+- ``--include-root`` widens the scan to the repository's authored Markdown: every
+  root ``*.md``, every ``AGENTS.md`` / ``README.md`` under ``src/``, ``tests/``,
+  ``config/``, ``scripts/``, ``lean/`` and ``manuscript/``, and the non-historical
+  documents under ``specs/``. Historical trees (``specs/done/**``,
+  ``specs/**/evidence/**``, ``gnn_output*``, ``gnn-input``, ``fixtures``) are
+  explicitly excluded: they are retained receipts and are never rewritten.
 
 After editing anchors in cross-link hubs such as ``pipeline.md`` or ``configuration.md``,
 run ``--strict`` so new ``#heading`` fragments resolve.
@@ -36,6 +40,71 @@ from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = DOCS_DIR.parent
+
+# --- Scan scope (kept identical in ``check_links.py`` and ``md_hygiene.py``) ---
+# ``--include-root`` widens the scan from ``docs/**`` to the whole repository's
+# authored Markdown: every root ``*.md``, every ``AGENTS.md`` / ``README.md``
+# under the subtrees below, and the non-historical documents under ``specs/``.
+CONTRACT_SUBTREES = ("src", "tests", "config", "scripts", "lean", "manuscript")
+CONTRACT_NAMES = frozenset({"AGENTS.md", "README.md"})
+# Historical / retained trees: ``specs/done/**`` and per-spec ``evidence/**``
+# are frozen receipts (their bytes may be hashed), and ``gnn_output*`` /
+# ``gnn-input`` / ``fixtures`` are tool outputs or tool inputs. They are never
+# scanned and never rewritten; a link broken there is annotated, not edited.
+HISTORICAL_DIR_NAMES = frozenset({"done", "evidence", "gnn-input", "fixtures"})
+HISTORICAL_DIR_PREFIXES = ("gnn_output",)
+# Vendored / build directories that can hold third-party Markdown.
+_SKIP_DIR_NAMES = frozenset({"node_modules", "build", "__pycache__", "site-packages"})
+
+
+def _label(path: Path) -> str:
+    """Repo-relative path for messages (falls back to the bare name outside the repo)."""
+    try:
+        return path.relative_to(DOCS_DIR.parent).as_posix()
+    except ValueError:
+        return path.name
+
+
+def _skip_dir(name: str) -> bool:
+    return name.startswith(".") or name in _SKIP_DIR_NAMES
+
+
+def _is_historical(rel_parts: tuple[str, ...]) -> bool:
+    return any(
+        part in HISTORICAL_DIR_NAMES or part.startswith(HISTORICAL_DIR_PREFIXES)
+        for part in rel_parts[:-1]
+    )
+
+
+def _walk_md(base: Path, *, names: frozenset[str] | None) -> list[Path]:
+    found: list[Path] = []
+    if not base.is_dir():
+        return found
+    for path in base.rglob("*.md"):
+        rel = path.relative_to(base).parts
+        if any(_skip_dir(p) for p in rel[:-1]):
+            continue
+        if names is not None and path.name not in names:
+            continue
+        found.append(path)
+    return found
+
+
+def discover_files(docs_dir: Path, *, include_root: bool) -> list[Path]:
+    """Return the Markdown files in scope (``docs/**``, plus the repo with ``include_root``)."""
+    files = sorted(docs_dir.glob("**/*.md"))
+    if not include_root:
+        return files
+    root = docs_dir.parent
+    extra: set[Path] = set(root.glob("*.md"))
+    for sub in CONTRACT_SUBTREES:
+        extra.update(_walk_md(root / sub, names=CONTRACT_NAMES))
+    specs = root / "specs"
+    for path in _walk_md(specs, names=None):
+        if not _is_historical(path.relative_to(specs).parts):
+            extra.add(path)
+    return files + sorted(extra - set(files))
+
 
 # Inline links:  [text](path)  or  [text](path#anchor "title")
 _LINK_PATTERN = re.compile(r"\[([^\]]+)\]\(\s*([^)\s]+)(?:\s+\"[^\"]*\")?\s*\)")
@@ -113,7 +182,7 @@ def check_file(
                 target = url.lstrip("#")
                 if target and target not in anchors:
                     issues.append(
-                        f"{filepath.name}:{lineno}: in-page anchor '#{target}' "
+                        f"{_label(filepath)}:{lineno}: in-page anchor '#{target}' "
                         f"not found in same file"
                     )
             continue
@@ -129,7 +198,7 @@ def check_file(
 
         if not target_path.exists():
             issues.append(
-                f"{filepath.name}:{lineno}: broken link → {url}  "
+                f"{_label(filepath)}:{lineno}: broken link → {url}  "
                 f"(resolved to {target_path})"
             )
             continue
@@ -145,7 +214,7 @@ def check_file(
                 anchor_cache[target_path] = anchors
             if anchor not in anchors:
                 issues.append(
-                    f"{filepath.name}:{lineno}: anchor '#{anchor}' not found in "
+                    f"{_label(filepath)}:{lineno}: anchor '#{anchor}' not found in "
                     f"{target_path.name} (known: {len(anchors)} headings)"
                 )
 
@@ -162,7 +231,7 @@ def main() -> int:
     parser.add_argument(
         "--include-root",
         action="store_true",
-        help="Also scan sibling files (../README.md, ../AGENTS.md, ../SPEC.md, ../PAI.md).",
+        help="Also scan repo-root *.md, every AGENTS.md/README.md under src/ tests/ config/ scripts/ lean/ manuscript/, and non-historical specs/ docs.",
     )
     parser.add_argument(
         "-v",
@@ -172,12 +241,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    files: list[Path] = sorted(DOCS_DIR.glob("**/*.md"))
-    if args.include_root:
-        for name in ("README.md", "AGENTS.md", "SPEC.md", "PAI.md"):
-            p = PROJECT_ROOT / name
-            if p.exists():
-                files.append(p)
+    files = discover_files(DOCS_DIR, include_root=args.include_root)
 
     anchor_cache: dict[Path, set[str]] = {}
     total_issues = 0

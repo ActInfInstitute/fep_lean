@@ -37,7 +37,7 @@ claim is made.
   keys, ragged arrays, and non-normalized input tables. The finite C-vector
   normalization is this selected input contract, not a Julia utility convention.
 - Freeze `false,true` as JSON indices `0,1` and Julia indices `1,2`;
-  A[outcome][state], B[next][previous][action], C[outcome], D[state], E[action].
+  `A[outcome][state]`, `B[next][previous][action]`, `C[outcome]`, `D[state]`, `E[action]`.
 - Emit independently auditable raw input tables and exact native claims.
   The asymmetric oracle must not be constructed from extracted values.
 - Reject all five nonidentity B-axis permutations against that oracle,

@@ -52,6 +52,7 @@ from fep_lean.output.release_bundle._core import (
     _json_object,
     _relative_file_bytes,
 )
+from fep_lean.verification import _subprocess
 from fep_lean.verification.numerical_witnesses import (
     NON_PROOF_EVIDENCE,
     evaluate_numerical_witnesses,
@@ -583,13 +584,10 @@ def _collect_python_node_ids(
 ) -> tuple[str, ...]:
     command = pytest_collection_command(temporary_root / "pytest-cache")
     try:
-        completed = subprocess.run(
+        completed = _subprocess.run_process_group(
             command,
             cwd=project_root,
             env=pytest_collection_environment(temporary_root),
-            check=False,
-            capture_output=True,
-            text=True,
             timeout=_PYTHON_ACCEPTANCE_TIMEOUT_SECONDS,
         )
     except (OSError, subprocess.SubprocessError) as exc:
@@ -861,13 +859,10 @@ def run_python_acceptance(project_root: Path) -> Path:
             temporary_root = Path(raw)
             node_ids = bundle._collect_python_node_ids(root, temporary_root)
             command = _python_acceptance_command(temporary_root / "pytest-cache")
-            completed = subprocess.run(
+            completed = _subprocess.run_process_group(
                 command,
                 cwd=root,
                 env=bundle._python_acceptance_environment(temporary_root),
-                check=False,
-                capture_output=True,
-                text=True,
                 timeout=_PYTHON_ACCEPTANCE_TIMEOUT_SECONDS,
             )
             if completed.returncode != 0:

@@ -23,6 +23,7 @@ from pathlib import (
 )
 from typing import Any
 
+from fep_lean._paths import FepLeanError
 from fep_lean.output.release_bundle._constants import (
     _PROVIDER_MEMBER_PREFIXES,
 )
@@ -41,7 +42,7 @@ class ReleaseBundleValidation:
     manifest: dict[str, Any] | None
 
 
-class ReleaseBundleError(ValueError):
+class ReleaseBundleError(ValueError, FepLeanError):
     """Raised before replacing an archive when publication inputs are invalid."""
 
 
