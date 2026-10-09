@@ -20046,7 +20046,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/gnn_document.lean` | `49bafbbf1816fb7bb65642a9595ce3a1073d5b5eb1189f331c5437025cffe57a` |
 | `formal/gnn_render_statements.lean` | `dd17bd9b3107c9a0f94b137b43ce3c1cf87f13c6bd8e96ff3084f3f94e0ae83c` |
 | `formal/h3_reference_model.lean` | `eb4f49d24fb49bfd064421d7f88e4cc554f7df5989690c28138b900adebfe47a` |
-| `formal/helmholtz_ao_ness.lean` | `cc0c6172e152dcbcf6db7a128630d15003514a7fcb37bbac965d174d262f0021` |
+| `formal/helmholtz_ao_ness.lean` | `79916bbc70b3388fcf39f808bef6c16d86ab42c4e08b4ea12df143ccbfd0319e` |
 | `formal/information_geometry.lean` | `958226855247a5658dd96594c4fd002aa07de3d81f232ff5e7cdbbf8e42e6fb6` |
 | `formal/law_weighted_split.lean` | `def5e9bbc82209660b18a353625799b860253d0701985bc0a2ce362bdd01dd1e` |
 | `formal/learning_theory.lean` | `d1d8784be113bb95ce26ba21307e5cd5e033bd888f197d1464485ecdbdeac88f` |

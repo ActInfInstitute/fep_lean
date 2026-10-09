@@ -14,20 +14,20 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1362 |
-| Foundation theorem declarations | 1030 |
-| Total theorem declarations | 1946 |
+| Formal-resource theorem declarations | 1358 |
+| Foundation theorem declarations | 1026 |
+| Total theorem declarations | 1942 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 799 |
-| Total definitions | 894 |
+| Formal-resource definitions | 793 |
+| Total definitions | 888 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
 | Formal-resource structures | 53 |
 | Distinct Mathlib imports | 70 |
 | Topic-to-import edges | 225 |
-| Formal-resource import edges | 272 |
-| Internal formal-module dependencies | 162 |
+| Formal-resource import edges | 273 |
+| Internal formal-module dependencies | 163 |
 | Authored formalism relations | 146 |
 | Derivational formal relations | 20 |
 | Checked formal pairings | 118 |
@@ -274,7 +274,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.perception_action_loop` | `foundation` | 22 | 6 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.controlled_markov`, `FepSketches.finite_markov_dynamics`, `FepSketches.temporal_inference` |
 | `FepSketches.bayesian_model_reduction` | `foundation` | 10 | 3 | 0 | `FepSketches.gaussian_information_geometry`, `FepSketches.variational_duality` |
 | `FepSketches.efe_time_scale_separation` | `foundation` | 37 | 8 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.ness_flow`, `FepSketches.path_thermodynamics` |
-| `FepSketches.helmholtz_ao_ness` | `foundation` | 26 | 11 | 0 | `FepSketches.continuous_time_markov` |
+| `FepSketches.helmholtz_ao_ness` | `foundation` | 22 | 5 | 0 | `FepSketches.continuous_time_markov`, `FepSketches.geometric_mechanics` |
 | `FepSketches.geometric_mechanics` | `foundation` | 37 | 23 | 0 | — |
 | `FepSketches.law_weighted_split` | `foundation` | 7 | 5 | 0 | `FepSketches.helmholtz_ao_ness` |
 | `FepSketches.h3_reference_model` | `foundation` | 53 | 48 | 2 | `FepSketches.fin4_gaussian_semigroup`, `FepSketches.markov_semigroup` |

@@ -8083,7 +8083,7 @@
       "lean_module": "FepSketches.helmholtz_ao_ness",
       "resource": "helmholtz_ao_ness.lean",
       "role": "foundation",
-      "theorem_count": 26
+      "theorem_count": 22
     },
     {
       "declaration_namespace": "FEP.GeometricMechanics",
@@ -8927,7 +8927,7 @@
     "formal/gnn_document.lean": "49bafbbf1816fb7bb65642a9595ce3a1073d5b5eb1189f331c5437025cffe57a",
     "formal/gnn_render_statements.lean": "dd17bd9b3107c9a0f94b137b43ce3c1cf87f13c6bd8e96ff3084f3f94e0ae83c",
     "formal/h3_reference_model.lean": "eb4f49d24fb49bfd064421d7f88e4cc554f7df5989690c28138b900adebfe47a",
-    "formal/helmholtz_ao_ness.lean": "cc0c6172e152dcbcf6db7a128630d15003514a7fcb37bbac965d174d262f0021",
+    "formal/helmholtz_ao_ness.lean": "79916bbc70b3388fcf39f808bef6c16d86ab42c4e08b4ea12df143ccbfd0319e",
     "formal/information_geometry.lean": "958226855247a5658dd96594c4fd002aa07de3d81f232ff5e7cdbbf8e42e6fb6",
     "formal/law_weighted_split.lean": "def5e9bbc82209660b18a353625799b860253d0701985bc0a2ce362bdd01dd1e",
     "formal/learning_theory.lean": "d1d8784be113bb95ce26ba21307e5cd5e033bd888f197d1464485ecdbdeac88f",
@@ -63979,6 +63979,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -63988,7 +63989,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.aoDecomposition",
-        "source_line": 194,
+        "source_line": 130,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem aoDecomposition {rate : State → State → ℝ} {law : FiniteLaw State}\n    (hSupport : ∀ i, 0 < law i) (i j : State) :\n    rate i j = symmetricPart rate law i j + circulationPart rate law i j",
         "statement_sha256": "d3f3554a5e58f286933dd6f4942a249ef845346a568c58e05a8c12a5c540cc6d"
@@ -64053,6 +64054,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64062,7 +64064,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.circulationNum_skew",
-        "source_line": 170,
+        "source_line": 106,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem circulationNum_skew {rate : State → State → ℝ}\n    {law : FiniteLaw State} (i j : State) :\n    circulationNum rate law i j = -circulationNum rate law j i",
         "statement_sha256": "05f7fd403c900f636f35656a9e578033dcc02c03b141c721aa2cbf548f0ded71"
@@ -64150,6 +64152,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64159,7 +64162,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.circulationPart_skew",
-        "source_line": 204,
+        "source_line": 140,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem circulationPart_skew {rate : State → State → ℝ} {law : FiniteLaw State}\n    (hSupport : ∀ i, 0 < law i) (i j : State) :\n    law i * circulationPart rate law i j =\n      -(law j * circulationPart rate law j i)",
         "statement_sha256": "f8b317a23ed5ddcd413e4bf901129f9a67dc5bb9e45dd305bc9bcdd9a7f35add"
@@ -64256,6 +64259,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64265,7 +64269,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.circulation_divergence_zero",
-        "source_line": 315,
+        "source_line": 251,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem circulation_divergence_zero\n    (generator : FiniteRateGenerator State) (law : FiniteLaw State)\n    (hStat : generator.IsStationary law) (hSupport : ∀ i, 0 < law i)\n    (i : State) :\n    ∑ j, 2 * law j * circulationPart generator.rate law j i = 0",
         "statement_sha256": "80f02f6df89b7c448421d9b340ebf113eadddf0405cd7bf819224f49d30ce294"
@@ -64340,6 +64344,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64349,7 +64354,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.current_eq_twice_circulation",
-        "source_line": 224,
+        "source_line": 160,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem current_eq_twice_circulation {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    circulationNum rate law i j =\n      2 * law i * circulationPart rate law i j",
         "statement_sha256": "530e0a4d2a162783362429fb6a4a5f40308f0aa320bb447eec3bf24a13763328"
@@ -64384,6 +64389,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64391,7 +64397,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_ao_ness",
-        "source_line": 380,
+        "source_line": 316,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_ao_ness :\n    threeCycleGenerator.IsStationary threeCycleStationaryLaw ∧\n      (∀ i : Fin 3,\n        ∑ j, threeCycleGenerator.probabilityCurrent\n            threeCycleStationaryLaw j i = 0) ∧\n      circulationPart threeCycleGenerator.rate threeCycleStationaryLaw\n          (0 : Fin 3) (1 : Fin 3) ≠ 0",
         "statement_sha256": "e33399621200f48d2796a1dc36108c95f2d79ff9d1b37ad7122912e9c1bd9e57"
@@ -64412,6 +64418,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64419,7 +64426,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_circulationPart_ne_zero",
-        "source_line": 372,
+        "source_line": 308,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_circulationPart_ne_zero :\n    circulationPart threeCycleGenerator.rate threeCycleStationaryLaw\n        (0 : Fin 3) (1 : Fin 3) ≠ 0",
         "statement_sha256": "175b79a962d52f3438e8823a3fff77dcbc6a164997f450afc2f4eff1a6bf4ffa"
@@ -64433,6 +64440,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64440,7 +64448,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_circulationPart_one_zero",
-        "source_line": 347,
+        "source_line": 283,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_circulationPart_one_zero :\n    circulationPart threeCycleGenerator.rate threeCycleStationaryLaw\n        (1 : Fin 3) (0 : Fin 3) = -1 / 2",
         "statement_sha256": "baa8118f91372f13ccab981ada421003cb3414630e9948e158019b0477ec5154"
@@ -64454,6 +64462,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64461,7 +64470,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_circulationPart_zero_one",
-        "source_line": 340,
+        "source_line": 276,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_circulationPart_zero_one :\n    circulationPart threeCycleGenerator.rate threeCycleStationaryLaw\n        (0 : Fin 3) (1 : Fin 3) = 1 / 2",
         "statement_sha256": "e89e248aead0dfdf690ae70b0e5e983ef63c4765e078cbb1e65cfbc4bebdc9cb"
@@ -64501,6 +64510,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64508,7 +64518,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_current_divergence_zero",
-        "source_line": 364,
+        "source_line": 300,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_current_divergence_zero (i : Fin 3) :\n    ∑ j, threeCycleGenerator.probabilityCurrent threeCycleStationaryLaw j i =\n      0",
         "statement_sha256": "8c3aee1110dd94c24d298597c8afbeb9a1463b099504178b7d5cecb68fcd3356"
@@ -64535,6 +64545,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64542,7 +64553,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_decomposition_zero_one",
-        "source_line": 354,
+        "source_line": 290,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_decomposition_zero_one :\n    threeCycleGenerator.rate (0 : Fin 3) (1 : Fin 3) =\n      symmetricPart threeCycleGenerator.rate threeCycleStationaryLaw\n          (0 : Fin 3) (1 : Fin 3) +\n        circulationPart threeCycleGenerator.rate threeCycleStationaryLaw\n          (0 : Fin 3) (1 : Fin 3)",
         "statement_sha256": "03ed8163c0982af24ae8a38643a2ca5bd2c5adafd26976fb8451837702b8d7e4"
@@ -64567,6 +64578,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64574,7 +64586,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_support",
-        "source_line": 331,
+        "source_line": 267,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_support (i : Fin 3) : 0 < threeCycleStationaryLaw i",
         "statement_sha256": "6fd6041526d915a66d760d586739b5f150b00484c51609cdbf49c38c055da7cb"
@@ -64588,6 +64600,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64595,7 +64608,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.cycle_symmetricPart_zero_one",
-        "source_line": 334,
+        "source_line": 270,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem cycle_symmetricPart_zero_one :\n    symmetricPart threeCycleGenerator.rate threeCycleStationaryLaw\n        (0 : Fin 3) (1 : Fin 3) = 1 / 2",
         "statement_sha256": "8800cfcdd709f3bc4182eb93e58140a140a464dc306b888ce57180251705127f"
@@ -64659,6 +64672,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64668,7 +64682,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.detailedBalanced_iff_circulation_eq_zero",
-        "source_line": 256,
+        "source_line": 192,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem detailedBalanced_iff_circulation_eq_zero {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) :\n    (∀ i j, law i * rate i j = law j * rate j i) ↔\n      ∀ i j, circulationPart rate law i j = 0",
         "statement_sha256": "d7632d4b811e245eaa94711eee635659db2ee5bc21b288a09495886a57ef6af3"
@@ -64763,6 +64777,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64772,7 +64787,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.forceSplit",
-        "source_line": 277,
+        "source_line": 213,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem forceSplit {rate : State → State → ℝ} {law : FiniteLaw State}\n    (hSupport : ∀ i, 0 < law i) {i j : State}\n    (hij : 0 < rate i j) (hji : 0 < rate j i) :\n    Real.log (law i * rate i j / (law j * rate j i)) =\n      aoPotential law j - aoPotential law i +\n        Real.log (rate i j / rate j i)",
         "statement_sha256": "df66bf100a9e53bc8217f2c6b6299fad589c3ecb0ccdc596f0311f7d66b3d49b"
@@ -64846,6 +64861,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64855,7 +64871,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.mass_div_two",
-        "source_line": 184,
+        "source_line": 120,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem mass_div_two {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i)\n    (X : ℝ) (i : State) : law i * X / (2 * law i) = X / 2",
         "statement_sha256": "914b4c8c46cf05927cdb82ea4a9e74f9a222d8d01a2fdc428ec3947272ebb9a3"
@@ -64937,6 +64953,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -64946,167 +64963,10 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.probabilityCurrent_eq_twice_circulation",
-        "source_line": 245,
+        "source_line": 181,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem probabilityCurrent_eq_twice_circulation\n    (generator : FiniteRateGenerator State) (law : FiniteLaw State)\n    (hSupport : ∀ i, 0 < law i) (i j : State) :\n    generator.probabilityCurrent law i j =\n      2 * law i * circulationPart generator.rate law i j",
         "statement_sha256": "286368fa221b3b1bb76a8a3b573accf0e1552fd07db8b756613753a461402315"
-      },
-      "FEP.HelmholtzAoNess.skewQuadratic_eq_zero": {
-        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
-        "binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "Q"
-            ],
-            "role": "typed_binder",
-            "source": "(Q : Fin n → Fin n → ℝ)",
-            "type_source": "Fin n → Fin n → ℝ",
-            "visibility": "explicit"
-          },
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "g"
-            ],
-            "role": "typed_binder",
-            "source": "(g : Fin n → ℝ)",
-            "type_source": "Fin n → ℝ",
-            "visibility": "explicit"
-          },
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "hQ"
-            ],
-            "role": "typed_binder",
-            "source": "(hQ : SkewSymmetric Q)",
-            "type_source": "SkewSymmetric Q",
-            "visibility": "explicit"
-          }
-        ],
-        "conclusion": "dot g (mulVec Q g) = 0",
-        "context_binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "n"
-            ],
-            "role": "typed_binder",
-            "source": "{n : ℕ}",
-            "type_source": "ℕ",
-            "visibility": "implicit"
-          }
-        ],
-        "declaration_mentions": [
-          {
-            "identifier": "sum_negPairs",
-            "qualified_name": "FEP.HelmholtzAoNess.sum_negPairs",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          },
-          {
-            "identifier": "sum_swapPairs",
-            "qualified_name": "FEP.HelmholtzAoNess.sum_swapPairs",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          }
-        ],
-        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
-        "import_context": [
-          "FepSketches.continuous_time_markov",
-          "Mathlib.Tactic"
-        ],
-        "line_coordinate_kind": "formal_resource_file",
-        "namespace": "FEP.HelmholtzAoNess",
-        "namespace_variable_context": [
-          "{n : ℕ}"
-        ],
-        "preceding_scope_directives": [],
-        "qualified_name": "FEP.HelmholtzAoNess.skewQuadratic_eq_zero",
-        "source_line": 97,
-        "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
-        "statement": "theorem skewQuadratic_eq_zero (Q : Fin n → Fin n → ℝ) (g : Fin n → ℝ)\n    (hQ : SkewSymmetric Q) : dot g (mulVec Q g) = 0",
-        "statement_sha256": "453a0551bb848289cd9f2d6023c415f073edf99e42480af2a36bf95cf8da8fa1"
-      },
-      "FEP.HelmholtzAoNess.skewTrace_eq_zero": {
-        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
-        "binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "Q",
-              "H"
-            ],
-            "role": "typed_binder",
-            "source": "(Q H : Fin n → Fin n → ℝ)",
-            "type_source": "Fin n → Fin n → ℝ",
-            "visibility": "explicit"
-          },
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "hQ"
-            ],
-            "role": "typed_binder",
-            "source": "(hQ : SkewSymmetric Q)",
-            "type_source": "SkewSymmetric Q",
-            "visibility": "explicit"
-          },
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "hH"
-            ],
-            "role": "typed_binder",
-            "source": "(hH : SymmetricOf H)",
-            "type_source": "SymmetricOf H",
-            "visibility": "explicit"
-          }
-        ],
-        "conclusion": "traceOf (mulOf Q H) = 0",
-        "context_binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "n"
-            ],
-            "role": "typed_binder",
-            "source": "{n : ℕ}",
-            "type_source": "ℕ",
-            "visibility": "implicit"
-          }
-        ],
-        "declaration_mentions": [
-          {
-            "identifier": "sum_negPairs",
-            "qualified_name": "FEP.HelmholtzAoNess.sum_negPairs",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          },
-          {
-            "identifier": "sum_swapPairs",
-            "qualified_name": "FEP.HelmholtzAoNess.sum_swapPairs",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          }
-        ],
-        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
-        "import_context": [
-          "FepSketches.continuous_time_markov",
-          "Mathlib.Tactic"
-        ],
-        "line_coordinate_kind": "formal_resource_file",
-        "namespace": "FEP.HelmholtzAoNess",
-        "namespace_variable_context": [
-          "{n : ℕ}"
-        ],
-        "preceding_scope_directives": [],
-        "qualified_name": "FEP.HelmholtzAoNess.skewTrace_eq_zero",
-        "source_line": 116,
-        "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
-        "statement": "theorem skewTrace_eq_zero (Q H : Fin n → Fin n → ℝ)\n    (hQ : SkewSymmetric Q) (hH : SymmetricOf H) : traceOf (mulOf Q H) = 0",
-        "statement_sha256": "45c5744381c96b70f6b2565437f9df61c3ce4d22b452729ab515a42c8a0222f1"
       },
       "FEP.HelmholtzAoNess.stationaryCurrent_divergence_zero": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -65177,6 +65037,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -65186,100 +65047,10 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.stationaryCurrent_divergence_zero",
-        "source_line": 306,
+        "source_line": 242,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem stationaryCurrent_divergence_zero\n    (generator : FiniteRateGenerator State) (law : FiniteLaw State)\n    (hStat : generator.IsStationary law) (i : State) :\n    ∑ j, generator.probabilityCurrent law j i = 0",
         "statement_sha256": "579cb223b5616d0a491ad52486f914f1b8a245fd967203b062a501e96fe9cdf5"
-      },
-      "FEP.HelmholtzAoNess.sum_negPairs": {
-        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
-        "binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "f"
-            ],
-            "role": "typed_binder",
-            "source": "{f : Fin n → Fin n → ℝ}",
-            "type_source": "Fin n → Fin n → ℝ",
-            "visibility": "implicit"
-          }
-        ],
-        "conclusion": "∑ i, ∑ j, -f i j = -∑ i, ∑ j, f i j",
-        "context_binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "n"
-            ],
-            "role": "typed_binder",
-            "source": "{n : ℕ}",
-            "type_source": "ℕ",
-            "visibility": "implicit"
-          }
-        ],
-        "declaration_mentions": [],
-        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
-        "import_context": [
-          "FepSketches.continuous_time_markov",
-          "Mathlib.Tactic"
-        ],
-        "line_coordinate_kind": "formal_resource_file",
-        "namespace": "FEP.HelmholtzAoNess",
-        "namespace_variable_context": [
-          "{n : ℕ}"
-        ],
-        "preceding_scope_directives": [],
-        "qualified_name": "FEP.HelmholtzAoNess.sum_negPairs",
-        "source_line": 91,
-        "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
-        "statement": "theorem sum_negPairs {f : Fin n → Fin n → ℝ} :\n    ∑ i, ∑ j, -f i j = -∑ i, ∑ j, f i j",
-        "statement_sha256": "b56e2b71eac3b36e291b332d76055dc4f7a7081eaedef1dc853bb001d8354439"
-      },
-      "FEP.HelmholtzAoNess.sum_swapPairs": {
-        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
-        "binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "f"
-            ],
-            "role": "typed_binder",
-            "source": "{f : Fin n → Fin n → ℝ}",
-            "type_source": "Fin n → Fin n → ℝ",
-            "visibility": "implicit"
-          }
-        ],
-        "conclusion": "∑ i, ∑ j, f i j = ∑ i, ∑ j, f j i",
-        "context_binders": [
-          {
-            "hypothesis_status": "source syntax; proposition elaboration not performed",
-            "names": [
-              "n"
-            ],
-            "role": "typed_binder",
-            "source": "{n : ℕ}",
-            "type_source": "ℕ",
-            "visibility": "implicit"
-          }
-        ],
-        "declaration_mentions": [],
-        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
-        "import_context": [
-          "FepSketches.continuous_time_markov",
-          "Mathlib.Tactic"
-        ],
-        "line_coordinate_kind": "formal_resource_file",
-        "namespace": "FEP.HelmholtzAoNess",
-        "namespace_variable_context": [
-          "{n : ℕ}"
-        ],
-        "preceding_scope_directives": [],
-        "qualified_name": "FEP.HelmholtzAoNess.sum_swapPairs",
-        "source_line": 86,
-        "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
-        "statement": "theorem sum_swapPairs {f : Fin n → Fin n → ℝ} :\n    ∑ i, ∑ j, f i j = ∑ i, ∑ j, f j i",
-        "statement_sha256": "5e968d456d832db3e9ad11b9c7cc42efaa677e8e379b46be3b934a3e36feabce"
       },
       "FEP.HelmholtzAoNess.symmetricNum_add_circulationNum": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -65341,6 +65112,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -65350,7 +65122,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.symmetricNum_add_circulationNum",
-        "source_line": 162,
+        "source_line": 98,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem symmetricNum_add_circulationNum {rate : State → State → ℝ}\n    {law : FiniteLaw State} (i j : State) :\n    symmetricNum rate law i j + circulationNum rate law i j =\n      2 * law i * rate i j",
         "statement_sha256": "e6affa613172a7869746da0ee2ca075453572ae6ae6174e59497726617fa6811"
@@ -65415,6 +65187,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -65424,7 +65197,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.symmetricNum_comm",
-        "source_line": 177,
+        "source_line": 113,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem symmetricNum_comm {rate : State → State → ℝ}\n    {law : FiniteLaw State} (i j : State) :\n    symmetricNum rate law i j = symmetricNum rate law j i",
         "statement_sha256": "659a12ad55d04d5ce500eabac1fa12c62b3d07c3d167335f9e53ed23c1a47e02"
@@ -65512,6 +65285,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -65521,7 +65295,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.symmetricPart_current_eq_zero",
-        "source_line": 235,
+        "source_line": 171,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem symmetricPart_current_eq_zero {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    law i * symmetricPart rate law i j -\n      law j * symmetricPart rate law j i = 0",
         "statement_sha256": "a5d20a407ede6c51b23ecd84c5dce96419e6995462d564dae52d2c8f3a2e6e7b"
@@ -65609,6 +65383,7 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.continuous_time_markov",
+          "FepSketches.geometric_mechanics",
           "Mathlib.Tactic"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -65618,7 +65393,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.HelmholtzAoNess.symmetricPart_reversible",
-        "source_line": 214,
+        "source_line": 150,
         "source_owner": "src/fep_lean/formal/helmholtz_ao_ness.lean",
         "statement": "theorem symmetricPart_reversible {rate : State → State → ℝ}\n    {law : FiniteLaw State} (hSupport : ∀ i, 0 < law i) (i j : State) :\n    law i * symmetricPart rate law i j =\n      law j * symmetricPart rate law j i",
         "statement_sha256": "34550b1722bec66bb1a4b3c2210a65b6eac47f830334fc87cbd1a80925637254"
@@ -173999,14 +173774,7 @@
             "visibility": "instance"
           }
         ],
-        "declaration_mentions": [
-          {
-            "identifier": "FEP.HelmholtzAoNess.skewQuadratic_eq_zero",
-            "qualified_name": "FEP.HelmholtzAoNess.skewQuadratic_eq_zero",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          }
-        ],
+        "declaration_mentions": [],
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.helmholtz_ao_ness"
@@ -174089,14 +173857,7 @@
             "visibility": "instance"
           }
         ],
-        "declaration_mentions": [
-          {
-            "identifier": "FEP.HelmholtzAoNess.skewTrace_eq_zero",
-            "qualified_name": "FEP.HelmholtzAoNess.skewTrace_eq_zero",
-            "resolution": "exact or same-namespace source identifier",
-            "role": "proof_reference"
-          }
-        ],
+        "declaration_mentions": [],
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.helmholtz_ao_ness"
