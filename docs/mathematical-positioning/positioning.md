@@ -20069,12 +20069,12 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/perception_action_loop.lean` | `e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1` |
 | `formal/policy_tree.lean` | `2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88` |
 | `formal/posterior_convergence.lean` | `1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20` |
-| `formal/predictive_coding.lean` | `3d62d7fcd3d4f469789049487ae757f687ec4ffe899a2367061bb2d57b389081` |
+| `formal/predictive_coding.lean` | `2b4589e435d281a04ac123f0289a2ffca4f6306b683a36aa2dd32b0d1d051782` |
 | `formal/scalar_gaussian_semigroup.lean` | `d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e` |
 | `formal/smooth_information_geometry.lean` | `571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8` |
 | `formal/statistical_convergence.lean` | `6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0` |
 | `formal/temporal_inference.lean` | `3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10` |
-| `formal/variational_duality.lean` | `7ed615bca08b812cb940a91326e335ae0f45eff27be716d734da4f49def09749` |
+| `formal/variational_duality.lean` | `fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0` |
 | `inputs/catalogue_metadata.yaml` | `e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd` |
 | `inputs/formalism_relations.yaml` | `68826c891cb3e5abaebada33394ed3caf8d97411eb3100be381534950a3299ae` |
 | `inputs/positioning.yaml` | `d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d` |

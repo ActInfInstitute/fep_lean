@@ -884,7 +884,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 7,
+      "definition_count": 8,
       "formal_dependencies": [
         "FepSketches.finite_probability"
       ],
@@ -897,8 +897,9 @@
       "resource": "finite_information.lean",
       "role": "foundation",
       "structure_count": 0,
-      "theorem_count": 25,
+      "theorem_count": 31,
       "theorems": [
+        "FEP.FiniteInformation.boolBiased_entropy_lt_log_two",
         "FEP.FiniteInformation.conditionalEntropy_nonneg",
         "FEP.FiniteInformation.conditionalKL_eq_crossEntropy_sub_entropy",
         "FEP.FiniteInformation.conditionalKL_eq_zero_iff",
@@ -906,7 +907,11 @@
         "FEP.FiniteInformation.crossEntropy_disjoint_pointMass_totalized",
         "FEP.FiniteInformation.crossEntropy_joint",
         "FEP.FiniteInformation.crossEntropy_product_marginals",
+        "FEP.FiniteInformation.crossEntropy_uniform",
+        "FEP.FiniteInformation.entropy_eq_log_card_iff",
         "FEP.FiniteInformation.entropy_joint_eq_add_conditional",
+        "FEP.FiniteInformation.entropy_le_log_card",
+        "FEP.FiniteInformation.entropy_lt_log_card_of_ne_uniform",
         "FEP.FiniteInformation.entropy_nonneg",
         "FEP.FiniteInformation.entropy_product",
         "FEP.FiniteInformation.finiteKL_disjoint_pointMass_totalized",
@@ -923,6 +928,7 @@
         "FEP.FiniteInformation.mutualInformation_le_predictive_entropy",
         "FEP.FiniteInformation.mutualInformation_nonneg",
         "FEP.FiniteInformation.mutualInformation_product_eq_zero",
+        "FEP.FiniteInformation.uniform_mass_pos",
         "FEP.FiniteInformation.weighted_klFun_eq_log_score"
       ]
     },
@@ -1123,7 +1129,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 32,
+      "definition_count": 38,
       "formal_dependencies": [
         "FepSketches.finite_information"
       ],
@@ -1137,8 +1143,9 @@
       "resource": "variational_duality.lean",
       "role": "foundation",
       "structure_count": 3,
-      "theorem_count": 56,
+      "theorem_count": 74,
       "theorems": [
+        "FEP.VariationalDuality.boolBiased_entropy_lt_zeroEnergyGibbs",
         "FEP.VariationalDuality.boolFeasible_information_pos",
         "FEP.VariationalDuality.boolHalfBudget_distinct_minimizers",
         "FEP.VariationalDuality.boolHammingDistortion_nonneg",
@@ -1159,6 +1166,13 @@
         "FEP.VariationalDuality.dvObjective_eq_logPartition_sub_kl",
         "FEP.VariationalDuality.dvObjective_le_logPartition",
         "FEP.VariationalDuality.dvObjective_optimizer",
+        "FEP.VariationalDuality.energyGibbsLaw_pos",
+        "FEP.VariationalDuality.energyGibbsLaw_zero_energy",
+        "FEP.VariationalDuality.energyGibbs_entropy_lt_of_ne",
+        "FEP.VariationalDuality.energyGibbs_maxEntropy",
+        "FEP.VariationalDuality.energyPartition_pos",
+        "FEP.VariationalDuality.entropy_eq_energy_add_logPartition_sub_kl",
+        "FEP.VariationalDuality.entropy_helmholtzGibbsLaw",
         "FEP.VariationalDuality.expectedDistortion_nonneg",
         "FEP.VariationalDuality.expected_log_weight_le_log_expected_weight",
         "FEP.VariationalDuality.fin3Boundary_feasible_iff_pointMassZero",
@@ -1173,11 +1187,21 @@
         "FEP.VariationalDuality.finiteKL_swap",
         "FEP.VariationalDuality.fixedSampleImportanceJensen",
         "FEP.VariationalDuality.gibbsFreeEnergy_optimizer",
+        "FEP.VariationalDuality.hasDerivAt_helmholtzFreeEnergy",
+        "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff",
+        "FEP.VariationalDuality.helmholtzFreeEnergy_le",
+        "FEP.VariationalDuality.helmholtzFreeEnergy_lt",
+        "FEP.VariationalDuality.helmholtzGibbsLaw_pos",
+        "FEP.VariationalDuality.helmholtzPartition_bool",
+        "FEP.VariationalDuality.helmholtzPartition_pos",
+        "FEP.VariationalDuality.helmholtz_bool_uniform_gt",
+        "FEP.VariationalDuality.helmholtz_decomposition",
         "FEP.VariationalDuality.iidProductLaw_mass",
         "FEP.VariationalDuality.isClosed_rateDistortionFeasibleMasses",
         "FEP.VariationalDuality.isCompact_rateDistortionFeasibleMasses",
         "FEP.VariationalDuality.jointELBO_coordinate_decomposition",
         "FEP.VariationalDuality.joint_supported_by_productMarginals",
+        "FEP.VariationalDuality.log_helmholtzGibbsLaw",
         "FEP.VariationalDuality.meanFieldCoordinateFreeEnergy_eq",
         "FEP.VariationalDuality.meanFieldCoordinate_optimum_iff",
         "FEP.VariationalDuality.mutualInformationOfMasses_eq",
@@ -1386,7 +1410,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 11,
+      "definition_count": 13,
       "formal_dependencies": [],
       "id": "formal-module-predictive-coding",
       "imports": [
@@ -1398,7 +1422,10 @@
         "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
         "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
         "Mathlib.Basic.Real.Basic",
+        "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+        "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
         "Mathlib.Order.Filter.Tendsto",
+        "Mathlib.Probability.Distributions.Gaussian.Real",
         "Mathlib.Topology.Algebra.Monoid",
         "Mathlib.Tactic"
       ],
@@ -1406,7 +1433,7 @@
       "resource": "predictive_coding.lean",
       "role": "foundation",
       "structure_count": 1,
-      "theorem_count": 37,
+      "theorem_count": 47,
       "theorems": [
         "FEP.PredictiveCoding.doubledPrecision_nontrivial_witness",
         "FEP.PredictiveCoding.exp_jet_shift_witness",
@@ -1415,6 +1442,8 @@
         "FEP.PredictiveCoding.firstOrderJet_value",
         "FEP.PredictiveCoding.firstOrderJet_velocity",
         "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+        "FEP.PredictiveCoding.gaussianChainEnergy_eq_neg_log_prod",
+        "FEP.PredictiveCoding.gaussianChain_twoLevel",
         "FEP.PredictiveCoding.generalizedCoordinateEnergy_hasDerivAt",
         "FEP.PredictiveCoding.generalizedFilteringStep_equation",
         "FEP.PredictiveCoding.generalizedFlow_top_boundary",
@@ -1425,6 +1454,7 @@
         "FEP.PredictiveCoding.iteratePredictionError",
         "FEP.PredictiveCoding.iteratePredictionError_tendsto_zero",
         "FEP.PredictiveCoding.iteratedDeriv_exp_eq",
+        "FEP.PredictiveCoding.neg_log_gaussianPDFReal",
         "FEP.PredictiveCoding.precisionEnergy_derivative_eq_gradient",
         "FEP.PredictiveCoding.precisionEnergy_eq_zero_iff",
         "FEP.PredictiveCoding.precisionEnergy_hasDerivAt",
@@ -1432,6 +1462,12 @@
         "FEP.PredictiveCoding.precisionEnergy_nonneg",
         "FEP.PredictiveCoding.precisionEnergy_pos",
         "FEP.PredictiveCoding.precisionEnergy_scale",
+        "FEP.PredictiveCoding.precisionFreeEnergy_eq_iff",
+        "FEP.PredictiveCoding.precisionFreeEnergy_hasDerivAt",
+        "FEP.PredictiveCoding.precisionFreeEnergy_min",
+        "FEP.PredictiveCoding.precisionFreeEnergy_strictConvexOn",
+        "FEP.PredictiveCoding.precisionFreeEnergy_sub_opt",
+        "FEP.PredictiveCoding.precisionFreeEnergy_zero_error_unbounded",
         "FEP.PredictiveCoding.precisionGradient_scale",
         "FEP.PredictiveCoding.predictionEnergy_contraction",
         "FEP.PredictiveCoding.predictionEnergy_strictDecrease",
@@ -1444,7 +1480,8 @@
         "FEP.PredictiveCoding.shift_one_functionJet_top",
         "FEP.PredictiveCoding.shift_top_zero",
         "FEP.PredictiveCoding.shift_zero",
-        "FEP.PredictiveCoding.twoLevelEnergy_witness"
+        "FEP.PredictiveCoding.twoLevelEnergy_witness",
+        "FEP.PredictiveCoding.twoLevel_chain_energy_witness"
       ]
     },
     {
@@ -1476,7 +1513,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 12,
+      "definition_count": 20,
       "formal_dependencies": [
         "FepSketches.finite_markov_dynamics",
         "FepSketches.variational_duality"
@@ -1490,11 +1527,24 @@
       "resource": "path_thermodynamics.lean",
       "role": "foundation",
       "structure_count": 1,
-      "theorem_count": 25,
+      "theorem_count": 56,
       "theorems": [
+        "FEP.PathThermodynamics.biasedCycleKernel_pos",
+        "FEP.PathThermodynamics.biasedCycle_entropyProduction",
+        "FEP.PathThermodynamics.biasedCycle_entropyProduction_pos",
+        "FEP.PathThermodynamics.biasedCycle_invariant",
+        "FEP.PathThermodynamics.biasedCycle_not_reversible",
         "FEP.PathThermodynamics.crooks_of_entropyProduction",
         "FEP.PathThermodynamics.detailedFluctuation_identity",
         "FEP.PathThermodynamics.entropyProduction_eq_expected_logRatio",
+        "FEP.PathThermodynamics.entropyProduction_markov_decomposition",
+        "FEP.PathThermodynamics.entropyProduction_markov_eq_localAffinity",
+        "FEP.PathThermodynamics.entropyProduction_markov_oneStep",
+        "FEP.PathThermodynamics.entropyProduction_markov_oneStep_split",
+        "FEP.PathThermodynamics.entropyProduction_markov_reversedKernel_zero",
+        "FEP.PathThermodynamics.entropyProduction_markov_reversible_zero",
+        "FEP.PathThermodynamics.entropyProduction_markov_schnakenberg",
+        "FEP.PathThermodynamics.entropyProduction_markov_stationary",
         "FEP.PathThermodynamics.entropyProduction_nonneg",
         "FEP.PathThermodynamics.finiteJarzynski_eq",
         "FEP.PathThermodynamics.finiteJarzynski_of_crooks",
@@ -1508,15 +1558,33 @@
         "FEP.PathThermodynamics.irreversibleForward_unitWork_not_jarzynski",
         "FEP.PathThermodynamics.isInvariant_of_isReversible",
         "FEP.PathThermodynamics.jarzynski_without_crooks",
+        "FEP.PathThermodynamics.localAffinity_zero_of_reversible",
         "FEP.PathThermodynamics.localAffinity_zero_reverseRate_boundary",
         "FEP.PathThermodynamics.localDetailedBalance_current_zero",
+        "FEP.PathThermodynamics.markovPathLaw_eq_reverse_of_reversible",
+        "FEP.PathThermodynamics.markovPathMass_nonneg",
+        "FEP.PathThermodynamics.markovPathMass_one",
+        "FEP.PathThermodynamics.markovPathMass_pos",
+        "FEP.PathThermodynamics.markovPathMass_snoc",
+        "FEP.PathThermodynamics.markovPathMass_sum_one",
+        "FEP.PathThermodynamics.markovReverseMass_eq",
+        "FEP.PathThermodynamics.markovReverseMass_one",
+        "FEP.PathThermodynamics.markovReverseMass_pos",
+        "FEP.PathThermodynamics.markovReverseMass_reversedKernel",
+        "FEP.PathThermodynamics.markovReversePathLaw_reversedKernel",
         "FEP.PathThermodynamics.pathLaw_normalization",
         "FEP.PathThermodynamics.pathRatio_mul_reverse",
         "FEP.PathThermodynamics.pathRatio_zero_reverse_boundary",
+        "FEP.PathThermodynamics.pathReverse_involutive",
+        "FEP.PathThermodynamics.pathwiseEntropyProduction_markov",
         "FEP.PathThermodynamics.pathwiseEntropyProduction_reverse",
         "FEP.PathThermodynamics.probabilityCurrent_antisymm",
+        "FEP.PathThermodynamics.prod_stage_ratio_telescope",
         "FEP.PathThermodynamics.reverse_reverse",
-        "FEP.PathThermodynamics.reversibleKL_oneStep_dissipation"
+        "FEP.PathThermodynamics.reversedKernel_detailedBalance",
+        "FEP.PathThermodynamics.reversedKernel_eq_of_reversible",
+        "FEP.PathThermodynamics.reversibleKL_oneStep_dissipation",
+        "FEP.PathThermodynamics.sum_pathTwo"
       ]
     },
     {
@@ -1564,7 +1632,7 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 15,
+      "definition_count": 26,
       "formal_dependencies": [
         "FepSketches.finite_information"
       ],
@@ -1576,21 +1644,49 @@
       "resource": "collective_inference.lean",
       "role": "foundation",
       "structure_count": 0,
-      "theorem_count": 13,
+      "theorem_count": 41,
       "theorems": [
+        "FEP.CollectiveInference.asymMatrix3_nonneg",
+        "FEP.CollectiveInference.asymMatrix3_row",
+        "FEP.CollectiveInference.asymMatrix3_scrambling",
+        "FEP.CollectiveInference.asymMatrix3_strict_contraction",
         "FEP.CollectiveInference.boolConsensus_nonzero_strict_witness",
         "FEP.CollectiveInference.collectiveVFE_additive",
         "FEP.CollectiveInference.consensusIterate_gap",
         "FEP.CollectiveInference.consensusMass_conserved",
+        "FEP.CollectiveInference.consensusMatrix2_nonneg",
+        "FEP.CollectiveInference.consensusMatrix2_row",
+        "FEP.CollectiveInference.consensusMatrix2_scrambling",
         "FEP.CollectiveInference.consensus_gap_contracts",
         "FEP.CollectiveInference.consensus_gap_tendsto_zero",
+        "FEP.CollectiveInference.consensus_spread_le_half",
         "FEP.CollectiveInference.coupledPotential_contracts",
         "FEP.CollectiveInference.coupledPotential_strict_descent",
+        "FEP.CollectiveInference.crossEntropy_linearPool_left",
+        "FEP.CollectiveInference.crossEntropy_self_eq_entropy",
+        "FEP.CollectiveInference.identityMixing2_no_contraction",
+        "FEP.CollectiveInference.identityMixing2_nonneg",
+        "FEP.CollectiveInference.identityMixing2_row",
         "FEP.CollectiveInference.independentEFE_additive",
+        "FEP.CollectiveInference.linearPool_kl_decomposition",
+        "FEP.CollectiveInference.linearPool_kl_minimal",
+        "FEP.CollectiveInference.linearPool_kl_unique_minimiser",
+        "FEP.CollectiveInference.logPoolNormalizer_pos",
+        "FEP.CollectiveInference.logPool_kl_decomposition",
+        "FEP.CollectiveInference.logPool_kl_minimal",
+        "FEP.CollectiveInference.logPool_kl_unique_minimiser",
+        "FEP.CollectiveInference.logPool_pos",
+        "FEP.CollectiveInference.log_logPool",
+        "FEP.CollectiveInference.mixStep_consensusMatrix2",
+        "FEP.CollectiveInference.mixStep_diff_le",
         "FEP.CollectiveInference.productAgent_joint_mass",
         "FEP.CollectiveInference.productExpectedCost_additive",
         "FEP.CollectiveInference.productKernel_sum_one",
-        "FEP.CollectiveInference.unitWeightProductOfExpertsPool_sum_one"
+        "FEP.CollectiveInference.sub_le_valueSpread",
+        "FEP.CollectiveInference.unitWeightProductOfExpertsPool_sum_one",
+        "FEP.CollectiveInference.valueSpread_mixStep_le",
+        "FEP.CollectiveInference.valueSpread_mixStep_lt",
+        "FEP.CollectiveInference.valueSpread_nonneg"
       ]
     },
     {
@@ -2621,20 +2717,22 @@
     },
     {
       "abbreviation_count": 0,
-      "definition_count": 11,
+      "definition_count": 5,
       "formal_dependencies": [
-        "FepSketches.continuous_time_markov"
+        "FepSketches.continuous_time_markov",
+        "FepSketches.geometric_mechanics"
       ],
       "id": "formal-module-helmholtz-ao-ness",
       "imports": [
         "FepSketches.continuous_time_markov",
+        "FepSketches.geometric_mechanics",
         "Mathlib.Tactic"
       ],
       "lean_module": "FepSketches.helmholtz_ao_ness",
       "resource": "helmholtz_ao_ness.lean",
       "role": "foundation",
       "structure_count": 0,
-      "theorem_count": 26,
+      "theorem_count": 22,
       "theorems": [
         "FEP.HelmholtzAoNess.aoDecomposition",
         "FEP.HelmholtzAoNess.circulationNum_skew",
@@ -2653,11 +2751,7 @@
         "FEP.HelmholtzAoNess.forceSplit",
         "FEP.HelmholtzAoNess.mass_div_two",
         "FEP.HelmholtzAoNess.probabilityCurrent_eq_twice_circulation",
-        "FEP.HelmholtzAoNess.skewQuadratic_eq_zero",
-        "FEP.HelmholtzAoNess.skewTrace_eq_zero",
         "FEP.HelmholtzAoNess.stationaryCurrent_divergence_zero",
-        "FEP.HelmholtzAoNess.sum_negPairs",
-        "FEP.HelmholtzAoNess.sum_swapPairs",
         "FEP.HelmholtzAoNess.symmetricNum_add_circulationNum",
         "FEP.HelmholtzAoNess.symmetricNum_comm",
         "FEP.HelmholtzAoNess.symmetricPart_current_eq_zero",
@@ -2838,7 +2932,7 @@
       "resource": "compositions/core.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 22,
+      "theorem_count": 23,
       "theorems": [
         "FEPComposed.activeInference_expectedFreeEnergy_to_fep021",
         "FEPComposed.fep002_vfe_compProd_chain_rule",
@@ -2861,7 +2955,8 @@
         "FEPComposed.fep037_autocorrelation_tracks_fep020",
         "FEPComposed.fep038_fisherRao_separation",
         "FEPComposed.fep039_partitionEnergy_conservation",
-        "FEPComposed.fep041_informationGain_is_fep014_kl"
+        "FEPComposed.fep041_informationGain_is_fep014_kl",
+        "FEPComposed.fep046_single_break_is_fep045_bernoulli"
       ]
     },
     {
@@ -2916,8 +3011,9 @@
       "resource": "compositions/control_temporal.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 14,
+      "theorem_count": 15,
       "theorems": [
+        "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
         "FEPComposed.fep065_controlledKernel_extends_fep023_normalization",
         "FEPComposed.fep066_action_update_refines_fep034_filter",
         "FEPComposed.fep067_reachableBelief_refines_fep023",
@@ -2986,8 +3082,10 @@
       "resource": "compositions/thermo_geometry.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 14,
+      "theorem_count": 16,
       "theorems": [
+        "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
+        "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production",
         "FEPComposed.fep093_path_ratio_extends_fep010_reversal",
         "FEPComposed.fep094_path_kl_refines_fep049_entropy_production",
         "FEPComposed.fep095_fluctuation_symmetry_extends_fep010_reversibility",
@@ -4430,26 +4528,26 @@
   ],
   "metrics": {
     "abbreviations": 38,
-    "authored_relation_edges": 146,
+    "authored_relation_edges": 150,
     "capability_nodes": 50,
-    "composed_theorems": 332,
-    "definitions": 897,
+    "composed_theorems": 336,
+    "definitions": 919,
     "distinct_mathlib_imports": 70,
-    "formal_module_dependency_edges": 162,
-    "formal_module_import_edges": 274,
+    "formal_module_dependency_edges": 163,
+    "formal_module_import_edges": 278,
     "formal_modules": 71,
     "formal_pairing_witnesses": 118,
-    "formal_relation_witnesses": 20,
+    "formal_relation_witnesses": 24,
     "formal_resource_abbreviations": 31,
-    "formal_resource_definitions": 802,
+    "formal_resource_definitions": 824,
     "formal_resource_structures": 53,
-    "formal_resource_theorems": 1376,
+    "formal_resource_theorems": 1469,
     "foundation_modules": 45,
-    "foundation_theorems": 1044,
+    "foundation_theorems": 1133,
     "open_capabilities": 0,
     "satisfied_capabilities": 50,
-    "theorem_witnessed_relations": 138,
-    "theorems": 1960,
+    "theorem_witnessed_relations": 142,
+    "theorems": 2053,
     "topic_abbreviations": 7,
     "topic_definitions": 95,
     "topic_import_edges": 225,
@@ -4458,7 +4556,7 @@
   },
   "relation_counts": {
     "conceptual": 8,
-    "formal": 20,
+    "formal": 24,
     "formal_pairing": 118
   },
   "relations": [
@@ -4489,6 +4587,13 @@
       "source": "fep-005",
       "target": "fep-009",
       "witness": null
+    },
+    {
+      "kind": "formal",
+      "rationale": "With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-007",
+      "target": "fep-028",
+      "witness": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax"
     },
     {
       "kind": "conceptual",
@@ -4582,6 +4687,13 @@
       "witness": null
     },
     {
+      "kind": "formal",
+      "rationale": "fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-029",
+      "target": "fep-104",
+      "witness": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance"
+    },
+    {
       "kind": "conceptual",
       "rationale": "A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.",
       "source": "fep-030",
@@ -4659,6 +4771,20 @@
       "witness": "FEPComposed.fep036_empiricalPosterior_closed"
     },
     {
+      "kind": "formal",
+      "rationale": "A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-046",
+      "target": "fep-045",
+      "witness": "FEPComposed.fep046_single_break_is_fep045_bernoulli"
+    },
+    {
+      "kind": "formal",
+      "rationale": "Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-050",
+      "target": "fep-049",
+      "witness": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production"
+    },
+    {
       "kind": "formal_pairing",
       "rationale": "Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion.",
       "source": "fep-051",
@@ -4681,7 +4807,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
+      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-054",
       "target": "fep-017",
       "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -4744,7 +4870,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
+      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-063",
       "target": "fep-014",
       "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -4926,7 +5052,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
+      "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-089",
       "target": "fep-006",
       "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -4947,7 +5073,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
+      "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-092",
       "target": "fep-032",
       "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -5073,7 +5199,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
+      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
       "source": "fep-110",
       "target": "fep-028",
       "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -5108,14 +5234,14 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
+      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-115",
       "target": "fep-042",
       "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
+      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-116",
       "target": "fep-001",
       "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"

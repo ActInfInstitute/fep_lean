@@ -7873,7 +7873,7 @@
       "lean_module": "FepSketches.variational_duality",
       "resource": "variational_duality.lean",
       "role": "foundation",
-      "theorem_count": 63
+      "theorem_count": 74
     },
     {
       "declaration_namespace": "FEP.ControlledMarkov",
@@ -7908,7 +7908,7 @@
       "lean_module": "FepSketches.predictive_coding",
       "resource": "predictive_coding.lean",
       "role": "foundation",
-      "theorem_count": 37
+      "theorem_count": 47
     },
     {
       "declaration_namespace": "FEP.NessFlow",
@@ -8970,12 +8970,12 @@
     "formal/perception_action_loop.lean": "e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1",
     "formal/policy_tree.lean": "2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88",
     "formal/posterior_convergence.lean": "1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20",
-    "formal/predictive_coding.lean": "3d62d7fcd3d4f469789049487ae757f687ec4ffe899a2367061bb2d57b389081",
+    "formal/predictive_coding.lean": "2b4589e435d281a04ac123f0289a2ffca4f6306b683a36aa2dd32b0d1d051782",
     "formal/scalar_gaussian_semigroup.lean": "d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e",
     "formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
     "formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
     "formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
-    "formal/variational_duality.lean": "7ed615bca08b812cb940a91326e335ae0f45eff27be716d734da4f49def09749",
+    "formal/variational_duality.lean": "fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
     "inputs/formalism_relations.yaml": "68826c891cb3e5abaebada33394ed3caf8d97411eb3100be381534950a3299ae",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
@@ -95255,7 +95255,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95264,7 +95267,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.doubledPrecision_nontrivial_witness",
-        "source_line": 367,
+        "source_line": 370,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem doubledPrecision_nontrivial_witness :\n    precisionEnergy 2 1 0 = 2 * precisionEnergy 1 1 0 ∧\n      precisionEnergy 1 1 0 < precisionEnergy 2 1 0",
         "statement_sha256": "b54edeab2332f3d1280f8c586b9821dcb09c03220ba1b332cc2e81ea50376fb0"
@@ -95331,7 +95334,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95340,7 +95346,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.exp_jet_shift_witness",
-        "source_line": 231,
+        "source_line": 234,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem exp_jet_shift_witness (order : ℕ) (t : ℝ) :\n    (∀ k, k ≤ order → (functionJet order Real.exp t).coefficient k ≠ 0) ∧\n      (∀ k, k < order →\n        (shift 1 (functionJet order Real.exp t)).coefficient k =\n          (functionJet order (deriv Real.exp) t).coefficient k) ∧\n      (shift 1 (functionJet order Real.exp t)).coefficient order = 0",
         "statement_sha256": "a3b750b233446db388704d840317c45e783331ceab8e61b4fd805a21c11d81e3"
@@ -95361,7 +95367,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95370,7 +95379,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderCorrection_witness",
-        "source_line": 330,
+        "source_line": 333,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderCorrection_witness :\n    let corrected",
         "statement_sha256": "f717f20d22be56c827d69bacf8468951aefec13d2a43834cc398129abbafb401"
@@ -95410,7 +95419,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95419,7 +95431,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_shift_boundary",
-        "source_line": 258,
+        "source_line": 261,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_shift_boundary (value velocity : ℝ) :\n    (shift 1 (firstOrderJet value velocity)).coefficient 0 = velocity ∧\n      (shift 1 (firstOrderJet value velocity)).coefficient 1 = 0",
         "statement_sha256": "6c21452307bd1ac67e5dc578f45c1d7f6bc16b350c47387a951457b1763dfdf9"
@@ -95452,7 +95464,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95461,7 +95476,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_value",
-        "source_line": 249,
+        "source_line": 252,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_value (value velocity : ℝ) :\n    (firstOrderJet value velocity).coefficient 0 = value",
         "statement_sha256": "b780a71e3377ba7a07fbc0d32111c0e6022be5aaa153a1769a3c4be112d3c61a"
@@ -95494,7 +95509,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95503,7 +95521,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_velocity",
-        "source_line": 254,
+        "source_line": 257,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_velocity (value velocity : ℝ) :\n    (firstOrderJet value velocity).coefficient 1 = velocity",
         "statement_sha256": "8d0565d9a1727e815a12d36c8408e6c84f0e1186ac4b8b8a351e381e521f5cad"
@@ -95575,7 +95593,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95584,10 +95605,172 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
-        "source_line": 179,
+        "source_line": 182,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem functionJet_coefficient_of_le {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k ≤ order) :\n    (functionJet order f t).coefficient k = iteratedDeriv k f t",
         "statement_sha256": "efa8abb3d913089fccad79a99edf275cb80d51d06d2dc982ba809367bfdaebb3"
+      },
+      "FEP.PredictiveCoding.gaussianChainEnergy_eq_neg_log_prod": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Level"
+            ],
+            "role": "typed_binder",
+            "source": "{Level : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Level]",
+            "type_source": "Fintype Level",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "mean",
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(mean x : Level → ℝ)",
+            "type_source": "Level → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "variance"
+            ],
+            "role": "typed_binder",
+            "source": "(variance : Level → NNReal)",
+            "type_source": "Level → NNReal",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hVariance"
+            ],
+            "role": "typed_binder",
+            "source": "(hVariance : ∀ level, variance level ≠ 0)",
+            "type_source": "∀ level, variance level ≠ 0",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "-Real.log (∏ level, ProbabilityTheory.gaussianPDFReal\n        (mean level) (variance level) (x level)) =\n      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))\n          (fun level => x level - mean level) +\n        (Fintype.card Level : ℝ) / 2 * Real.log (2 * Real.pi)",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "neg_log_gaussianPDFReal",
+            "qualified_name": "FEP.PredictiveCoding.neg_log_gaussianPDFReal",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.gaussianChainEnergy_eq_neg_log_prod",
+        "source_line": 592,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem gaussianChainEnergy_eq_neg_log_prod\n    {Level : Type*} [Fintype Level]\n    (mean x : Level → ℝ) (variance : Level → NNReal)\n    (hVariance : ∀ level, variance level ≠ 0) :\n    -Real.log (∏ level, ProbabilityTheory.gaussianPDFReal\n        (mean level) (variance level) (x level)) =\n      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))\n          (fun level => x level - mean level) +\n        (Fintype.card Level : ℝ) / 2 * Real.log (2 * Real.pi)",
+        "statement_sha256": "4e27ad0c8e26b0fc0599d6db578b7bdc5d335acacb55063c0f4328ab18d6b9a8"
+      },
+      "FEP.PredictiveCoding.gaussianChain_twoLevel": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "mean",
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(mean x : Fin 2 → ℝ)",
+            "type_source": "Fin 2 → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "variance"
+            ],
+            "role": "typed_binder",
+            "source": "(variance : Fin 2 → NNReal)",
+            "type_source": "Fin 2 → NNReal",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hVariance"
+            ],
+            "role": "typed_binder",
+            "source": "(hVariance : ∀ level, variance level ≠ 0)",
+            "type_source": "∀ level, variance level ≠ 0",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "-Real.log (ProbabilityTheory.gaussianPDFReal (mean 0) (variance 0) (x 0) *\n        ProbabilityTheory.gaussianPDFReal (mean 1) (variance 1) (x 1)) =\n      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))\n          (fun level => x level - mean level) + Real.log (2 * Real.pi)",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "gaussianChainEnergy_eq_neg_log_prod",
+            "qualified_name": "FEP.PredictiveCoding.gaussianChainEnergy_eq_neg_log_prod",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.gaussianChain_twoLevel",
+        "source_line": 612,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem gaussianChain_twoLevel\n    (mean x : Fin 2 → ℝ) (variance : Fin 2 → NNReal)\n    (hVariance : ∀ level, variance level ≠ 0) :\n    -Real.log (ProbabilityTheory.gaussianPDFReal (mean 0) (variance 0) (x 0) *\n        ProbabilityTheory.gaussianPDFReal (mean 1) (variance 1) (x 1)) =\n      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))\n          (fun level => x level - mean level) + Real.log (2 * Real.pi)",
+        "statement_sha256": "9030972c819f8eeee95e91bd3f6730b20629c2bea50114f9ad37ce172bf0662d"
       },
       "FEP.PredictiveCoding.generalizedCoordinateEnergy_hasDerivAt": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -95654,7 +95837,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95663,7 +95849,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedCoordinateEnergy_hasDerivAt",
-        "source_line": 304,
+        "source_line": 307,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedCoordinateEnergy_hasDerivAt {order : ℕ}\n    (precision : ℕ → ℝ) (target estimate : FiniteJet order) (degree : ℕ) :\n    HasDerivAt\n      (fun candidate =>\n        precisionEnergy (precision degree) (target.coefficient degree) candidate)\n      (precisionEnergyGradient (precision degree)\n        (target.coefficient degree) (estimate.coefficient degree))\n      (estimate.coefficient degree)",
         "statement_sha256": "e4cb27d3abe7405622e5049ea946cef080eb4ceaa19fcb0af07467d12637c53f"
@@ -95736,7 +95922,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95745,7 +95934,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedFilteringStep_equation",
-        "source_line": 294,
+        "source_line": 297,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedFilteringStep_equation {order : ℕ} (stepSize : ℝ)\n    (precision : ℕ → ℝ) (target estimate : FiniteJet order)\n    (degree : ℕ) :\n    (generalizedFilteringStep stepSize precision target estimate).coefficient degree =\n      estimate.coefficient degree + stepSize *\n        ((shift 1 estimate).coefficient degree -\n          precisionEnergyGradient (precision degree)\n            (target.coefficient degree) (estimate.coefficient degree))",
         "statement_sha256": "692a7cfe5a9acc3bc0d4f1e20a227d52ee881820b92a4911f90979d1a9eca375"
@@ -95805,7 +95994,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95814,7 +96006,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedFlow_top_boundary",
-        "source_line": 316,
+        "source_line": 319,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedFlow_top_boundary {order : ℕ} (precision : ℕ → ℝ)\n    (target estimate : FiniteJet order) :\n    (generalizedFlow precision target estimate).coefficient order =\n      -precisionEnergyGradient (precision order)\n        (target.coefficient order) (estimate.coefficient order)",
         "statement_sha256": "42f59822f3206209670e13d3af05d43eb8940a92e8d45fda6735ca7e7e05b9dd"
@@ -95835,7 +96027,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95844,7 +96039,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.halfStep_energy_witness",
-        "source_line": 466,
+        "source_line": 469,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem halfStep_energy_witness :\n    precisionEnergy 2 1 0 = 1 ∧\n      predictionUpdate (1 / 2) 1 0 = 1 / 2 ∧\n      precisionEnergy 2 1 (predictionUpdate (1 / 2) 1 0) = 1 / 4",
         "statement_sha256": "900f852cb7a96c04d156cf8f8896f2c7963d5f81921b50655a3e4ff7542db67d"
@@ -95905,7 +96100,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95914,7 +96112,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.hierarchicalEnergy_nonneg",
-        "source_line": 105,
+        "source_line": 108,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem hierarchicalEnergy_nonneg\n    {Level : Type*} [Fintype Level]\n    (precision error : Level → ℝ)\n    (hPrecision : ∀ level, 0 ≤ precision level) :\n    0 ≤ hierarchicalEnergy precision error",
         "statement_sha256": "65ba0496da0b9e4762826eeebc06678874361525ced2f4d2c44b02b22db7d874"
@@ -95957,7 +96155,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -95966,7 +96167,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.hierarchicalEnergy_succ",
-        "source_line": 116,
+        "source_line": 119,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem hierarchicalEnergy_succ {depth : ℕ}\n    (precision error : Fin (depth + 1) → ℝ) :\n    hierarchicalEnergy precision error =\n      precision 0 / 2 * error 0 ^ 2 +\n        ∑ level : Fin depth,\n          precision level.succ / 2 * error level.succ ^ 2",
         "statement_sha256": "2a389e11f043edcf33ef99ae08e75c950c607416bbbe3aebb674648ab4eb5bfa"
@@ -96046,7 +96247,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96055,7 +96259,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionEnergy_tendsto_zero",
-        "source_line": 452,
+        "source_line": 455,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionEnergy_tendsto_zero\n    (precision : ℝ) {stepSize : ℝ} (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (target estimate : ℝ) :\n    Tendsto\n      (fun iterations => precisionEnergy precision target\n        (iteratePredictionUpdate stepSize target iterations estimate))\n      atTop (nhds 0)",
         "statement_sha256": "3fc140f44a72befd789d13d4541a195125f18b75421cffff69fa6960536f2d69"
@@ -96106,7 +96310,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96115,7 +96322,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionError",
-        "source_line": 418,
+        "source_line": 421,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionError\n    (stepSize target estimate : ℝ) (iterations : ℕ) :\n    predictionError target\n        (iteratePredictionUpdate stepSize target iterations estimate) =\n      (1 - stepSize) ^ iterations * predictionError target estimate",
         "statement_sha256": "a9473096f24489a076b1531daa8bd2c20282e70a3f2b161f1bf4260aaf515477"
@@ -96185,7 +96392,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96194,7 +96404,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionError_tendsto_zero",
-        "source_line": 431,
+        "source_line": 434,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionError_tendsto_zero\n    {stepSize : ℝ} (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (target estimate : ℝ) :\n    Tendsto\n      (fun iterations => predictionError target\n        (iteratePredictionUpdate stepSize target iterations estimate))\n      atTop (nhds 0)",
         "statement_sha256": "583d6a81fbfff0b6313b3c08c48704fb45984d8c830be4678101c14fade1f680"
@@ -96236,7 +96446,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96245,10 +96458,75 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratedDeriv_exp_eq",
-        "source_line": 221,
+        "source_line": 224,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratedDeriv_exp_eq (k : ℕ) (t : ℝ) : iteratedDeriv k Real.exp t = Real.exp t",
         "statement_sha256": "a846d1151a902fb89f2ea35cb1bd87d6d3ded48dba24ec2073e16ac5f71e721b"
+      },
+      "FEP.PredictiveCoding.neg_log_gaussianPDFReal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "mean",
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(mean x : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "variance"
+            ],
+            "role": "typed_binder",
+            "source": "{variance : NNReal}",
+            "type_source": "NNReal",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hVariance"
+            ],
+            "role": "typed_binder",
+            "source": "(hVariance : variance ≠ 0)",
+            "type_source": "variance ≠ 0",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "-Real.log (ProbabilityTheory.gaussianPDFReal mean variance x) =\n      (1 / (variance : ℝ)) / 2 * (x - mean) ^ 2\n        - Real.log (1 / (variance : ℝ)) / 2 + Real.log (2 * Real.pi) / 2",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.neg_log_gaussianPDFReal",
+        "source_line": 573,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem neg_log_gaussianPDFReal (mean x : ℝ) {variance : NNReal}\n    (hVariance : variance ≠ 0) :\n    -Real.log (ProbabilityTheory.gaussianPDFReal mean variance x) =\n      (1 / (variance : ℝ)) / 2 * (x - mean) ^ 2\n        - Real.log (1 / (variance : ℝ)) / 2 + Real.log (2 * Real.pi) / 2",
+        "statement_sha256": "b754a42f1ef50a38c20697eee40dbe1536cf19aa8e2cab6c7829d9b4c45be8c4"
       },
       "FEP.PredictiveCoding.precisionEnergy_derivative_eq_gradient": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -96286,7 +96564,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96295,7 +96576,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_derivative_eq_gradient",
-        "source_line": 92,
+        "source_line": 95,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_derivative_eq_gradient\n    (precision observation estimate : ℝ) :\n    HasDerivAt (fun candidate => precisionEnergy precision observation candidate)\n      (precisionEnergyGradient precision observation estimate) estimate",
         "statement_sha256": "6ae930689b6770a1246d0825288ea9347979b4ebc174490e94aef2853652ae61"
@@ -96348,7 +96629,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96357,7 +96641,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_eq_zero_iff",
-        "source_line": 47,
+        "source_line": 50,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_eq_zero_iff {precision : ℝ}\n    (hPrecision : 0 < precision) (observation estimate : ℝ) :\n    precisionEnergy precision observation estimate = 0 ↔\n      estimate = observation",
         "statement_sha256": "01a9ee70ca7e2cdacbc9a8529de50f6443906762bf255312b9f80affb42ee4ff"
@@ -96391,7 +96675,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96400,7 +96687,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_hasDerivAt",
-        "source_line": 76,
+        "source_line": 79,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_hasDerivAt (precision observation estimate : ℝ) :\n    HasDerivAt (fun candidate => precisionEnergy precision observation candidate)\n      (-precision * predictionError observation estimate) estimate",
         "statement_sha256": "3c7dd16edc5a4bb2bf141ef6c186379c0f6ce121b643f9936561d537f633b2a1"
@@ -96471,7 +96758,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96480,7 +96770,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_mono",
-        "source_line": 342,
+        "source_line": 345,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_mono {lower upper : ℝ}\n    (hLowerNonneg : 0 ≤ lower) (hPrecision : lower ≤ upper)\n    (observation estimate : ℝ) :\n    0 ≤ precisionEnergy lower observation estimate ∧\n      precisionEnergy lower observation estimate ≤\n        precisionEnergy upper observation estimate",
         "statement_sha256": "c373aa0e791fc94c471d7e52511cdcb6fbc1f8f25173b38981cfdb7d2c447c1e"
@@ -96533,7 +96823,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96542,7 +96835,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_nonneg",
-        "source_line": 40,
+        "source_line": 43,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_nonneg {precision : ℝ} (hPrecision : 0 ≤ precision)\n    (observation estimate : ℝ) :\n    0 ≤ precisionEnergy precision observation estimate",
         "statement_sha256": "0ebc1576504aa52cd10695f7e5007d4006d887cb6af38f94f48bc5b1dc6d0833"
@@ -96605,7 +96898,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96614,7 +96910,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_pos",
-        "source_line": 63,
+        "source_line": 66,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_pos {precision : ℝ} (hPrecision : 0 < precision)\n    {observation estimate : ℝ} (hError : observation ≠ estimate) :\n    0 < precisionEnergy precision observation estimate",
         "statement_sha256": "59cc60b9b6969226a24bf212f4183becd1e71a65e5cb3cade45a3b48f414b41d"
@@ -96649,7 +96945,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96658,10 +96957,398 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_scale",
-        "source_line": 354,
+        "source_line": 357,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_scale (scale precision observation estimate : ℝ) :\n    precisionEnergy (scale * precision) observation estimate =\n      scale * precisionEnergy precision observation estimate",
         "statement_sha256": "577a76f3296d7f19f002bbc6a8a9cf1a444d11825b5e9477cace0883b558f4ce"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_eq_iff": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "error"
+            ],
+            "role": "typed_binder",
+            "source": "{error : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hError"
+            ],
+            "role": "typed_binder",
+            "source": "(hError : error ≠ 0)",
+            "type_source": "error ≠ 0",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "precision"
+            ],
+            "role": "typed_binder",
+            "source": "{precision : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hPrecision"
+            ],
+            "role": "typed_binder",
+            "source": "(hPrecision : 0 < precision)",
+            "type_source": "0 < precision",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "precisionFreeEnergy error precision =\n        precisionFreeEnergy error (1 / error ^ 2) ↔\n      precision = 1 / error ^ 2",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "precisionFreeEnergy_sub_opt",
+            "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_sub_opt",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_eq_iff",
+        "source_line": 510,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_eq_iff {error : ℝ} (hError : error ≠ 0)\n    {precision : ℝ} (hPrecision : 0 < precision) :\n    precisionFreeEnergy error precision =\n        precisionFreeEnergy error (1 / error ^ 2) ↔\n      precision = 1 / error ^ 2",
+        "statement_sha256": "02fc0591b741d4836604200adc2c60fff248bb17f75defd1d33a315d54b68c92"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_hasDerivAt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "error"
+            ],
+            "role": "typed_binder",
+            "source": "(error : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "precision"
+            ],
+            "role": "typed_binder",
+            "source": "{precision : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hPrecision"
+            ],
+            "role": "typed_binder",
+            "source": "(hPrecision : 0 < precision)",
+            "type_source": "0 < precision",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "HasDerivAt (precisionFreeEnergy error)\n      (error ^ 2 / 2 - 1 / (2 * precision)) precision",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_hasDerivAt",
+        "source_line": 532,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_hasDerivAt (error : ℝ) {precision : ℝ}\n    (hPrecision : 0 < precision) :\n    HasDerivAt (precisionFreeEnergy error)\n      (error ^ 2 / 2 - 1 / (2 * precision)) precision",
+        "statement_sha256": "723e81d3f137d6de18ace4e8f7965441ea5d1d6916049e0db2d3602c4c0486b4"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_min": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "error"
+            ],
+            "role": "typed_binder",
+            "source": "{error : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hError"
+            ],
+            "role": "typed_binder",
+            "source": "(hError : error ≠ 0)",
+            "type_source": "error ≠ 0",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "precision"
+            ],
+            "role": "typed_binder",
+            "source": "{precision : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hPrecision"
+            ],
+            "role": "typed_binder",
+            "source": "(hPrecision : 0 < precision)",
+            "type_source": "0 < precision",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "precisionFreeEnergy error (1 / error ^ 2) ≤\n      precisionFreeEnergy error precision",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "precisionFreeEnergy_sub_opt",
+            "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_sub_opt",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_min",
+        "source_line": 500,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_min {error : ℝ} (hError : error ≠ 0)\n    {precision : ℝ} (hPrecision : 0 < precision) :\n    precisionFreeEnergy error (1 / error ^ 2) ≤\n      precisionFreeEnergy error precision",
+        "statement_sha256": "1560478ad6e3b638081899d309624f854a730e9b58c98b6165f742249338f21e"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_strictConvexOn": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "error"
+            ],
+            "role": "typed_binder",
+            "source": "(error : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "StrictConvexOn ℝ (Set.Ioi 0) (precisionFreeEnergy error)",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_strictConvexOn",
+        "source_line": 549,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_strictConvexOn (error : ℝ) :\n    StrictConvexOn ℝ (Set.Ioi 0) (precisionFreeEnergy error)",
+        "statement_sha256": "9e9e8d3bdba2233476160e5a9033d420b0f10d09633b27c7f3008decc6deda3e"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_sub_opt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "error"
+            ],
+            "role": "typed_binder",
+            "source": "{error : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hError"
+            ],
+            "role": "typed_binder",
+            "source": "(hError : error ≠ 0)",
+            "type_source": "error ≠ 0",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "precision"
+            ],
+            "role": "typed_binder",
+            "source": "{precision : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hPrecision"
+            ],
+            "role": "typed_binder",
+            "source": "(hPrecision : 0 < precision)",
+            "type_source": "0 < precision",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "precisionFreeEnergy error precision - precisionFreeEnergy error (1 / error ^ 2) =\n      (error ^ 2 * precision - 1 - Real.log (error ^ 2 * precision)) / 2",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_sub_opt",
+        "source_line": 485,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_sub_opt {error : ℝ} (hError : error ≠ 0)\n    {precision : ℝ} (hPrecision : 0 < precision) :\n    precisionFreeEnergy error precision - precisionFreeEnergy error (1 / error ^ 2) =\n      (error ^ 2 * precision - 1 - Real.log (error ^ 2 * precision)) / 2",
+        "statement_sha256": "04560a9dd8a09d75ff1cbb025124461bec9efd73e439a9cb3303ef41a7a152cc"
+      },
+      "FEP.PredictiveCoding.precisionFreeEnergy_zero_error_unbounded": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "M"
+            ],
+            "role": "typed_binder",
+            "source": "(M : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∃ precision : ℝ, 0 < precision ∧ precisionFreeEnergy 0 precision < M",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.precisionFreeEnergy_zero_error_unbounded",
+        "source_line": 558,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem precisionFreeEnergy_zero_error_unbounded (M : ℝ) :\n    ∃ precision : ℝ, 0 < precision ∧ precisionFreeEnergy 0 precision < M",
+        "statement_sha256": "5625928271e3331ee845c9d99533a907f78c4a7a585d481c941beb93c488c0df"
       },
       "FEP.PredictiveCoding.precisionGradient_scale": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -96693,7 +97380,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96702,7 +97392,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionGradient_scale",
-        "source_line": 361,
+        "source_line": 364,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionGradient_scale (scale precision observation estimate : ℝ) :\n    precisionEnergyGradient (scale * precision) observation estimate =\n      scale * precisionEnergyGradient precision observation estimate",
         "statement_sha256": "e318e126855afe357984aa5e8b8c214e62356f3c5fbb5f08800cfb30c9ea93f2"
@@ -96744,7 +97434,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96753,7 +97446,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionEnergy_contraction",
-        "source_line": 385,
+        "source_line": 388,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionEnergy_contraction\n    (precision stepSize target estimate : ℝ) :\n    precisionEnergy precision target\n        (predictionUpdate stepSize target estimate) =\n      (1 - stepSize) ^ 2 * precisionEnergy precision target estimate",
         "statement_sha256": "00bfc855049be3d4757ec69cd32bbfcdad39cede54b114ec4b9ac29b0f7d39ee"
@@ -96841,7 +97534,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96850,7 +97546,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionEnergy_strictDecrease",
-        "source_line": 395,
+        "source_line": 398,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionEnergy_strictDecrease {precision stepSize target estimate : ℝ}\n    (hPrecision : 0 < precision) (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (hError : target ≠ estimate) :\n    precisionEnergy precision target (predictionUpdate stepSize target estimate) <\n      precisionEnergy precision target estimate",
         "statement_sha256": "4d3c3529c857feb942502715e114fa19a692929c42f0901a73538de64a4f28ec"
@@ -96884,7 +97580,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96893,7 +97592,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionError_update",
-        "source_line": 378,
+        "source_line": 381,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionError_update (stepSize target estimate : ℝ) :\n    predictionError target (predictionUpdate stepSize target estimate) =\n      (1 - stepSize) * predictionError target estimate",
         "statement_sha256": "876a95cfd59b90e24634449e8dc2e64cadd1d2386937b111b3739044211dab82"
@@ -96946,7 +97645,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -96955,7 +97657,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_add",
-        "source_line": 159,
+        "source_line": 162,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_add {order : ℕ} (first second : ℕ) (jet : FiniteJet order) :\n    shift (first + second) jet = shift first (shift second jet)",
         "statement_sha256": "6d2dd1327b57abe3e1c6b1aa6d7bd427eaf35ee361ed906705a8ecdf2c1a1446"
@@ -97008,7 +97710,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97017,7 +97722,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_coefficient",
-        "source_line": 148,
+        "source_line": 151,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_coefficient {order : ℕ} (steps degree : ℕ)\n    (jet : FiniteJet order) :\n    (shift steps jet).coefficient degree = jet.coefficient (degree + steps)",
         "statement_sha256": "07f584fe6705057427628394bc22955b293e973b62e859e35912176697760d4b"
@@ -97112,7 +97817,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97121,7 +97829,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_functionJet",
-        "source_line": 196,
+        "source_line": 199,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_functionJet {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k + m ≤ order) :\n    (shift m (functionJet order f t)).coefficient k =\n      (functionJet order (iteratedDeriv m f) t).coefficient k",
         "statement_sha256": "46df7eee78ddeea39747dc743b9e04694f2c0677a1424177d4a9b62d963ce5ec"
@@ -97200,7 +97908,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97209,7 +97920,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_functionJet_succ",
-        "source_line": 207,
+        "source_line": 210,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_functionJet_succ {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) (k : ℕ) :\n    (shift (m + 1) (functionJet order f t)).coefficient k =\n      (shift 1 (shift m (functionJet order f t))).coefficient k",
         "statement_sha256": "4c89e22dfc2999364b2fd06e1c80d7737683cb28d1dbd066ef49dfcf1e96dc37"
@@ -97294,7 +98005,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97303,7 +98017,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_one_functionJet",
-        "source_line": 187,
+        "source_line": 190,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_one_functionJet {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k < order) :\n    (shift 1 (functionJet order f t)).coefficient k =\n      (functionJet order (deriv f) t).coefficient k",
         "statement_sha256": "3d3bdffd64f6812613cb21870b0bff269f5676b2e6dc9a5a75132fdee9c6e06c"
@@ -97368,7 +98082,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97377,7 +98094,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_one_functionJet_top",
-        "source_line": 214,
+        "source_line": 217,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_one_functionJet_top {order : ℕ} (f : ℝ → ℝ) (t : ℝ) :\n    (shift 1 (functionJet order f t)).coefficient order = 0 ∧\n      (functionJet order (deriv f) t).coefficient order =\n        iteratedDeriv (order + 1) f t",
         "statement_sha256": "6bab7e46d70ac4ebe915211c93e38b5371714ace1a0dd1e2e5dab8c56c88b553"
@@ -97419,7 +98136,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97428,7 +98148,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_top_zero",
-        "source_line": 167,
+        "source_line": 170,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_top_zero {order : ℕ} (jet : FiniteJet order) :\n    (shift 1 jet).coefficient order = 0",
         "statement_sha256": "1a453b796f2dbb1a22d6d13c99538b8e5c7a71ce945ae0482d33567752356480"
@@ -97470,7 +98190,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97479,7 +98202,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_zero",
-        "source_line": 152,
+        "source_line": 155,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_zero {order : ℕ} (jet : FiniteJet order) :\n    shift 0 jet = jet",
         "statement_sha256": "dd3dde0191a5149263f8628742d3bbbb476c5e21f8e60e09919e514e3215e50c"
@@ -97500,7 +98223,10 @@
           "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
           "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
           "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
           "Mathlib.Topology.Algebra.Monoid",
           "Mathlib.Tactic"
         ],
@@ -97509,10 +98235,50 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.twoLevelEnergy_witness",
-        "source_line": 126,
+        "source_line": 129,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem twoLevelEnergy_witness :\n    hierarchicalEnergy\n      (fun level : Fin 2 => if level = 0 then 2 else 4)\n      (fun level : Fin 2 => if level = 0 then 3 else 1) = 11",
         "statement_sha256": "4cba23200c20c955a3bcedd1efcc53b22d46c5d5c6bd0fff6534546d9802d9a8"
+      },
+      "FEP.PredictiveCoding.twoLevel_chain_energy_witness": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "gaussianChainEnergy\n      (fun level : Fin 2 => if level = 0 then 2 else 4)\n      (fun level : Fin 2 => if level = 0 then 3 else 1) =\n        11 - 3 / 2 * Real.log 2",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "twoLevelEnergy_witness",
+            "qualified_name": "FEP.PredictiveCoding.twoLevelEnergy_witness",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Analysis.SpecialFunctions.Log.Deriv",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Probability.Distributions.Gaussian.Real",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.twoLevel_chain_energy_witness",
+        "source_line": 627,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem twoLevel_chain_energy_witness :\n    gaussianChainEnergy\n      (fun level : Fin 2 => if level = 0 then 2 else 4)\n      (fun level : Fin 2 => if level = 0 then 3 else 1) =\n        11 - 3 / 2 * Real.log 2",
+        "statement_sha256": "3e66bed738d18102583af34f471d017751d4b507efc7fba17d90b82a156beed9"
       },
       "FEP.ScalarGaussianSemigroup.ScalarOUParameters.integral_ouTransition_tendsto_invariant": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -108518,6 +109284,125 @@
         "statement": "theorem entropy_eq_energy_add_logPartition_sub_kl [Nonempty α]\n    (E : α → ℝ) (β : ℝ) (q : FiniteLaw α) :\n    entropy q = β * expectation q E + Real.log (energyPartition E β) -\n      finiteKL q (energyGibbsLaw E β)",
         "statement_sha256": "93d55a3f71095ff49fc3b85792dc1e9e14190157da08af412f79a0e10309f5b3"
       },
+      "FEP.VariationalDuality.entropy_helmholtzGibbsLaw": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropy (helmholtzGibbsLaw E T) =\n      (∑ x, Real.exp (-E x / T) * E x) / (T * helmholtzPartition E T) +\n        Real.log (helmholtzPartition E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "log_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.entropy_helmholtzGibbsLaw",
+        "source_line": 1400,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem entropy_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) :\n    entropy (helmholtzGibbsLaw E T) =\n      (∑ x, Real.exp (-E x / T) * E x) / (T * helmholtzPartition E T) +\n        Real.log (helmholtzPartition E T)",
+        "statement_sha256": "f04fa4fe0e6997e3342e3eaeab4fa052b74d05f13eb92a6844f1c96c21dff60e"
+      },
       "FEP.VariationalDuality.expectedDistortion_nonneg": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -109829,6 +110714,1057 @@
         "statement": "theorem gibbsFreeEnergy_optimizer (certificate : GibbsCertificate α) :\n    gibbsFreeEnergy certificate certificate.optimizer =\n      -certificate.logPartition",
         "statement_sha256": "1e6ae1beb175eaf8520ea5af29ea21e4524b5c8996c9437f555ecb53215f7ee6"
       },
+      "FEP.VariationalDuality.hasDerivAt_helmholtzFreeEnergy": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "HasDerivAt (helmholtzFreeEnergy E) (-entropy (helmholtzGibbsLaw E T)) T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropy_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.entropy_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.hasDerivAt_helmholtzFreeEnergy",
+        "source_line": 1424,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem hasDerivAt_helmholtzFreeEnergy [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) :\n    HasDerivAt (helmholtzFreeEnergy E) (-entropy (helmholtzGibbsLaw E T)) T",
+        "statement_sha256": "e8ff4c8f8f128e8bf48d3e057779a61abfac647caa7b9705e0971053d126c828"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "expectation q E - T * entropy q = helmholtzFreeEnergy E T ↔\n      q = helmholtzGibbsLaw E T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtz_decomposition",
+            "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff",
+        "source_line": 1380,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_eq_iff [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) (q : FiniteLaw α) :\n    expectation q E - T * entropy q = helmholtzFreeEnergy E T ↔\n      q = helmholtzGibbsLaw E T",
+        "statement_sha256": "b91fe3d90e8ce073532a73643df75c6f300e2f10786c706c6ccd0bfaf74580ec"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_le": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy E T ≤ expectation q E - T * entropy q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtz_decomposition",
+            "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_le",
+        "source_line": 1372,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_le [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) :\n    helmholtzFreeEnergy E T ≤ expectation q E - T * entropy q",
+        "statement_sha256": "f57994c6c55c20192eeb4a9f0530274ccc59db0e061dca1af5e008eb3f005785"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_lt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hq"
+            ],
+            "role": "typed_binder",
+            "source": "(hq : q ≠ helmholtzGibbsLaw E T)",
+            "type_source": "q ≠ helmholtzGibbsLaw E T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy E T < expectation q E - T * entropy q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzFreeEnergy_eq_iff",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzFreeEnergy_le",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_lt",
+        "source_line": 1393,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_lt [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) (hq : q ≠ helmholtzGibbsLaw E T) :\n    helmholtzFreeEnergy E T < expectation q E - T * entropy q",
+        "statement_sha256": "01f03ffd1d9fc797ace5a9d6a7a5f83511308c699f3d4e2602f64e537932f073"
+      },
+      "FEP.VariationalDuality.helmholtzGibbsLaw_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < helmholtzGibbsLaw E T x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzGibbsLaw_pos",
+        "source_line": 1337,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzGibbsLaw_pos [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :\n    0 < helmholtzGibbsLaw E T x",
+        "statement_sha256": "5e4fe0d4ef1c4cdb7cf7fe9e96d81c63924ca911464ff19d719f8527840c9903"
+      },
+      "FEP.VariationalDuality.helmholtzPartition_bool": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzPartition_bool",
+        "source_line": 1462,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzPartition_bool (T : ℝ) :\n    helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1",
+        "statement_sha256": "0503320fa9b32a633c72d8cafb00506ecb1d72bff2a7c2c2fce89b457cfb1cf2"
+      },
+      "FEP.VariationalDuality.helmholtzPartition_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < helmholtzPartition E T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+        "source_line": 1324,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzPartition_pos [Nonempty α] (E : α → ℝ) (T : ℝ) :\n    0 < helmholtzPartition E T",
+        "statement_sha256": "34551357b1a4a59fdbf146e079647f366e37842029fdada84b437ba4f940279f"
+      },
+      "FEP.VariationalDuality.helmholtz_bool_uniform_gt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy helmholtzBoolEnergy T <\n      expectation (FiniteLaw.uniform : FiniteLaw Bool) helmholtzBoolEnergy -\n        T * entropy (FiniteLaw.uniform : FiniteLaw Bool)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzFreeEnergy_lt",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_lt",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_bool",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_bool",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtz_bool_uniform_gt",
+        "source_line": 1468,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtz_bool_uniform_gt {T : ℝ} (hT : 0 < T) :\n    helmholtzFreeEnergy helmholtzBoolEnergy T <\n      expectation (FiniteLaw.uniform : FiniteLaw Bool) helmholtzBoolEnergy -\n        T * entropy (FiniteLaw.uniform : FiniteLaw Bool)",
+        "statement_sha256": "422ee3b89af16c2c698da5d30726de5449e18018f03538c053283aa0de76a441"
+      },
+      "FEP.VariationalDuality.helmholtz_decomposition": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "expectation q E - T * entropy q =\n      helmholtzFreeEnergy E T + T * finiteKL q (helmholtzGibbsLaw E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy"
+            ],
+            "identifier": "finiteKL_eq_crossEntropy_sub_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzGibbsLaw_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzGibbsLaw_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "log_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+        "source_line": 1350,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtz_decomposition [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) :\n    expectation q E - T * entropy q =\n      helmholtzFreeEnergy E T + T * finiteKL q (helmholtzGibbsLaw E T)",
+        "statement_sha256": "08d003dae185237cee4acc0b86bca46e0aa638c9f0b60b3c3689586eeb63f9f9"
+      },
       "FEP.VariationalDuality.iidProductLaw_mass": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -110314,6 +112250,119 @@
         "source_owner": "src/fep_lean/formal/variational_duality.lean",
         "statement": "theorem joint_supported_by_productMarginals (joint : FiniteLaw (α × β)) :\n    ∀ xy, joint xy ≠ 0 →\n      0 < (joint.fstMarginal.product joint.sndMarginal) xy",
         "statement_sha256": "a41569935cfef4f82887c5f60b709370d2d2eaed9f99a3c7d34f3a2d9c8cf2b0"
+      },
+      "FEP.VariationalDuality.log_helmholtzGibbsLaw": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "Real.log (helmholtzGibbsLaw E T x) =\n      -E x / T - Real.log (helmholtzPartition E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+        "source_line": 1341,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem log_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :\n    Real.log (helmholtzGibbsLaw E T x) =\n      -E x / T - Real.log (helmholtzPartition E T)",
+        "statement_sha256": "170e5ff33206f0012ec71e31e2ea427570ba3be20b3354f04537b59fcefc7c63"
       },
       "FEP.VariationalDuality.meanFieldCoordinateFreeEnergy_eq": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
