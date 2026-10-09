@@ -1759,23 +1759,23 @@ variable {S : Type*} [Fintype S] [DecidableEq S]
 def MatrixNonneg (M : Matrix S S ℝ) : Prop := ∀ i j, 0 ≤ M i j
 
 omit [DecidableEq S] in
-theorem MatrixNonneg.mul {M N : Matrix S S ℝ} (hM : MatrixNonneg M)
+theorem matrixNonneg_mul {M N : Matrix S S ℝ} (hM : MatrixNonneg M)
     (hN : MatrixNonneg N) : MatrixNonneg (M * N) := by
   intro i j
   rw [Matrix.mul_apply]
   exact Finset.sum_nonneg fun k _ => mul_nonneg (hM i k) (hN k j)
 
 omit [Fintype S] in
-theorem MatrixNonneg.one : MatrixNonneg (1 : Matrix S S ℝ) := by
+theorem matrixNonneg_one : MatrixNonneg (1 : Matrix S S ℝ) := by
   intro i j
   rw [Matrix.one_apply]
   split_ifs <;> norm_num
 
-theorem MatrixNonneg.pow {M : Matrix S S ℝ} (hM : MatrixNonneg M) (n : ℕ) :
+theorem matrixNonneg_pow {M : Matrix S S ℝ} (hM : MatrixNonneg M) (n : ℕ) :
     MatrixNonneg (M ^ n) := by
   induction n with
-  | zero => rw [pow_zero]; exact MatrixNonneg.one
-  | succ n ih => rw [pow_succ]; exact ih.mul hM
+  | zero => rw [pow_zero]; exact matrixNonneg_one
+  | succ n ih => rw [pow_succ]; exact matrixNonneg_mul ih hM
 
 /-- The exponential power series of a matrix converges entrywise. -/
 theorem exp_hasSum_entry (M : Matrix S S ℝ) (i j : S) :
@@ -1786,11 +1786,11 @@ theorem exp_hasSum_entry (M : Matrix S S ℝ) (i j : S) :
     (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) M) i) j
 
 /-- Powers of a nonnegative matrix yield a nonnegative exponential. -/
-theorem MatrixNonneg.exp_smul {M : Matrix S S ℝ} (hM : MatrixNonneg M)
+theorem matrixNonneg_exp_smul {M : Matrix S S ℝ} (hM : MatrixNonneg M)
     {s : ℝ} (hs : 0 ≤ s) : MatrixNonneg (NormedSpace.exp (s • M)) := by
   intro i j
   refine (exp_hasSum_entry (s • M) i j).nonneg fun n => ?_
-  have hpow := (hM.pow n) i j
+  have hpow := (matrixNonneg_pow hM n) i j
   rw [smul_pow, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul]
   exact mul_nonneg (inv_nonneg.2 (Nat.cast_nonneg _))
     (mul_nonneg (pow_nonneg hs n) hpow)
@@ -1938,7 +1938,7 @@ theorem exp_nonneg (g : FiniteRateGenerator S) {t : ℝ} (ht : 0 ≤ t) :
   intro i j
   rw [Matrix.mul_apply]
   refine Finset.sum_nonneg fun k _ => mul_nonneg
-    ((g.uniformShift_nonneg.exp_smul ht) i k) ?_
+    ((matrixNonneg_exp_smul g.uniformShift_nonneg ht) i k) ?_
   rw [Matrix.smul_apply, smul_eq_mul]
   exact mul_nonneg (Real.exp_nonneg _) (by rw [Matrix.one_apply]; split_ifs <;> norm_num)
 
