@@ -15,7 +15,7 @@ from fep_lean.verification.environment import (
     _check_lean_workspace,
     _check_mathlib_built,
     _check_output_writable,
-    _check_python_numpy_matplotlib,
+    _check_python_stack,
     _check_references_bib,
     _check_toolchain_pin,
     _check_topics_yaml,
@@ -224,7 +224,7 @@ def test_credential_probe_reuses_readonly_execution_configuration(
 
 
 def test_scientific_stack_is_present() -> None:
-    ok, message = _check_python_numpy_matplotlib()
+    ok, message = _check_python_stack()
     assert ok
     assert "Python" in message
 

@@ -148,7 +148,7 @@ uv run mypy src
 uv run ruff check src tests scripts docs
 uv run ruff format --check src tests scripts docs
 uv run python docs/check_links.py --strict --include-root
-uv run python docs/md_hygiene.py --strict
+uv run python docs/md_hygiene.py --strict --include-root
 uv run python docs/pin_audit.py --check-latest
 uv run python docs/xref_audit.py
 uv run python docs/check_orphan_compiles.py

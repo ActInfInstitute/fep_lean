@@ -68,7 +68,6 @@ from fep_lean.verification._toolchain import find_executable as _shared_find_exe
 from fep_lean.verification._toolchain import (
     find_toolchain_bin as _shared_find_toolchain_bin,
 )
-from fep_lean.verification._toolchain import get_elan_home as _get_elan_home
 from fep_lean.verification._toolchain import (
     get_writable_elan_home as _get_elan_home_override,
 )
@@ -180,10 +179,6 @@ def classify_failure_kind(
     if "import" in s and "error" in s.lower():
         return "missing_import"
     return "other"
-
-
-def _get_elan_bin() -> Path:
-    return _get_elan_home() / "bin"
 
 
 def _subprocess_env(lean_dir: Path | None = None) -> dict[str, str]:

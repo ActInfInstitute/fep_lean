@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import sys
 from collections.abc import Iterator
@@ -1960,3 +1961,47 @@ def test_cli_resume_requires_a_reason(
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "error"
     assert "--reason" in payload["error"]
+
+
+@pytest.mark.skipif(os.name != "posix", reason="process groups are POSIX")
+def test_run_timeout_reaps_grandchild_and_reports_failure(tmp_path: Path) -> None:
+    """A timed-out verify command fails closed and leaves no descendant alive."""
+    import subprocess
+    import sys
+    import time
+
+    marker = tmp_path / "grandchild.json"
+    grand = (
+        "import os,time,json;from pathlib import Path;"
+        f"Path({str(marker)!r}).write_text(json.dumps(os.getpid()));"
+        "time.sleep(30)"
+    )
+    program = (
+        "import sys,subprocess,time\nfrom pathlib import Path\n"
+        f"subprocess.Popen([sys.executable,'-S','-c',{grand!r}])\n"
+        f"while not Path({str(marker)!r}).exists(): time.sleep(.005)\n"
+        "time.sleep(30)\n"
+    )
+    started = time.monotonic()
+    result = refresh_module._run(
+        sys.executable, "-S", "-c", program, root=tmp_path, timeout=1.5
+    )
+    assert time.monotonic() - started < 10
+    assert result["exit_code"] == refresh_module.TIMEOUT_EXIT_CODE
+    assert "timed out" in result["tail"]
+    assert marker.is_file()
+    pid = json.loads(marker.read_text())
+    deadline = time.monotonic() + 3
+    state = "alive"
+    while time.monotonic() < deadline:
+        state = subprocess.run(
+            ["/bin/ps", "-o", "stat=", "-p", str(pid)],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=5,
+        ).stdout.strip()
+        if not state or state.startswith("Z"):
+            break
+        time.sleep(0.05)
+    assert not state or state.startswith("Z"), f"grandchild survived: {pid}"

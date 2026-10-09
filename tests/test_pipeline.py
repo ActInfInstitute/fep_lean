@@ -11,6 +11,7 @@ import yaml
 
 from fep_lean._paths import resolve_output_root
 from fep_lean.catalogue.topics import CatalogueValidationError, FEPTopicCatalogue
+from fep_lean.gauss.runner import TopicRunResult
 from fep_lean.output import manuscript
 from fep_lean.output.manuscript import _verify_block_from_manifest
 from fep_lean.output.provenance import report_owner_errors, report_source_digest
@@ -316,8 +317,24 @@ def test_stats_never_counts_catalogue_as_verified() -> None:
 def test_topic_metrics_use_clean_compilation() -> None:
     result = PipelineResult(status="ok", mode="full", catalogue_topics=2)
     result.topic_results = [
-        SimpleNamespace(hermes_success=True, lean_compiles=True, lean_has_sorry=False),
-        SimpleNamespace(hermes_success=True, lean_compiles=True, lean_has_sorry=True),
+        TopicRunResult(
+            "fep-001",
+            "s1",
+            True,
+            "ok",
+            hermes_success=True,
+            lean_compiles=True,
+            lean_has_sorry=False,
+        ),
+        TopicRunResult(
+            "fep-002",
+            "s2",
+            False,
+            "ok",
+            hermes_success=True,
+            lean_compiles=True,
+            lean_has_sorry=True,
+        ),
     ]
     assert result.hermes_count == 2
     assert result.lean_verified_count == 2
