@@ -102,7 +102,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `compositions.efe_policy_selection` | composition | `FEPComposed` | fep_all, efe_policy_selection |
 | `compositions.finite_policy_action` | composition | `FEPComposed.FinitePolicyAction` | policy_tree, active_inference, controlled_markov, decision_risk, finite_posterior_learning |
 | `efe_time_scale_separation` | foundation | `FEP.TimeScaleEFE` | continuous_time_markov, path_thermodynamics, active_inference, ness_flow |
-| `helmholtz_ao_ness` | foundation | `FEP.HelmholtzAoNess` | continuous_time_markov |
+| `helmholtz_ao_ness` | foundation | `FEP.HelmholtzAoNess` | continuous_time_markov, geometric_mechanics |
 | `markov_semigroup` | foundation | `FEP.MarkovSemigroup` | continuous_time_markov, native_blanket |
 | `perception_action_loop` | foundation | `FEP.PerceptionActionLoop` | active_inference, controlled_markov, finite_markov_dynamics, temporal_inference, continuous_time_markov |
 | `posterior_convergence` | foundation | `FEP.PosteriorConvergence` | gaussian_information_geometry, finite_posterior_learning, measure_bayes |

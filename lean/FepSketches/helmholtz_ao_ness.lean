@@ -1,4 +1,5 @@
 import FepSketches.continuous_time_markov
+import FepSketches.geometric_mechanics
 import Mathlib.Tactic
 
 /-!
@@ -55,80 +56,15 @@ namespace FEP.HelmholtzAoNess
 open FEP FEP.ContinuousTimeMarkov Finset
 open scoped BigOperators
 
-/-! ## Skew bilinear algebra: the cancellation terms -/
+/-! ## Skew bilinear algebra (shared matrix kit)
 
-section SkewAlgebra
+The plain-matrix kit and its cancellation lemmas are defined once in
+`FEP.GeometricMechanics`; the names are re-exported here so that
+`FEP.HelmholtzAoNess.<name>` keeps resolving to the same declarations. -/
 
-variable {n : ℕ}
-
-/-- Dot product of plain real vectors indexed by `Fin n`. -/
-def dot (v w : Fin n → ℝ) : ℝ := ∑ i, v i * w i
-
-/-- Matrix–vector product for a plain real matrix indexed by `Fin n`. -/
-def mulVec (M : Fin n → Fin n → ℝ) (v : Fin n → ℝ) : Fin n → ℝ :=
-  fun i => ∑ k, M i k * v k
-
-/-- Matrix product for plain real matrices indexed by `Fin n`. -/
-def mulOf (A B : Fin n → Fin n → ℝ) : Fin n → Fin n → ℝ :=
-  fun i j => ∑ k, A i k * B k j
-
-/-- Plain trace of a plain real matrix indexed by `Fin n`. -/
-def traceOf (M : Fin n → Fin n → ℝ) : ℝ := ∑ i, M i i
-
-/-- Skew-symmetry `Mᵀ = -M` for a plain real matrix. -/
-def SkewSymmetric (M : Fin n → Fin n → ℝ) : Prop := ∀ i j, M i j = -M j i
-
-/-- Symmetry `Mᵀ = M` for a plain real matrix; the finite Hessian role. -/
-def SymmetricOf (M : Fin n → Fin n → ℝ) : Prop := ∀ i j, M i j = M j i
-
-/-- Double-index swap for sums over `Fin n × Fin n`: after
-`Finset.sum_comm` the two binder orders are alpha-equivalent. -/
-theorem sum_swapPairs {f : Fin n → Fin n → ℝ} :
-    ∑ i, ∑ j, f i j = ∑ i, ∑ j, f j i := by
-  rw [Finset.sum_comm]
-
-/-- Negation commutes with a double sum over `Fin n × Fin n`. -/
-theorem sum_negPairs {f : Fin n → Fin n → ℝ} :
-    ∑ i, ∑ j, -f i j = -∑ i, ∑ j, f i j := by
-  rw [Finset.sum_congr rfl fun i _ => Finset.sum_neg_distrib (f := fun j => f i j),
-    Finset.sum_neg_distrib (f := fun i => ∑ j, f i j)]
-
-/-- A skew-symmetric matrix annihilates its own quadratic form. -/
-theorem skewQuadratic_eq_zero (Q : Fin n → Fin n → ℝ) (g : Fin n → ℝ)
-    (hQ : SkewSymmetric Q) : dot g (mulVec Q g) = 0 := by
-  have key : dot g (mulVec Q g) = ∑ i, ∑ j, Q i j * (g i * g j) := by
-    simp only [dot, mulVec, Finset.mul_sum]
-    exact Finset.sum_congr rfl fun i _ =>
-      Finset.sum_congr rfl fun j _ => by ring
-  have negated : dot g (mulVec Q g) = -dot g (mulVec Q g) := by
-    calc dot g (mulVec Q g)
-        = ∑ i, ∑ j, Q i j * (g i * g j) := key
-      _ = ∑ i, ∑ j, Q j i * (g j * g i) := sum_swapPairs
-      _ = ∑ i, ∑ j, -(Q i j * (g i * g j)) := by
-            refine Finset.sum_congr rfl fun i _ => ?_
-            exact Finset.sum_congr rfl fun j _ => by rw [hQ j i]; ring
-      _ = -∑ i, ∑ j, Q i j * (g i * g j) := sum_negPairs
-      _ = -dot g (mulVec Q g) := by rw [key]
-  linarith
-
-/-- The trace-term cancellation: a skew matrix contracted against a
-symmetric matrix has zero trace. -/
-theorem skewTrace_eq_zero (Q H : Fin n → Fin n → ℝ)
-    (hQ : SkewSymmetric Q) (hH : SymmetricOf H) : traceOf (mulOf Q H) = 0 := by
-  have key : traceOf (mulOf Q H) = ∑ i, ∑ j, Q i j * H j i := by
-    simp only [traceOf, mulOf]
-  have negated : traceOf (mulOf Q H) = -traceOf (mulOf Q H) := by
-    calc traceOf (mulOf Q H)
-        = ∑ i, ∑ j, Q i j * H j i := key
-      _ = ∑ i, ∑ j, Q j i * H i j := sum_swapPairs
-      _ = ∑ i, ∑ j, -(Q i j * H j i) := by
-            refine Finset.sum_congr rfl fun i _ => ?_
-            exact Finset.sum_congr rfl fun j _ => by rw [hQ j i, hH i j]; ring
-      _ = -∑ i, ∑ j, Q i j * H j i := sum_negPairs
-      _ = -traceOf (mulOf Q H) := by rw [key]
-  linarith
-
-end SkewAlgebra
+export FEP.GeometricMechanics
+  (dot mulVec mulOf traceOf SkewSymmetric SymmetricOf sum_swapPairs
+   sum_negPairs skewTrace_eq_zero skewQuadratic_eq_zero)
 
 /-! ## The Helmholtz–Ao decomposition of a rate field -/
 
