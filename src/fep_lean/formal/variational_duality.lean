@@ -1207,4 +1207,102 @@ theorem boolZeroBudget_unique_feasible (joint : FiniteLaw (Bool × Bool))
   rcases xy with ⟨x, y⟩
   cases x <;> cases y <;> simp [boolZeroDistortionJoint, htf, hft, htt, hff]
 
+/-! ## Gibbs maximum entropy under a mean-energy constraint -/
+
+/-- Unnormalized partition function `Z(β) = ∑ exp(-β E)`. -/
+noncomputable def energyPartition (E : α → ℝ) (β : ℝ) : ℝ :=
+  ∑ x, Real.exp (-β * E x)
+
+/-- The energy partition function is strictly positive. -/
+theorem energyPartition_pos [Nonempty α] (E : α → ℝ) (β : ℝ) :
+    0 < energyPartition E β :=
+  Finset.sum_pos (fun _ _ => Real.exp_pos _) Finset.univ_nonempty
+
+/-- The Gibbs law `p_β(x) = exp(-β E x) / Z(β)`. -/
+noncomputable def energyGibbsLaw [Nonempty α] (E : α → ℝ) (β : ℝ) :
+    FiniteLaw α where
+  mass x := Real.exp (-β * E x) / energyPartition E β
+  nonneg x := div_nonneg (Real.exp_pos _).le (energyPartition_pos E β).le
+  sum_one := by
+    rw [← Finset.sum_div]
+    exact div_self (energyPartition_pos E β).ne'
+
+/-- Every atom of the Gibbs law is positive. -/
+theorem energyGibbsLaw_pos [Nonempty α] (E : α → ℝ) (β : ℝ) (x : α) :
+    0 < energyGibbsLaw E β x :=
+  div_pos (Real.exp_pos _) (energyPartition_pos E β)
+
+/-- Entropy decomposition against the Gibbs law:
+`H(q) = β⟨E⟩_q + log Z - KL(q ‖ p_β)`. -/
+theorem entropy_eq_energy_add_logPartition_sub_kl [Nonempty α]
+    (E : α → ℝ) (β : ℝ) (q : FiniteLaw α) :
+    entropy q = β * expectation q E + Real.log (energyPartition E β) -
+      finiteKL q (energyGibbsLaw E β) := by
+  rw [finiteKL_eq_crossEntropy_sub_entropy q _ (energyGibbsLaw_pos E β)]
+  have hlog : ∀ x, -(q x) * Real.log (energyGibbsLaw E β x) =
+      q x * (β * E x) + q x * Real.log (energyPartition E β) := by
+    intro x
+    change -(q x) * Real.log (Real.exp (-β * E x) / energyPartition E β) = _
+    rw [Real.log_div (Real.exp_pos _).ne' (energyPartition_pos E β).ne',
+      Real.log_exp]
+    ring
+  have hce : crossEntropy q (energyGibbsLaw E β) =
+      β * expectation q E + Real.log (energyPartition E β) := by
+    unfold crossEntropy expectation
+    rw [Finset.sum_congr rfl fun x _ => hlog x, Finset.sum_add_distrib,
+      ← Finset.sum_mul, q.sum_one, one_mul, Finset.mul_sum]
+    congr 1
+    refine Finset.sum_congr rfl fun x _ => by ring
+  rw [hce]
+  ring
+
+/-- Gibbs maximum entropy: among all finite laws with the same mean energy as
+`p_β`, the Gibbs law has maximal entropy, and uniquely so. -/
+theorem energyGibbs_maxEntropy [Nonempty α] (E : α → ℝ) (β : ℝ)
+    (q : FiniteLaw α)
+    (hq : expectation q E = expectation (energyGibbsLaw E β) E) :
+    entropy q ≤ entropy (energyGibbsLaw E β) ∧
+      (entropy q = entropy (energyGibbsLaw E β) ↔ q = energyGibbsLaw E β) := by
+  have hq' := entropy_eq_energy_add_logPartition_sub_kl E β q
+  have hg := entropy_eq_energy_add_logPartition_sub_kl E β
+    (energyGibbsLaw E β)
+  rw [finiteKL_self] at hg
+  rw [hq] at hq'
+  refine ⟨?_, ?_⟩
+  · linarith [finiteKL_nonneg q (energyGibbsLaw E β)]
+  · rw [← finiteKL_eq_zero_iff]
+    constructor <;> intro h <;> linarith
+
+/-- Strict form: a mean-energy-matched law different from `p_β` has strictly
+smaller entropy. -/
+theorem energyGibbs_entropy_lt_of_ne [Nonempty α] (E : α → ℝ) (β : ℝ)
+    (q : FiniteLaw α)
+    (hq : expectation q E = expectation (energyGibbsLaw E β) E)
+    (hne : q ≠ energyGibbsLaw E β) :
+    entropy q < entropy (energyGibbsLaw E β) :=
+  lt_of_le_of_ne (energyGibbs_maxEntropy E β q hq).1
+    fun h => hne ((energyGibbs_maxEntropy E β q hq).2.mp h)
+
+/-- With the zero energy, the Gibbs law is uniform. -/
+theorem energyGibbsLaw_zero_energy [Nonempty α] (β : ℝ) :
+    energyGibbsLaw (fun _ : α => (0 : ℝ)) β = FiniteLaw.uniform := by
+  apply FiniteLaw.ext_mass
+  funext x
+  simp [energyGibbsLaw, energyPartition, FiniteLaw.uniform]
+
+/-- Strict constrained witness on `Bool`: with zero energy every law meets the
+mean-energy constraint, and the biased law has entropy strictly below the
+Gibbs (uniform) law. -/
+theorem boolBiased_entropy_lt_zeroEnergyGibbs (β : ℝ) :
+    entropy boolBiased <
+      entropy (energyGibbsLaw (fun _ : Bool => (0 : ℝ)) β) := by
+  have hne : boolBiased ≠ energyGibbsLaw (fun _ : Bool => (0 : ℝ)) β := by
+    rw [energyGibbsLaw_zero_energy]
+    intro h
+    have := congrArg (fun r : FiniteLaw Bool => r.mass true) h
+    simp [boolBiased, FiniteLaw.uniform] at this
+    norm_num at this
+  refine energyGibbs_entropy_lt_of_ne _ β boolBiased ?_ hne
+  simp [expectation]
+
 end FEP.VariationalDuality
