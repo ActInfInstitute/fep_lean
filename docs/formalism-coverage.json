@@ -2915,9 +2915,13 @@
       "definition_count": 1,
       "formal_dependencies": [
         "FepSketches.active_inference",
+        "FepSketches.controlled_markov",
+        "FepSketches.geometric_optimization",
         "FepSketches.information_geometry",
         "FepSketches.markov_blanket",
-        "FepSketches.statistical_convergence"
+        "FepSketches.path_thermodynamics",
+        "FepSketches.statistical_convergence",
+        "FepSketches.temporal_inference"
       ],
       "id": "formal-module-core",
       "imports": [
@@ -2926,18 +2930,23 @@
         "FepSketches.information_geometry",
         "FepSketches.markov_blanket",
         "FepSketches.statistical_convergence",
+        "FepSketches.controlled_markov",
+        "FepSketches.temporal_inference",
+        "FepSketches.path_thermodynamics",
+        "FepSketches.geometric_optimization",
         "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
       ],
       "lean_module": "FepSketches.compositions.core",
       "resource": "compositions/core.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 23,
+      "theorem_count": 26,
       "theorems": [
         "FEPComposed.activeInference_expectedFreeEnergy_to_fep021",
         "FEPComposed.fep002_vfe_compProd_chain_rule",
         "FEPComposed.fep003_pragmaticCost_efe_balance",
         "FEPComposed.fep004_bernoulliMetric_specialization",
+        "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
         "FEPComposed.fep012_softmax_entropyRegularizedCost_le",
         "FEPComposed.fep013_gaussianHelmholtz_derivative",
         "FEPComposed.fep021_informationGain_balance",
@@ -2946,6 +2955,7 @@
         "FEPComposed.fep025_current_dissipation_nonneg",
         "FEPComposed.fep026_priorComplexity_is_fep011_surprise",
         "FEPComposed.fep027_priorPredictive_is_fep019",
+        "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
         "FEPComposed.fep031_zeroBeta_binary_maxEntropy",
         "FEPComposed.fep031_zeroBeta_binary_uniform",
         "FEPComposed.fep032_update_is_fep043_gradientStep",
@@ -2956,7 +2966,8 @@
         "FEPComposed.fep038_fisherRao_separation",
         "FEPComposed.fep039_partitionEnergy_conservation",
         "FEPComposed.fep041_informationGain_is_fep014_kl",
-        "FEPComposed.fep046_single_break_is_fep045_bernoulli"
+        "FEPComposed.fep046_single_break_is_fep045_bernoulli",
+        "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production"
       ]
     },
     {
@@ -3011,9 +3022,8 @@
       "resource": "compositions/control_temporal.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 15,
+      "theorem_count": 14,
       "theorems": [
-        "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
         "FEPComposed.fep065_controlledKernel_extends_fep023_normalization",
         "FEPComposed.fep066_action_update_refines_fep034_filter",
         "FEPComposed.fep067_reachableBelief_refines_fep023",
@@ -3082,10 +3092,8 @@
       "resource": "compositions/thermo_geometry.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 16,
+      "theorem_count": 14,
       "theorems": [
-        "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
-        "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production",
         "FEPComposed.fep093_path_ratio_extends_fep010_reversal",
         "FEPComposed.fep094_path_kl_refines_fep049_entropy_production",
         "FEPComposed.fep095_fluctuation_symmetry_extends_fep010_reversibility",
@@ -4533,8 +4541,8 @@
     "composed_theorems": 336,
     "definitions": 919,
     "distinct_mathlib_imports": 70,
-    "formal_module_dependency_edges": 163,
-    "formal_module_import_edges": 278,
+    "formal_module_dependency_edges": 167,
+    "formal_module_import_edges": 282,
     "formal_modules": 71,
     "formal_pairing_witnesses": 118,
     "formal_relation_witnesses": 24,
@@ -4807,7 +4815,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
       "source": "fep-054",
       "target": "fep-017",
       "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -4870,7 +4878,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
       "source": "fep-063",
       "target": "fep-014",
       "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -5052,7 +5060,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
       "source": "fep-089",
       "target": "fep-006",
       "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -5073,7 +5081,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
       "source": "fep-092",
       "target": "fep-032",
       "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -5199,7 +5207,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
+      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
       "source": "fep-110",
       "target": "fep-028",
       "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -5234,14 +5242,14 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
       "source": "fep-115",
       "target": "fep-042",
       "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
       "source": "fep-116",
       "target": "fep-001",
       "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"

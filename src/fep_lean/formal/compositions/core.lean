@@ -3,6 +3,10 @@ import FepSketches.active_inference
 import FepSketches.information_geometry
 import FepSketches.markov_blanket
 import FepSketches.statistical_convergence
+import FepSketches.controlled_markov
+import FepSketches.temporal_inference
+import FepSketches.path_thermodynamics
+import FepSketches.geometric_optimization
 import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 namespace FEPComposed
@@ -348,5 +352,115 @@ theorem fep046_single_break_is_fep045_bernoulli (p l₀ l₁ : ℝ) :
     simp [fep_fep046.FEP046.fep046_stickWeights,
       fep_fep046.FEP046.fep046_remainder,
       fep_fep045.FEP045.fep045_bernoulliMass] at hconserve ⊢
+
+/-! ## Derivations from released core topics
+
+Reviewed derivational edges for core topics that previously had no relation
+(LEAN-8).  The five expansion leaves own exactly one bridge per expansion
+topic, so these core-topic derivations live here. -/
+
+section CoreTopicDerivations
+
+open FEP FEP.ControlledMarkov FEP.TemporalInference FEP.FiniteInformation
+  FEP.FiniteMarkovDynamics FEP.GeometricOptimization FEP.InformationGeometry
+  FEP.PathThermodynamics Finset
+open scoped BigOperators Matrix
+
+/-- With unit incoming messages and factor `exp (-gamma * cost)`, fep-007's
+normalized sum-product message is fep-028's support-aware softmax on the
+support embedded from `Fin 8` into the ten-policy type.  Consequently fep-007's
+message normalization derives the unit sum of that softmax. -/
+theorem fep007_normalizedMessage_is_fep028_softmax
+    (gamma : ℝ) (cost : Fin 10 → ℝ) (neighbors : Finset (Fin 8))
+    (hNeighbors : neighbors.Nonempty) (node : Fin 8) :
+    (∀ target : Fin 8,
+      fep_fep007.FEP007.fep007_normalizedMessage
+          (fun _ source =>
+            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))
+          (fun _ => 1) neighbors node target =
+        fep_fep028.FEP028.fep028_softmax gamma cost
+          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)
+          (Fin.castLE (by norm_num) target)) ∧
+      (∑ policy ∈ neighbors.map
+          ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩,
+        fep_fep028.FEP028.fep028_softmax gamma cost
+          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)
+          policy = 1) := by
+  have hIdentify : ∀ target : Fin 8,
+      fep_fep007.FEP007.fep007_normalizedMessage
+          (fun _ source =>
+            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))
+          (fun _ => 1) neighbors node target =
+        fep_fep028.FEP028.fep028_softmax gamma cost
+          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)
+          (Fin.castLE (by norm_num) target) := by
+    intro target
+    classical
+    simp only [fep_fep007.FEP007.fep007_normalizedMessage,
+      fep_fep007.FEP007.fep007_unnormalizedMessage,
+      fep_fep007.FEP007.fep007_messageNormalizer,
+      fep_fep028.FEP028.fep028_softmax, mul_one, Finset.sum_map,
+      Function.Embedding.coeFn_mk]
+    simp
+  refine ⟨hIdentify, ?_⟩
+  rw [Finset.sum_map]
+  simp only [Function.Embedding.coeFn_mk]
+  calc
+    _ = ∑ target ∈ neighbors,
+        fep_fep007.FEP007.fep007_normalizedMessage
+          (fun _ source =>
+            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))
+          (fun _ => 1) neighbors node target :=
+      Finset.sum_congr rfl fun target _ => (hIdentify target).symm
+    _ = 1 :=
+      fep_fep007.FEP007.fep007_normalizedMessage_sum_one _ _ neighbors node
+        hNeighbors (fun _ _ => Real.exp_pos _) (fun _ _ => one_pos)
+
+/-- fep-029's scalar quadratic Bregman divergence is the one-coordinate
+instance of the generic Bregman divergence of fep-104 with potential `v 0 ^ 2`
+and gradient `2 * v 0`; the fep-104 three-point identity therefore yields the
+scalar three-point law for fep-029's divergence. -/
+theorem fep029_quadraticBregman_is_fep104_scalar_instance (x y z : ℝ) :
+    bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+        (fun _ => x) (fun _ => y) =
+        fep_fep029.FEP029.fep029_quadraticBregman x y ∧
+      fep_fep029.FEP029.fep029_quadraticBregman x z -
+          fep_fep029.FEP029.fep029_quadraticBregman x y -
+          fep_fep029.FEP029.fep029_quadraticBregman y z =
+        2 * (y - z) * (x - y) := by
+  have hIdentify : ∀ a b : ℝ,
+      bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+          (fun _ => a) (fun _ => b) =
+        fep_fep029.FEP029.fep029_quadraticBregman a b := by
+    intro a b
+    simp [bregmanDivergence, coordinatePairing,
+      fep_fep029.FEP029.fep029_quadraticBregman]
+  refine ⟨hIdentify x y, ?_⟩
+  have hThree := fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity
+    (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+    (fun _ => x) (fun _ => y) (fun _ => z)
+  rw [hIdentify, hIdentify, hIdentify] at hThree
+  simpa [coordinatePairing, mul_sub, sub_mul] using hThree
+
+/-- Discharging fep-050's second-law premise with fep-049's nonnegative
+quadratic entropy production derives the Landauer work bound.  The explicit
+`hBalance` premise identifies the erasure's total entropy change with the
+constitutive-law entropy production; it is a modelling assumption, not a
+consequence of either topic. -/
+theorem fep050_landauer_work_bound_from_fep049_entropy_production
+    {Edge : Type*} [Fintype Edge] {W Q T kB : ℝ} (hT : 0 < T)
+    (conductance force : Edge → ℝ)
+    (hConductance : ∀ edge, 0 ≤ conductance edge)
+    (hBalance : fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =
+      fep_fep049.FEP049.fep049_entropyProduction conductance force)
+    (hWorkHeat : Q ≤ W) :
+    fep_fep050.FEP050.fep050_landauerBound kB T ≤ W := by
+  have hSecondLaw : 0 ≤ fep_fep050.FEP050.fep050_totalEntropyChange Q T kB := by
+    rw [hBalance]
+    exact fep_fep049.FEP049.fep049_entropyProduction_nonneg
+      conductance force hConductance
+  exact fep_fep050.FEP050.fep050_landauer_work_bound hT hSecondLaw hWorkHeat
+
+end CoreTopicDerivations
 
 end FEPComposed

@@ -949,7 +949,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
         "source": "fep-054",
         "target": "fep-017",
         "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -1012,7 +1012,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
         "source": "fep-063",
         "target": "fep-014",
         "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -1194,7 +1194,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
         "source": "fep-089",
         "target": "fep-006",
         "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -1215,7 +1215,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
         "source": "fep-092",
         "target": "fep-032",
         "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -1341,7 +1341,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
+        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
         "source": "fep-110",
         "target": "fep-028",
         "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -1376,14 +1376,14 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
         "source": "fep-115",
         "target": "fep-042",
         "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
+        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
         "source": "fep-116",
         "target": "fep-001",
         "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"
@@ -8139,7 +8139,7 @@
       "lean_module": "FepSketches.compositions.core",
       "resource": "compositions/core.lean",
       "role": "composition",
-      "theorem_count": 23
+      "theorem_count": 26
     },
     {
       "declaration_namespace": "FEPComposed",
@@ -8153,7 +8153,7 @@
       "lean_module": "FepSketches.compositions.control_temporal",
       "resource": "compositions/control_temporal.lean",
       "role": "composition",
-      "theorem_count": 15
+      "theorem_count": 14
     },
     {
       "declaration_namespace": "FEPComposed",
@@ -8167,7 +8167,7 @@
       "lean_module": "FepSketches.compositions.thermo_geometry",
       "resource": "compositions/thermo_geometry.lean",
       "role": "composition",
-      "theorem_count": 16
+      "theorem_count": 14
     },
     {
       "declaration_namespace": "FEPComposed",
@@ -8912,8 +8912,8 @@
     "formal/compositions/causal_predictive.lean": "6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7",
     "formal/compositions/collective_learning.lean": "dd955765c85e05b70c39847c5f439303e879717ff437b0e36d7ca1969acde4e5",
     "formal/compositions/continuous_time.lean": "6c19c0fc1952141f3451d9da385c5d853608f36aab91bcfcda09b559c09510a8",
-    "formal/compositions/control_temporal.lean": "0cbdf3642bed611af2593db1df7e57f93fed79db047193b09c2e6de1e461a379",
-    "formal/compositions/core.lean": "ed36f94fd73bafdf813eda4eb0b3ff04566f4102554d119f1d21e2e02a66b0a2",
+    "formal/compositions/control_temporal.lean": "98ce41a805e7ac2a2eba43f7ba89664e5c77c7bbe20380c756d0bd3ff288aed2",
+    "formal/compositions/core.lean": "5ce07f7f61ffa33852ad55f13f5ca11ac99ce47a60f1f6a1604ccbe37da1d471",
     "formal/compositions/efe_policy_selection.lean": "27b1b26c1af403e387850f77ddf9804467c44ee5085ab5a74b2ee75cb4ba6c7d",
     "formal/compositions/efe_time_scale_separation.lean": "93f15c1daaa53f51634e2da4b5b080b5ffe68a8a7d15881b427c14a20891c81f",
     "formal/compositions/exponential_family.lean": "618ef2cf9838134b1a1815410a1cac84ce2daa6c030be2ac4d4e577caa83e1d1",
@@ -8932,7 +8932,7 @@
     "formal/compositions/policy_trees.lean": "98a74b0976bbac14a784887c38cdaf95db373a071667ecc66bd7f2b7ea657db4",
     "formal/compositions/risk_calibration.lean": "428430da8985d59619fe00975b79eff4151ccd90d3e078fbb10796c17f8cb455",
     "formal/compositions/smooth_reference_kernel.lean": "156464de9e7c33e16fa22bd6939fa64938b03ee4f5554fb3ecd48fbfaed6d397",
-    "formal/compositions/thermo_geometry.lean": "ae0510fafddafd63e094e8280cdfaaae1be1d89977a0bc2f45e86b701c44e167",
+    "formal/compositions/thermo_geometry.lean": "d4f5683ae70c9e3a20e849aa1c6446639e4e9ced08762cacb1d4564afdf83745",
     "formal/continuous_time_markov.lean": "47545a9d994578878c1e314dc16a858b3527459f3ef49a6903bee943ef7b5e83",
     "formal/controlled_markov.lean": "7cb9c18603f96adab7106f0930eb3d2870b42dd101fe1eff05fce9a8bf889652",
     "formal/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
@@ -8977,7 +8977,7 @@
     "formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
     "formal/variational_duality.lean": "fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
-    "inputs/formalism_relations.yaml": "68826c891cb3e5abaebada33394ed3caf8d97411eb3100be381534950a3299ae",
+    "inputs/formalism_relations.yaml": "8665aa1c7ac5a72f7eea383c61c5719e9a5183559273b38709fa2a1d3f86cb2d",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
     "inputs/theorem_maturity.yaml": "7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded",
     "lean_source.py": "8bf35005a2f360805af28eb8918dd988c48b33941c6e2dad7215d22c787b804c",
@@ -126886,6 +126886,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -126895,7 +126899,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.activeInference_expectedFreeEnergy_to_fep021",
-        "source_line": 40,
+        "source_line": 44,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem activeInference_expectedFreeEnergy_to_fep021\n    {Policy State Outcome : Type*}\n    [Fintype Policy] [Fintype State] [Fintype Outcome]\n    (model : FEP.ActiveInference.GenerativeModel Policy State Outcome)\n    (policy : Policy) :\n    ENNReal.ofReal (FEP.ActiveInference.expectedFreeEnergy model policy) =\n      fep_fep021.FEP021.fep021_expectedFreeEnergy\n        (ENNReal.ofReal (FEP.ActiveInference.pragmaticCost model policy))\n        (ENNReal.ofReal (FEP.ActiveInference.epistemicValue model policy))",
         "statement_sha256": "ecb2042ff154b7822097f6dc472d5db69434fb58a5b80feb3752c416a0300bc5"
@@ -127023,6 +127027,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127032,7 +127040,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep002_vfe_compProd_chain_rule",
-        "source_line": 56,
+        "source_line": 60,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep002_vfe_compProd_chain_rule\n    {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]\n    (μ ν : Measure α) (κ η : Kernel α β)\n    [IsFiniteMeasure μ] [IsFiniteMeasure ν]\n    [IsMarkovKernel κ] [IsMarkovKernel η]\n    (surprisal : ENNReal) :\n    fep_fep002.FEP002.fep002_variationalFreeEnergy\n        (μ ⊗ₘ κ) (ν ⊗ₘ η) surprisal =\n      surprisal +\n        (InformationTheory.klDiv μ ν +\n          InformationTheory.klDiv (μ ⊗ₘ κ) (μ ⊗ₘ η))",
         "statement_sha256": "f60958326ea657384132dea1df2a17494902aa7e36f043d47b17a8601a151e03"
@@ -127119,6 +127127,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127128,7 +127140,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep003_pragmaticCost_efe_balance",
-        "source_line": 202,
+        "source_line": 206,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep003_pragmaticCost_efe_balance\n    (discount : ENNReal) (stageCost : ℕ → ENNReal) (horizon : ℕ)\n    (epistemicValue : ENNReal)\n    (hvalue : epistemicValue ≤\n      fep_fep003.FEP003.fep003_pragmaticCost discount stageCost horizon) :\n    fep_fep021.FEP021.fep021_expectedFreeEnergy\n          (fep_fep003.FEP003.fep003_pragmaticCost discount stageCost horizon)\n          epistemicValue + epistemicValue =\n      fep_fep003.FEP003.fep003_pragmaticCost discount stageCost horizon",
         "statement_sha256": "372d8ff6fcb524916e2e02b8a852e03a02ee6def113a55e96ab2486dbb9c337f"
@@ -127170,6 +127182,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127179,7 +127195,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep004_bernoulliMetric_specialization",
-        "source_line": 243,
+        "source_line": 247,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep004_bernoulliMetric_specialization (p v w : ℝ) :\n    fep_fep004.FEP004.fep004_fisherMetric\n        (ι := Unit)\n        (fun _ => fep_fep038.FEP038.fep038_fisherInformation p)\n        (fun _ => v) (fun _ => w) =\n      fep_fep038.FEP038.fep038_fisherMetric p v w",
         "statement_sha256": "993be8f56f32f67d0374b536051468d0843e941182dce42ab56418ea4fc02d1b"
@@ -127239,7 +127255,18 @@
           }
         ],
         "conclusion": "(∀ target : Fin 8,\n      fep_fep007.FEP007.fep007_normalizedMessage\n          (fun _ source =>\n            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))\n          (fun _ => 1) neighbors node target =\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          (Fin.castLE (by norm_num) target)) ∧\n      (∑ policy ∈ neighbors.map\n          ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩,\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          policy = 1)",
-        "context_binders": [],
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          }
+        ],
         "declaration_mentions": [
           {
             "identifier": "fep_fep007.FEP007.fep007_normalizedMessage_sum_one",
@@ -127251,16 +127278,25 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.fep_all",
+          "FepSketches.active_inference",
+          "FepSketches.information_geometry",
+          "FepSketches.markov_blanket",
+          "FepSketches.statistical_convergence",
           "FepSketches.controlled_markov",
-          "FepSketches.temporal_inference"
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
+          "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
         "namespace": "FEPComposed",
-        "namespace_variable_context": [],
+        "namespace_variable_context": [
+          "{Ω : Type*}"
+        ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
-        "source_line": 368,
-        "source_owner": "src/fep_lean/formal/compositions/control_temporal.lean",
+        "source_line": 373,
+        "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep007_normalizedMessage_is_fep028_softmax\n    (gamma : ℝ) (cost : Fin 10 → ℝ) (neighbors : Finset (Fin 8))\n    (hNeighbors : neighbors.Nonempty) (node : Fin 8) :\n    (∀ target : Fin 8,\n      fep_fep007.FEP007.fep007_normalizedMessage\n          (fun _ source =>\n            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))\n          (fun _ => 1) neighbors node target =\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          (Fin.castLE (by norm_num) target)) ∧\n      (∑ policy ∈ neighbors.map\n          ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩,\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          policy = 1)",
         "statement_sha256": "c6ec46a8f7769f48fa053643e483fc1538d6a4242cc0da632360cc3651d628b3"
       },
@@ -127368,6 +127404,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127377,7 +127417,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep012_softmax_entropyRegularizedCost_le",
-        "source_line": 261,
+        "source_line": 265,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep012_softmax_entropyRegularizedCost_le\n    (γ : ℝ) (cost : Fin 10 → ℝ) (policies : Finset (Fin 10))\n    (hne : policies.Nonempty) {temperature : ℝ} (htemperature : 0 ≤ temperature) :\n    fep_fep012.FEP012.fep012_entropyRegularizedCost\n        (fep_fep028.FEP028.fep028_softmax γ cost policies)\n        cost temperature ≤\n      fep_fep012.FEP012.fep012_expectedCost\n        (fep_fep028.FEP028.fep028_softmax γ cost policies) cost",
         "statement_sha256": "b98488cd22c069a26d20178c62fdcf05a5a825a2678413350dc1d9cabbebf1ff"
@@ -127451,6 +127491,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127460,7 +127504,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep013_gaussianHelmholtz_derivative",
-        "source_line": 281,
+        "source_line": 285,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep013_gaussianHelmholtz_derivative\n    {κ T : ℝ} (hκ : 0 < κ) (hT : 0 < T) :\n    HasDerivAt\n      (fun t => fep_fep013.FEP013.fep013_helmholtz\n        (t / 2) t (fep_fep040.FEP040.fep040_thermalEntropy κ t))\n      (-fep_fep040.FEP040.fep040_thermalEntropy κ T) T",
         "statement_sha256": "731927a33de8d94e10b9d0b56bdc70f8f0c2540e81816b0ddb5cfe45d7085fe2"
@@ -127546,6 +127590,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127555,7 +127603,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep021_informationGain_balance",
-        "source_line": 189,
+        "source_line": 193,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep021_informationGain_balance\n    {State : Type*} [MeasurableSpace State]\n    (posterior prior : Measure State) (pragmaticCost : ENNReal)\n    (hvalue :\n      fep_fep041.FEP041.fep041_informationGain posterior prior ≤ pragmaticCost) :\n    fep_fep021.FEP021.fep021_expectedFreeEnergy pragmaticCost\n          (fep_fep041.FEP041.fep041_informationGain posterior prior) +\n        fep_fep041.FEP041.fep041_informationGain posterior prior =\n      pragmaticCost",
         "statement_sha256": "efd86353af9fbbe31d4385b10c8436797529f46c710867ea693114d578fbdc8f"
@@ -127675,6 +127723,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127684,7 +127736,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep022_predictive_is_hierarchical_marginal",
-        "source_line": 93,
+        "source_line": 97,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep022_predictive_is_hierarchical_marginal\n    {𝓒 Ω 𝓧 : Type*}\n    [MeasurableSpace 𝓒] [MeasurableSpace Ω] [MeasurableSpace 𝓧]\n    (ν : Measure 𝓒) (posterior : Kernel 𝓒 Ω) (likelihood : Kernel Ω 𝓧)\n    [SFinite ν] [IsSFiniteKernel posterior] [IsSFiniteKernel likelihood] :\n    (fep_fep027.FEP027.fep027_hierarchicalJoint ν\n      (fep_fep022.FEP022.fep022_posteriorPredictive posterior likelihood)).snd =\n        likelihood ∘ₘ (posterior ∘ₘ ν)",
         "statement_sha256": "69c61db96ca65dea792e0b3d41d8b5936c4ffec1ea806b0480be691a43b8ab59"
@@ -127761,6 +127813,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127770,7 +127826,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep024_regularizer_is_fep014_kl",
-        "source_line": 215,
+        "source_line": 219,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep024_regularizer_is_fep014_kl\n    {α : Type*} [MeasurableSpace α]\n    (base weight : ENNReal) (approximation prior : Measure α) :\n    fep_fep024.FEP024.fep024_klRegularizedObjective\n        base weight approximation prior =\n      base + weight * InformationTheory.klDiv approximation prior ∧\n    0 ≤ InformationTheory.klDiv approximation prior",
         "statement_sha256": "a41c057633445e5d7321be27c17eff9897f9347809952c978488ba7be8c682c5"
@@ -127847,6 +127903,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127856,7 +127916,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep025_current_dissipation_nonneg",
-        "source_line": 168,
+        "source_line": 172,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep025_current_dissipation_nonneg\n    {n : ℕ} (flow : Matrix (Fin n) (Fin n) ℝ)\n    (resistance : Fin n × Fin n → ℝ)\n    (hresistance : ∀ edge, 0 ≤ resistance edge) :\n    0 ≤ fep_fep049.FEP049.fep049_entropyProduction resistance\n      (fun edge =>\n        fep_fep025.FEP025.fep025_probabilityCurrent flow edge.1 edge.2)",
         "statement_sha256": "90023de6dd3fa49f0c45719ad15e67c348743fa7f968f3a996972c3e79639bfc"
@@ -127896,6 +127956,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -127905,7 +127969,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep026_priorComplexity_is_fep011_surprise",
-        "source_line": 254,
+        "source_line": 258,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep026_priorComplexity_is_fep011_surprise (p : ℝ) :\n    fep_fep026.FEP026.fep026_priorComplexity p =\n      fep_fep011.FEP011.fep011_surprise p",
         "statement_sha256": "86d2073ba73a0b20d87e92a3d26f6811bc756048ccc7ce58d1e5af16ee051444"
@@ -128005,6 +128069,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128014,7 +128082,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep027_priorPredictive_is_fep019",
-        "source_line": 84,
+        "source_line": 88,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep027_priorPredictive_is_fep019\n    {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]\n    (μ : Measure α) (κ : Kernel α β) [SFinite μ] [IsSFiniteKernel κ] :\n    (fep_fep027.FEP027.fep027_hierarchicalJoint μ κ).snd =\n      fep_fep019.FEP019.fep019_priorPredictive κ μ",
         "statement_sha256": "770f616b5b44b5ed1ac0f74b0a1de35fda9bfa2afcc70a24285736bd22746835"
@@ -128036,7 +128104,18 @@
           }
         ],
         "conclusion": "bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)\n        (fun _ => x) (fun _ => y) =\n        fep_fep029.FEP029.fep029_quadraticBregman x y ∧\n      fep_fep029.FEP029.fep029_quadraticBregman x z -\n          fep_fep029.FEP029.fep029_quadraticBregman x y -\n          fep_fep029.FEP029.fep029_quadraticBregman y z =\n        2 * (y - z) * (x - y)",
-        "context_binders": [],
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          }
+        ],
         "declaration_mentions": [
           {
             "identifier": "fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity",
@@ -128048,16 +128127,25 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.fep_all",
+          "FepSketches.active_inference",
+          "FepSketches.information_geometry",
+          "FepSketches.markov_blanket",
+          "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
           "FepSketches.path_thermodynamics",
-          "FepSketches.geometric_optimization"
+          "FepSketches.geometric_optimization",
+          "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
         "namespace": "FEPComposed",
-        "namespace_variable_context": [],
+        "namespace_variable_context": [
+          "{Ω : Type*}"
+        ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
-        "source_line": 330,
-        "source_owner": "src/fep_lean/formal/compositions/thermo_geometry.lean",
+        "source_line": 423,
+        "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep029_quadraticBregman_is_fep104_scalar_instance (x y z : ℝ) :\n    bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)\n        (fun _ => x) (fun _ => y) =\n        fep_fep029.FEP029.fep029_quadraticBregman x y ∧\n      fep_fep029.FEP029.fep029_quadraticBregman x z -\n          fep_fep029.FEP029.fep029_quadraticBregman x y -\n          fep_fep029.FEP029.fep029_quadraticBregman y z =\n        2 * (y - z) * (x - y)",
         "statement_sha256": "cef0776c169b7097f07502c175c3e5167e4a14affdca02dd236663257153429a"
       },
@@ -128109,6 +128197,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128118,7 +128210,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep031_zeroBeta_binary_maxEntropy",
-        "source_line": 233,
+        "source_line": 237,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep031_zeroBeta_binary_maxEntropy (E : Fin 2 → ℝ) :\n    Real.binEntropy\n        (fep_fep031.FEP031.fep031_gibbsProbability\n          0 2 E Finset.univ 0) = Real.log 2",
         "statement_sha256": "b0d13a7410ffdc1a8d7feaf0a73ae1f30c5fcf1a34dae0dd1939c5ec51cf27db"
@@ -128158,6 +128250,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128167,7 +128263,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep031_zeroBeta_binary_uniform",
-        "source_line": 226,
+        "source_line": 230,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep031_zeroBeta_binary_uniform (E : Fin 2 → ℝ) :\n    fep_fep031.FEP031.fep031_gibbsProbability\n        0 2 E Finset.univ 0 = (2 : ℝ)⁻¹",
         "statement_sha256": "a8d7127f62599e0c21c90781a214f664f3d1b414088d55dbd6e224d97761b6e4"
@@ -128210,6 +128306,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128219,7 +128319,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep032_update_is_fep043_gradientStep",
-        "source_line": 298,
+        "source_line": 302,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep032_update_is_fep043_gradientStep\n    (η a center x : ℝ) :\n    x - η * fep_fep043.FEP043.fep043_quadraticGradient a center x =\n      fep_fep032.FEP032.fep032_quadraticUpdate (2 * a * η) center x",
         "statement_sha256": "3d7317556477ab24dc41501669d76c7147e571724c9edaf449b7d894e5895dbc"
@@ -128346,6 +128446,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128355,7 +128459,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep034_filter_is_fep017_posterior",
-        "source_line": 72,
+        "source_line": 76,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep034_filter_is_fep017_posterior\n    {Ω 𝓧 : Type*} [MeasurableSpace Ω] [MeasurableSpace 𝓧]\n    (τ : Kernel Ω Ω) (κ : Kernel Ω 𝓧) (μ : Measure Ω)\n    [StandardBorelSpace Ω] [Nonempty Ω]\n    [IsFiniteMeasure μ] [IsFiniteKernel τ] [IsFiniteKernel κ] :\n    fep_fep034.FEP034.fep034_filter τ κ μ =\n      fep_fep017.FEP017.fep017_posterior κ\n        (τ ∘ₘ μ)",
         "statement_sha256": "8b7c37d519d298bc4bcd7c9668118d36ab344ae5e890c60176738e96947f3743"
@@ -128461,6 +128565,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128470,7 +128578,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep036_empiricalPosterior_closed",
-        "source_line": 109,
+        "source_line": 113,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep036_empiricalPosterior_closed\n    (data : List Bool) {l₀ l₁ : ℝ} (hl₀ : 0 < l₀) (hl₁ : 0 < l₁) (b : Bool) :\n    fep_fep045.FEP045.fep045_bernoulliMass\n        (fep_fep045.FEP045.fep045_posteriorParameter\n          (fep_fep036.FEP036.fep036_smoothedRate\n            (fep_fep042.FEP042.fep042_successCount data) data.length)\n          l₀ l₁) b =\n      fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep036.FEP036.fep036_smoothedRate\n            (fep_fep042.FEP042.fep042_successCount data) data.length) b *\n        fep_fep045.FEP045.fep045_binaryLikelihood l₀ l₁ b /\n          fep_fep045.FEP045.fep045_evidence\n            (fep_fep036.FEP036.fep036_smoothedRate\n              (fep_fep042.FEP042.fep042_successCount data) data.length)\n            l₀ l₁",
         "statement_sha256": "c98e623d8b5bd22eac37dd18679e66caa3a0cdba1d00a049eebfcf0e609877e3"
@@ -128573,6 +128681,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128582,7 +128694,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep036_smoothedRate_strongLaw",
-        "source_line": 17,
+        "source_line": 21,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep036_smoothedRate_strongLaw\n    [MeasurableSpace Ω] (μ : Measure Ω) (observations : ℕ → Ω → Bool)\n    (hint : Integrable (indicator observations 0) μ)\n    (hindep : Pairwise (fun i j =>\n      indicator observations i ⟂ᵢ[μ] indicator observations j))\n    (hident : ∀ index,\n      IdentDistrib (indicator observations index)\n        (indicator observations 0) μ μ) :\n    ∀ᵐ ω ∂μ,\n      Tendsto\n        (fun n =>\n          fep_fep036.FEP036.fep036_smoothedRate\n            (successCount observations n ω) n)\n        atTop (nhds μ[indicator observations 0])",
         "statement_sha256": "2fed250d046a85f1381267cdacde4174cbd889b2deb945caf9d78b1d4187779f"
@@ -128639,6 +128751,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128648,7 +128764,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep037_autocorrelation_tracks_fep020",
-        "source_line": 179,
+        "source_line": 183,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep037_autocorrelation_tracks_fep020 (α : ℝ) (n : ℕ) :\n    2 * (((fep_fep020.FEP020.fep020_evolve α)^[n]) 1 - 1 / 2) =\n      fep_fep037.FEP037.fep037_autocorrelation α 1 n",
         "statement_sha256": "16121f404700d679b4ca09c6df0ea4bcff9bbba5bf0d3082dc0c4c426b02bcd1"
@@ -128733,6 +128849,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128742,7 +128862,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep038_fisherRao_separation",
-        "source_line": 142,
+        "source_line": 146,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep038_fisherRao_separation\n    {p q v : ℝ} (hp : p ∈ Set.Ioo (0 : ℝ) 1)\n    (hq : q ∈ Set.Icc (0 : ℝ) 1) (hv : v ≠ 0) :\n    (fep_fep018.FEP018.fep018_fisherRaoDistance p q = 0 ↔ p = q) ∧\n      0 < fep_fep038.FEP038.fep038_fisherMetric p v v",
         "statement_sha256": "22de169e1c5d28f944eccaffe03802d5b8892e521200fd0f795d92a20424d2a1"
@@ -128792,6 +128912,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128801,7 +128925,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep039_partitionEnergy_conservation",
-        "source_line": 315,
+        "source_line": 319,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep039_partitionEnergy_conservation\n    (assign : Fin 20 → fep_fep005.FEP005.BlkPart)\n    (stateEnergy : Fin 20 → ℝ) :\n    fep_fep039.FEP039.fep039_global_fe\n        (fep005_blockEnergy assign stateEnergy) =\n      ∑ state : Fin 20, stateEnergy state",
         "statement_sha256": "99eb2abe782363cfa2fc123e3cb6808a08fa0af937ec95289eb12e3e36baa691"
@@ -128883,6 +129007,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128892,7 +129020,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep041_informationGain_is_fep014_kl",
-        "source_line": 154,
+        "source_line": 158,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep041_informationGain_is_fep014_kl\n    {State : Type*} [MeasurableSpace State]\n    (posterior prior : Measure State)\n    [IsFiniteMeasure posterior] [IsFiniteMeasure prior] :\n    fep_fep041.FEP041.fep041_informationGain posterior prior =\n        InformationTheory.klDiv posterior prior ∧\n      (fep_fep041.FEP041.fep041_informationGain posterior prior = 0 ↔\n        posterior = prior)",
         "statement_sha256": "63ab0110391c9ac83777b99becebd113e5178b3d94be56261a93cf68f87a99b2"
@@ -128941,6 +129069,10 @@
           "FepSketches.information_geometry",
           "FepSketches.markov_blanket",
           "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization",
           "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
@@ -128950,7 +129082,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep046_single_break_is_fep045_bernoulli",
-        "source_line": 330,
+        "source_line": 334,
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep046_single_break_is_fep045_bernoulli (p l₀ l₁ : ℝ) :\n    fep_fep046.FEP046.fep046_stickWeights\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        [fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) true] ∧\n      fep_fep046.FEP046.fep046_remainder\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) false ∧\n      ∑ b : Bool, fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) b = 1",
         "statement_sha256": "dd982859e1b9f4470aefa5ffb441364cf3bbf433d4b2b894f97e3890f3c132e0"
@@ -129042,7 +129174,18 @@
           }
         ],
         "conclusion": "fep_fep050.FEP050.fep050_landauerBound kB T ≤ W",
-        "context_binders": [],
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          }
+        ],
         "declaration_mentions": [
           {
             "identifier": "fep_fep049.FEP049.fep049_entropyProduction_nonneg",
@@ -129060,16 +129203,25 @@
         "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
         "import_context": [
           "FepSketches.fep_all",
+          "FepSketches.active_inference",
+          "FepSketches.information_geometry",
+          "FepSketches.markov_blanket",
+          "FepSketches.statistical_convergence",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference",
           "FepSketches.path_thermodynamics",
-          "FepSketches.geometric_optimization"
+          "FepSketches.geometric_optimization",
+          "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
         ],
         "line_coordinate_kind": "formal_resource_file",
         "namespace": "FEPComposed",
-        "namespace_variable_context": [],
+        "namespace_variable_context": [
+          "{Ω : Type*}"
+        ],
         "preceding_scope_directives": [],
         "qualified_name": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production",
-        "source_line": 312,
-        "source_owner": "src/fep_lean/formal/compositions/thermo_geometry.lean",
+        "source_line": 450,
+        "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep050_landauer_work_bound_from_fep049_entropy_production\n    {Edge : Type*} [Fintype Edge] {W Q T kB : ℝ} (hT : 0 < T)\n    (conductance force : Edge → ℝ)\n    (hConductance : ∀ edge, 0 ≤ conductance edge)\n    (hBalance : fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =\n      fep_fep049.FEP049.fep049_entropyProduction conductance force)\n    (hWorkHeat : Q ≤ W) :\n    fep_fep050.FEP050.fep050_landauerBound kB T ≤ W",
         "statement_sha256": "82ff123cea446838c45179e6b5ad754244b725192146e1734cd271f8f1c918a0"
       },

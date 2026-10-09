@@ -734,7 +734,7 @@ edges:
   - source: fep-054
     target: fep-017
     kind: formal_pairing
-    rationale: Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.
     witness: FEPComposed.fep054_involution_of_fep017_posterior
   - source: fep-055
     target: fep-019
@@ -779,7 +779,7 @@ edges:
   - source: fep-063
     target: fep-014
     kind: formal_pairing
-    rationale: Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.
     witness: FEPComposed.fep063_channel_dpi_bounds_fep014
   - source: fep-064
     target: fep-041
@@ -909,7 +909,7 @@ edges:
   - source: fep-089
     target: fep-006
     kind: formal_pairing
-    rationale: The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.
     witness: FEPComposed.fep089_finite_jet_shift_specializes_fep006
   - source: fep-090
     target: fep-043
@@ -924,7 +924,7 @@ edges:
   - source: fep-092
     target: fep-032
     kind: formal_pairing
-    rationale: On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.
     witness: FEPComposed.fep092_quadratic_convergence_specializes_fep032
   - source: fep-093
     target: fep-010
@@ -1014,7 +1014,7 @@ edges:
   - source: fep-110
     target: fep-028
     kind: formal_pairing
-    rationale: Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.
+    rationale: Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.
     witness: FEPComposed.fep110_product_of_experts_refines_fep028_normalization
   - source: fep-111
     target: fep-025
@@ -1039,12 +1039,12 @@ edges:
   - source: fep-115
     target: fep-042
     kind: formal_pairing
-    rationale: The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.
     witness: FEPComposed.fep115_frequency_union_bound_extends_fep042_counts
   - source: fep-116
     target: fep-001
     kind: formal_pairing
-    rationale: The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
+    rationale: The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.
     witness: FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound
   - source: fep-117
     target: fep-017
