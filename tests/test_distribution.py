@@ -118,7 +118,8 @@ def _package_namespace_digests(project_root: Path) -> dict[str, str]:
     return {
         path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in root.rglob("*")
-        if path.is_file() and path.suffix in {".py", ".lean", ".yaml"}
+        if path.is_file()
+        and (path.suffix in {".py", ".lean", ".yaml"} or path.name == "py.typed")
     }
 
 
@@ -194,6 +195,9 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
         )
         wheel_metadata = archive.read(metadata_name).decode("utf-8")
     _assert_wheel_metadata_headers(wheel_metadata)
+    # PEP 561: the typed-package marker ships (empty) in the built wheel.
+    assert expected_resources["py.typed"] == hashlib.sha256(b"").hexdigest()
+    assert "py.typed" in _wheel_namespace_digests(wheel)
 
     environment = tmp_path / "venv"
     target_python = os.environ.get("FEP_DISTRIBUTION_PYTHON", sys.executable)
@@ -255,7 +259,7 @@ def test_built_wheel_imports_in_isolated_namespace(tmp_path: Path) -> None:
                 "assert all(hashlib.sha256(root.joinpath(name).read_bytes()).hexdigest() == value for name, value in expected.items()); "
                 "installed_root = pathlib.Path(fep_lean.__file__).parent; "
                 "installed = {path.relative_to(installed_root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest() "
-                "for path in installed_root.rglob('*') if path.is_file() and path.suffix in {'.py', '.lean', '.yaml'}}; "
+                "for path in installed_root.rglob('*') if path.is_file() and (path.suffix in {'.py', '.lean', '.yaml'} or path.name == 'py.typed')}; "
                 "assert installed == expected, 'installed namespace roster or bytes differ'; "
                 "from fep_lean.verification.gnn_continuous_artifact_proof import ContinuousArtifactError, scaffold_digest, canonical_scaffold_bytes; "
                 f"q7_source = pathlib.Path({str(PROJECT_ROOT / 'specs/gnn-bridge-q7-continuous-ou-proof/fixtures/continuous_ou_jax.py')!r}).read_text(encoding='utf-8'); "

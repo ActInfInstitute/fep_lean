@@ -37,6 +37,7 @@ from fep_lean.output.release_bundle import (
     validate_release_bundle,
     write_publication_manuscript,
 )
+from fep_lean.verification import _subprocess
 
 PROJ = Path(__file__).resolve().parents[1]
 
@@ -3155,7 +3156,7 @@ def test_python_acceptance_is_emitted_only_by_the_exact_stable_run(
         )
         return SimpleNamespace(returncode=0, stdout="passed", stderr="")
 
-    monkeypatch.setattr(subprocess, "run", completed_run)
+    monkeypatch.setattr(_subprocess, "run_process_group", completed_run)
 
     receipt_path = bundle_module.run_python_acceptance(tmp_path)
     receipt = json.loads(receipt_path.read_bytes())
@@ -3214,7 +3215,7 @@ def test_python_acceptance_is_emitted_only_by_the_exact_stable_run(
         pytest.fail("static Python validation started collection")
 
     with monkeypatch.context() as static_patch:
-        static_patch.setattr(subprocess, "run", forbidden_collection)
+        static_patch.setattr(_subprocess, "run_process_group", forbidden_collection)
         static_patch.setattr(
             bundle_module, "_collect_python_node_ids", forbidden_collection
         )
@@ -3349,7 +3350,7 @@ def test_python_acceptance_rolls_back_when_inputs_or_executor_change_during_run(
             test_count_owner.write_text("tests:\n  collected: 1\n", encoding="utf-8")
         return SimpleNamespace(returncode=0, stdout="", stderr="")
 
-    monkeypatch.setattr(subprocess, "run", changing_run)
+    monkeypatch.setattr(_subprocess, "run_process_group", changing_run)
 
     with pytest.raises(
         bundle_module.ReleaseBundleError,
@@ -3402,7 +3403,7 @@ def test_python_acceptance_rolls_back_after_an_interrupted_run(
         (output / "coverage.xml").write_bytes(b"partial coverage\n")
         raise KeyboardInterrupt
 
-    monkeypatch.setattr(subprocess, "run", interrupted_run)
+    monkeypatch.setattr(_subprocess, "run_process_group", interrupted_run)
 
     with pytest.raises(KeyboardInterrupt):
         bundle_module.run_python_acceptance(tmp_path)
@@ -3458,7 +3459,7 @@ def test_python_acceptance_failure_removes_partial_new_receipts_and_restores_pri
         coverage.write_bytes(b"partial coverage\n")
         return SimpleNamespace(returncode=3, stdout="", stderr="suite failed")
 
-    monkeypatch.setattr(subprocess, "run", failed_run)
+    monkeypatch.setattr(_subprocess, "run_process_group", failed_run)
 
     with pytest.raises(
         bundle_module.ReleaseBundleError,
