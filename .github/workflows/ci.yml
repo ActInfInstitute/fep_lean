@@ -1054,9 +1054,21 @@ jobs:
       # near-fresh bytes. The always() saves partial-but-valid incremental
       # state on failures (lake traces only completed modules) without ever
       # saving custody artifacts; same-sha reruns hit "cache already exists",
-      # which is a no-op, not a failure.
+      # which is a no-op, not a failure. Only pushes to main save: pull-request
+      # caches are scoped to their merge ref, so no later run could restore
+      # them, and they only evict main's entries. PRs restore main's newest.
+      - name: Record the Lean build cache result
+        if: always() && steps.lean-build-restore.outcome != 'skipped'
+        env:
+          HIT: ${{ steps.lean-build-restore.outputs.cache-hit }}
+          MATCHED: ${{ steps.lean-build-restore.outputs.cache-matched-key }}
+        run: |
+          if [ "$HIT" = "true" ]; then result="exact hit"
+          elif [ -n "$MATCHED" ]; then result="prefix hit ($MATCHED)"
+          else result="miss"; fi
+          echo "Lean build cache: $result" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Save the Lean build cache
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.use_lean_cache == true)
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         continue-on-error: true
         uses: actions/cache/save@v6
         with:
