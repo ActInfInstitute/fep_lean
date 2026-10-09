@@ -7894,7 +7894,7 @@
       "lean_module": "FepSketches.path_thermodynamics",
       "resource": "path_thermodynamics.lean",
       "role": "foundation",
-      "theorem_count": 25
+      "theorem_count": 56
     },
     {
       "declaration_namespace": "FEP.GeometricOptimization",
@@ -8938,7 +8938,7 @@
     "formal/measure_bayes.lean": "a8d81f59d449761a19960663fde0c8b5208cbc2db8966d6ddb2081175e3be133",
     "formal/native_blanket.lean": "b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b",
     "formal/ness_flow.lean": "fcf58cdd04feac36a46095b12c744f4c29683444ea56895b43531daa0b5e7de4",
-    "formal/path_thermodynamics.lean": "bac2fde1b9e0bfafa78b3f622662aa8169c6d1510cc19ffec5a9e955dd5dbf00",
+    "formal/path_thermodynamics.lean": "ba726b7c4bebe273092e1247cf6d67b7d78585adbf267dd8c05ff0d5e48e5c6e",
     "formal/perception_action_loop.lean": "e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1",
     "formal/policy_tree.lean": "2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88",
     "formal/posterior_convergence.lean": "1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20",
@@ -80164,6 +80164,329 @@
         "statement": "theorem solenoidal_orthogonal (ω : ℝ) (g : Fin 2 → ℝ) :\n    dot (solenoidal ω g) g = 0",
         "statement_sha256": "14982221cb83c0d573a0b5094daf2d09a33bd6230d0726f98410cb1427f93208"
       },
+      "FEP.PathThermodynamics.biasedCycleKernel_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : Fin 3)",
+            "type_source": "Fin 3",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < biasedCycleKernel i j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.biasedCycleKernel_pos",
+        "source_line": 945,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem biasedCycleKernel_pos (i j : Fin 3) : 0 < biasedCycleKernel i j",
+        "statement_sha256": "7e719111660e0e37ec4f5cc96f3bad9b190cf16898b2ab1eed103dbd6ee756f9"
+      },
+      "FEP.PathThermodynamics.biasedCycle_entropyProduction": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "entropyProduction (markovPathProtocol biasedCycleKernel\n      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1) =\n      Real.log 2 / 4",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "biasedCycleKernel_pos",
+            "qualified_name": "FEP.PathThermodynamics.biasedCycleKernel_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "biasedCycle_invariant",
+            "qualified_name": "FEP.PathThermodynamics.biasedCycle_invariant",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "entropyProduction_markov_stationary",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_stationary",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.biasedCycle_entropyProduction",
+        "source_line": 966,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem biasedCycle_entropyProduction :\n    entropyProduction (markovPathProtocol biasedCycleKernel\n      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1) =\n      Real.log 2 / 4",
+        "statement_sha256": "5a86721b81cdcbd448ce8e23ce62e1cb36a963d687bb26c516b6caf9e466f6f7"
+      },
+      "FEP.PathThermodynamics.biasedCycle_entropyProduction_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "0 < entropyProduction (markovPathProtocol biasedCycleKernel\n      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "biasedCycle_entropyProduction",
+            "qualified_name": "FEP.PathThermodynamics.biasedCycle_entropyProduction",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.biasedCycle_entropyProduction_pos",
+        "source_line": 980,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem biasedCycle_entropyProduction_pos :\n    0 < entropyProduction (markovPathProtocol biasedCycleKernel\n      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1)",
+        "statement_sha256": "0e9a5c40cfe395026916a1046a75bbfbb01a826ded1f37e975ed2fa7040f8f27"
+      },
+      "FEP.PathThermodynamics.biasedCycle_invariant": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "IsInvariant (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.biasedCycle_invariant",
+        "source_line": 949,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem biasedCycle_invariant :\n    IsInvariant (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel",
+        "statement_sha256": "c194321b0dc794754fcf183edf595589220e8569c4e0215cdefed37f9861b333"
+      },
+      "FEP.PathThermodynamics.biasedCycle_not_reversible": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "¬ IsReversible (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.biasedCycle_not_reversible",
+        "source_line": 958,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem biasedCycle_not_reversible :\n    ¬ IsReversible (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel",
+        "statement_sha256": "f3d286c421b7ab0ce72e014f769e0d0835259d1b405b82fd49a4c0e5fd49c8e4"
+      },
       "FEP.PathThermodynamics.crooks_of_entropyProduction": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -80456,6 +80779,1148 @@
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem entropyProduction_eq_expected_logRatio\n    (protocol : FinitePathProtocol Path)\n    (hForward : ∀ path, 0 < protocol.forward path)\n    (hReverse : ∀ path, 0 < protocol.reverseAligned path) :\n    entropyProduction protocol =\n      ∑ path, protocol.forward path * pathwiseEntropyProduction protocol path",
         "statement_sha256": "abd39ea403d5dacc3fd3ff655a7cd97eec99aaf1594ab32fac663db3ab4bf1ca"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_decomposition": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel",
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial",
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(initial final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInitial"
+            ],
+            "role": "typed_binder",
+            "source": "(hInitial : ∀ s, 0 < initial s)",
+            "type_source": "∀ s, 0 < initial s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hFinal"
+            ],
+            "role": "typed_binder",
+            "source": "(hFinal : ∀ s, 0 < final s)",
+            "type_source": "∀ s, 0 < final s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ a b, 0 < reverse a b)",
+            "type_source": "∀ a b, 0 < reverse a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel initial reverse final n) =\n      (∑ path : Fin (n + 1) → S, markovPathLaw kernel initial n path *\n          Real.log (initial (path 0) / final (path (Fin.last n)))) +\n        ∑ t : Fin n, ∑ path : Fin (n + 1) → S,\n          markovPathLaw kernel initial n path *\n            Real.log (kernel (path t.castSucc) (path t.succ) /\n              reverse (path t.succ) (path t.castSucc))",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_eq_expected_logRatio",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_eq_expected_logRatio",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovPathMass_pos",
+            "qualified_name": "FEP.PathThermodynamics.markovPathMass_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovReverseMass_pos",
+            "qualified_name": "FEP.PathThermodynamics.markovReverseMass_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "pathwiseEntropyProduction_markov",
+            "qualified_name": "FEP.PathThermodynamics.pathwiseEntropyProduction_markov",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_decomposition",
+        "source_line": 650,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_decomposition\n    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)\n    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)\n    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b)\n    (n : ℕ) :\n    entropyProduction (markovPathProtocol kernel initial reverse final n) =\n      (∑ path : Fin (n + 1) → S, markovPathLaw kernel initial n path *\n          Real.log (initial (path 0) / final (path (Fin.last n)))) +\n        ∑ t : Fin n, ∑ path : Fin (n + 1) → S,\n          markovPathLaw kernel initial n path *\n            Real.log (kernel (path t.castSucc) (path t.succ) /\n              reverse (path t.succ) (path t.castSucc))",
+        "statement_sha256": "bb71277d2b91d1c09cbd2f654bc9885b7b1b2c558f7fbe32b2e01e9d8d4aaa11"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_eq_localAffinity": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j * localAffinity law kernel i j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_markov_schnakenberg",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_schnakenberg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_eq_localAffinity",
+        "source_line": 777,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_eq_localAffinity\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b) :\n    entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j * localAffinity law kernel i j",
+        "statement_sha256": "b5544f0d8889b7669fb410a84c242840e22ef36bf1c2b4a015b81ff8deba87d7"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_oneStep": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel",
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial",
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(initial final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInitial"
+            ],
+            "role": "typed_binder",
+            "source": "(hInitial : ∀ s, 0 < initial s)",
+            "type_source": "∀ s, 0 < initial s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hFinal"
+            ],
+            "role": "typed_binder",
+            "source": "(hFinal : ∀ s, 0 < final s)",
+            "type_source": "∀ s, 0 < final s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ a b, 0 < reverse a b)",
+            "type_source": "∀ a b, 0 < reverse a b",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel initial reverse final 1) =\n      ∑ i : S, ∑ j : S, initial i * kernel i j *\n        Real.log (initial i * kernel i j / (final j * reverse j i))",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_eq_expected_logRatio",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_eq_expected_logRatio",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovPathMass_one",
+            "qualified_name": "FEP.PathThermodynamics.markovPathMass_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovPathMass_pos",
+            "qualified_name": "FEP.PathThermodynamics.markovPathMass_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovReverseMass_one",
+            "qualified_name": "FEP.PathThermodynamics.markovReverseMass_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovReverseMass_pos",
+            "qualified_name": "FEP.PathThermodynamics.markovReverseMass_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "sum_pathTwo",
+            "qualified_name": "FEP.PathThermodynamics.sum_pathTwo",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_oneStep",
+        "source_line": 695,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_oneStep\n    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)\n    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)\n    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b) :\n    entropyProduction (markovPathProtocol kernel initial reverse final 1) =\n      ∑ i : S, ∑ j : S, initial i * kernel i j *\n        Real.log (initial i * kernel i j / (final j * reverse j i))",
+        "statement_sha256": "5934d0cf04c8fd5fb946f24101786439062c315aece566aa05ee7fa0a81e0782"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_oneStep_split": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel",
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial",
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(initial final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInitial"
+            ],
+            "role": "typed_binder",
+            "source": "(hInitial : ∀ s, 0 < initial s)",
+            "type_source": "∀ s, 0 < initial s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hFinal"
+            ],
+            "role": "typed_binder",
+            "source": "(hFinal : ∀ s, 0 < final s)",
+            "type_source": "∀ s, 0 < final s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ a b, 0 < reverse a b)",
+            "type_source": "∀ a b, 0 < reverse a b",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel initial reverse final 1) =\n      (∑ i : S, initial i * Real.log (initial i) -\n          ∑ j : S, kernel.predictive initial j * Real.log (final j)) +\n        ∑ i : S, ∑ j : S, initial i * kernel i j *\n          Real.log (kernel i j / reverse j i)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_markov_oneStep",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_oneStep",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_oneStep_split",
+        "source_line": 719,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_oneStep_split\n    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)\n    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)\n    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b) :\n    entropyProduction (markovPathProtocol kernel initial reverse final 1) =\n      (∑ i : S, initial i * Real.log (initial i) -\n          ∑ j : S, kernel.predictive initial j * Real.log (final j)) +\n        ∑ i : S, ∑ j : S, initial i * kernel i j *\n          Real.log (kernel i j / reverse j i)",
+        "statement_sha256": "184bb9480de26ec3d3533ed416bab48d49764ffb4fd681058b4d3759cd372711"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_reversedKernel_zero": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInvariant"
+            ],
+            "role": "typed_binder",
+            "source": "(hInvariant : IsInvariant law kernel)",
+            "type_source": "IsInvariant law kernel",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel law\n      (reversedKernel law kernel hLaw hInvariant) law n) = 0",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_self"
+            ],
+            "identifier": "finiteKL_self",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovReversePathLaw_reversedKernel",
+            "qualified_name": "FEP.PathThermodynamics.markovReversePathLaw_reversedKernel",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_reversedKernel_zero",
+        "source_line": 920,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_reversedKernel_zero (law : FiniteLaw S)\n    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)\n    (hInvariant : IsInvariant law kernel) (n : ℕ) :\n    entropyProduction (markovPathProtocol kernel law\n      (reversedKernel law kernel hLaw hInvariant) law n) = 0",
+        "statement_sha256": "89ca3d8a0bbc5fb352d8d0b4294d02b54e57a90d09bdd25366ceae54b15167c6"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_reversible_zero": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReversible"
+            ],
+            "role": "typed_binder",
+            "source": "(hReversible : IsReversible law kernel)",
+            "type_source": "IsReversible law kernel",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel law kernel law 1) = 0",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_self"
+            ],
+            "identifier": "finiteKL_self",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovPathLaw_eq_reverse_of_reversible",
+            "qualified_name": "FEP.PathThermodynamics.markovPathLaw_eq_reverse_of_reversible",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_reversible_zero",
+        "source_line": 811,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_reversible_zero\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hReversible : IsReversible law kernel) :\n    entropyProduction (markovPathProtocol kernel law kernel law 1) = 0",
+        "statement_sha256": "b90cf45fe89f132bb020bcd6d3b2a3e22977d686351b2ea5a163ec35757475fd"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_schnakenberg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j *\n        Real.log (law i * kernel i j / (law j * kernel j i))",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_markov_oneStep",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_oneStep",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_schnakenberg",
+        "source_line": 767,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_schnakenberg\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b) :\n    entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j *\n        Real.log (law i * kernel i j / (law j * kernel j i))",
+        "statement_sha256": "8ac9f521c2c1c70dbe11f08578102278a9fa4bf7be83d998791f4c27e00f2ae5"
+      },
+      "FEP.PathThermodynamics.entropyProduction_markov_stationary": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInvariant"
+            ],
+            "role": "typed_binder",
+            "source": "(hInvariant : IsInvariant law kernel)",
+            "type_source": "IsInvariant law kernel",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j *\n        Real.log (kernel i j / kernel j i)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropyProduction_markov_oneStep_split",
+            "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_oneStep_split",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.entropyProduction_markov_stationary",
+        "source_line": 786,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem entropyProduction_markov_stationary\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b)\n    (hInvariant : IsInvariant law kernel) :\n    entropyProduction (markovPathProtocol kernel law kernel law 1) =\n      ∑ i : S, ∑ j : S, law i * kernel i j *\n        Real.log (kernel i j / kernel j i)",
+        "statement_sha256": "6959367d82123275b33bcaf9f72a983f38602327be58830f310452c7183b77d4"
       },
       "FEP.PathThermodynamics.entropyProduction_nonneg": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -81384,6 +82849,124 @@
         "statement": "theorem jarzynski_without_crooks :\n    HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0\n        (fun _ => 0) ∧\n      ¬ HasCrooksRelation irreversibleBoolProtocol 1 0 (fun _ => 0)",
         "statement_sha256": "3edcfef3421f01494e50fcf721fe7aa4e2079ac0061d58201fea32511f89736c"
       },
+      "FEP.PathThermodynamics.localAffinity_zero_of_reversible": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReversible"
+            ],
+            "role": "typed_binder",
+            "source": "(hReversible : IsReversible law kernel)",
+            "type_source": "IsReversible law kernel",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "source",
+              "target"
+            ],
+            "role": "typed_binder",
+            "source": "(source target : S)",
+            "type_source": "S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "localAffinity law kernel source target = 0",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.localAffinity_zero_of_reversible",
+        "source_line": 823,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem localAffinity_zero_of_reversible\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hReversible : IsReversible law kernel) (source target : S) :\n    localAffinity law kernel source target = 0",
+        "statement_sha256": "08da27fc32de1558496ee795bb41a7a577b7ad3ecd60e8ec6057b2b4c5eed767"
+      },
       "FEP.PathThermodynamics.localAffinity_zero_reverseRate_boundary": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -81569,6 +83152,1349 @@
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem localDetailedBalance_current_zero\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (hReversible : IsReversible law kernel) (source target : State) :\n    probabilityCurrent law kernel source target = 0",
         "statement_sha256": "e88f4388b57888276f96543dd122480d3cab967c2128c58be1fb827c13cb9e59"
+      },
+      "FEP.PathThermodynamics.markovPathLaw_eq_reverse_of_reversible": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReversible"
+            ],
+            "role": "typed_binder",
+            "source": "(hReversible : IsReversible law kernel)",
+            "type_source": "IsReversible law kernel",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovPathLaw kernel law 1 = markovReversePathLaw kernel law 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "markovPathMass_one",
+            "qualified_name": "FEP.PathThermodynamics.markovPathMass_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "markovReverseMass_one",
+            "qualified_name": "FEP.PathThermodynamics.markovReverseMass_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovPathLaw_eq_reverse_of_reversible",
+        "source_line": 799,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathLaw_eq_reverse_of_reversible\n    (kernel : FiniteKernel S S) (law : FiniteLaw S)\n    (hReversible : IsReversible law kernel) :\n    markovPathLaw kernel law 1 = markovReversePathLaw kernel law 1",
+        "statement_sha256": "fb9f33dbcf413fd8ac144e5862e4bde4ccce869874bdb2c69efb6fe1424ff69e"
+      },
+      "FEP.PathThermodynamics.markovPathMass_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ markovPathMass kernel initial n path",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.markovPathMass_nonneg",
+        "source_line": 511,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathMass_nonneg (kernel : FiniteKernel S S)\n    (initial : FiniteLaw S) (n : ℕ) (path : Fin (n + 1) → S) :\n    0 ≤ markovPathMass kernel initial n path",
+        "statement_sha256": "1cc9bea7835c9b3875421537b1aa3ff9fb64ebd9ac73540306387a348def926a"
+      },
+      "FEP.PathThermodynamics.markovPathMass_one": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin 2 → S)",
+            "type_source": "Fin 2 → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovPathMass kernel initial 1 path = initial (path 0) * kernel (path 0) (path 1)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovPathMass_one",
+        "source_line": 683,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathMass_one (kernel : FiniteKernel S S) (initial : FiniteLaw S)\n    (path : Fin 2 → S) :\n    markovPathMass kernel initial 1 path = initial (path 0) * kernel (path 0) (path 1)",
+        "statement_sha256": "608265e4a994b89fe7fc6250944c31324ff2cc855c1e87907af56e88770c98af"
+      },
+      "FEP.PathThermodynamics.markovPathMass_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInitial"
+            ],
+            "role": "typed_binder",
+            "source": "(hInitial : ∀ s, 0 < initial s)",
+            "type_source": "∀ s, 0 < initial s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < markovPathMass kernel initial n path",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovPathMass_pos",
+        "source_line": 609,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathMass_pos (kernel : FiniteKernel S S) (initial : FiniteLaw S)\n    (hInitial : ∀ s, 0 < initial s) (hKernel : ∀ a b, 0 < kernel a b)\n    (n : ℕ) (path : Fin (n + 1) → S) :\n    0 < markovPathMass kernel initial n path",
+        "statement_sha256": "ddd16ffcb8e4636f5ef896a0bd0b3e0a7660f7ed2c8646b81ace6640e7137b8e"
+      },
+      "FEP.PathThermodynamics.markovPathMass_snoc": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "next"
+            ],
+            "role": "typed_binder",
+            "source": "(next : S)",
+            "type_source": "S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovPathMass kernel initial (n + 1)\n        (Fin.snoc (α := fun _ => S) path next) =\n      markovPathMass kernel initial n path * kernel (path (Fin.last n)) next",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.markovPathMass_snoc",
+        "source_line": 485,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathMass_snoc (kernel : FiniteKernel S S) (initial : FiniteLaw S)\n    (n : ℕ) (path : Fin (n + 1) → S) (next : S) :\n    markovPathMass kernel initial (n + 1)\n        (Fin.snoc (α := fun _ => S) path next) =\n      markovPathMass kernel initial n path * kernel (path (Fin.last n)) next",
+        "statement_sha256": "a8b0b2574bcf5a481dd9abba2563203c2939a6a1f214fb860aa96a7a8e1e038f"
+      },
+      "FEP.PathThermodynamics.markovPathMass_sum_one": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ path : Fin (n + 1) → S, markovPathMass kernel initial n path = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "markovPathMass_snoc",
+            "qualified_name": "FEP.PathThermodynamics.markovPathMass_snoc",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.markovPathMass_sum_one",
+        "source_line": 518,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovPathMass_sum_one (kernel : FiniteKernel S S)\n    (initial : FiniteLaw S) (n : ℕ) :\n    ∑ path : Fin (n + 1) → S, markovPathMass kernel initial n path = 1",
+        "statement_sha256": "47e70ac80a8461d6fa429b1187b3469a94dcabd14c090407ca0c89cef8a9a9e4"
+      },
+      "FEP.PathThermodynamics.markovReverseMass_eq": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovReverseMass reverse final n path =\n      markovPathMass reverse final n (pathReverse n path)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovReverseMass_eq",
+        "source_line": 574,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovReverseMass_eq (reverse : FiniteKernel S S) (final : FiniteLaw S)\n    (n : ℕ) (path : Fin (n + 1) → S) :\n    markovReverseMass reverse final n path =\n      markovPathMass reverse final n (pathReverse n path)",
+        "statement_sha256": "26b547635b9e90615556dac091fe2ec78582e29b849fd51c1a017078756f1676"
+      },
+      "FEP.PathThermodynamics.markovReverseMass_one": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin 2 → S)",
+            "type_source": "Fin 2 → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovReverseMass reverse final 1 path = final (path 1) * reverse (path 1) (path 0)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovReverseMass_one",
+        "source_line": 689,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovReverseMass_one (reverse : FiniteKernel S S) (final : FiniteLaw S)\n    (path : Fin 2 → S) :\n    markovReverseMass reverse final 1 path = final (path 1) * reverse (path 1) (path 0)",
+        "statement_sha256": "b2da47e83a7cca567b2345a33b53dbe2772756dd967d36336855406f9db8cbba"
+      },
+      "FEP.PathThermodynamics.markovReverseMass_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hFinal"
+            ],
+            "role": "typed_binder",
+            "source": "(hFinal : ∀ s, 0 < final s)",
+            "type_source": "∀ s, 0 < final s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ a b, 0 < reverse a b)",
+            "type_source": "∀ a b, 0 < reverse a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < markovReverseMass reverse final n path",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovReverseMass_pos",
+        "source_line": 616,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovReverseMass_pos (reverse : FiniteKernel S S) (final : FiniteLaw S)\n    (hFinal : ∀ s, 0 < final s) (hReverse : ∀ a b, 0 < reverse a b)\n    (n : ℕ) (path : Fin (n + 1) → S) :\n    0 < markovReverseMass reverse final n path",
+        "statement_sha256": "1756ac8b066a00317aff75902239fd342aa24462c5cd45edf5cd333f24c39463"
+      },
+      "FEP.PathThermodynamics.markovReverseMass_reversedKernel": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInvariant"
+            ],
+            "role": "typed_binder",
+            "source": "(hInvariant : IsInvariant law kernel)",
+            "type_source": "IsInvariant law kernel",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovReverseMass (reversedKernel law kernel hLaw hInvariant) law n path =\n      markovPathMass kernel law n path",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "prod_stage_ratio_telescope",
+            "qualified_name": "FEP.PathThermodynamics.prod_stage_ratio_telescope",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovReverseMass_reversedKernel",
+        "source_line": 889,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovReverseMass_reversedKernel (law : FiniteLaw S)\n    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)\n    (hInvariant : IsInvariant law kernel) (n : ℕ) (path : Fin (n + 1) → S) :\n    markovReverseMass (reversedKernel law kernel hLaw hInvariant) law n path =\n      markovPathMass kernel law n path",
+        "statement_sha256": "7a7c337773bf87cb456a59e3e22901eb2b8421902ca2af79ba9fb1e5176a7312"
+      },
+      "FEP.PathThermodynamics.markovReversePathLaw_reversedKernel": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInvariant"
+            ],
+            "role": "typed_binder",
+            "source": "(hInvariant : IsInvariant law kernel)",
+            "type_source": "IsInvariant law kernel",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "markovReversePathLaw (reversedKernel law kernel hLaw hInvariant) law n =\n      markovPathLaw kernel law n",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "markovReverseMass_reversedKernel",
+            "qualified_name": "FEP.PathThermodynamics.markovReverseMass_reversedKernel",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.markovReversePathLaw_reversedKernel",
+        "source_line": 909,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem markovReversePathLaw_reversedKernel (law : FiniteLaw S)\n    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)\n    (hInvariant : IsInvariant law kernel) (n : ℕ) :\n    markovReversePathLaw (reversedKernel law kernel hLaw hInvariant) law n =\n      markovPathLaw kernel law n",
+        "statement_sha256": "db5135ac95e6e463729834a7c95e759666c711a2ea8b8f02c4e209ce99f9223d"
       },
       "FEP.PathThermodynamics.pathLaw_normalization": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -81796,6 +84722,252 @@
         "statement": "theorem pathRatio_zero_reverse_boundary\n    (protocol : FinitePathProtocol Path) (path : Path)\n    (hZero : protocol.reverseAligned path = 0) :\n    pathRatio protocol path = 0",
         "statement_sha256": "bd3d2909effb07f283c0a799057f17df79d72e6a212d4bdcbcc2e67c5d1362e1"
       },
+      "FEP.PathThermodynamics.pathReverse_involutive": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "Function.Involutive (pathReverse (S := S) n)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.pathReverse_involutive",
+        "source_line": 566,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem pathReverse_involutive (n : ℕ) :\n    Function.Involutive (pathReverse (S := S) n)",
+        "statement_sha256": "564b09c6341531c54799e7335ba8be33024f13c4f3c2b016773487c08c12e43f"
+      },
+      "FEP.PathThermodynamics.pathwiseEntropyProduction_markov": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel",
+              "reverse"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel reverse : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial",
+              "final"
+            ],
+            "role": "typed_binder",
+            "source": "(initial final : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInitial"
+            ],
+            "role": "typed_binder",
+            "source": "(hInitial : ∀ s, 0 < initial s)",
+            "type_source": "∀ s, 0 < initial s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hFinal"
+            ],
+            "role": "typed_binder",
+            "source": "(hFinal : ∀ s, 0 < final s)",
+            "type_source": "∀ s, 0 < final s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hKernel"
+            ],
+            "role": "typed_binder",
+            "source": "(hKernel : ∀ a b, 0 < kernel a b)",
+            "type_source": "∀ a b, 0 < kernel a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ a b, 0 < reverse a b)",
+            "type_source": "∀ a b, 0 < reverse a b",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "path"
+            ],
+            "role": "typed_binder",
+            "source": "(path : Fin (n + 1) → S)",
+            "type_source": "Fin (n + 1) → S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "pathwiseEntropyProduction\n        (markovPathProtocol kernel initial reverse final n) path =\n      Real.log (initial (path 0) / final (path (Fin.last n))) +\n        ∑ t : Fin n, Real.log\n          (kernel (path t.castSucc) (path t.succ) /\n            reverse (path t.succ) (path t.castSucc))",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.pathwiseEntropyProduction_markov",
+        "source_line": 624,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem pathwiseEntropyProduction_markov\n    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)\n    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)\n    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b)\n    (n : ℕ) (path : Fin (n + 1) → S) :\n    pathwiseEntropyProduction\n        (markovPathProtocol kernel initial reverse final n) path =\n      Real.log (initial (path 0) / final (path (Fin.last n))) +\n        ∑ t : Fin n, Real.log\n          (kernel (path t.castSucc) (path t.succ) /\n            reverse (path t.succ) (path t.castSucc))",
+        "statement_sha256": "512e26c0e20eb1019a84304795c62872dfae8721a2c90dce1ce2e2859d58ae96"
+      },
       "FEP.PathThermodynamics.pathwiseEntropyProduction_reverse": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -81991,6 +85163,113 @@
         "statement": "theorem probabilityCurrent_antisymm\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (source target : State) :\n    probabilityCurrent law kernel source target =\n      -probabilityCurrent law kernel target source",
         "statement_sha256": "10b7178b49efce1fc247a51ebb93256f8f5ef0b76aa0b1dbec4bf780fa529d3f"
       },
+      "FEP.PathThermodynamics.prod_stage_ratio_telescope": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : Fin (n + 1) → ℝ)",
+            "type_source": "Fin (n + 1) → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hf"
+            ],
+            "role": "typed_binder",
+            "source": "(hf : ∀ i, f i ≠ 0)",
+            "type_source": "∀ i, f i ≠ 0",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∏ t : Fin n, f t.castSucc / f t.succ = f 0 / f (Fin.last n)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.prod_stage_ratio_telescope",
+        "source_line": 871,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem prod_stage_ratio_telescope (n : ℕ) (f : Fin (n + 1) → ℝ)\n    (hf : ∀ i, f i ≠ 0) :\n    ∏ t : Fin n, f t.castSucc / f t.succ = f 0 / f (Fin.last n)",
+        "statement_sha256": "92c60c0d277bc634185bc7c22a8a5a66f9cee7bb969c618bab25e74d11985ce0"
+      },
       "FEP.PathThermodynamics.reverse_reverse": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -82062,6 +85341,258 @@
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem reverse_reverse (protocol : FinitePathProtocol Path) (path : Path) :\n    protocol.reversal (protocol.reversal path) = path",
         "statement_sha256": "03c798ce5626361e20afa5a0209e1bc65cf91e46a37793d4052d582dbbaace24"
+      },
+      "FEP.PathThermodynamics.reversedKernel_detailedBalance": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hInvariant"
+            ],
+            "role": "typed_binder",
+            "source": "(hInvariant : IsInvariant law kernel)",
+            "type_source": "IsInvariant law kernel",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "a",
+              "b"
+            ],
+            "role": "typed_binder",
+            "source": "(a b : S)",
+            "type_source": "S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "law a * reversedKernel law kernel hLaw hInvariant a b =\n      law b * kernel b a",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.reversedKernel_detailedBalance",
+        "source_line": 850,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem reversedKernel_detailedBalance (law : FiniteLaw S)\n    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)\n    (hInvariant : IsInvariant law kernel) (a b : S) :\n    law a * reversedKernel law kernel hLaw hInvariant a b =\n      law b * kernel b a",
+        "statement_sha256": "ec1f0480775a45ed70110ad892e5fddaa9825b0005237a377d071633ff989ee3"
+      },
+      "FEP.PathThermodynamics.reversedKernel_eq_of_reversible": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw S)",
+            "type_source": "FiniteLaw S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel S S)",
+            "type_source": "FiniteKernel S S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hLaw"
+            ],
+            "role": "typed_binder",
+            "source": "(hLaw : ∀ s, 0 < law s)",
+            "type_source": "∀ s, 0 < law s",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReversible"
+            ],
+            "role": "typed_binder",
+            "source": "(hReversible : IsReversible law kernel)",
+            "type_source": "IsReversible law kernel",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "reversedKernel law kernel hLaw (isInvariant_of_isReversible law kernel hReversible) =\n      kernel",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "isInvariant_of_isReversible",
+            "qualified_name": "FEP.PathThermodynamics.isInvariant_of_isReversible",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "statement_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.reversedKernel_eq_of_reversible",
+        "source_line": 859,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem reversedKernel_eq_of_reversible (law : FiniteLaw S)\n    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)\n    (hReversible : IsReversible law kernel) :\n    reversedKernel law kernel hLaw (isInvariant_of_isReversible law kernel hReversible) =\n      kernel",
+        "statement_sha256": "3d185e0045ba0597d2fed2b80ee5a3821d6435f373b899a862e3586c32b1941b"
       },
       "FEP.PathThermodynamics.reversibleKL_oneStep_dissipation": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -82198,6 +85729,93 @@
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem reversibleKL_oneStep_dissipation [Nonempty State]\n    (actual stationary : FiniteLaw State)\n    (kernel : FiniteKernel State State)\n    (hActual : ∀ state, 0 < actual state)\n    (hStationary : ∀ state, 0 < stationary state)\n    (hKernel : ∀ source target, 0 < kernel source target)\n    (hReversible : IsReversible stationary kernel) :\n    finiteKL (kernel.predictive actual) stationary ≤\n      finiteKL actual stationary",
         "statement_sha256": "6879e6fac8566e0139119b6567f2de2e0c1b894ed184d72dbd14b5002740d7b5"
+      },
+      "FEP.PathThermodynamics.sum_pathTwo": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "g"
+            ],
+            "role": "typed_binder",
+            "source": "(g : (Fin 2 → S) → ℝ)",
+            "type_source": "(Fin 2 → S) → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ path : Fin 2 → S, g path = ∑ i : S, ∑ j : S, g ![i, j]",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype S]",
+            "type_source": "Fintype S",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]",
+          "{S : Type*} [Fintype S]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype S] in"
+          }
+        ],
+        "qualified_name": "FEP.PathThermodynamics.sum_pathTwo",
+        "source_line": 677,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem sum_pathTwo (g : (Fin 2 → S) → ℝ) :\n    ∑ path : Fin 2 → S, g path = ∑ i : S, ∑ j : S, g ![i, j]",
+        "statement_sha256": "9d2e6b8ca69c621afe8c99085d1525875ff962cd89d994892ac1649f8866fc08"
       },
       "FEP.PerceptionActionLoop.actionEvidence_eq_predictive_of_identity": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
