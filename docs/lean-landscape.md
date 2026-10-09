@@ -18,7 +18,7 @@ roster and roles live in the manifest; this page projects them for navigation.
   [`formalism-atlas.html`](formalism-atlas.html); generated counts are in
   [`formalism-coverage.md`](formalism-coverage.md).
 
-## Layer 0 (7 modules)
+## Layer 0 (6 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
@@ -26,11 +26,10 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `gaussian_information_geometry` | foundation | `FEP.GaussianInformationGeometry` | — |
 | `geometric_mechanics` | foundation | `FEP.GeometricMechanics` | — |
 | `gnn_document` | foundation | `FEP.GnnDocument` | — |
-| `ness_flow` | foundation | `FEP.NessFlow` | — |
 | `predictive_coding` | foundation | `FEP.PredictiveCoding` | — |
 | `statistical_convergence` | foundation | `FEP.StatisticalConvergence` | — |
 
-## Layer 1 (6 modules)
+## Layer 1 (7 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
@@ -39,6 +38,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `finite_markov_dynamics` | foundation | `FEP.FiniteMarkovDynamics` | finite_probability |
 | `information_geometry` | foundation | `FEP.InformationGeometry` | finite_probability |
 | `measure_bayes` | foundation | `FEP.MeasureBayes` | finite_probability |
+| `ness_flow` | foundation | `FEP.NessFlow` | geometric_mechanics |
 | `smooth_information_geometry` | foundation | `FEP.SmoothInformationGeometry` | gaussian_information_geometry |
 
 ## Layer 2 (6 modules)

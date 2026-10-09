@@ -20032,7 +20032,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/compositions/risk_calibration.lean` | `428430da8985d59619fe00975b79eff4151ccd90d3e078fbb10796c17f8cb455` |
 | `formal/compositions/smooth_reference_kernel.lean` | `156464de9e7c33e16fa22bd6939fa64938b03ee4f5554fb3ecd48fbfaed6d397` |
 | `formal/compositions/thermo_geometry.lean` | `d4f5683ae70c9e3a20e849aa1c6446639e4e9ced08762cacb1d4564afdf83745` |
-| `formal/continuous_time_markov.lean` | `47545a9d994578878c1e314dc16a858b3527459f3ef49a6903bee943ef7b5e83` |
+| `formal/continuous_time_markov.lean` | `9c62314be4193b589d2c3911d274197db1089e6e07de57290e840f0f8cc022bf` |
 | `formal/controlled_markov.lean` | `7cb9c18603f96adab7106f0930eb3d2870b42dd101fe1eff05fce9a8bf889652` |
 | `formal/decision_risk.lean` | `0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689` |
 | `formal/declarations.py` | `26ca913d57a85a6ef744c8e72efcf678b5113a3c0de084b497a790fb452fdc16` |
@@ -20064,8 +20064,8 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/markov_semigroup.lean` | `5aa92f5750cd7f502e388944883e8f9d3de8398db92264253b81765d046598b1` |
 | `formal/measure_bayes.lean` | `a8d81f59d449761a19960663fde0c8b5208cbc2db8966d6ddb2081175e3be133` |
 | `formal/native_blanket.lean` | `b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b` |
-| `formal/ness_flow.lean` | `fcf58cdd04feac36a46095b12c744f4c29683444ea56895b43531daa0b5e7de4` |
-| `formal/path_thermodynamics.lean` | `ba726b7c4bebe273092e1247cf6d67b7d78585adbf267dd8c05ff0d5e48e5c6e` |
+| `formal/ness_flow.lean` | `80102f366d6e54604b7a76cdb663fe9dc2354bdfac0e2d671c20f73567c19890` |
+| `formal/path_thermodynamics.lean` | `75b63d5a506e98801475f23789fde02ef4c05c3fb72aae66d94969232c836f98` |
 | `formal/perception_action_loop.lean` | `e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1` |
 | `formal/policy_tree.lean` | `2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88` |
 | `formal/posterior_convergence.lean` | `1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20` |
@@ -20073,7 +20073,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/scalar_gaussian_semigroup.lean` | `d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e` |
 | `formal/smooth_information_geometry.lean` | `571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8` |
 | `formal/statistical_convergence.lean` | `6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0` |
-| `formal/temporal_inference.lean` | `3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10` |
+| `formal/temporal_inference.lean` | `04cbf77813427dda68a9aa03082cdb191cfffc980071e67e89cde6671baff7a2` |
 | `formal/variational_duality.lean` | `fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0` |
 | `inputs/catalogue_metadata.yaml` | `e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd` |
 | `inputs/formalism_relations.yaml` | `8665aa1c7ac5a72f7eea383c61c5719e9a5183559273b38709fa2a1d3f86cb2d` |
