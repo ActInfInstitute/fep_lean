@@ -1,5 +1,8 @@
 import Mathlib.Algebra.Order.Ring.Unbundled.Basic
 import Mathlib.Basic.Real.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+import FepSketches.geometric_mechanics
 import Mathlib.Tactic
 
 /-!
@@ -154,5 +157,249 @@ a persistent solenoidal drive sustains positive entropy production. -/
 theorem ness_signature (ω : ℝ) (g : Fin 2 → ℝ) (hg : g 0 ≠ 0 ∨ g 1 ≠ 0) :
     (solenoidal ω g = 0) ↔ (ω = 0) :=
   detailed_balance_iff ω g hg
+
+/-! ## Fokker–Planck stationarity of `p = exp (-F)` (Euclidean calculus)
+
+Smooth-density counterpart of the `Fin 2` scalar carrier above, on `Fin n → ℝ`
+with Fréchet derivatives and no stochastic process.  For a `C²` potential `F`,
+constant `Γ`, `Q`, density `p = exp (-F)`, drift `f = -(Γ + Q) ∇F` and
+probability current `J = p f - Γ ∇p`, the dissipative part cancels
+pointwise, `J = -p · Q ∇F`, and `div J = 0` exactly when `Q` is
+skew-symmetric (the Hessian of a `C²` function is symmetric).  Hence
+`∂ₜ p = -div J = 0`: `p` is stationary for the Fokker–Planck equation.
+-/
+
+section FokkerPlanck
+
+variable {n : ℕ}
+
+/-- Gradient components `∇F x i = DF(x) eᵢ`. -/
+noncomputable def gradF (F : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ) : Fin n → ℝ :=
+  fun i => fderiv ℝ F x (Pi.single i 1)
+
+/-- Hessian components `∂ᵢ∂ₖ F x = D²F(x) eᵢ eₖ`. -/
+noncomputable def hessF (F : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ) (i k : Fin n) : ℝ :=
+  fderiv ℝ (fderiv ℝ F) x (Pi.single i 1) (Pi.single k 1)
+
+/-- The stationary density `p x = exp (-F x)`. -/
+noncomputable def density (F : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ) : ℝ :=
+  Real.exp (-F x)
+
+/-- Entrywise sum of two plain real matrices. -/
+def addMat (Γ Q : Fin n → Fin n → ℝ) : Fin n → Fin n → ℝ := fun i j => Γ i j + Q i j
+
+/-- The Helmholtz drift `f x = -(Γ + Q) ∇F x`. -/
+noncomputable def drift (F : (Fin n → ℝ) → ℝ) (Γ Q : Fin n → Fin n → ℝ)
+    (x : Fin n → ℝ) : Fin n → ℝ :=
+  fun i => -GeometricMechanics.mulVec (addMat Γ Q) (gradF F x) i
+
+/-- The probability current `J x = p x • f x - Γ ∇p x`. -/
+noncomputable def probCurrent (F : (Fin n → ℝ) → ℝ) (Γ Q : Fin n → Fin n → ℝ)
+    (x : Fin n → ℝ) : Fin n → ℝ :=
+  fun i => density F x * drift F Γ Q x i
+    - GeometricMechanics.mulVec Γ (gradF (density F) x) i
+
+/-- Euclidean divergence `div V x = ∑ᵢ ∂ᵢ Vᵢ x`. -/
+noncomputable def divergence (V : (Fin n → ℝ) → Fin n → ℝ) (x : Fin n → ℝ) : ℝ :=
+  ∑ i, fderiv ℝ (fun y => V y i) x (Pi.single i 1)
+
+/-- The Fokker–Planck right-hand side `∂ₜ p = -div J` (the diffusion and drift
+terms are already folded into `J`). -/
+noncomputable def fpRate (F : (Fin n → ℝ) → ℝ) (Γ Q : Fin n → Fin n → ℝ)
+    (x : Fin n → ℝ) : ℝ :=
+  -divergence (probCurrent F Γ Q) x
+
+/-- `∇p = -p ∇F` for `p = exp (-F)`. -/
+theorem gradF_density (F : (Fin n → ℝ) → ℝ) (x : Fin n → ℝ)
+    (hF : DifferentiableAt ℝ F x) :
+    gradF (density F) x = fun i => -(density F x) * gradF F x i := by
+  have h : HasFDerivAt (density F) (density F x • (-(fderiv ℝ F x))) x :=
+    hF.hasFDerivAt.neg.exp
+  funext i
+  simp [gradF, h.fderiv]
+
+/-- **(1) Pointwise current identity.** `J x = -p x • (Q ∇F x)`: the
+dissipative `Γ` terms cancel identically (no symmetry of `Γ`, `Q` needed). -/
+theorem probCurrent_eq (F : (Fin n → ℝ) → ℝ) (Γ Q : Fin n → Fin n → ℝ)
+    (x : Fin n → ℝ) (hF : DifferentiableAt ℝ F x) :
+    probCurrent F Γ Q x
+      = fun i => -(density F x) * GeometricMechanics.mulVec Q (gradF F x) i := by
+  funext i
+  have hΓ : ∑ k, Γ i k * (-density F x * gradF F x k)
+      = -(density F x * ∑ k, Γ i k * gradF F x k) := by
+    rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+    exact Finset.sum_congr rfl fun k _ => by ring
+  simp only [probCurrent, drift, gradF_density F x hF, GeometricMechanics.mulVec, addMat,
+    add_mul, Finset.sum_add_distrib, hΓ]
+  ring
+
+/-- **(2) The `Q` term does no work**: `(Q ∇F) · ∇F = 0` for skew `Q`. -/
+theorem qGradient_orthogonal (F : (Fin n → ℝ) → ℝ) (Q : Fin n → Fin n → ℝ)
+    (hQ : GeometricMechanics.SkewSymmetric Q) (x : Fin n → ℝ) :
+    GeometricMechanics.dot (GeometricMechanics.mulVec Q (gradF F x)) (gradF F x) = 0 := by
+  have h := GeometricMechanics.skewQuadratic_eq_zero Q (gradF F x) hQ
+  simpa [GeometricMechanics.dot, mul_comm] using h
+
+/-- Derivative of a gradient component of a `C²` function. -/
+theorem hasFDerivAt_gradF (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (x : Fin n → ℝ) (k : Fin n) :
+    HasFDerivAt (fun y => gradF F y k)
+      ((fderiv ℝ (fderiv ℝ F) x).flip (Pi.single k 1)) x := by
+  have hd : DifferentiableAt ℝ (fderiv ℝ F) x :=
+    ((hF.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num)) x
+  have := hd.hasFDerivAt.clm_apply (hasFDerivAt_const (Pi.single k (1 : ℝ) : Fin n → ℝ) x)
+  simpa [gradF] using this
+
+/-- Mixed second derivatives as directional derivatives of gradient components. -/
+theorem hessF_eq_fderiv_gradF (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (x : Fin n → ℝ) (i k : Fin n) :
+    hessF F x i k = fderiv ℝ (fun y => gradF F y k) x (Pi.single i 1) := by
+  rw [(hasFDerivAt_gradF F hF x k).fderiv]
+  rfl
+
+/-- The Hessian components of a `C²` function are symmetric (Schwarz). -/
+theorem hessF_symmetric (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (x : Fin n → ℝ) : GeometricMechanics.SymmetricOf (hessF F x) := by
+  intro i k
+  have h := hF.contDiffAt.isSymmSndFDerivAt (x := x) (by simp)
+  exact h _ _
+
+/-- The skew contraction against a symmetric matrix vanishes entrywise-summed. -/
+theorem skew_contract_symm (Q H : Fin n → Fin n → ℝ)
+    (hQ : GeometricMechanics.SkewSymmetric Q) (hH : GeometricMechanics.SymmetricOf H) :
+    ∑ i, ∑ k, Q i k * H i k = 0 := by
+  have h := GeometricMechanics.skewTrace_eq_zero Q H hQ hH
+  simp only [GeometricMechanics.traceOf, GeometricMechanics.mulOf] at h
+  rw [← h]
+  refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun k _ => ?_
+  rw [hH i k]
+
+/-- The `Q`-part of the current, `i`-th component: `p · (Q ∇F)ᵢ`. -/
+noncomputable def qCurrent (F : (Fin n → ℝ) → ℝ) (Q : Fin n → Fin n → ℝ)
+    (y : Fin n → ℝ) (i : Fin n) : ℝ :=
+  density F y * GeometricMechanics.mulVec Q (gradF F y) i
+
+/-- Product-rule expansion of `∂ᵢ (p (Q∇F)ᵢ)`. -/
+theorem fderiv_qCurrent (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (Q : Fin n → Fin n → ℝ) (x : Fin n → ℝ) (i : Fin n) :
+    fderiv ℝ (fun y => qCurrent F Q y i) x (Pi.single i 1)
+      = -(density F x * gradF F x i * GeometricMechanics.mulVec Q (gradF F x) i)
+        + density F x * ∑ k, Q i k * hessF F x i k := by
+  have hdiff : DifferentiableAt ℝ F x := (hF.differentiable (by norm_num)) x
+  have hp : HasFDerivAt (density F) (density F x • (-(fderiv ℝ F x))) x :=
+    hdiff.hasFDerivAt.neg.exp
+  have hs : HasFDerivAt (fun y => GeometricMechanics.mulVec Q (gradF F y) i)
+      (∑ k, Q i k • (fderiv ℝ (fderiv ℝ F) x).flip (Pi.single k 1)) x := by
+    unfold GeometricMechanics.mulVec
+    exact HasFDerivAt.fun_sum fun k _ => (hasFDerivAt_gradF F hF x k).const_mul (Q i k)
+  have := (hp.mul hs).fderiv
+  unfold qCurrent
+  rw [show (fun y => density F y * GeometricMechanics.mulVec Q (gradF F y) i)
+      = density F * (fun y => GeometricMechanics.mulVec Q (gradF F y) i) from rfl, this]
+  simp [hessF, gradF, GeometricMechanics.mulVec]
+  ring
+
+/-- Divergence of the current for arbitrary constant `Γ`, `Q`:
+`div J = p (∇F · Q∇F) - p ∑ᵢₖ Qᵢₖ ∂ᵢ∂ₖF`. -/
+theorem divergence_probCurrent_eq (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (Γ Q : Fin n → Fin n → ℝ) (x : Fin n → ℝ) :
+    divergence (probCurrent F Γ Q) x
+      = density F x * GeometricMechanics.dot (gradF F x) (GeometricMechanics.mulVec Q (gradF F x))
+        - density F x * ∑ i, ∑ k, Q i k * hessF F x i k := by
+  have hfun : ∀ i, (fun y => probCurrent F Γ Q y i) = fun y => -(qCurrent F Q y i) := by
+    intro i; funext y
+    rw [probCurrent_eq F Γ Q y ((hF.differentiable (by norm_num)) y)]
+    simp [qCurrent]
+  have hterm : ∀ i, fderiv ℝ (fun y => probCurrent F Γ Q y i) x (Pi.single i 1)
+      = density F x * (gradF F x i * GeometricMechanics.mulVec Q (gradF F x) i)
+        - density F x * ∑ k, Q i k * hessF F x i k := by
+    intro i
+    rw [hfun i, fderiv_fun_neg, neg_apply, fderiv_qCurrent F hF Q x i]
+    ring
+  unfold divergence
+  simp only [hterm, Finset.sum_sub_distrib, ← Finset.mul_sum]
+  rfl
+
+/-- **(3) The current is divergence-free** for skew `Q` and `C²` `F`. -/
+theorem divergence_probCurrent_eq_zero (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (Γ Q : Fin n → Fin n → ℝ) (hQ : GeometricMechanics.SkewSymmetric Q)
+    (x : Fin n → ℝ) : divergence (probCurrent F Γ Q) x = 0 := by
+  rw [divergence_probCurrent_eq F hF Γ Q x,
+    skew_contract_symm Q _ hQ (hessF_symmetric F hF x),
+    GeometricMechanics.skewQuadratic_eq_zero Q _ hQ]
+  ring
+
+/-- **Fokker–Planck stationarity**: `∂ₜ p = -div J = 0`. -/
+theorem fpRate_eq_zero (F : (Fin n → ℝ) → ℝ) (hF : ContDiff ℝ 2 F)
+    (Γ Q : Fin n → Fin n → ℝ) (hQ : GeometricMechanics.SkewSymmetric Q)
+    (x : Fin n → ℝ) : fpRate F Γ Q x = 0 := by
+  simp [fpRate, divergence_probCurrent_eq_zero F hF Γ Q hQ x]
+
+/-! ### Concrete `n = 2` witnesses -/
+
+/-- The Gaussian potential `F x = (x₀² + x₁²) / 2`. -/
+noncomputable def gaussF : (Fin 2 → ℝ) → ℝ := fun x => (x 0 ^ 2 + x 1 ^ 2) / 2
+
+/-- Unit dissipation matrix. -/
+def gammaId : Fin 2 → Fin 2 → ℝ := fun i j => if i = j then 1 else 0
+
+/-- The skew rotation `Q = [[0,1],[-1,0]]`. -/
+def qRot : Fin 2 → Fin 2 → ℝ := fun i j =>
+  if i = 0 ∧ j = 1 then 1 else if i = 1 ∧ j = 0 then -1 else 0
+
+/-- The non-skew matrix `Q = [[1,0],[0,0]]`. -/
+def qNonSkew : Fin 2 → Fin 2 → ℝ := fun i j => if i = 0 ∧ j = 0 then 1 else 0
+
+theorem gaussF_contDiff : ContDiff ℝ 2 gaussF := by
+  unfold gaussF; fun_prop
+
+theorem gradF_gaussF (y : Fin 2 → ℝ) : gradF gaussF y = y := by
+  funext i
+  have h : HasFDerivAt gaussF
+      ((y 0 : ℝ) • (ContinuousLinearMap.proj 0 : (Fin 2 → ℝ) →L[ℝ] ℝ)
+        + (y 1 : ℝ) • (ContinuousLinearMap.proj 1 : (Fin 2 → ℝ) →L[ℝ] ℝ)) y := by
+    have h0 := ((hasFDerivAt_apply (𝕜 := ℝ) (0 : Fin 2) y).pow 2)
+    have h1 := ((hasFDerivAt_apply (𝕜 := ℝ) (1 : Fin 2) y).pow 2)
+    have h := (h0.add h1).const_mul (1 / 2 : ℝ)
+    have e : gaussF = fun y => (1 / 2 : ℝ) * (y 0 ^ 2 + y 1 ^ 2) := by
+      funext y; simp [gaussF]; ring
+    rw [e]
+    refine h.congr_fderiv (ContinuousLinearMap.ext fun z => ?_)
+    simp
+    ring
+  unfold gradF
+  rw [h.fderiv]
+  fin_cases i <;> simp
+
+theorem hessF_gaussF (x : Fin 2 → ℝ) (i k : Fin 2) :
+    hessF gaussF x i k = if i = k then 1 else 0 := by
+  rw [hessF_eq_fderiv_gradF gaussF gaussF_contDiff x i k]
+  have : (fun y => gradF gaussF y k) = fun y => y k := funext fun y => by rw [gradF_gaussF]
+  rw [this, (hasFDerivAt_apply k x).fderiv]
+  simp [Pi.single_apply, eq_comm]
+
+/-- **(4a) Non-skew countermodel.** With `Q = [[1,0],[0,0]]` (not skew), the
+Gaussian potential and `Γ = I`, the divergence at the origin is `-1 ≠ 0`:
+skew-symmetry of `Q` cannot be dropped. -/
+theorem nonSkew_divergence_ne_zero :
+    divergence (probCurrent gaussF gammaId qNonSkew) (fun _ => 0) ≠ 0 := by
+  rw [divergence_probCurrent_eq gaussF gaussF_contDiff]
+  simp [gradF_gaussF, hessF_gaussF, GeometricMechanics.dot, qNonSkew, density, gaussF]
+
+/-- **(4b) Gaussian witness with nonzero circulation.** With the skew rotation
+`Q = [[0,1],[-1,0]] ≠ 0`, the current at `(0,1)` is nonzero, yet it is
+divergence-free there. -/
+theorem rotation_current_ne_zero_divergence_zero :
+    probCurrent gaussF gammaId qRot ![0, 1] ≠ 0 ∧
+      divergence (probCurrent gaussF gammaId qRot) ![0, 1] = 0 := by
+  refine ⟨?_, divergence_probCurrent_eq_zero gaussF gaussF_contDiff _ _ ?_ _⟩
+  · intro h
+    have h0 := congrFun h 0
+    rw [probCurrent_eq gaussF gammaId qRot _ (gaussF_contDiff.differentiable (by norm_num) _)] at h0
+    simp [gradF_gaussF, GeometricMechanics.mulVec, qRot, density, gaussF] at h0
+  · intro i j
+    fin_cases i <;> fin_cases j <;> simp [qRot]
+
+end FokkerPlanck
 
 end FEP.NessFlow
