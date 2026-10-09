@@ -54,7 +54,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.information_geometry": 33,
         "FepSketches.statistical_convergence": 7,
         "FepSketches.measure_bayes": 12,
-        "FepSketches.variational_duality": 74,
+        "FepSketches.variational_duality": 82,
         "FepSketches.controlled_markov": 30,
         "FepSketches.temporal_inference": 52,
         "FepSketches.finite_markov_dynamics": 17,
