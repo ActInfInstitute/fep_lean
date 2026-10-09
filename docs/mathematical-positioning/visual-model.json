@@ -11725,7 +11725,7 @@
     "formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
     "formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
     "formal/temporal_inference.lean": "04cbf77813427dda68a9aa03082cdb191cfffc980071e67e89cde6671baff7a2",
-    "formal/variational_duality.lean": "fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0",
+    "formal/variational_duality.lean": "865f0315296a2432c50c48f612e1e71eb503f5881f433347582c8286f59c7c92",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
     "inputs/formalism_relations.yaml": "8665aa1c7ac5a72f7eea383c61c5719e9a5183559273b38709fa2a1d3f86cb2d",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
@@ -126915,6 +126915,429 @@
         "statement": "theorem jointELBO_coordinate_decomposition\n    (actualPrior referencePrior : FiniteLaw α)\n    (actualKernel referenceKernel : FiniteKernel α β)\n    (hprior : ∀ x, 0 < referencePrior x)\n    (hkernel : ∀ x y, 0 < referenceKernel x y) :\n    jointELBO actualPrior referencePrior actualKernel referenceKernel =\n      -finiteKL actualPrior referencePrior -\n        conditionalKL actualPrior actualKernel referenceKernel",
         "statement_sha256": "dc5201007e2dfd1f4da8b91d3d5b8548d5fd91bebaa9a44dd19360de558dcbd2"
       },
+      "FEP.VariationalDuality.jointSliceVFE_eq_kl_add_surprisal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "prior"
+            ],
+            "role": "typed_binder",
+            "source": "(prior : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel α β)",
+            "type_source": "FiniteKernel α β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "y"
+            ],
+            "role": "typed_binder",
+            "source": "(y : β)",
+            "type_source": "β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hy"
+            ],
+            "role": "typed_binder",
+            "source": "(hy : 0 < kernel.predictive prior y)",
+            "type_source": "0 < kernel.predictive prior y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hjoint"
+            ],
+            "role": "typed_binder",
+            "source": "(hjoint : ∀ x, 0 < prior x * kernel x y)",
+            "type_source": "∀ x, 0 < prior x * kernel x y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "jointSliceVFE prior kernel y q =\n      finiteKL q (kernel.posterior prior y hy) +\n        evidenceSurprisal prior kernel y",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy"
+            ],
+            "identifier": "finiteKL_eq_crossEntropy_sub_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.jointSliceVFE_eq_kl_add_surprisal",
+        "source_line": 1512,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem jointSliceVFE_eq_kl_add_surprisal (prior : FiniteLaw α)\n    (kernel : FiniteKernel α β) (y : β)\n    (hy : 0 < kernel.predictive prior y)\n    (hjoint : ∀ x, 0 < prior x * kernel x y) (q : FiniteLaw α) :\n    jointSliceVFE prior kernel y q =\n      finiteKL q (kernel.posterior prior y hy) +\n        evidenceSurprisal prior kernel y",
+        "statement_sha256": "e0caeeb007f599f6a76e20da585119b17edd5730b21290267d32a17f8c7feca5"
+      },
+      "FEP.VariationalDuality.jointSliceVFE_eq_surprisal_iff": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "prior"
+            ],
+            "role": "typed_binder",
+            "source": "(prior : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel α β)",
+            "type_source": "FiniteKernel α β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "y"
+            ],
+            "role": "typed_binder",
+            "source": "(y : β)",
+            "type_source": "β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hy"
+            ],
+            "role": "typed_binder",
+            "source": "(hy : 0 < kernel.predictive prior y)",
+            "type_source": "0 < kernel.predictive prior y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hjoint"
+            ],
+            "role": "typed_binder",
+            "source": "(hjoint : ∀ x, 0 < prior x * kernel x y)",
+            "type_source": "∀ x, 0 < prior x * kernel x y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "jointSliceVFE prior kernel y q = evidenceSurprisal prior kernel y ↔\n      q = kernel.posterior prior y hy",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "jointSliceVFE_eq_kl_add_surprisal",
+            "qualified_name": "FEP.VariationalDuality.jointSliceVFE_eq_kl_add_surprisal",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.jointSliceVFE_eq_surprisal_iff",
+        "source_line": 1554,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem jointSliceVFE_eq_surprisal_iff (prior : FiniteLaw α)\n    (kernel : FiniteKernel α β) (y : β)\n    (hy : 0 < kernel.predictive prior y)\n    (hjoint : ∀ x, 0 < prior x * kernel x y) (q : FiniteLaw α) :\n    jointSliceVFE prior kernel y q = evidenceSurprisal prior kernel y ↔\n      q = kernel.posterior prior y hy",
+        "statement_sha256": "fa6a768eca7efc76738a7219451667ddfde5bc0580857d536f44db5dfb4377db"
+      },
+      "FEP.VariationalDuality.jointSliceVFE_ge_surprisal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "prior"
+            ],
+            "role": "typed_binder",
+            "source": "(prior : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel α β)",
+            "type_source": "FiniteKernel α β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "y"
+            ],
+            "role": "typed_binder",
+            "source": "(y : β)",
+            "type_source": "β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hy"
+            ],
+            "role": "typed_binder",
+            "source": "(hy : 0 < kernel.predictive prior y)",
+            "type_source": "0 < kernel.predictive prior y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hjoint"
+            ],
+            "role": "typed_binder",
+            "source": "(hjoint : ∀ x, 0 < prior x * kernel x y)",
+            "type_source": "∀ x, 0 < prior x * kernel x y",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "evidenceSurprisal prior kernel y ≤ jointSliceVFE prior kernel y q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "jointSliceVFE_eq_kl_add_surprisal",
+            "qualified_name": "FEP.VariationalDuality.jointSliceVFE_eq_kl_add_surprisal",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.jointSliceVFE_ge_surprisal",
+        "source_line": 1545,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem jointSliceVFE_ge_surprisal (prior : FiniteLaw α)\n    (kernel : FiniteKernel α β) (y : β)\n    (hy : 0 < kernel.predictive prior y)\n    (hjoint : ∀ x, 0 < prior x * kernel x y) (q : FiniteLaw α) :\n    evidenceSurprisal prior kernel y ≤ jointSliceVFE prior kernel y q",
+        "statement_sha256": "7970469fe93249e07387c6d9e71c6793a2699afdd90ce90984d8496bcbb794fc"
+      },
       "FEP.VariationalDuality.joint_supported_by_productMarginals": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -127608,6 +128031,122 @@
         "source_owner": "src/fep_lean/formal/variational_duality.lean",
         "statement": "theorem neg_logPartition_le_gibbsFreeEnergy\n    (certificate : GibbsCertificate α) (candidate : FiniteLaw α) :\n    -certificate.logPartition ≤ gibbsFreeEnergy certificate candidate",
         "statement_sha256": "6414184e30bc110462d1608c922ea81a3fb22592f9b20c2fda36ded0149a1be0"
+      },
+      "FEP.VariationalDuality.predictive_pos_of_jointSlice_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "prior"
+            ],
+            "role": "typed_binder",
+            "source": "(prior : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "kernel"
+            ],
+            "role": "typed_binder",
+            "source": "(kernel : FiniteKernel α β)",
+            "type_source": "FiniteKernel α β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "y"
+            ],
+            "role": "typed_binder",
+            "source": "(y : β)",
+            "type_source": "β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hjoint"
+            ],
+            "role": "typed_binder",
+            "source": "(hjoint : ∀ x, 0 < prior x * kernel x y)",
+            "type_source": "∀ x, 0 < prior x * kernel x y",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < kernel.predictive prior y",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.predictive_pos_of_jointSlice_pos",
+        "source_line": 1565,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem predictive_pos_of_jointSlice_pos [Nonempty α] (prior : FiniteLaw α)\n    (kernel : FiniteKernel α β) (y : β)\n    (hjoint : ∀ x, 0 < prior x * kernel x y) :\n    0 < kernel.predictive prior y",
+        "statement_sha256": "24efe21b111cbe1e4e5d9191e91baec40d23fb4ee297366f2a5d67f9b18d3dd9"
       },
       "FEP.VariationalDuality.rateDistortionDual_bddBelow": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -128926,6 +129465,310 @@
         "source_owner": "src/fep_lean/formal/variational_duality.lean",
         "statement": "theorem uniformZeroPotentialGibbs_objective [Nonempty α] :\n    dvObjective (uniformZeroPotentialGibbs (α := α))\n        (uniformZeroPotentialGibbs (α := α)).optimizer = 0",
         "statement_sha256": "03121e4a597d4bda90e1e563e724d67b75909606916074797c4805957b05cee8"
+      },
+      "FEP.VariationalDuality.vfeWitness_gap_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "evidenceSurprisal (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel\n        true <\n      jointSliceVFE (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel true\n        (FiniteLaw.uniform : FiniteLaw Bool)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "jointSliceVFE_eq_kl_add_surprisal",
+            "qualified_name": "FEP.VariationalDuality.jointSliceVFE_eq_kl_add_surprisal",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "vfeWitness_predictive_true",
+            "qualified_name": "FEP.VariationalDuality.vfeWitness_predictive_true",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.vfeWitness_gap_pos",
+        "source_line": 1596,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem vfeWitness_gap_pos :\n    evidenceSurprisal (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel\n        true <\n      jointSliceVFE (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel true\n        (FiniteLaw.uniform : FiniteLaw Bool)",
+        "statement_sha256": "1595fd0974c5d25e2107acde7fc63ae3d39444c1af55a0c1489542374e9d99ef"
+      },
+      "FEP.VariationalDuality.vfeWitness_predictive_true": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "vfeWitnessKernel.predictive (FiniteLaw.uniform : FiniteLaw Bool) true =\n      1 / 2",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.vfeWitness_predictive_true",
+        "source_line": 1580,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem vfeWitness_predictive_true :\n    vfeWitnessKernel.predictive (FiniteLaw.uniform : FiniteLaw Bool) true =\n      1 / 2",
+        "statement_sha256": "1868b2532e868a4ba41b7c90876780dc52c5750c066dea484b671f52bb4ef338"
+      },
+      "FEP.VariationalDuality.vfeWitness_surprisal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "evidenceSurprisal (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel\n      true = Real.log 2",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "vfeWitness_predictive_true",
+            "qualified_name": "FEP.VariationalDuality.vfeWitness_predictive_true",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.vfeWitness_surprisal",
+        "source_line": 1588,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem vfeWitness_surprisal :\n    evidenceSurprisal (FiniteLaw.uniform : FiniteLaw Bool) vfeWitnessKernel\n      true = Real.log 2",
+        "statement_sha256": "1467771a8697f61d2560e3ba127ce67baa03afe172d86d035e239c4543fe5faf"
+      },
+      "FEP.VariationalDuality.vfeZeroEvidence_boundary": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "vfeZeroEvidenceKernel.predictive (FiniteLaw.uniform : FiniteLaw Bool)\n        true = 0 ∧\n      (∀ x : Bool, (FiniteLaw.uniform : FiniteLaw Bool) x *\n        vfeZeroEvidenceKernel x true = 0) ∧\n      ¬ (0 < vfeZeroEvidenceKernel.predictive\n        (FiniteLaw.uniform : FiniteLaw Bool) true)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.vfeZeroEvidence_boundary",
+        "source_line": 1631,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem vfeZeroEvidence_boundary :\n    vfeZeroEvidenceKernel.predictive (FiniteLaw.uniform : FiniteLaw Bool)\n        true = 0 ∧\n      (∀ x : Bool, (FiniteLaw.uniform : FiniteLaw Bool) x *\n        vfeZeroEvidenceKernel x true = 0) ∧\n      ¬ (0 < vfeZeroEvidenceKernel.predictive\n        (FiniteLaw.uniform : FiniteLaw Bool) true)",
+        "statement_sha256": "ea36dd3e5932c782e0e6f96d73cd047566f3358b23ed0cb337a4711a485d4f9a"
       },
       "FEP.VariationalDuality.zeroTemperature_not_certified": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
