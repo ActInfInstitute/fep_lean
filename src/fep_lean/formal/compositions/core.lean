@@ -323,4 +323,30 @@ theorem fep039_partitionEnergy_conservation
     fep_fep005.FEP005.fep005_partitionCover] using
     (Finset.sum_fiberwise (s := Finset.univ) assign stateEnergy)
 
+/-- One stick-breaking fraction is the Bernoulli law of fep-045: the allocated
+weight and the residual are its `true` and `false` masses.  Applied to the
+conjugate posterior parameter, fep-046's mass-conservation law derives the
+normalization of fep-045's posterior mass function. -/
+theorem fep046_single_break_is_fep045_bernoulli (p l₀ l₁ : ℝ) :
+    fep_fep046.FEP046.fep046_stickWeights
+          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =
+        [fep_fep045.FEP045.fep045_bernoulliMass
+          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) true] ∧
+      fep_fep046.FEP046.fep046_remainder
+          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =
+        fep_fep045.FEP045.fep045_bernoulliMass
+          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) false ∧
+      ∑ b : Bool, fep_fep045.FEP045.fep045_bernoulliMass
+          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) b = 1 := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [fep_fep046.FEP046.fep046_stickWeights,
+      fep_fep045.FEP045.fep045_bernoulliMass]
+  · simp [fep_fep046.FEP046.fep046_remainder,
+      fep_fep045.FEP045.fep045_bernoulliMass]
+  · have hconserve := fep_fep046.FEP046.fep046_mass_conservation
+      [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁]
+    simp [fep_fep046.FEP046.fep046_stickWeights,
+      fep_fep046.FEP046.fep046_remainder,
+      fep_fep045.FEP045.fep045_bernoulliMass] at hconserve ⊢
+
 end FEPComposed

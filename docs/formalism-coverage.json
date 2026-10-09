@@ -2822,7 +2822,7 @@
       "resource": "compositions/core.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 22,
+      "theorem_count": 23,
       "theorems": [
         "FEPComposed.activeInference_expectedFreeEnergy_to_fep021",
         "FEPComposed.fep002_vfe_compProd_chain_rule",
@@ -2845,7 +2845,8 @@
         "FEPComposed.fep037_autocorrelation_tracks_fep020",
         "FEPComposed.fep038_fisherRao_separation",
         "FEPComposed.fep039_partitionEnergy_conservation",
-        "FEPComposed.fep041_informationGain_is_fep014_kl"
+        "FEPComposed.fep041_informationGain_is_fep014_kl",
+        "FEPComposed.fep046_single_break_is_fep045_bernoulli"
       ]
     },
     {
@@ -2900,8 +2901,9 @@
       "resource": "compositions/control_temporal.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 14,
+      "theorem_count": 15,
       "theorems": [
+        "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
         "FEPComposed.fep065_controlledKernel_extends_fep023_normalization",
         "FEPComposed.fep066_action_update_refines_fep034_filter",
         "FEPComposed.fep067_reachableBelief_refines_fep023",
@@ -2970,8 +2972,10 @@
       "resource": "compositions/thermo_geometry.lean",
       "role": "composition",
       "structure_count": 0,
-      "theorem_count": 14,
+      "theorem_count": 16,
       "theorems": [
+        "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
+        "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production",
         "FEPComposed.fep093_path_ratio_extends_fep010_reversal",
         "FEPComposed.fep094_path_kl_refines_fep049_entropy_production",
         "FEPComposed.fep095_fluctuation_symmetry_extends_fep010_reversibility",
@@ -4414,26 +4418,26 @@
   ],
   "metrics": {
     "abbreviations": 38,
-    "authored_relation_edges": 146,
+    "authored_relation_edges": 150,
     "capability_nodes": 50,
-    "composed_theorems": 332,
+    "composed_theorems": 336,
     "definitions": 894,
     "distinct_mathlib_imports": 70,
     "formal_module_dependency_edges": 162,
     "formal_module_import_edges": 272,
     "formal_modules": 71,
     "formal_pairing_witnesses": 118,
-    "formal_relation_witnesses": 20,
+    "formal_relation_witnesses": 24,
     "formal_resource_abbreviations": 31,
     "formal_resource_definitions": 799,
     "formal_resource_structures": 53,
-    "formal_resource_theorems": 1362,
+    "formal_resource_theorems": 1366,
     "foundation_modules": 45,
     "foundation_theorems": 1030,
     "open_capabilities": 0,
     "satisfied_capabilities": 50,
-    "theorem_witnessed_relations": 138,
-    "theorems": 1946,
+    "theorem_witnessed_relations": 142,
+    "theorems": 1950,
     "topic_abbreviations": 7,
     "topic_definitions": 95,
     "topic_import_edges": 225,
@@ -4442,7 +4446,7 @@
   },
   "relation_counts": {
     "conceptual": 8,
-    "formal": 20,
+    "formal": 24,
     "formal_pairing": 118
   },
   "relations": [
@@ -4473,6 +4477,13 @@
       "source": "fep-005",
       "target": "fep-009",
       "witness": null
+    },
+    {
+      "kind": "formal",
+      "rationale": "With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-007",
+      "target": "fep-028",
+      "witness": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax"
     },
     {
       "kind": "conceptual",
@@ -4566,6 +4577,13 @@
       "witness": null
     },
     {
+      "kind": "formal",
+      "rationale": "fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-029",
+      "target": "fep-104",
+      "witness": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance"
+    },
+    {
       "kind": "conceptual",
       "rationale": "A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.",
       "source": "fep-030",
@@ -4641,6 +4659,20 @@
       "source": "fep-042",
       "target": "fep-036",
       "witness": "FEPComposed.fep036_empiricalPosterior_closed"
+    },
+    {
+      "kind": "formal",
+      "rationale": "A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-046",
+      "target": "fep-045",
+      "witness": "FEPComposed.fep046_single_break_is_fep045_bernoulli"
+    },
+    {
+      "kind": "formal",
+      "rationale": "Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-050",
+      "target": "fep-049",
+      "witness": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production"
     },
     {
       "kind": "formal_pairing",

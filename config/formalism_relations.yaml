@@ -583,6 +583,11 @@ edges:
     target: fep-009
     kind: conceptual
     rationale: The finite blanket foundation proves a normalized conditional factorization and ties each transition row to it, but neither theorem consumes fep-005's finite partition declarations or fep-009's measure-theoretic conditional-independence declarations. A formal cross-topic edge awaits an explicit carrier bridge.
+  - source: fep-007
+    target: fep-028
+    kind: formal
+    rationale: With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep007_normalizedMessage_is_fep028_softmax
   - source: fep-008
     target: fep-028
     kind: conceptual
@@ -643,6 +648,11 @@ edges:
     target: fep-044
     kind: conceptual
     rationale: The explicit quadratic Bregman instance and the alpha-divergence proxy are neighboring but mathematically distinct divergence families.
+  - source: fep-029
+    target: fep-104
+    kind: formal
+    rationale: fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance
   - source: fep-030
     target: fep-031
     kind: conceptual
@@ -696,6 +706,16 @@ edges:
     kind: formal
     rationale: The composed theorem uses fep-042's success count to construct fep-036's smoothed empirical prior before conjugate updating. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorems `fep_fep036.FEP036.fep036_smoothedRate_pos` and `fep_fep036.FEP036.fep036_smoothedRate_lt_one` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged.
     witness: FEPComposed.fep036_empiricalPosterior_closed
+  - source: fep-046
+    target: fep-045
+    kind: formal
+    rationale: A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep046_single_break_is_fep045_bernoulli
+  - source: fep-050
+    target: fep-049
+    kind: formal
+    rationale: Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production
   - source: fep-051
     target: fep-017
     kind: formal_pairing

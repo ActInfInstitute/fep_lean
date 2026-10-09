@@ -126,3 +126,26 @@ section is maintained by hand; no generator writes it.
 Outcome: zero re-tags. The `formal` edge count is not raised by this review.
 Every kept row now states in its `rationale` that it was reviewed on this date
 and why it is not a derivation.
+
+## LEAN-8 review: isolated topics (2026-10-08)
+
+Issue #106 asked for the four topics with no or only conceptual relations.
+Verified at the start of the review: fep-007, fep-046 and fep-050 had no edge
+at all, and fep-029 had a single `conceptual` edge (to fep-044). No existing
+composition or foundation theorem mentioned any of the four, so none could be
+related by an existing qualified witness. Each now has a small new theorem in
+an existing composition leaf, with an explicit scope statement in its
+rationale.
+
+| Topic | New edge | Witness (leaf) | What the theorem proves |
+| --- | --- | --- | --- |
+| fep-007 | fep-007 → fep-028 `formal` | `fep007_normalizedMessage_is_fep028_softmax` (`control_temporal`) | With unit incoming messages and factor `exp (-gamma * cost)`, the normalized message equals the support-aware softmax on the support embedded from `Fin 8` into `Fin 10`; fep-007's primary theorem then gives the softmax unit sum. |
+| fep-029 | fep-029 → fep-104 `formal` (the conceptual fep-044 edge is kept) | `fep029_quadraticBregman_is_fep104_scalar_instance` (`thermo_geometry`) | The scalar quadratic Bregman divergence is the `d = 1` instance of the generic Bregman divergence, and fep-104's three-point identity gives the scalar three-point law. |
+| fep-046 | fep-046 → fep-045 `formal` | `fep046_single_break_is_fep045_bernoulli` (`core`) | One break is the Bernoulli law of fep-045; fep-046's mass conservation derives the normalization of fep-045's posterior mass function. |
+| fep-050 | fep-050 → fep-049 `formal` | `fep050_landauer_work_bound_from_fep049_entropy_production` (`thermo_geometry`) | With the explicit premise `totalEntropyChange = entropyProduction`, fep-049's nonnegativity discharges fep-050's second-law hypothesis and yields the Landauer work bound. |
+
+Caveats recorded with the edges: the fep-050 → fep-049 premise is a modelling
+assumption, not a consequence of either topic; the fep-007 → fep-028 identity
+fixes the factor and incoming messages; the fep-046 → fep-045 identity covers
+one break only. The relations schema has no "isolated by design" field, and none
+was needed because every topic received a witnessed edge.
