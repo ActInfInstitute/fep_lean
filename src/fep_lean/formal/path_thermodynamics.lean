@@ -217,6 +217,74 @@ theorem finiteJarzynski_eq
       simp
     _ = Real.exp (-beta * deltaFreeEnergy) := by rw [hFactor, mul_one]
 
+/-! ## Crooks relation as the source of the Jarzynski premise -/
+
+/-- Pathwise Crooks relation in forward-path coordinates: the aligned reverse
+path mass, reweighted by the exponential dissipated work `β (W - ΔF)`, is the
+forward path mass.  Unlike `HasJarzynskiNormalization`, it is a per-path
+microscopic statement rather than the averaged conclusion. -/
+def HasCrooksRelation
+    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)
+    (work : Path → ℝ) : Prop :=
+  0 < beta ∧ ∀ path,
+    protocol.reverseAligned path *
+        Real.exp (beta * (work path - deltaFreeEnergy)) =
+      protocol.forward path
+
+/-- The pathwise Crooks relation implies the Jarzynski normalization premise:
+weighting it by `exp (-β (W - ΔF))` returns the reverse law's unit mass.  No
+support hypothesis is needed. -/
+theorem hasJarzynskiNormalization_of_crooks
+    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)
+    (work : Path → ℝ)
+    (hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work) :
+    HasJarzynskiNormalization protocol.forward beta deltaFreeEnergy work := by
+  refine ⟨hCrooks.1, ?_⟩
+  calc
+    (∑ path, protocol.forward path *
+        Real.exp (-beta * (work path - deltaFreeEnergy))) =
+        ∑ path, protocol.reverseAligned path := by
+      apply Finset.sum_congr rfl
+      intro path _
+      rw [← hCrooks.2 path, mul_assoc, ← Real.exp_add]
+      have hCancel : beta * (work path - deltaFreeEnergy) +
+          -beta * (work path - deltaFreeEnergy) = 0 := by ring
+      rw [hCancel, Real.exp_zero, mul_one]
+    _ = 1 := protocol.reverseAligned.sum_one
+
+/-- Finite Jarzynski equality derived from the pathwise Crooks relation rather
+than from an assumed exponential-work normalization. -/
+theorem finiteJarzynski_of_crooks
+    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)
+    (work : Path → ℝ)
+    (hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work) :
+    exponentialWorkAverage protocol.forward beta work =
+      Real.exp (-beta * deltaFreeEnergy) :=
+  finiteJarzynski_eq protocol.forward beta deltaFreeEnergy work
+    (hasJarzynskiNormalization_of_crooks protocol beta deltaFreeEnergy work
+      hCrooks)
+
+/-- On a supported protocol the work `ΔF + σ / β`, with `σ` the pathwise
+entropy production, satisfies the Crooks relation: the detailed fluctuation
+identity is the Crooks relation with dissipated work `β (W - ΔF) = σ`. -/
+theorem crooks_of_entropyProduction
+    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)
+    (hBeta : 0 < beta)
+    (hForward : ∀ path, 0 < protocol.forward path)
+    (hReverse : ∀ path, 0 < protocol.reverseAligned path) :
+    HasCrooksRelation protocol beta deltaFreeEnergy
+      (fun path =>
+        deltaFreeEnergy + pathwiseEntropyProduction protocol path / beta) := by
+  refine ⟨hBeta, fun path => ?_⟩
+  have hDissipated :
+      beta * (deltaFreeEnergy + pathwiseEntropyProduction protocol path / beta -
+          deltaFreeEnergy) =
+        pathwiseEntropyProduction protocol path := by
+    field_simp
+    ring
+  rw [hDissipated]
+  exact detailedFluctuation_identity protocol hForward hReverse path
+
 /-! ## Local detailed balance and finite currents -/
 
 /-- Oriented one-step probability current. -/
@@ -340,5 +408,59 @@ theorem irreversibleBool_entropyProduction_pos :
     exact irreversibleForward_ne_reverse
       ((finiteKL_eq_zero_iff irreversibleForward irreversibleReverse).mp hZero)
   exact lt_of_le_of_ne hNonneg (Ne.symm hNe)
+
+/-! ## Crooks witness and the strictness of the Jarzynski premise -/
+
+/-- Nonconstant Boolean work `± log 3` for the irreversible protocol. -/
+noncomputable def irreversibleCrooksWork (path : Bool) : ℝ :=
+  if path then Real.log 3 else -Real.log 3
+
+/-- The irreversible Boolean protocol satisfies the Crooks relation at `β = 1`,
+`ΔF = 0` with the nonconstant work `± log 3`. -/
+theorem irreversibleBool_crooks :
+    HasCrooksRelation irreversibleBoolProtocol 1 0 irreversibleCrooksWork := by
+  have hLog : Real.exp (Real.log 3) = 3 := Real.exp_log (by norm_num)
+  refine ⟨one_pos, fun path => ?_⟩
+  cases path <;>
+    norm_num [irreversibleBoolProtocol, irreversibleCrooksWork,
+      irreversibleForward, irreversibleReverse, Real.exp_neg, hLog]
+
+/-- The Crooks witness work genuinely varies across paths. -/
+theorem irreversibleCrooksWork_nonconstant :
+    irreversibleCrooksWork true ≠ irreversibleCrooksWork false := by
+  have hPos : 0 < Real.log 3 := Real.log_pos (by norm_num)
+  simp only [irreversibleCrooksWork, ↓reduceIte, Bool.false_eq_true]
+  intro hEqual
+  linarith
+
+/-- The Jarzynski normalization is strictly weaker than Crooks: zero work
+normalizes the irreversible forward law yet violates the pathwise relation. -/
+theorem jarzynski_without_crooks :
+    HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0
+        (fun _ => 0) ∧
+      ¬ HasCrooksRelation irreversibleBoolProtocol 1 0 (fun _ => 0) := by
+  refine ⟨⟨one_pos, ?_⟩, ?_⟩
+  · simp only [sub_self, mul_zero, Real.exp_zero, mul_one]
+    exact irreversibleBoolProtocol.forward.sum_one
+  · rintro ⟨_, hCrooks⟩
+    have hTrue := hCrooks true
+    simp only [irreversibleBoolProtocol, irreversibleForward,
+      irreversibleReverse, ↓reduceIte, sub_self, mul_zero, Real.exp_zero,
+      mul_one] at hTrue
+    norm_num at hTrue
+
+/-- The Jarzynski premise is substantive: constant unit work at `β = 1`,
+`ΔF = 0` violates it on the irreversible forward law. -/
+theorem irreversibleForward_unitWork_not_jarzynski :
+    ¬ HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0
+        (fun _ => 1) := by
+  rintro ⟨_, hNormalization⟩
+  have hSum : (∑ path, irreversibleBoolProtocol.forward path *
+      Real.exp (-1 * ((1 : ℝ) - 0))) = Real.exp (-1) := by
+    rw [← Finset.sum_mul, irreversibleBoolProtocol.forward.sum_one]
+    norm_num
+  have hLt : Real.exp (-1) < 1 := Real.exp_lt_one_iff.2 (by norm_num)
+  rw [hSum] at hNormalization
+  linarith
 
 end FEP.PathThermodynamics

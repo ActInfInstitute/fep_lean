@@ -20057,7 +20057,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/measure_bayes.lean` | `a8d81f59d449761a19960663fde0c8b5208cbc2db8966d6ddb2081175e3be133` |
 | `formal/native_blanket.lean` | `b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b` |
 | `formal/ness_flow.lean` | `fcf58cdd04feac36a46095b12c744f4c29683444ea56895b43531daa0b5e7de4` |
-| `formal/path_thermodynamics.lean` | `8ff5b4c984829e283d7129ce8c3ed42bd18b201a774aab8677a5f09cf4c6864b` |
+| `formal/path_thermodynamics.lean` | `bac2fde1b9e0bfafa78b3f622662aa8169c6d1510cc19ffec5a9e955dd5dbf00` |
 | `formal/perception_action_loop.lean` | `e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1` |
 | `formal/policy_tree.lean` | `2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88` |
 | `formal/posterior_convergence.lean` | `1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20` |

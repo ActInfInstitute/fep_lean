@@ -11654,7 +11654,7 @@
     "formal/measure_bayes.lean": "a8d81f59d449761a19960663fde0c8b5208cbc2db8966d6ddb2081175e3be133",
     "formal/native_blanket.lean": "b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b",
     "formal/ness_flow.lean": "fcf58cdd04feac36a46095b12c744f4c29683444ea56895b43531daa0b5e7de4",
-    "formal/path_thermodynamics.lean": "8ff5b4c984829e283d7129ce8c3ed42bd18b201a774aab8677a5f09cf4c6864b",
+    "formal/path_thermodynamics.lean": "bac2fde1b9e0bfafa78b3f622662aa8169c6d1510cc19ffec5a9e955dd5dbf00",
     "formal/perception_action_loop.lean": "e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1",
     "formal/policy_tree.lean": "2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88",
     "formal/posterior_convergence.lean": "1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20",
@@ -82880,6 +82880,116 @@
         "statement": "theorem solenoidal_orthogonal (ω : ℝ) (g : Fin 2 → ℝ) :\n    dot (solenoidal ω g) g = 0",
         "statement_sha256": "14982221cb83c0d573a0b5094daf2d09a33bd6230d0726f98410cb1427f93208"
       },
+      "FEP.PathThermodynamics.crooks_of_entropyProduction": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "protocol"
+            ],
+            "role": "typed_binder",
+            "source": "(protocol : FinitePathProtocol Path)",
+            "type_source": "FinitePathProtocol Path",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "beta",
+              "deltaFreeEnergy"
+            ],
+            "role": "typed_binder",
+            "source": "(beta deltaFreeEnergy : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hBeta"
+            ],
+            "role": "typed_binder",
+            "source": "(hBeta : 0 < beta)",
+            "type_source": "0 < beta",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hForward"
+            ],
+            "role": "typed_binder",
+            "source": "(hForward : ∀ path, 0 < protocol.forward path)",
+            "type_source": "∀ path, 0 < protocol.forward path",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hReverse"
+            ],
+            "role": "typed_binder",
+            "source": "(hReverse : ∀ path, 0 < protocol.reverseAligned path)",
+            "type_source": "∀ path, 0 < protocol.reverseAligned path",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "HasCrooksRelation protocol beta deltaFreeEnergy\n      (fun path =>\n        deltaFreeEnergy + pathwiseEntropyProduction protocol path / beta)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "detailedFluctuation_identity",
+            "qualified_name": "FEP.PathThermodynamics.detailedFluctuation_identity",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.crooks_of_entropyProduction",
+        "source_line": 270,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem crooks_of_entropyProduction\n    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)\n    (hBeta : 0 < beta)\n    (hForward : ∀ path, 0 < protocol.forward path)\n    (hReverse : ∀ path, 0 < protocol.reverseAligned path) :\n    HasCrooksRelation protocol beta deltaFreeEnergy\n      (fun path =>\n        deltaFreeEnergy + pathwiseEntropyProduction protocol path / beta)",
+        "statement_sha256": "b595a96433ec5d7ea56ae505084e2fe0e2877e5d2306e7beb0cfbe080748a687"
+      },
       "FEP.PathThermodynamics.detailedFluctuation_identity": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -83227,6 +83337,205 @@
         "statement": "theorem finiteJarzynski_eq\n    (law : FiniteLaw Path) (beta deltaFreeEnergy : ℝ)\n    (work : Path → ℝ)\n    (hNormalization :\n      HasJarzynskiNormalization law beta deltaFreeEnergy work) :\n    exponentialWorkAverage law beta work =\n      Real.exp (-beta * deltaFreeEnergy)",
         "statement_sha256": "a71655539a8fe7a95ee1cc965794d05302b8873cddb46b61abb1a771e6dc391f"
       },
+      "FEP.PathThermodynamics.finiteJarzynski_of_crooks": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "protocol"
+            ],
+            "role": "typed_binder",
+            "source": "(protocol : FinitePathProtocol Path)",
+            "type_source": "FinitePathProtocol Path",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "beta",
+              "deltaFreeEnergy"
+            ],
+            "role": "typed_binder",
+            "source": "(beta deltaFreeEnergy : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "work"
+            ],
+            "role": "typed_binder",
+            "source": "(work : Path → ℝ)",
+            "type_source": "Path → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hCrooks"
+            ],
+            "role": "typed_binder",
+            "source": "(hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work)",
+            "type_source": "HasCrooksRelation protocol beta deltaFreeEnergy work",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "exponentialWorkAverage protocol.forward beta work =\n      Real.exp (-beta * deltaFreeEnergy)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "finiteJarzynski_eq",
+            "qualified_name": "FEP.PathThermodynamics.finiteJarzynski_eq",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "hasJarzynskiNormalization_of_crooks",
+            "qualified_name": "FEP.PathThermodynamics.hasJarzynskiNormalization_of_crooks",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.finiteJarzynski_of_crooks",
+        "source_line": 257,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem finiteJarzynski_of_crooks\n    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)\n    (work : Path → ℝ)\n    (hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work) :\n    exponentialWorkAverage protocol.forward beta work =\n      Real.exp (-beta * deltaFreeEnergy)",
+        "statement_sha256": "6c6dc7947b45ea2292c0dc3dc611835a2ca328afc723eb40739ebcd26602ff40"
+      },
+      "FEP.PathThermodynamics.hasJarzynskiNormalization_of_crooks": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "protocol"
+            ],
+            "role": "typed_binder",
+            "source": "(protocol : FinitePathProtocol Path)",
+            "type_source": "FinitePathProtocol Path",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "beta",
+              "deltaFreeEnergy"
+            ],
+            "role": "typed_binder",
+            "source": "(beta deltaFreeEnergy : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "work"
+            ],
+            "role": "typed_binder",
+            "source": "(work : Path → ℝ)",
+            "type_source": "Path → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hCrooks"
+            ],
+            "role": "typed_binder",
+            "source": "(hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work)",
+            "type_source": "HasCrooksRelation protocol beta deltaFreeEnergy work",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "HasJarzynskiNormalization protocol.forward beta deltaFreeEnergy work",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.hasJarzynskiNormalization_of_crooks",
+        "source_line": 237,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem hasJarzynskiNormalization_of_crooks\n    (protocol : FinitePathProtocol Path) (beta deltaFreeEnergy : ℝ)\n    (work : Path → ℝ)\n    (hCrooks : HasCrooksRelation protocol beta deltaFreeEnergy work) :\n    HasJarzynskiNormalization protocol.forward beta deltaFreeEnergy work",
+        "statement_sha256": "27b3125171284c1c3b54c9d86eac281fe4d4c34faef5bcd7944cfd9101ca9dee"
+      },
       "FEP.PathThermodynamics.identityKernel_KL_equality": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -83293,7 +83602,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.identityKernel_KL_equality",
-        "source_line": 298,
+        "source_line": 366,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem identityKernel_KL_equality [DecidableEq State]\n    (actual stationary : FiniteLaw State) :\n    finiteKL\n        ((FiniteKernel.identity : FiniteKernel State State).predictive actual)\n        stationary = finiteKL actual stationary",
         "statement_sha256": "9c2e278d3a9400d79984636af95b1198d4c6c897c64ea4164bda3799f0fe4c49"
@@ -83380,6 +83689,57 @@
         "statement": "theorem integralFluctuation_eq_one\n    (protocol : FinitePathProtocol Path)\n    (hForward : ∀ path, 0 < protocol.forward path)\n    (hReverse : ∀ path, 0 < protocol.reverseAligned path) :\n    ∑ path, protocol.forward path *\n        Real.exp (-pathwiseEntropyProduction protocol path) = 1",
         "statement_sha256": "fcf7ad08f02d4e7bb47ff7c30904e1d8b06496d8b534f0cb23de9777f271e6f0"
       },
+      "FEP.PathThermodynamics.irreversibleBool_crooks": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "HasCrooksRelation irreversibleBoolProtocol 1 0 irreversibleCrooksWork",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.irreversibleBool_crooks",
+        "source_line": 420,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem irreversibleBool_crooks :\n    HasCrooksRelation irreversibleBoolProtocol 1 0 irreversibleCrooksWork",
+        "statement_sha256": "bc974c07abce87e801c11a33f64dcce666e2283d2c3e68c7bad1686b81ccb63a"
+      },
       "FEP.PathThermodynamics.irreversibleBool_entropyProduction_pos": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [],
@@ -83449,10 +83809,61 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.irreversibleBool_entropyProduction_pos",
-        "source_line": 335,
+        "source_line": 403,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem irreversibleBool_entropyProduction_pos :\n    0 < entropyProduction irreversibleBoolProtocol",
         "statement_sha256": "7613d1a48af9e4af0e71d3625ec05098e1edebeddc07a4987e5de8bfb4ac754a"
+      },
+      "FEP.PathThermodynamics.irreversibleCrooksWork_nonconstant": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "irreversibleCrooksWork true ≠ irreversibleCrooksWork false",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.irreversibleCrooksWork_nonconstant",
+        "source_line": 429,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem irreversibleCrooksWork_nonconstant :\n    irreversibleCrooksWork true ≠ irreversibleCrooksWork false",
+        "statement_sha256": "71f430969fca9fc684d8742ea1d0ab6fb57ed4442ccc8ce0ba27042890ff80b7"
       },
       "FEP.PathThermodynamics.irreversibleForward_ne_reverse": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -83500,10 +83911,61 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.irreversibleForward_ne_reverse",
-        "source_line": 327,
+        "source_line": 395,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem irreversibleForward_ne_reverse :\n    irreversibleForward ≠ irreversibleReverse",
         "statement_sha256": "74bd318dd6ab38ed4b14aa0850b01c141fd693212ae97712e7209695c130799a"
+      },
+      "FEP.PathThermodynamics.irreversibleForward_unitWork_not_jarzynski": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "¬ HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0\n        (fun _ => 1)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.irreversibleForward_unitWork_not_jarzynski",
+        "source_line": 454,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem irreversibleForward_unitWork_not_jarzynski :\n    ¬ HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0\n        (fun _ => 1)",
+        "statement_sha256": "335368feaf773449832f1186e402e09da48ee37ee05d70c34dfe9c534f7431cb"
       },
       "FEP.PathThermodynamics.isInvariant_of_isReversible": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -83582,10 +84044,61 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.isInvariant_of_isReversible",
-        "source_line": 260,
+        "source_line": 328,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem isInvariant_of_isReversible\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (hReversible : IsReversible law kernel) :\n    FEP.FiniteMarkovDynamics.IsInvariant law kernel",
         "statement_sha256": "830a07291304aff920362afe6d693ccccba22e4bef4dc72cacf8913a5c79072a"
+      },
+      "FEP.PathThermodynamics.jarzynski_without_crooks": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0\n        (fun _ => 0) ∧\n      ¬ HasCrooksRelation irreversibleBoolProtocol 1 0 (fun _ => 0)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Path",
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{Path State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Path]",
+            "type_source": "Fintype Path",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.variational_duality"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PathThermodynamics",
+        "namespace_variable_context": [
+          "{Path State : Type*} [Fintype Path] [Fintype State]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PathThermodynamics.jarzynski_without_crooks",
+        "source_line": 438,
+        "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
+        "statement": "theorem jarzynski_without_crooks :\n    HasJarzynskiNormalization irreversibleBoolProtocol.forward 1 0\n        (fun _ => 0) ∧\n      ¬ HasCrooksRelation irreversibleBoolProtocol 1 0 (fun _ => 0)",
+        "statement_sha256": "3edcfef3421f01494e50fcf721fe7aa4e2079ac0061d58201fea32511f89736c"
       },
       "FEP.PathThermodynamics.localAffinity_zero_reverseRate_boundary": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -83675,7 +84188,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.localAffinity_zero_reverseRate_boundary",
-        "source_line": 251,
+        "source_line": 319,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem localAffinity_zero_reverseRate_boundary\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (source target : State) (hZero : kernel target source = 0) :\n    localAffinity law kernel source target = 0",
         "statement_sha256": "2f218319679dc3a5f9d6e9c6d1334f725c9d6c80a4795b2da31e7e40ebbf9baa"
@@ -83768,7 +84281,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.localDetailedBalance_current_zero",
-        "source_line": 236,
+        "source_line": 304,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem localDetailedBalance_current_zero\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (hReversible : IsReversible law kernel) (source target : State) :\n    probabilityCurrent law kernel source target = 0",
         "statement_sha256": "e88f4388b57888276f96543dd122480d3cab967c2128c58be1fb827c13cb9e59"
@@ -84189,7 +84702,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.probabilityCurrent_antisymm",
-        "source_line": 228,
+        "source_line": 296,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem probabilityCurrent_antisymm\n    (law : FiniteLaw State) (kernel : FiniteKernel State State)\n    (source target : State) :\n    probabilityCurrent law kernel source target =\n      -probabilityCurrent law kernel target source",
         "statement_sha256": "10b7178b49efce1fc247a51ebb93256f8f5ef0b76aa0b1dbec4bf780fa529d3f"
@@ -84397,7 +84910,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PathThermodynamics.reversibleKL_oneStep_dissipation",
-        "source_line": 281,
+        "source_line": 349,
         "source_owner": "src/fep_lean/formal/path_thermodynamics.lean",
         "statement": "theorem reversibleKL_oneStep_dissipation [Nonempty State]\n    (actual stationary : FiniteLaw State)\n    (kernel : FiniteKernel State State)\n    (hActual : ∀ state, 0 < actual state)\n    (hStationary : ∀ state, 0 < stationary state)\n    (hKernel : ∀ source target, 0 < kernel source target)\n    (hReversible : IsReversible stationary kernel) :\n    finiteKL (kernel.predictive actual) stationary ≤\n      finiteKL actual stationary",
         "statement_sha256": "6879e6fac8566e0139119b6567f2de2e0c1b894ed184d72dbd14b5002740d7b5"
