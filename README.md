@@ -286,8 +286,9 @@ The operator command quick reference lives at
 ## Development checks
 
 Contributor setup, check tiers and repository rules are in
-[`CONTRIBUTING.md`](CONTRIBUTING.md). The complete release-gate list is maintained as "Required release gates" in
-[`docs/testing.md`](docs/testing.md); the quick local dev checks are:
+[`CONTRIBUTING.md`](CONTRIBUTING.md). The complete required-check list is
+maintained once, in the "Required checks" block of
+[`AGENTS.md`](AGENTS.md#required-checks); the quick local dev checks are:
 
 ```bash
 uv run pytest tests/ -q --cov=src --cov-fail-under=89 -m "not serial_lean"

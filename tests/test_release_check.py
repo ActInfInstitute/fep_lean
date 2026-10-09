@@ -19,6 +19,7 @@ _SOURCES = (
     "CITATION.cff",
     "manuscript/config.yaml",
     "config/settings.yaml",
+    ".aii/config.yaml",
     "uv.lock",
     "CHANGELOG.md",
 )
@@ -64,6 +65,8 @@ def test_repository_metadata_agrees_on_one_release() -> None:
         ("CITATION.cff", "date-released: ", "date-released: 1999-01-01 #", "CITATION"),
         ("manuscript/config.yaml", "  version: ", "  version: 0.0.1 #", "manuscript"),
         ("config/settings.yaml", "  version: ", "  version: 0.0.1 #", "settings"),
+        (".aii/config.yaml", "Release v", "Release v0.0.", ".aii"),
+        (".aii/config.yaml", "updated: '", "updated: '1999-01-01' #", ".aii"),
     ],
 )
 def test_any_metadata_drift_is_reported(
@@ -158,3 +161,76 @@ def test_cli_reports_json_and_exit_status(
     root = _copy_sources(tmp_path)
     (root / "CITATION.cff").write_text("version: 0\n", encoding="utf-8")
     assert check.main(["--root", str(root)]) == 1
+
+
+def test_bump_rewrites_every_gated_file_and_leaves_only_expected_gaps(
+    tmp_path: Path,
+) -> None:
+    check = _module()
+    root = _copy_sources(tmp_path)
+    changed = check.bump(root, "9.8.7", "2031-02-03")
+    assert ".aii/config.yaml" in changed and "pyproject.toml" in changed
+    versions, dates = check.read_versions(root), check.read_dates(root)
+    assert {k: v for k, v in versions.items() if k != "uv.lock"} == {
+        k: "9.8.7" for k in versions if k != "uv.lock"
+    }
+    assert set(dates.values()) == {"2031-02-03"}
+    errors = check.metadata_errors(root)
+    # Only the maintainer-owned steps remain: uv.lock and the changelog section.
+    assert len(errors) == 2
+    assert any(e.startswith("uv.lock version") for e in errors)
+    assert any("CHANGELOG.md lacks" in e and "9.8.7" in e for e in errors)
+
+
+def test_bump_is_idempotent_and_closes_the_gate_given_lock_and_changelog(
+    tmp_path: Path,
+) -> None:
+    check = _module()
+    root = _copy_sources(tmp_path)
+    old = check.read_release(root)
+    check.bump(root, "9.8.7", "2031-02-03")
+    first = {r: (root / r).read_text(encoding="utf-8") for r in _SOURCES}
+    check.bump(root, "9.8.7", "2031-02-03")
+    assert first == {r: (root / r).read_text(encoding="utf-8") for r in _SOURCES}
+    lock = root / "uv.lock"
+    lock.write_text(
+        lock.read_text(encoding="utf-8").replace(
+            f'version = "{old.version}"', 'version = "9.8.7"', 1
+        ),
+        encoding="utf-8",
+    )
+    changelog = root / "CHANGELOG.md"
+    changelog.write_text(
+        "## 9.8.7 — 2031-02-03 — test\n\n" + changelog.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    assert check.metadata_errors(root) == ()
+
+
+@pytest.mark.parametrize(
+    ("version", "date"), [("1.7", "2031-02-03"), ("1.7.0", "03/02/2031")]
+)
+def test_bump_rejects_malformed_arguments_without_touching_files(
+    tmp_path: Path, version: str, date: str
+) -> None:
+    check = _module()
+    root = _copy_sources(tmp_path)
+    before = {r: (root / r).read_text(encoding="utf-8") for r in _SOURCES}
+    with pytest.raises(ValueError):
+        check.bump(root, version, date)
+    assert before == {r: (root / r).read_text(encoding="utf-8") for r in _SOURCES}
+
+
+def test_cli_bump_prints_uv_lock_and_requires_both_flags(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    check = _module()
+    root = _copy_sources(tmp_path)
+    assert (
+        check.main(["--root", str(root), "--bump", "9.8.7", "--date", "2031-02-03"])
+        == 0
+    )
+    assert "uv lock" in capsys.readouterr().out
+    assert check.read_release(root).version == "9.8.7"
+    with pytest.raises(SystemExit):
+        check.main(["--root", str(root), "--bump", "9.8.8"])

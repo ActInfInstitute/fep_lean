@@ -120,6 +120,13 @@ document wins.
 
 ## Required checks
 
+This block is the single owner of the required-check list. `docs/development.md`,
+`docs/testing.md` and the README link here instead of re-listing it, and
+`tests/test_check_inventory.py` fails if a command below is neither executed in
+`.github/workflows/ci.yml` nor on that test's commented hosted-only/local-only
+allow-lists, or if CI runs a gate that is missing here. Add a check to CI and
+to this block in the same change.
+
 ```bash
 uv lock --check && uv pip check
 uv run python scripts/_maint_build_topics_catalogue.py --check
@@ -135,6 +142,8 @@ uv run fep-lean --project-root . methods check --output-root docs/mathematical-p
 uv run pytest specs/openai-math-methods/test_methods.py \
   specs/openai-math-methods/test_upstream.py \
   specs/openai-math-methods/test_visualization.py -q --no-cov
+uv run ruff check specs/openai-math-methods
+uv run ruff format --check specs/openai-math-methods
 uv run python scripts/audit_formalisms.py \
   --receipt output/formalism-audit.json
 uv run python docs/theorem_ref_audit.py
@@ -143,10 +152,17 @@ uv run fep-lean catalogue
 uv run python scripts/render_manuscript.py --check
 uv run python scripts/build_render_fonts.py --check
 uv run python scripts/check_render_log.py --verify-receipt
+uv run python scripts/build_manuscript_figures.py
+uv run python scripts/build_manuscript_figures.py --check
+uv run pytest specs/publication-browser-acceptance/test_validate_acceptance.py -q --no-cov
+uv run ruff check specs/publication-browser-acceptance
+uv run ruff format --check specs/publication-browser-acceptance
+uv run python specs/publication-browser-acceptance/validate_acceptance.py --collect output/python-acceptance-collection.json
 uv run pytest tests/ -q --cov=src --cov-fail-under=89 -m "not serial_lean"
 uv run mypy src
 uv run ruff check src tests scripts docs
 uv run ruff format --check src tests scripts docs
+git diff --check
 uv run python docs/check_links.py --strict --include-root
 uv run python docs/md_hygiene.py --strict --include-root
 uv run python docs/pin_audit.py --check-latest
@@ -155,6 +171,19 @@ uv run python docs/check_orphan_compiles.py
 uv run python specs/gnn-bridge-q5-artifact-proof/generate_probe.py --check
 uv run python specs/geo-infer-notation-bridge/check_geo_notation_bridge.py --check
 ```
+
+Native Lean checks need the built pinned Mathlib cache (`lake exe cache get`)
+and run in the hosted `lean` job:
+
+```bash
+(cd lean && lake build FepSketches)
+uv run pytest tests/ -q -m serial_lean -n 1 --no-cov
+uv run fep-lean verify --fail-on-warnings --receipt output/native-verification.json
+```
+
+Hosted CI also runs the `distribution` installed-wheel matrix, the isolated
+live Chrome pair and the membership aggregate of
+`validate_acceptance.py`; see `docs/testing.md` for those boundaries.
 
 The listed Q5 `generate_probe.py --check` and GEO notation checks validate
 retained static artifacts without a sibling checkout. CI runs both. Q5
