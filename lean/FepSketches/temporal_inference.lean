@@ -420,4 +420,304 @@ theorem boolSmoothing_sum_one :
   rw [boolSmoothing_false_mass, boolSmoothing_true_mass]
   norm_num
 
+/-! ## Sum-product message passing on finite rooted trees
+
+A `PTree S` is a finite rooted tree of variables over the finite state space
+`S`.  Each node carries a nonnegative node potential and, for each of its
+children, an edge potential indexed by (parent state, child state).  The
+joint weight of a configuration is the product of all node and edge
+potentials; the exact marginal is obtained by brute-force summation over every
+configuration.  Sum-product messages are defined by structural recursion on the
+tree, and `rootBelief_eq_exactMarginal` states that the normalised product of
+incoming messages at the root is that exact marginal.  A three-cycle witness
+shows that the same one-pass message product is not the marginal on a loopy
+graph.  The theorems certify exact finite sum-product identities for these
+potentials only; they are not a statement about convergence of loopy belief
+propagation. -/
+
+universe uS
+
+/-- A finite rooted tree of variables over the state space `S`: a node
+potential, a finite number of children, and an edge potential
+(parent state, child state) for each child. -/
+inductive PTree (S : Type uS) where
+  | node (potential : S → ℝ) (arity : ℕ) (edge : Fin arity → S → S → ℝ)
+      (child : Fin arity → PTree S) : PTree S
+
+namespace PTree
+
+variable {S : Type uS}
+
+/-- A leaf: a node with no children. -/
+def leaf (potential : S → ℝ) : PTree S :=
+  node potential 0 (fun i => i.elim0) (fun i => i.elim0)
+
+/-- All potentials of the tree are nonnegative. -/
+def Nonneg : PTree S → Prop
+  | node φ n ψ c =>
+    (∀ s, 0 ≤ φ s) ∧ (∀ i s y, 0 ≤ ψ i s y) ∧ ∀ i : Fin n, Nonneg (c i)
+
+/-- Joint configurations: one state per node of the tree. -/
+def Conf : PTree S → Type uS
+  | node _ n _ c => S × ∀ i : Fin n, Conf (c i)
+
+/-- The state a configuration assigns to the root. -/
+def Conf.root : (t : PTree S) → Conf t → S
+  | node _ _ _ _, x => x.1
+
+/-- Finiteness of the configuration space. -/
+@[instance_reducible]
+def fintypeConf [Fintype S] : (t : PTree S) → Fintype (Conf t)
+  | node _ n _ c =>
+    haveI : ∀ i : Fin n, Fintype (Conf (c i)) := fun i => fintypeConf (c i)
+    inferInstanceAs (Fintype (S × ∀ i : Fin n, Conf (c i)))
+
+attribute [instance] fintypeConf
+
+/-- Unnormalised joint weight: the product of every node and edge potential. -/
+noncomputable def weight : (t : PTree S) → Conf t → ℝ
+  | node φ n ψ c, x =>
+    φ x.1 * ∏ i : Fin n,
+      ψ i x.1 (Conf.root (c i) (x.2 i)) * weight (c i) (x.2 i)
+
+section Messages
+
+variable [Fintype S]
+
+/-- Brute-force unnormalised marginal: the total weight of all
+configurations whose root is in state `s`. -/
+noncomputable def bruteMass [DecidableEq S] (t : PTree S) (s : S) : ℝ :=
+  ∑ x : Conf t, if Conf.root t x = s then weight t x else 0
+
+/-- Total weight of all configurations. -/
+noncomputable def totalWeight (t : PTree S) : ℝ := ∑ x : Conf t, weight t x
+
+/-- Exact marginal at the root, computed by brute-force summation. -/
+noncomputable def exactMarginal [DecidableEq S] (t : PTree S) (s : S) : ℝ :=
+  bruteMass t s / totalWeight t
+
+/-- Unnormalised sum-product belief at a node: its potential times the
+product of the messages from its children. -/
+noncomputable def msg : PTree S → S → ℝ
+  | node φ n ψ c, s => φ s * ∏ i : Fin n, ∑ y, ψ i s y * msg (c i) y
+
+/-- The message sent by child `i` of a node to that node, as a function of the
+parent state. -/
+noncomputable def childMessage (ψ : S → S → ℝ) (child : PTree S) (s : S) : ℝ :=
+  ∑ y, ψ s y * msg child y
+
+/-- Normaliser of the root belief. -/
+noncomputable def beliefNormalizer (t : PTree S) : ℝ := ∑ y, msg t y
+
+/-- Normalised product of incoming messages at the root. -/
+noncomputable def rootBelief (t : PTree S) (s : S) : ℝ :=
+  msg t s / beliefNormalizer t
+
+/-- The root belief of a node is its potential times the product of the
+incoming child messages, normalised. -/
+theorem rootBelief_node (φ : S → ℝ) (n : ℕ) (ψ : Fin n → S → S → ℝ)
+    (c : Fin n → PTree S) (s : S) :
+    rootBelief (node φ n ψ c) s =
+      (φ s * ∏ i : Fin n, childMessage (ψ i) (c i) s) /
+        ∑ y, φ y * ∏ i : Fin n, childMessage (ψ i) (c i) y :=
+  rfl
+
+/-- Summing a root-dependent weight over configurations groups them by root
+state. -/
+theorem sum_root_weight [DecidableEq S] (t : PTree S) (F : S → ℝ) :
+    ∑ x : Conf t, F (Conf.root t x) * weight t x =
+      ∑ y, F y * bruteMass t y := by
+  simp only [bruteMass, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  simp [mul_ite]
+
+/-- Total weight is the sum of the brute-force root masses. -/
+theorem totalWeight_eq_sum_bruteMass [DecidableEq S] (t : PTree S) :
+    totalWeight t = ∑ y, bruteMass t y := by
+  simpa [totalWeight] using sum_root_weight t (fun _ => 1)
+
+/-- Sum-product messages compute the brute-force unnormalised marginal. -/
+theorem msg_eq_bruteMass [DecidableEq S] (t : PTree S) (s : S) :
+    msg t s = bruteMass t s := by
+  induction t generalizing s with
+  | node φ n ψ c ih =>
+    have hsum : ∑ x : Conf (node φ n ψ c),
+        (if Conf.root (node φ n ψ c) x = s then
+          weight (node φ n ψ c) x else 0) =
+        ∑ f : (∀ i : Fin n, Conf (c i)),
+          φ s * ∏ i : Fin n,
+            ψ i s (Conf.root (c i) (f i)) * weight (c i) (f i) := by
+      change ∑ x : S × (∀ i : Fin n, Conf (c i)),
+        (if x.1 = s then φ x.1 * ∏ i : Fin n,
+          ψ i x.1 (Conf.root (c i) (x.2 i)) * weight (c i) (x.2 i) else 0) = _
+      rw [Fintype.sum_prod_type]
+      simp
+    rw [bruteMass, hsum, ← Finset.mul_sum]
+    have hprod := Finset.prod_univ_sum (fun i : Fin n => (Finset.univ : Finset (Conf (c i))))
+      (fun i x => ψ i s (Conf.root (c i) x) * weight (c i) x)
+    rw [Fintype.piFinset_univ] at hprod
+    rw [← hprod, msg]
+    congr 1
+    refine Finset.prod_congr rfl fun i _ => ?_
+    rw [sum_root_weight (c i) (fun y => ψ i s y)]
+    exact Finset.sum_congr rfl fun y _ => by rw [ih i y]
+
+/-- The normaliser of the root belief is the total configuration weight. -/
+theorem beliefNormalizer_eq_totalWeight [DecidableEq S] (t : PTree S) :
+    beliefNormalizer t = totalWeight t := by
+  rw [totalWeight_eq_sum_bruteMass, beliefNormalizer]
+  exact Finset.sum_congr rfl fun y _ => msg_eq_bruteMass t y
+
+/-- Sum-product exactness on finite trees: the normalised product of incoming
+messages at the root equals the exact marginal of the joint
+`∝ ∏ node potentials · ∏ edge potentials` computed by brute-force summation
+over all configurations. -/
+theorem rootBelief_eq_exactMarginal [DecidableEq S] (t : PTree S) (s : S) :
+    rootBelief t s = exactMarginal t s := by
+  rw [rootBelief, exactMarginal, msg_eq_bruteMass, beliefNormalizer_eq_totalWeight]
+
+/-- Messages are nonnegative when all potentials are. -/
+theorem msg_nonneg : (t : PTree S) → t.Nonneg → ∀ s, 0 ≤ msg t s
+  | node φ n ψ c, ⟨hφ, hψ, hc⟩, s => by
+    rw [msg]
+    exact mul_nonneg (hφ s) (Finset.prod_nonneg fun i _ =>
+      Finset.sum_nonneg fun y _ => mul_nonneg (hψ i s y) (msg_nonneg (c i) (hc i) y))
+
+/-- With nonnegative potentials and positive total weight, the root belief is
+a probability law. -/
+theorem rootBelief_sum_one [DecidableEq S] (t : PTree S) (hpos : 0 < totalWeight t) :
+    ∑ s, rootBelief t s = 1 := by
+  have h : beliefNormalizer t ≠ 0 := by
+    rw [beliefNormalizer_eq_totalWeight]; exact hpos.ne'
+  simp only [rootBelief]
+  rw [← Finset.sum_div]
+  exact div_self h
+
+/-- Root beliefs are nonnegative for nonnegative potentials. -/
+theorem rootBelief_nonneg (t : PTree S) (ht : t.Nonneg) (s : S) :
+    0 ≤ rootBelief t s := by
+  refine div_nonneg (msg_nonneg t ht s) ?_
+  exact Finset.sum_nonneg fun y _ => msg_nonneg t ht y
+
+end Messages
+
+end PTree
+
+/-! ### A three-node star witness and a three-cycle countermodel -/
+
+open PTree
+
+/-- Leaf potential on `Bool`: weight `3` on `true`, `1` on `false`. -/
+def spLeafPotential (b : Bool) : ℝ := if b then 3 else 1
+
+/-- Ferromagnetic edge potential: `2` for agreement, `1` for disagreement. -/
+def spEdge (x y : Bool) : ℝ := if x = y then 2 else 1
+
+/-- A three-node star: a root with unit potential and two leaves. -/
+def spStar : PTree Bool :=
+  PTree.node (fun _ => 1) 2 (fun _ => spEdge) (fun _ => PTree.leaf spLeafPotential)
+
+/-- Explicit joint weight of the star on `(root, leaf₁, leaf₂)`. -/
+def spStarJoint (x₀ x₁ x₂ : Bool) : ℝ :=
+  spEdge x₀ x₁ * spEdge x₀ x₂ * spLeafPotential x₁ * spLeafPotential x₂
+
+/-- Explicit joint weight of the three-cycle on `(x₀, x₁, x₂)`: the star
+weight together with the closing edge between the two leaves. -/
+def spCycleJoint (x₀ x₁ x₂ : Bool) : ℝ :=
+  spStarJoint x₀ x₁ x₂ * spEdge x₁ x₂
+
+/-- The star's sum-product message at root state `true`. -/
+theorem spStar_msg_true : PTree.msg spStar true = 49 := by
+  norm_num [spStar, PTree.leaf, PTree.msg, Fin.prod_univ_two, Fintype.sum_bool,
+    spEdge, spLeafPotential]
+
+/-- The star's sum-product message at root state `false`. -/
+theorem spStar_msg_false : PTree.msg spStar false = 25 := by
+  norm_num [spStar, PTree.leaf, PTree.msg, Fin.prod_univ_two, Fintype.sum_bool,
+    spEdge, spLeafPotential]
+
+/-- The star root belief at `true` is `49/74`. -/
+theorem spStar_rootBelief_true : PTree.rootBelief spStar true = 49 / 74 := by
+  rw [PTree.rootBelief, PTree.beliefNormalizer, Fintype.sum_bool,
+    spStar_msg_true, spStar_msg_false]
+  norm_num
+
+/-- Brute-force enumeration of all eight configurations of the star gives the
+root marginal `49/74` at `true`, independently of the message recursion. -/
+theorem spStar_bruteForce_true :
+    (∑ x₁ : Bool, ∑ x₂ : Bool, spStarJoint true x₁ x₂) /
+        (∑ x₀ : Bool, ∑ x₁ : Bool, ∑ x₂ : Bool, spStarJoint x₀ x₁ x₂) =
+      49 / 74 := by
+  norm_num [Fintype.sum_bool, spStarJoint, spEdge, spLeafPotential]
+
+/-- The tree-recursion exact marginal of the star agrees with the explicit
+eight-configuration enumeration. -/
+theorem spStar_exactMarginal_true : PTree.exactMarginal spStar true = 49 / 74 := by
+  rw [← PTree.rootBelief_eq_exactMarginal, spStar_rootBelief_true]
+
+/-- True marginal of node `0` on the three-cycle, by brute force over all
+eight configurations: `43/62`. -/
+theorem spCycle_marginal_true :
+    (∑ x₁ : Bool, ∑ x₂ : Bool, spCycleJoint true x₁ x₂) /
+        (∑ x₀ : Bool, ∑ x₁ : Bool, ∑ x₂ : Bool, spCycleJoint x₀ x₁ x₂) =
+      43 / 62 := by
+  norm_num [Fintype.sum_bool, spCycleJoint, spStarJoint, spEdge, spLeafPotential]
+
+/-- Countermodel: on the loopy three-cycle the naive message product (the
+star belief that ignores the closing edge) is not the true marginal. -/
+theorem spCycle_naive_message_product_ne_marginal :
+    PTree.rootBelief spStar true ≠
+      (∑ x₁ : Bool, ∑ x₂ : Bool, spCycleJoint true x₁ x₂) /
+        (∑ x₀ : Bool, ∑ x₁ : Bool, ∑ x₂ : Bool, spCycleJoint x₀ x₁ x₂) := by
+  rw [spStar_rootBelief_true, spCycle_marginal_true]
+  norm_num
+
+/-! ### The fep-007 local update as a one-edge sum-product instance -/
+
+/-- Normalised local sum-product update on an arbitrary finite carrier:
+the edge potential times the incoming message, normalised over the selected
+neighbour support and extended by zero outside it.  On `Fin 8` this is the
+fep-007 normalised message. -/
+noncomputable def localUpdate {S : Type uS} [DecidableEq S]
+    (ψ : S → S → ℝ) (incoming : S → ℝ) (neighbors : Finset S) (i j : S) : ℝ :=
+  if j ∈ neighbors then
+    ψ i j * incoming j / ∑ k ∈ neighbors, ψ i k * incoming k
+  else 0
+
+/-- The one-edge tree: root `j` carries the incoming message restricted to the
+neighbour support, and its single child carries the point mass at `i`. -/
+noncomputable def oneEdgeTree {S : Type uS} [DecidableEq S]
+    (ψ : S → S → ℝ) (incoming : S → ℝ) (neighbors : Finset S) (i : S) : PTree S :=
+  PTree.node (fun s => if s ∈ neighbors then incoming s else 0) 1
+    (fun _ s y => ψ y s) (fun _ => PTree.leaf (fun y => if y = i then 1 else 0))
+
+/-- The fep-007 local update is the root belief of a one-edge tree, on any
+finite carrier. -/
+theorem localUpdate_eq_oneEdge_rootBelief {S : Type uS} [Fintype S] [DecidableEq S]
+    (ψ : S → S → ℝ) (incoming : S → ℝ) (neighbors : Finset S) (i j : S) :
+    localUpdate ψ incoming neighbors i j =
+      PTree.rootBelief (oneEdgeTree ψ incoming neighbors i) j := by
+  have hmsg : ∀ s, PTree.msg (oneEdgeTree ψ incoming neighbors i) s =
+      if s ∈ neighbors then ψ i s * incoming s else 0 := by
+    intro s
+    by_cases hs : s ∈ neighbors <;>
+      simp [oneEdgeTree, PTree.leaf, PTree.msg, hs, mul_comm]
+  have hnorm : PTree.beliefNormalizer (oneEdgeTree ψ incoming neighbors i) =
+      ∑ k ∈ neighbors, ψ i k * incoming k := by
+    rw [PTree.beliefNormalizer]
+    simp_rw [hmsg]
+    rw [Finset.sum_ite_mem, Finset.univ_inter]
+  rw [localUpdate, PTree.rootBelief, hmsg, hnorm]
+  by_cases hj : j ∈ neighbors <;> simp [hj]
+
+/-- The fep-007 local update equals the brute-force exact marginal of the
+one-edge model, on any finite carrier. -/
+theorem localUpdate_eq_oneEdge_exactMarginal {S : Type uS} [Fintype S] [DecidableEq S]
+    (ψ : S → S → ℝ) (incoming : S → ℝ) (neighbors : Finset S) (i j : S) :
+    localUpdate ψ incoming neighbors i j =
+      PTree.exactMarginal (oneEdgeTree ψ incoming neighbors i) j := by
+  rw [localUpdate_eq_oneEdge_rootBelief, PTree.rootBelief_eq_exactMarginal]
+
+
 end FEP.TemporalInference
