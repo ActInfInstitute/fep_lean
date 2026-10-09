@@ -20046,7 +20046,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/finite_posterior_learning.lean` | `c7b8e6bb97f33edc75ffb627cd03998c22943a2b2f34017d12ab5b1d24c86cc6` |
 | `formal/finite_probability.lean` | `eb019691997b8c9a2e3dfbe127bf3336610c5dd12bb035e559dc1d77842c9a66` |
 | `formal/gaussian_information_geometry.lean` | `cb4d2a5d8c5bb5061e08c3d968d00cdafd7c60b2849b4ecc7c5efaae8f0bae1c` |
-| `formal/gaussian_precision_conditioning.lean` | `64afcf45cf2ef44b78db7e5b2fb2de02bd3af80cefda888523baae1043b37c38` |
+| `formal/gaussian_precision_conditioning.lean` | `5544cd30da1f5cc80cfda3d5176a6c1e4bb1e5d5953ef6e400e32f7fa5eb6025` |
 | `formal/geometric_mechanics.lean` | `8fa48e8f991e9f977f6a6018a1a3450470e06df4654ed6e9f35e9602b987a438` |
 | `formal/geometric_optimization.lean` | `c5db1cacf6fdbfab8a1a776bd1ffe4bb9883a122f9f83b433eb04641cfdf6a2f` |
 | `formal/gnn_denotation.lean` | `1ef46fd7b090115b36a392cdb69b4c87847ca63a99edd3e4bf5e706d7df5b2bd` |

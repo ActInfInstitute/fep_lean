@@ -76,7 +76,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.scalar_gaussian_semigroup": 15,
         "FepSketches.linear_gaussian_semigroup": 25,
         "FepSketches.fin4_gaussian_semigroup": 42,
-        "FepSketches.gaussian_precision_conditioning": 25,
+        "FepSketches.gaussian_precision_conditioning": 38,
         "FepSketches.decision_risk": 25,
         "FepSketches.finite_posterior_learning": 13,
         "FepSketches.posterior_convergence": 26,

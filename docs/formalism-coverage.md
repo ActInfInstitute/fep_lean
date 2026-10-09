@@ -14,19 +14,19 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1541 |
-| Foundation theorem declarations | 1205 |
-| Total theorem declarations | 2125 |
+| Formal-resource theorem declarations | 1554 |
+| Foundation theorem declarations | 1218 |
+| Total theorem declarations | 2138 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 865 |
-| Total definitions | 960 |
+| Formal-resource definitions | 871 |
+| Total definitions | 966 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
 | Formal-resource structures | 54 |
 | Distinct Mathlib imports | 70 |
 | Topic-to-import edges | 225 |
-| Formal-resource import edges | 286 |
+| Formal-resource import edges | 288 |
 | Internal formal-module dependencies | 168 |
 | Authored formalism relations | 150 |
 | Derivational formal relations | 24 |
@@ -262,7 +262,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.scalar_gaussian_semigroup` | `foundation` | 15 | 11 | 1 | `FepSketches.gaussian_information_geometry`, `FepSketches.markov_semigroup` |
 | `FepSketches.linear_gaussian_semigroup` | `foundation` | 25 | 13 | 1 | `FepSketches.markov_semigroup`, `FepSketches.scalar_gaussian_semigroup` |
 | `FepSketches.fin4_gaussian_semigroup` | `foundation` | 42 | 18 | 0 | `FepSketches.linear_gaussian_semigroup` |
-| `FepSketches.gaussian_precision_conditioning` | `foundation` | 25 | 15 | 0 | `FepSketches.fin4_gaussian_semigroup` |
+| `FepSketches.gaussian_precision_conditioning` | `foundation` | 38 | 21 | 0 | `FepSketches.fin4_gaussian_semigroup` |
 | `FepSketches.decision_risk` | `foundation` | 25 | 10 | 0 | `FepSketches.finite_information`, `FepSketches.native_blanket` |
 | `FepSketches.finite_posterior_learning` | `foundation` | 13 | 18 | 0 | `FepSketches.decision_risk`, `FepSketches.learning_theory`, `FepSketches.native_blanket`, `FepSketches.statistical_convergence` |
 | `FepSketches.posterior_convergence` | `foundation` | 26 | 22 | 0 | `FepSketches.finite_posterior_learning`, `FepSketches.gaussian_information_geometry`, `FepSketches.measure_bayes` |
