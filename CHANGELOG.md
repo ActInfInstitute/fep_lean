@@ -1,3 +1,43 @@
+## Unreleased
+
+Formal-resource strengthening on the existing 168-topic roster. No semantic
+disposition changes: each new statement awaits independent review against its
+theorem proxy, and compilation establishes only the exact Lean statements.
+Every addition builds warning-free at the pin (Lean v4.34.1) and depends only on
+`propext`, `Classical.choice` and `Quot.sound`. Lexical Lean declarations grow
+from 1,946 to 2,053.
+
+- Path thermodynamics: the Jarzynski normalisation follows from a pathwise
+  Crooks relation and is strictly weaker than it ([#87](https://github.com/ActiveInferenceInstitute/fep_formal/issues/87)); Markov-chain path
+  laws for general horizons, the Schnakenberg entropy-production form and
+  reversed-kernel duality ([#89](https://github.com/ActiveInferenceInstitute/fep_formal/issues/89)).
+- Variational free energy: general finite maximum entropy and the constrained
+  Gibbs maximiser ([#85](https://github.com/ActiveInferenceInstitute/fep_formal/issues/85)); Helmholtz free energy as the unique variational
+  minimum with `dF/dT = −H` derived ([#86](https://github.com/ActiveInferenceInstitute/fep_formal/issues/86)).
+- Predictive coding: generalized-coordinate jets are iterated derivatives
+  ([#91](https://github.com/ActiveInferenceInstitute/fep_formal/issues/91)); precision is inferred with unique optimum `1/ε²`, and the
+  linear-Gaussian chain energy is a negative log joint density ([#92](https://github.com/ActiveInferenceInstitute/fep_formal/issues/92)).
+- Collective inference: KL-optimal linear and product-of-experts pooling and
+  Dobrushin consensus contraction for any finite mixing matrix ([#96](https://github.com/ActiveInferenceInstitute/fep_formal/issues/96)).
+- Relations: four derivational edges give every previously isolated topic a
+  witness, raising `formal` edges from 20 to 24 ([#106](https://github.com/ActiveInferenceInstitute/fep_formal/issues/106)); the
+  specializes/refines pairing review keeps all seven as pairings ([#104](https://github.com/ActiveInferenceInstitute/fep_formal/issues/104)).
+  Released relation rows stay digest-sealed; reviewed additions are listed
+  explicitly in the seal test.
+- One shared finite-matrix kit replaces a duplicated one ([#99](https://github.com/ActiveInferenceInstitute/fep_formal/issues/99)).
+
+Package and tooling: CLI cold start falls about sixfold through lazy imports
+([#117](https://github.com/ActiveInferenceInstitute/fep_formal/issues/117)); custody and acceptance subprocesses run in contained process groups
+([#114](https://github.com/ActiveInferenceInstitute/fep_formal/issues/114)); typed pipeline results ([#121](https://github.com/ActiveInferenceInstitute/fep_formal/issues/121)); a common `FepLeanError` base and
+one CLI failure emitter for unpinned modules ([#119](https://github.com/ActiveInferenceInstitute/fep_formal/issues/119)); `py.typed` ships in the
+wheel ([#116](https://github.com/ActiveInferenceInstitute/fep_formal/issues/116)). CI runs static checks in a parallel job ([#128](https://github.com/ActiveInferenceInstitute/fep_formal/issues/128)), pins uv with
+grouped Dependabot action updates ([#135](https://github.com/ActiveInferenceInstitute/fep_formal/issues/135)) and adds a non-gating weekly compile
+against the newest Lean/Mathlib pair ([#108](https://github.com/ActiveInferenceInstitute/fep_formal/issues/108)). The hosted release gate requires
+every promised job, not only the run conclusion. `release_check.py --bump`
+rewrites every version-bearing source ([#131](https://github.com/ActiveInferenceInstitute/fep_formal/issues/131)), and `AGENTS.md` is the single,
+test-enforced owner of the required-check list ([#129](https://github.com/ActiveInferenceInstitute/fep_formal/issues/129), [#139](https://github.com/ActiveInferenceInstitute/fep_formal/issues/139)). Link and
+hygiene checks cover every maintained Markdown file ([#141](https://github.com/ActiveInferenceInstitute/fep_formal/issues/141)).
+
 ## 1.6.0 — 2026-10-07 — mathematical methods, positioning and manuscript supplement
 
 Mathematical integration with the pinned

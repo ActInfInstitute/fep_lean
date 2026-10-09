@@ -111,16 +111,13 @@ Issue as roster-bound wait for a coordinated provenance-roster refresh.
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
-| [LEAN-1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/99) — Share one finite-matrix and skew-algebra kit | Minor | Independent | At most one definition per name across `src/fep_lean/formal`; formal-module and axiom gates green. |
 | [LEAN-2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/100) — One Gaussian Markov semigroup interface | Medium | Independent | Duplicate names drop to one; unchanged `#print axioms`; H3 declaration names preserved. |
 | [LEAN-3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/101) — Per-family shards instead of importing the whole fep_all aggregate | Medium | Independent | No composition imports `FepSketches.fep_all`; warm incremental build time after a one-topic edit measured before and after; `--check` freshness preserved. |
 | [LEAN-4](https://github.com/ActiveInferenceInstitute/fep_formal/issues/102) — Split h3_case_study.lean and retire its maxHeartbeats override | Medium | [CUR-08](https://github.com/ActiveInferenceInstitute/fep_formal/issues/55) | No `set_option` in the formal tree; declaration names unchanged; native export refreshed. |
 | [LEAN-5](https://github.com/ActiveInferenceInstitute/fep_formal/issues/103) — A reviewed derivational edge in every family | Medium | [FORM-D3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/75) | At most six families without a `formal` edge; endpoint-qualification notes per the adjudication doc; relation tests pass. |
 | [LEAN-6](https://github.com/ActiveInferenceInstitute/fep_formal/issues/104) — Review pairings whose witnesses already specialize or refine | Minor | Independent | At least 22 `formal` edges, each with a review note naming the consumed endpoint theorem. |
 | [LEAN-7](https://github.com/ActiveInferenceInstitute/fep_formal/issues/105) — Obligation records for conceptual relations | Minor | Independent | A schema test requires `blocked_by` on every conceptual edge; at least one converted to a pairing (034↔047 via FORM-S10 or 016↔032). |
-| [LEAN-8](https://github.com/ActiveInferenceInstitute/fep_formal/issues/106) — Close the isolated relation topics | Minor | Independent | Zero topics without a relation entry or a justification. |
 | [LEAN-9](https://github.com/ActiveInferenceInstitute/fep_formal/issues/107) — Numerical witnesses for the core families | Medium | [CORE-D3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/74) | At least 22 catalogue witnesses; dashboard `--check` and witness tests pass. |
-| [LEAN-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/108) — Non-gating Mathlib-bump deprecation canary | Medium | Independent | The job completes on `workflow_dispatch` and publishes a summary artifact; the pinned gate is unchanged. |
 | [LEAN-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/109) — Narrow blanket Mathlib.Tactic and root Mathlib imports | Minor | Independent | No blanket tactic import in `src/fep_lean/formal`; build stays warning-free. |
 | [LEAN-12](https://github.com/ActiveInferenceInstitute/fep_formal/issues/110) — Move the finite KL bridge beside finiteKL and prepare a Mathlib PR | Medium | Independent | Bridge lemma compiles with only Mathlib imports and no FEP namespace; upstream draft prepared after checking current Mathlib. |
 | [LEAN-13](https://github.com/ActiveInferenceInstitute/fep_formal/issues/111) — Upstream candidates: Donsker–Varadhan and exponential-family score facts | Medium | Independent | A measure-level Donsker–Varadhan inequality proved without FEP types. |
@@ -131,14 +128,11 @@ Issue as roster-bound wait for a coordinated provenance-roster refresh.
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
-| [PKG-1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/114) — Contain and time-bound custody refresh subprocesses | Minor | Independent | A grandchild-spawning stub times out and leaves no descendant; custody tests pass; receipt shape unchanged. |
 | [PKG-2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/115) — Delete confirmed dead code | Minor | Independent | An AST scan finds no unreferenced private top-level names in those modules; tests, ruff and mypy pass. |
 | [PKG-3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/116) — Ship py.typed | Minor | [CUR-06](https://github.com/ActiveInferenceInstitute/fep_formal/issues/49) | A clean-venv installed wheel passes mypy on `from fep_lean import FEPPipeline`. |
-| [PKG-4](https://github.com/ActiveInferenceInstitute/fep_formal/issues/117) — Cut CLI cold start with lazy imports | Minor | Independent | `import fep_lean.cli` without matplotlib in `sys.modules` under an agreed budget; import-surface tests and byte-identical figures pass. |
 | [PKG-5](https://github.com/ActiveInferenceInstitute/fep_formal/issues/118) — Consolidate atomic-write, hash and strict-JSON helpers | Medium | Independent | `mkstemp`/`os.replace` only in `fsutil` plus documented exceptions; existing tests pass. |
 | [PKG-6](https://github.com/ActiveInferenceInstitute/fep_formal/issues/119) — One error taxonomy and one CLI failure emitter | Medium | [CORE-M1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/62) | A parametrised test asserts the identical error schema and exit 1 for every verb's failure path. |
 | [PKG-7](https://github.com/ActiveInferenceInstitute/fep_formal/issues/120) — Remove layer inversions and global environment mutation | Medium | [CORE-D1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/64), [CORE-M3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/73) | No `from fep_lean.cli` outside the console entry; no private release_bundle access outside its owner; an import-direction test. |
-| [PKG-8](https://github.com/ActiveInferenceInstitute/fep_formal/issues/121) — Type PipelineResult and StepResult | Minor | Independent | mypy strict passes without `getattr` on typed items; `as_dict()` byte-identical. |
 | [PKG-9](https://github.com/ActiveInferenceInstitute/fep_formal/issues/122) — Ratchet function length | Medium | Independent | `ruff check` clean with the rule; no function in the named modules over 200 lines; outputs unchanged. |
 | [PKG-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/123) — Mirror the test layout to the source split | Minor | [CUR-03](https://github.com/ActiveInferenceInstitute/fep_formal/issues/52) | Identical collected node-id set modulo renames. |
 | [PKG-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/124) — Narrow blanket pytest warning filters | Minor | Independent | Suite passes with module-scoped ignores only. |
@@ -150,29 +144,18 @@ Issue as roster-bound wait for a coordinated provenance-roster refresh.
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
-| [TOOL-3](https://github.com/ActiveInferenceInstitute/fep_formal/issues/128) — Run static checks in a parallel CI job | Minor | Independent | A PR with one failing test and one ruff violation reports both. |
-| [TOOL-4](https://github.com/ActiveInferenceInstitute/fep_formal/issues/129) — One check manifest for CI, AGENTS.md and development docs | Medium | Independent | The test fails when any of the three diverges from the manifest. |
 | [TOOL-5](https://github.com/ActiveInferenceInstitute/fep_formal/issues/130) — Lint specs and type-check scripts and docs | Medium | Independent | `ruff check .` green in CI; an unused import in a linted spec fails. |
-| [TOOL-6](https://github.com/ActiveInferenceInstitute/fep_formal/issues/131) — Automate the release bump and draft release | Medium | Independent | A temp-tree bump then `release_check` passes; one version everywhere. |
 | [TOOL-7](https://github.com/ActiveInferenceInstitute/fep_formal/issues/132) — Prune merged remote branches | Minor | Independent | `git branch -r --merged origin/main` lists only `main`/`HEAD`. |
 | [TOOL-8](https://github.com/ActiveInferenceInstitute/fep_formal/issues/133) — Save the Lean build cache from main only | Medium | Independent | PR runs create no cache entries; at most one per main commit. |
 | [TOOL-9](https://github.com/ActiveInferenceInstitute/fep_formal/issues/134) — Reduced PR distribution matrix | Minor | Independent | PR matrix 9 cells; main 15; release gate still requires every cell. |
-| [TOOL-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/135) — Pin uv and add Dependabot for actions | Minor | Independent | Every `setup-uv` step pins a version; first grouped Dependabot PR opens. |
-| [TOOL-12](https://github.com/ActiveInferenceInstitute/fep_formal/issues/136) — Contributor guide and environment sync note | Minor | Independent | A newcomer reaches `fep-lean catalogue` and the static tier from the guide alone. |
-| [TOOL-13](https://github.com/ActiveInferenceInstitute/fep_formal/issues/137) — State which root document is current | Minor | Independent | Every root doc linked with a status; strict link check passes. |
 
 ### Documentation and manuscript
 
 | Work | Size | Predecessors | Closure probe |
 | --- | --- | --- | --- |
-| [DOC-1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/138) — First-run path at the top of the README | Medium | Independent | A fresh clone reaches `fep-lean catalogue` from the first 25 lines; markdown gates pass. |
-| [DOC-2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/139) — Single owner for the release gate list | Minor | [TOOL-4](https://github.com/ActiveInferenceInstitute/fep_formal/issues/129) | The README link resolves; a test fails when a check is added to one list only. |
 | [DOC-4](https://github.com/ActiveInferenceInstitute/fep_formal/issues/140) — Tokenise the remaining manuscript count and audit root-doc counts | Medium | Independent | Changing a catalogue count in README fails the audit; `render_manuscript.py --check` passes. |
-| [DOC-5](https://github.com/ActiveInferenceInstitute/fep_formal/issues/141) — Extend link and hygiene checks beyond docs/ and four root files | Medium | Independent | Extended strict run exits 0; a deliberately broken link in a package README fails it. |
-| [DOC-6](https://github.com/ActiveInferenceInstitute/fep_formal/issues/142) — Index every docs page | Minor | Independent | A test that every doc is indexed or marked historical. |
 | [DOC-7](https://github.com/ActiveInferenceInstitute/fep_formal/issues/143) — Move dated scope baselines out of the root | Minor | Independent | No stale path to either file; strict link check passes. |
 | [DOC-8](https://github.com/ActiveInferenceInstitute/fep_formal/issues/144) — Clarify the '155' catalogue chapter beside a 168-topic catalogue | Minor | Independent | `xref_audit`, `render_manuscript --check` and the landscape `--check` pass. |
-| [DOC-10](https://github.com/ActiveInferenceInstitute/fep_formal/issues/145) — Generated-directory agent contracts | Minor | Independent | Every generated directory names its generator; `methods check` tolerates the added file. |
 | [DOC-11](https://github.com/ActiveInferenceInstitute/fep_formal/issues/146) — One owner per topic across README, AGENTS, HANDOFF and SPEC | Major | [CORE-M2](https://github.com/ActiveInferenceInstitute/fep_formal/issues/63), [DOC-1](https://github.com/ActiveInferenceInstitute/fep_formal/issues/138) | Each gate command defined once; README shorter; markdown gates pass. |
 
 ## Original requirement coverage and closure
