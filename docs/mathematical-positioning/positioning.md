@@ -20066,7 +20066,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/native_blanket.lean` | `b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b` |
 | `formal/ness_flow.lean` | `80102f366d6e54604b7a76cdb663fe9dc2354bdfac0e2d671c20f73567c19890` |
 | `formal/path_thermodynamics.lean` | `75b63d5a506e98801475f23789fde02ef4c05c3fb72aae66d94969232c836f98` |
-| `formal/perception_action_loop.lean` | `e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1` |
+| `formal/perception_action_loop.lean` | `9a60e3d8166644e4ff265d92e2424ea081ca3c34d5b7d11e15970104119c101b` |
 | `formal/policy_tree.lean` | `2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88` |
 | `formal/posterior_convergence.lean` | `1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20` |
 | `formal/predictive_coding.lean` | `2b4589e435d281a04ac123f0289a2ffca4f6306b683a36aa2dd32b0d1d051782` |

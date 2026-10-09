@@ -99,7 +99,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.compositions.gaussian_grid_path": 11,
         "FepSketches.compositions.smooth_reference_kernel": 30,
         "FepSketches.efe_policy_selection": 9,
-        "FepSketches.perception_action_loop": 22,
+        "FepSketches.perception_action_loop": 40,
         "FepSketches.bayesian_model_reduction": 10,
         "FepSketches.efe_time_scale_separation": 37,
         "FepSketches.compositions.efe_policy_selection": 1,
