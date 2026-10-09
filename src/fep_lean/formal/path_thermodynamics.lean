@@ -1,5 +1,6 @@
 import FepSketches.finite_markov_dynamics
 import FepSketches.variational_duality
+import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 /-!
 # Finite path-space stochastic thermodynamics
@@ -983,5 +984,267 @@ theorem biasedCycle_entropyProduction_pos :
   rw [biasedCycle_entropyProduction]
   have := Real.log_pos (by norm_num : (1 : ℝ) < 2)
   linarith
+
+/-! ## Landauer erasure from path entropy production -/
+
+section LandauerErasure
+
+/-- Expectation of a function of one coordinate equals the fiber-mass weighted
+sum over that coordinate's values. -/
+theorem sum_mul_comp_eq_sum_fiber (law : FiniteLaw Path) (coordinate : Path → Bool)
+    (g : Bool → ℝ) :
+    ∑ path, law path * g (coordinate path) =
+      ∑ b, (∑ path with coordinate path = b, law path) * g b := by
+  rw [← Finset.sum_fiberwise Finset.univ coordinate
+    (fun path => law path * g (coordinate path))]
+  apply Finset.sum_congr rfl
+  intro b _
+  rw [Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro path hPath
+  rw [(Finset.mem_filter.mp hPath).2]
+
+/-- A finite one-bit erasure model.  Every modelling assumption is a named
+field:
+
+* `initial_marginal` / `final_marginal`: the forward path law has initial-bit
+  law `prior` and final-bit law `finalLaw`.
+* `reverse_support`: the aligned reverse law charges every forward-supported
+  path (absolute continuity, needed for a finite log ratio).
+* `localDetailedBalance`: the standard stochastic-thermodynamics encoding of
+  heat.  On forward-supported paths the pathwise entropy production
+  `log (P_F / P_R)` equals `β Q` (entropy flow into the bath at inverse
+  temperature `β`) plus the system surprisal change
+  `log prior(x₀) - log finalLaw(x_T)`, i.e. `σ = β Q + Δ s_sys`.
+
+Nothing here assumes the second law; nonnegativity of mean production comes
+from `entropyProduction_nonneg`. -/
+structure ErasureModel (Path : Type*) [Fintype Path] extends
+    FinitePathProtocol Path where
+  prior : FiniteLaw Bool
+  finalLaw : FiniteLaw Bool
+  initialBit : Path → Bool
+  finalBit : Path → Bool
+  beta : ℝ
+  heat : Path → ℝ
+  beta_pos : 0 < beta
+  initial_marginal : ∀ b, ∑ path with initialBit path = b, forward path = prior b
+  final_marginal : ∀ b, ∑ path with finalBit path = b, forward path = finalLaw b
+  reverse_support : ∀ path, forward path ≠ 0 → 0 < reverseAligned path
+  localDetailedBalance : ∀ path, forward path ≠ 0 →
+    pathwiseEntropyProduction toFinitePathProtocol path =
+      beta * heat path + Real.log (prior (initialBit path)) -
+        Real.log (finalLaw (finalBit path))
+
+/-- Mean heat `⟨Q⟩` released to the bath under the forward path law. -/
+noncomputable def ErasureModel.meanHeat (model : ErasureModel Path) : ℝ :=
+  ∑ path, model.forward path * model.heat path
+
+/-- The model erases: the final bit is deterministically `false`. -/
+def ErasureModel.IsReset (model : ErasureModel Path) : Prop :=
+  model.finalLaw = FiniteLaw.pointMass false
+
+/-- A reset (point-mass) final law has zero entropy. -/
+theorem entropy_pointMass_bool (chosen : Bool) :
+    entropy (FiniteLaw.pointMass chosen) = 0 := by
+  cases chosen <;>
+    simp [entropy, FiniteLaw.pointMass]
+
+/-- Shannon entropy of a Boolean law is the binary entropy of its `true` mass. -/
+theorem entropy_bool_eq_binEntropy (law : FiniteLaw Bool) :
+    entropy law = Real.binEntropy (law true) := by
+  have hFalse : law false = 1 - law true := by
+    have := law.sum_one
+    rw [Fintype.sum_bool] at this
+    linarith
+  rw [entropy, Fintype.sum_bool, Real.binEntropy_eq_negMulLog_add_negMulLog_one_sub,
+    ← hFalse]
+
+/-- Decomposition of mean path entropy production into mean heat and the
+change of system Shannon entropy:
+`σ = β ⟨Q⟩ - H(initial) + H(final)`. -/
+theorem erasure_entropyProduction_decomposition (model : ErasureModel Path) :
+    entropyProduction model.toFinitePathProtocol =
+      model.beta * model.meanHeat - entropy model.prior +
+        entropy model.finalLaw := by
+  have hKL : entropyProduction model.toFinitePathProtocol =
+      ∑ path, model.forward path *
+        pathwiseEntropyProduction model.toFinitePathProtocol path := by
+    unfold entropyProduction
+    rw [finiteKL_eq_crossEntropy_sub_entropy_of_relativeSupport _ _
+      model.reverse_support]
+    simp only [crossEntropy, entropy, ← Finset.sum_sub_distrib]
+    apply Finset.sum_congr rfl
+    intro path _
+    by_cases hZero : model.forward path = 0
+    · simp [hZero]
+    · have hF : 0 < model.forward path :=
+        lt_of_le_of_ne (model.forward.nonneg path) (Ne.symm hZero)
+      have hR := model.reverse_support path hZero
+      change -model.forward path * Real.log (model.reverseAligned path) -
+          Real.negMulLog (model.forward path) =
+        model.forward path * Real.log (pathRatio model.toFinitePathProtocol path)
+      rw [pathRatio, Real.log_div hF.ne' hR.ne', Real.negMulLog_eq_neg]
+      ring
+  have hSupport : ∀ path, model.forward path *
+      pathwiseEntropyProduction model.toFinitePathProtocol path =
+        model.forward path * (model.beta * model.heat path +
+          Real.log (model.prior (model.initialBit path)) -
+          Real.log (model.finalLaw (model.finalBit path))) := by
+    intro path
+    by_cases hZero : model.forward path = 0
+    · simp [hZero]
+    · rw [model.localDetailedBalance path hZero]
+  have hInitial := sum_mul_comp_eq_sum_fiber model.forward model.initialBit
+    (fun b => Real.log (model.prior b))
+  have hFinal := sum_mul_comp_eq_sum_fiber model.forward model.finalBit
+    (fun b => Real.log (model.finalLaw b))
+  simp only [model.initial_marginal, model.final_marginal] at hInitial hFinal
+  have hEntropy : ∀ law : FiniteLaw Bool,
+      entropy law = -∑ b, law b * Real.log (law b) := by
+    intro law
+    simp only [entropy, Real.negMulLog_eq_neg, Finset.sum_neg_distrib]
+  rw [hKL, Finset.sum_congr rfl (fun path _ => hSupport path), hEntropy,
+    hEntropy, ← hInitial, ← hFinal, ErasureModel.meanHeat, Finset.mul_sum]
+  simp only [mul_add, mul_sub, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  have hHeat : ∑ path, model.forward path * (model.beta * model.heat path) =
+      ∑ path, model.beta * (model.forward path * model.heat path) :=
+    Finset.sum_congr rfl fun path _ => by ring
+  rw [hHeat]
+  ring
+
+/-- Generalized Landauer bound, with no second-law hypothesis:
+`β ⟨Q⟩ ≥ H(initial) - H(final)`. -/
+theorem erasure_generalized_landauer (model : ErasureModel Path) :
+    entropy model.prior - entropy model.finalLaw ≤
+      model.beta * model.meanHeat := by
+  have hDecomp := erasure_entropyProduction_decomposition model
+  have hNonneg := entropyProduction_nonneg model.toFinitePathProtocol
+  linarith
+
+/-- Landauer bound for a reset: `⟨Q⟩ ≥ binEntropy(p) / β`, in nats. -/
+theorem erasure_landauer_reset (model : ErasureModel Path)
+    (hReset : model.IsReset) :
+    Real.binEntropy (model.prior true) / model.beta ≤ model.meanHeat := by
+  have hBound := erasure_generalized_landauer model
+  rw [hReset, entropy_pointMass_bool, sub_zero,
+    entropy_bool_eq_binEntropy] at hBound
+  exact (div_le_iff₀ model.beta_pos).mpr (by linarith)
+
+/-- Fair-bit case: erasing a uniformly random bit costs at least
+`log 2 / β`. -/
+theorem erasure_landauer_fair_bit (model : ErasureModel Path)
+    (hReset : model.IsReset) (hFair : model.prior true = 1 / 2) :
+    Real.log 2 / model.beta ≤ model.meanHeat := by
+  have hBound := erasure_landauer_reset model hReset
+  rwa [hFair, one_div, Real.binEntropy_two_inv] at hBound
+
+/-- A biased prior has a strictly smaller Landauer threshold than a fair
+bit. -/
+theorem landauer_biased_threshold_lt_fair (p beta : ℝ) (hBeta : 0 < beta)
+    (hBiased : p ≠ 1 / 2) :
+    Real.binEntropy p / beta < Real.log 2 / beta := by
+  apply div_lt_div_of_pos_right _ hBeta
+  rw [Real.binEntropy_lt_log_two]
+  simpa [one_div] using hBiased
+
+/-- Equality case: if the aligned reverse law equals the forward law, mean
+entropy production vanishes and the generalized Landauer bound is attained. -/
+theorem erasure_reversible_attains_bound (model : ErasureModel Path)
+    (hReversible : model.reverseAligned = model.forward) :
+    entropyProduction model.toFinitePathProtocol = 0 ∧
+      model.beta * model.meanHeat =
+        entropy model.prior - entropy model.finalLaw := by
+  have hZero : entropyProduction model.toFinitePathProtocol = 0 := by
+    unfold entropyProduction
+    rw [hReversible]
+    exact finiteKL_self _
+  refine ⟨hZero, ?_⟩
+  have hDecomp := erasure_entropyProduction_decomposition model
+  linarith
+
+/-- Reversible reset witness on the one-bit path space: the path is the
+initial bit, the final bit is `false`, the reverse law equals the forward law,
+and heat is the surprisal `-log p(x) / β`. -/
+noncomputable def reversibleErasureWitness (prior : FiniteLaw Bool) (beta : ℝ)
+    (hBeta : 0 < beta) : ErasureModel Bool where
+  forward := prior
+  reverseAligned := prior
+  reversal := id
+  reversal_involutive := fun _ => rfl
+  prior := prior
+  finalLaw := FiniteLaw.pointMass false
+  initialBit := id
+  finalBit := fun _ => false
+  beta := beta
+  heat := fun x => -Real.log (prior x) / beta
+  beta_pos := hBeta
+  initial_marginal := by
+    intro b
+    rw [Finset.sum_filter]
+    simp
+  final_marginal := by
+    intro b
+    have hOne := prior.sum_one
+    rw [Fintype.sum_bool] at hOne
+    cases b
+    · simp [FiniteLaw.pointMass]
+      linarith
+    · simp [FiniteLaw.pointMass]
+  reverse_support := fun path h =>
+    lt_of_le_of_ne (prior.nonneg path) (Ne.symm h)
+  localDetailedBalance := by
+    intro path hPath
+    have hPos : 0 < prior path :=
+      lt_of_le_of_ne (prior.nonneg path) (Ne.symm hPath)
+    simp only [pathwiseEntropyProduction, pathRatio, div_self hPos.ne',
+      Real.log_one, id]
+    have hBeta' := hBeta.ne'
+    simp [FiniteLaw.pointMass]
+    field_simp
+    ring
+
+/-- The witness is a reset. -/
+theorem reversibleErasureWitness_isReset (prior : FiniteLaw Bool) (beta : ℝ)
+    (hBeta : 0 < beta) : (reversibleErasureWitness prior beta hBeta).IsReset :=
+  rfl
+
+/-- The reversible witness attains the Landauer bound exactly:
+`⟨Q⟩ = binEntropy(p) / β`. -/
+theorem reversibleErasureWitness_meanHeat (prior : FiniteLaw Bool) (beta : ℝ)
+    (hBeta : 0 < beta) :
+    (reversibleErasureWitness prior beta hBeta).meanHeat =
+      Real.binEntropy (prior true) / beta := by
+  have hAttain := (erasure_reversible_attains_bound
+    (reversibleErasureWitness prior beta hBeta) rfl).2
+  have hBeta' : (reversibleErasureWitness prior beta hBeta).beta = beta := rfl
+  have hPrior : (reversibleErasureWitness prior beta hBeta).prior = prior := rfl
+  have hFinal : (reversibleErasureWitness prior beta hBeta).finalLaw =
+      FiniteLaw.pointMass false := rfl
+  rw [hBeta', hPrior, hFinal, entropy_pointMass_bool, sub_zero,
+    entropy_bool_eq_binEntropy] at hAttain
+  rw [eq_div_iff hBeta.ne']
+  linarith
+
+/-- Biased-bit witness (`P(true) = 3/4`): the reversible erasure heat
+`binEntropy(3/4) / β` is strictly below the fair-bit threshold `log 2 / β`. -/
+theorem biasedBit_erasure_heat_lt_fair (beta : ℝ) (hBeta : 0 < beta) :
+    (reversibleErasureWitness irreversibleForward beta hBeta).meanHeat <
+      Real.log 2 / beta := by
+  rw [reversibleErasureWitness_meanHeat]
+  apply landauer_biased_threshold_lt_fair _ _ hBeta
+  simp only [irreversibleForward, ↓reduceIte]
+  norm_num
+
+/-- Fair-bit witness: the reversible erasure heat is exactly `log 2 / β`. -/
+theorem fairBit_erasure_heat_eq (beta : ℝ) (hBeta : 0 < beta) :
+    (reversibleErasureWitness (FiniteLaw.uniform : FiniteLaw Bool) beta
+        hBeta).meanHeat = Real.log 2 / beta := by
+  rw [reversibleErasureWitness_meanHeat]
+  have hHalf : (FiniteLaw.uniform : FiniteLaw Bool) true = 2⁻¹ := by
+    simp [FiniteLaw.uniform]
+  rw [hHalf, Real.binEntropy_two_inv]
+
+end LandauerErasure
 
 end FEP.PathThermodynamics
