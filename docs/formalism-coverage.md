@@ -14,12 +14,12 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1369 |
-| Foundation theorem declarations | 1037 |
-| Total theorem declarations | 1953 |
+| Formal-resource theorem declarations | 1380 |
+| Foundation theorem declarations | 1048 |
+| Total theorem declarations | 1964 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 801 |
-| Total definitions | 896 |
+| Formal-resource definitions | 805 |
+| Total definitions | 900 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
@@ -240,7 +240,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.information_geometry` | `foundation` | 33 | 14 | 1 | `FepSketches.finite_probability` |
 | `FepSketches.statistical_convergence` | `foundation` | 7 | 8 | 0 | — |
 | `FepSketches.measure_bayes` | `foundation` | 12 | 0 | 0 | `FepSketches.finite_probability` |
-| `FepSketches.variational_duality` | `foundation` | 56 | 32 | 3 | `FepSketches.finite_information` |
+| `FepSketches.variational_duality` | `foundation` | 67 | 36 | 3 | `FepSketches.finite_information` |
 | `FepSketches.controlled_markov` | `foundation` | 30 | 28 | 2 | `FepSketches.active_inference` |
 | `FepSketches.temporal_inference` | `foundation` | 34 | 18 | 1 | `FepSketches.controlled_markov` |
 | `FepSketches.finite_markov_dynamics` | `foundation` | 17 | 6 | 0 | `FepSketches.finite_probability` |

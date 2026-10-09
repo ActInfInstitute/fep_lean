@@ -11663,7 +11663,7 @@
     "formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
     "formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
     "formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
-    "formal/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
+    "formal/variational_duality.lean": "d31543374320d6bc0e0592af820672fd60abfc7c172576606449bb23187f5b46",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
     "inputs/formalism_relations.yaml": "a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
@@ -102400,6 +102400,125 @@
         "statement": "theorem dvObjective_optimizer (certificate : GibbsCertificate α) :\n    dvObjective certificate certificate.optimizer =\n      certificate.logPartition",
         "statement_sha256": "4ff9bca17c91e518c5489c4efad23ab786aa8a94baea0af04d7bda141313758b"
       },
+      "FEP.VariationalDuality.entropy_helmholtzGibbsLaw": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "entropy (helmholtzGibbsLaw E T) =\n      (∑ x, Real.exp (-E x / T) * E x) / (T * helmholtzPartition E T) +\n        Real.log (helmholtzPartition E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "log_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.entropy_helmholtzGibbsLaw",
+        "source_line": 1302,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem entropy_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) :\n    entropy (helmholtzGibbsLaw E T) =\n      (∑ x, Real.exp (-E x / T) * E x) / (T * helmholtzPartition E T) +\n        Real.log (helmholtzPartition E T)",
+        "statement_sha256": "f04fa4fe0e6997e3342e3eaeab4fa052b74d05f13eb92a6844f1c96c21dff60e"
+      },
       "FEP.VariationalDuality.expectedDistortion_nonneg": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -103711,6 +103830,1057 @@
         "statement": "theorem gibbsFreeEnergy_optimizer (certificate : GibbsCertificate α) :\n    gibbsFreeEnergy certificate certificate.optimizer =\n      -certificate.logPartition",
         "statement_sha256": "1e6ae1beb175eaf8520ea5af29ea21e4524b5c8996c9437f555ecb53215f7ee6"
       },
+      "FEP.VariationalDuality.hasDerivAt_helmholtzFreeEnergy": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "HasDerivAt (helmholtzFreeEnergy E) (-entropy (helmholtzGibbsLaw E T)) T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "entropy_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.entropy_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.hasDerivAt_helmholtzFreeEnergy",
+        "source_line": 1326,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem hasDerivAt_helmholtzFreeEnergy [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) :\n    HasDerivAt (helmholtzFreeEnergy E) (-entropy (helmholtzGibbsLaw E T)) T",
+        "statement_sha256": "e8ff4c8f8f128e8bf48d3e057779a61abfac647caa7b9705e0971053d126c828"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "expectation q E - T * entropy q = helmholtzFreeEnergy E T ↔\n      q = helmholtzGibbsLaw E T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtz_decomposition",
+            "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff",
+        "source_line": 1282,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_eq_iff [Nonempty α] (E : α → ℝ) {T : ℝ}\n    (hT : 0 < T) (q : FiniteLaw α) :\n    expectation q E - T * entropy q = helmholtzFreeEnergy E T ↔\n      q = helmholtzGibbsLaw E T",
+        "statement_sha256": "b91fe3d90e8ce073532a73643df75c6f300e2f10786c706c6ccd0bfaf74580ec"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_le": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy E T ≤ expectation q E - T * entropy q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtz_decomposition",
+            "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_le",
+        "source_line": 1274,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_le [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) :\n    helmholtzFreeEnergy E T ≤ expectation q E - T * entropy q",
+        "statement_sha256": "f57994c6c55c20192eeb4a9f0530274ccc59db0e061dca1af5e008eb3f005785"
+      },
+      "FEP.VariationalDuality.helmholtzFreeEnergy_lt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hq"
+            ],
+            "role": "typed_binder",
+            "source": "(hq : q ≠ helmholtzGibbsLaw E T)",
+            "type_source": "q ≠ helmholtzGibbsLaw E T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy E T < expectation q E - T * entropy q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzFreeEnergy_eq_iff",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_eq_iff",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzFreeEnergy_le",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_lt",
+        "source_line": 1295,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzFreeEnergy_lt [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) (hq : q ≠ helmholtzGibbsLaw E T) :\n    helmholtzFreeEnergy E T < expectation q E - T * entropy q",
+        "statement_sha256": "01f03ffd1d9fc797ace5a9d6a7a5f83511308c699f3d4e2602f64e537932f073"
+      },
+      "FEP.VariationalDuality.helmholtzGibbsLaw_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < helmholtzGibbsLaw E T x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzGibbsLaw_pos",
+        "source_line": 1239,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzGibbsLaw_pos [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :\n    0 < helmholtzGibbsLaw E T x",
+        "statement_sha256": "5e4fe0d4ef1c4cdb7cf7fe9e96d81c63924ca911464ff19d719f8527840c9903"
+      },
+      "FEP.VariationalDuality.helmholtzPartition_bool": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzPartition_bool",
+        "source_line": 1364,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzPartition_bool (T : ℝ) :\n    helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1",
+        "statement_sha256": "0503320fa9b32a633c72d8cafb00506ecb1d72bff2a7c2c2fce89b457cfb1cf2"
+      },
+      "FEP.VariationalDuality.helmholtzPartition_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < helmholtzPartition E T",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+        "source_line": 1226,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtzPartition_pos [Nonempty α] (E : α → ℝ) (T : ℝ) :\n    0 < helmholtzPartition E T",
+        "statement_sha256": "34551357b1a4a59fdbf146e079647f366e37842029fdada84b437ba4f940279f"
+      },
+      "FEP.VariationalDuality.helmholtz_bool_uniform_gt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "helmholtzFreeEnergy helmholtzBoolEnergy T <\n      expectation (FiniteLaw.uniform : FiniteLaw Bool) helmholtzBoolEnergy -\n        T * entropy (FiniteLaw.uniform : FiniteLaw Bool)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzFreeEnergy_lt",
+            "qualified_name": "FEP.VariationalDuality.helmholtzFreeEnergy_lt",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_bool",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_bool",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtz_bool_uniform_gt",
+        "source_line": 1370,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtz_bool_uniform_gt {T : ℝ} (hT : 0 < T) :\n    helmholtzFreeEnergy helmholtzBoolEnergy T <\n      expectation (FiniteLaw.uniform : FiniteLaw Bool) helmholtzBoolEnergy -\n        T * entropy (FiniteLaw.uniform : FiniteLaw Bool)",
+        "statement_sha256": "422ee3b89af16c2c698da5d30726de5449e18018f03538c053283aa0de76a441"
+      },
+      "FEP.VariationalDuality.helmholtz_decomposition": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "{T : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "expectation q E - T * entropy q =\n      helmholtzFreeEnergy E T + T * finiteKL q (helmholtzGibbsLaw E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy"
+            ],
+            "identifier": "finiteKL_eq_crossEntropy_sub_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "helmholtzGibbsLaw_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzGibbsLaw_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "log_helmholtzGibbsLaw",
+            "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.helmholtz_decomposition",
+        "source_line": 1252,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem helmholtz_decomposition [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)\n    (q : FiniteLaw α) :\n    expectation q E - T * entropy q =\n      helmholtzFreeEnergy E T + T * finiteKL q (helmholtzGibbsLaw E T)",
+        "statement_sha256": "08d003dae185237cee4acc0b86bca46e0aa638c9f0b60b3c3689586eeb63f9f9"
+      },
       "FEP.VariationalDuality.iidProductLaw_mass": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -104196,6 +105366,119 @@
         "source_owner": "src/fep_lean/formal/variational_duality.lean",
         "statement": "theorem joint_supported_by_productMarginals (joint : FiniteLaw (α × β)) :\n    ∀ xy, joint xy ≠ 0 →\n      0 < (joint.fstMarginal.product joint.sndMarginal) xy",
         "statement_sha256": "a41569935cfef4f82887c5f60b709370d2d2eaed9f99a3c7d34f3a2d9c8cf2b0"
+      },
+      "FEP.VariationalDuality.log_helmholtzGibbsLaw": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "E"
+            ],
+            "role": "typed_binder",
+            "source": "(E : α → ℝ)",
+            "type_source": "α → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "T"
+            ],
+            "role": "typed_binder",
+            "source": "(T : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "Real.log (helmholtzGibbsLaw E T x) =\n      -E x / T - Real.log (helmholtzPartition E T)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β",
+              "γ"
+            ],
+            "role": "typed_binder",
+            "source": "{α β γ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype γ]",
+            "type_source": "Fintype γ",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "helmholtzPartition_pos",
+            "qualified_name": "FEP.VariationalDuality.helmholtzPartition_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information",
+          "Mathlib.Analysis.Convex.SpecificFunctions.Basic",
+          "Mathlib.Topology.Order.Compact"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.VariationalDuality",
+        "namespace_variable_context": [
+          "{α β γ : Type*} [Fintype α] [Fintype β] [Fintype γ]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype α] in"
+          }
+        ],
+        "qualified_name": "FEP.VariationalDuality.log_helmholtzGibbsLaw",
+        "source_line": 1243,
+        "source_owner": "src/fep_lean/formal/variational_duality.lean",
+        "statement": "theorem log_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :\n    Real.log (helmholtzGibbsLaw E T x) =\n      -E x / T - Real.log (helmholtzPartition E T)",
+        "statement_sha256": "170e5ff33206f0012ec71e31e2ea427570ba3be20b3354f04537b59fcefc7c63"
       },
       "FEP.VariationalDuality.meanFieldCoordinateFreeEnergy_eq": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
