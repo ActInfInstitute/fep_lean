@@ -455,4 +455,64 @@ theorem mutualInformation_le_predictive_entropy
     hprior hpredictive]
   linarith [conditionalEntropy_nonneg prior kernel]
 
+/-! ## Maximum entropy on the uniform carrier -/
+
+/-- Every atom of the uniform law on a nonempty finite type is positive. -/
+theorem uniform_mass_pos [Nonempty α] (x : α) :
+    0 < (FiniteLaw.uniform : FiniteLaw α) x := by
+  change 0 < ((Fintype.card α : ℝ)⁻¹)
+  exact inv_pos.mpr (Nat.cast_pos.mpr Fintype.card_pos)
+
+/-- Cross-entropy against the uniform law is the constant `log n`. -/
+theorem crossEntropy_uniform [Nonempty α] (p : FiniteLaw α) :
+    crossEntropy p FiniteLaw.uniform = Real.log (Fintype.card α) := by
+  unfold crossEntropy
+  have h : ∀ x : α, -(p x) * Real.log ((FiniteLaw.uniform : FiniteLaw α) x) =
+      p x * Real.log (Fintype.card α) := by
+    intro x
+    change -(p x) * Real.log ((Fintype.card α : ℝ)⁻¹) = _
+    rw [Real.log_inv]
+    ring
+  rw [Finset.sum_congr rfl fun x _ => h x, ← Finset.sum_mul, p.sum_one, one_mul]
+
+/-- Maximum entropy on a finite carrier: `H(p) ≤ log n`. -/
+theorem entropy_le_log_card [Nonempty α] (p : FiniteLaw α) :
+    entropy p ≤ Real.log (Fintype.card α) := by
+  have h := finiteKL_eq_crossEntropy_sub_entropy p FiniteLaw.uniform
+    uniform_mass_pos
+  rw [crossEntropy_uniform] at h
+  linarith [finiteKL_nonneg p (FiniteLaw.uniform : FiniteLaw α)]
+
+/-- The bound `H(p) = log n` is attained exactly by the uniform law. -/
+theorem entropy_eq_log_card_iff [Nonempty α] (p : FiniteLaw α) :
+    entropy p = Real.log (Fintype.card α) ↔ p = FiniteLaw.uniform := by
+  have h := finiteKL_eq_crossEntropy_sub_entropy p FiniteLaw.uniform
+    uniform_mass_pos
+  rw [crossEntropy_uniform] at h
+  rw [← finiteKL_eq_zero_iff]
+  constructor <;> intro h' <;> linarith
+
+/-- Strict form: any non-uniform law has entropy strictly below `log n`. -/
+theorem entropy_lt_log_card_of_ne_uniform [Nonempty α] (p : FiniteLaw α)
+    (hp : p ≠ FiniteLaw.uniform) :
+    entropy p < Real.log (Fintype.card α) :=
+  lt_of_le_of_ne (entropy_le_log_card p)
+    fun h => hp ((entropy_eq_log_card_iff p).mp h)
+
+/-- A biased Bool law with masses `3/4` and `1/4`. -/
+noncomputable def boolBiased : FiniteLaw Bool where
+  mass b := if b then 3 / 4 else 1 / 4
+  nonneg b := by cases b <;> norm_num
+  sum_one := by simp; norm_num
+
+/-- Strict witness: the biased Bool law has entropy strictly below `log 2`. -/
+theorem boolBiased_entropy_lt_log_two :
+    entropy boolBiased < Real.log 2 := by
+  have hne : boolBiased ≠ (FiniteLaw.uniform : FiniteLaw Bool) := by
+    intro h
+    have := congrArg (fun r : FiniteLaw Bool => r.mass true) h
+    simp [boolBiased, FiniteLaw.uniform] at this
+    norm_num at this
+  simpa using entropy_lt_log_card_of_ne_uniform boolBiased hne
+
 end FEP.FiniteInformation

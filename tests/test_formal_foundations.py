@@ -45,7 +45,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
     ) == ("FepSketches.composed",)
     assert Counter(owners.values()) == {
         "FepSketches.finite_probability": 19,
-        "FepSketches.finite_information": 25,
+        "FepSketches.finite_information": 31,
         "FepSketches.active_inference": 44,
         "FepSketches.gnn_denotation": 7,
         "FepSketches.gnn_denotation_continuous": 9,
@@ -54,7 +54,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.information_geometry": 33,
         "FepSketches.statistical_convergence": 7,
         "FepSketches.measure_bayes": 12,
-        "FepSketches.variational_duality": 56,
+        "FepSketches.variational_duality": 63,
         "FepSketches.controlled_markov": 30,
         "FepSketches.temporal_inference": 34,
         "FepSketches.finite_markov_dynamics": 17,
