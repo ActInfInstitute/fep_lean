@@ -398,13 +398,13 @@ theorem coupledPotential_strict_descent
     exact sq_pos_of_ne_zero (sub_ne_zero.mpr separated)
   linarith
 
-/-! ## Linear and logarithmic opinion pools -/
+/-! ## KL-optimal linear and product-of-experts pooling -/
 
-section OpinionPools
+section KLPooling
 
 variable {α ι : Type*} [Fintype α] [Fintype ι]
 
-/-- Linear opinion pool `∑ᵢ wᵢ pᵢ` for convex weights. -/
+/-- Linear pool `∑ᵢ wᵢ pᵢ` for convex weights. -/
 noncomputable def linearPool
     (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
     (p : ι → FiniteLaw α) : FiniteLaw α where
@@ -587,7 +587,7 @@ theorem logPool_kl_unique_minimiser
   exact (finiteKL_eq_zero_iff _ _).mp
     (le_antisymm (by linarith) (finiteKL_nonneg _ _))
 
-end OpinionPools
+end KLPooling
 
 /-! ## Dobrushin contraction for row-stochastic mixing -/
 
