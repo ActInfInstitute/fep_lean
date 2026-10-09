@@ -20033,7 +20033,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/empirical_risk.lean` | `d1a9230237c237648c167bd677d347eb4aacbb3e70c93914bb6ab52498064067` |
 | `formal/exponential_family.lean` | `5d12165f38e1d18b03f03869fcc907720a41aac243589d96a99a57e41601dbc9` |
 | `formal/fin4_gaussian_semigroup.lean` | `a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c` |
-| `formal/finite_information.lean` | `3d52e359f9cb6a44a4b228f1353f63bfe1eb69170b653e20c1c2a8b72720bd45` |
+| `formal/finite_information.lean` | `8d5cae82d2c1046056dcf8d65c0758ebf04f6afef7d2d1edb795ec1be746989d` |
 | `formal/finite_markov_dynamics.lean` | `5798cbfd93cddfac652bb76effc278796e549ff9124632cba00bfaecf9448f89` |
 | `formal/finite_posterior_learning.lean` | `c7b8e6bb97f33edc75ffb627cd03998c22943a2b2f34017d12ab5b1d24c86cc6` |
 | `formal/finite_probability.lean` | `eb019691997b8c9a2e3dfbe127bf3336610c5dd12bb035e559dc1d77842c9a66` |
@@ -20066,7 +20066,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/smooth_information_geometry.lean` | `571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8` |
 | `formal/statistical_convergence.lean` | `6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0` |
 | `formal/temporal_inference.lean` | `3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10` |
-| `formal/variational_duality.lean` | `82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f` |
+| `formal/variational_duality.lean` | `7ed615bca08b812cb940a91326e335ae0f45eff27be716d734da4f49def09749` |
 | `inputs/catalogue_metadata.yaml` | `e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd` |
 | `inputs/formalism_relations.yaml` | `a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e` |
 | `inputs/positioning.yaml` | `d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d` |

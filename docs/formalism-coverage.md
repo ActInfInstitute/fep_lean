@@ -14,12 +14,12 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1362 |
-| Foundation theorem declarations | 1030 |
-| Total theorem declarations | 1946 |
+| Formal-resource theorem declarations | 1375 |
+| Foundation theorem declarations | 1043 |
+| Total theorem declarations | 1959 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 799 |
-| Total definitions | 894 |
+| Formal-resource definitions | 802 |
+| Total definitions | 897 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
@@ -234,13 +234,13 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | Module | Role | Theorems | Definitions | Structures | Internal dependencies |
 | --- | --- | ---: | ---: | ---: | --- |
 | `FepSketches.finite_probability` | `foundation` | 19 | 13 | 2 | — |
-| `FepSketches.finite_information` | `foundation` | 25 | 7 | 0 | `FepSketches.finite_probability` |
+| `FepSketches.finite_information` | `foundation` | 31 | 8 | 0 | `FepSketches.finite_probability` |
 | `FepSketches.active_inference` | `foundation` | 44 | 35 | 3 | `FepSketches.finite_information` |
 | `FepSketches.markov_blanket` | `foundation` | 9 | 8 | 2 | `FepSketches.finite_information` |
 | `FepSketches.information_geometry` | `foundation` | 33 | 14 | 1 | `FepSketches.finite_probability` |
 | `FepSketches.statistical_convergence` | `foundation` | 7 | 8 | 0 | — |
 | `FepSketches.measure_bayes` | `foundation` | 12 | 0 | 0 | `FepSketches.finite_probability` |
-| `FepSketches.variational_duality` | `foundation` | 56 | 32 | 3 | `FepSketches.finite_information` |
+| `FepSketches.variational_duality` | `foundation` | 63 | 34 | 3 | `FepSketches.finite_information` |
 | `FepSketches.controlled_markov` | `foundation` | 30 | 28 | 2 | `FepSketches.active_inference` |
 | `FepSketches.temporal_inference` | `foundation` | 34 | 18 | 1 | `FepSketches.controlled_markov` |
 | `FepSketches.finite_markov_dynamics` | `foundation` | 17 | 6 | 0 | `FepSketches.finite_probability` |
