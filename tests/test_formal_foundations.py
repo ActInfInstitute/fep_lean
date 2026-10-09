@@ -63,7 +63,7 @@ def test_formal_kernel_has_exact_manifested_declaration_closure() -> None:
         "FepSketches.ness_flow": 9,
         "FepSketches.path_thermodynamics": 25,
         "FepSketches.geometric_optimization": 25,
-        "FepSketches.collective_inference": 13,
+        "FepSketches.collective_inference": 41,
         "FepSketches.learning_theory": 12,
         "FepSketches.empirical_risk": 17,
         "FepSketches.policy_tree": 13,
