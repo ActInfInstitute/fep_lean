@@ -1749,4 +1749,341 @@ theorem benchmarkLyapunov_deriv_zero_neg :
 
 end TwoStateRates
 
+/-! ## Uniformisation: every finite rate generator exponentiates to a Markov semigroup -/
+
+section Uniformisation
+
+variable {S : Type*} [Fintype S] [DecidableEq S]
+
+/-- Entrywise nonnegativity of a real matrix. -/
+def MatrixNonneg (M : Matrix S S ℝ) : Prop := ∀ i j, 0 ≤ M i j
+
+omit [DecidableEq S] in
+theorem MatrixNonneg.mul {M N : Matrix S S ℝ} (hM : MatrixNonneg M)
+    (hN : MatrixNonneg N) : MatrixNonneg (M * N) := by
+  intro i j
+  rw [Matrix.mul_apply]
+  exact Finset.sum_nonneg fun k _ => mul_nonneg (hM i k) (hN k j)
+
+omit [Fintype S] in
+theorem MatrixNonneg.one : MatrixNonneg (1 : Matrix S S ℝ) := by
+  intro i j
+  rw [Matrix.one_apply]
+  split_ifs <;> norm_num
+
+theorem MatrixNonneg.pow {M : Matrix S S ℝ} (hM : MatrixNonneg M) (n : ℕ) :
+    MatrixNonneg (M ^ n) := by
+  induction n with
+  | zero => rw [pow_zero]; exact MatrixNonneg.one
+  | succ n ih => rw [pow_succ]; exact ih.mul hM
+
+/-- The exponential power series of a matrix converges entrywise. -/
+theorem exp_hasSum_entry (M : Matrix S S ℝ) (i j : S) :
+    HasSum (fun n : ℕ => (((Nat.factorial n : ℕ) : ℝ)⁻¹ • M ^ n) i j)
+      ((NormedSpace.exp M) i j) := by
+  open scoped Matrix.Norms.Operator in
+  exact Pi.hasSum.mp (Pi.hasSum.mp
+    (NormedSpace.exp_series_hasSum_exp' (𝕂 := ℝ) M) i) j
+
+/-- Powers of a nonnegative matrix yield a nonnegative exponential. -/
+theorem MatrixNonneg.exp_smul {M : Matrix S S ℝ} (hM : MatrixNonneg M)
+    {s : ℝ} (hs : 0 ≤ s) : MatrixNonneg (NormedSpace.exp (s • M)) := by
+  intro i j
+  refine (exp_hasSum_entry (s • M) i j).nonneg fun n => ?_
+  have hpow := (hM.pow n) i j
+  rw [smul_pow, Matrix.smul_apply, Matrix.smul_apply, smul_eq_mul, smul_eq_mul]
+  exact mul_nonneg (inv_nonneg.2 (Nat.cast_nonneg _))
+    (mul_nonneg (pow_nonneg hs n) hpow)
+
+/-- Zero row sums propagate to every positive power. -/
+theorem sum_pow_succ_eq_zero {M : Matrix S S ℝ} (hM : ∀ i, ∑ j, M i j = 0)
+    (n : ℕ) (i : S) : ∑ j, (M ^ (n + 1)) i j = 0 := by
+  rw [pow_succ]
+  simp_rw [Matrix.mul_apply]
+  rw [Finset.sum_comm]
+  refine Finset.sum_eq_zero fun k _ => ?_
+  rw [← Finset.mul_sum, hM k, mul_zero]
+
+/-- A matrix with zero row sums has an exponential with unit row sums. -/
+theorem exp_smul_rowSum {M : Matrix S S ℝ} (hM : ∀ i, ∑ j, M i j = 0)
+    (s : ℝ) (i : S) : ∑ j, NormedSpace.exp (s • M) i j = 1 := by
+  have hSum : HasSum (fun n : ℕ =>
+      ∑ j, (((Nat.factorial n : ℕ) : ℝ)⁻¹ • (s • M) ^ n) i j)
+      (∑ j, NormedSpace.exp (s • M) i j) :=
+    hasSum_sum fun j _ => exp_hasSum_entry (s • M) i j
+  have hTerm : (fun n : ℕ =>
+      ∑ j, (((Nat.factorial n : ℕ) : ℝ)⁻¹ • (s • M) ^ n) i j) =
+      fun n => if n = 0 then (1 : ℝ) else 0 := by
+    funext n
+    cases n with
+    | zero => simp [Matrix.one_apply]
+    | succ n =>
+      simp only [Matrix.smul_apply, smul_eq_mul, smul_pow, Nat.succ_ne_zero,
+        ↓reduceIte]
+      rw [← Finset.mul_sum, ← Finset.mul_sum, sum_pow_succ_eq_zero hM, mul_zero,
+        mul_zero]
+  rw [hTerm] at hSum
+  exact hSum.unique (hasSum_ite_eq 0 (1 : ℝ))
+
+/-- `exp (c • 1)` is the scalar matrix `Real.exp c`. -/
+theorem exp_smul_one (c : ℝ) :
+    NormedSpace.exp (c • (1 : Matrix S S ℝ)) = Real.exp c • (1 : Matrix S S ℝ) := by
+  rw [Real.exp_eq_exp_ℝ, ← Algebra.algebraMap_eq_smul_one,
+    ← Algebra.algebraMap_eq_smul_one]
+  open scoped Matrix.Norms.Operator in
+  exact (NormedSpace.algebraMap_exp_comm (𝕂 := ℝ) (𝔸 := Matrix S S ℝ) c).symm
+
+namespace FiniteRateGenerator
+
+/-- Every diagonal rate is nonpositive. -/
+theorem rate_diag_nonpos (g : FiniteRateGenerator S) (i : S) : g i i ≤ 0 := by
+  have h := g.row_sum_zero i
+  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ i)] at h
+  have hRest : 0 ≤ ∑ j ∈ Finset.univ.erase i, g i j :=
+    Finset.sum_nonneg fun j hj =>
+      g.offDiagonal_nonneg i j (Finset.ne_of_mem_erase hj).symm
+  linarith
+
+/-- An explicit uniformisation constant dominating every exit rate, strictly
+positive. -/
+noncomputable def uniformRate (g : FiniteRateGenerator S) : ℝ :=
+  1 + ∑ i, -g i i
+
+theorem neg_diag_le_uniformRate (g : FiniteRateGenerator S) (i : S) :
+    -g i i ≤ g.uniformRate := by
+  have h : -g i i ≤ ∑ k, -g k k :=
+    Finset.single_le_sum (f := fun k => -g k k)
+      (fun k _ => neg_nonneg.2 (g.rate_diag_nonpos k)) (Finset.mem_univ i)
+  unfold uniformRate
+  linarith
+
+theorem uniformRate_pos (g : FiniteRateGenerator S) : 0 < g.uniformRate := by
+  unfold uniformRate
+  have : 0 ≤ ∑ i, -g i i :=
+    Finset.sum_nonneg fun k _ => neg_nonneg.2 (g.rate_diag_nonpos k)
+  linarith
+
+/-- The shifted generator `Q + λ I`, entrywise nonnegative. -/
+noncomputable def uniformShift (g : FiniteRateGenerator S) : Matrix S S ℝ :=
+  g.matrix + g.uniformRate • (1 : Matrix S S ℝ)
+
+theorem uniformShift_nonneg (g : FiniteRateGenerator S) :
+    MatrixNonneg g.uniformShift := by
+  intro i j
+  by_cases h : i = j
+  · subst h
+    have := g.neg_diag_le_uniformRate i
+    unfold uniformShift
+    rw [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul,
+      mul_one]
+    change 0 ≤ g i i + g.uniformRate
+    linarith
+  · unfold uniformShift
+    rw [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_ne h, smul_zero,
+      add_zero]
+    exact g.offDiagonal_nonneg i j h
+
+/-- The uniformised jump matrix `P = I + Q / λ`. -/
+noncomputable def uniformKernelMatrix (g : FiniteRateGenerator S) : Matrix S S ℝ :=
+  1 + g.uniformRate⁻¹ • g.matrix
+
+theorem uniformKernelMatrix_nonneg (g : FiniteRateGenerator S) :
+    MatrixNonneg g.uniformKernelMatrix := by
+  have h : g.uniformKernelMatrix = g.uniformRate⁻¹ • g.uniformShift := by
+    unfold uniformKernelMatrix uniformShift
+    rw [smul_add, smul_smul, inv_mul_cancel₀ g.uniformRate_pos.ne', one_smul,
+      add_comm]
+  rw [h]
+  intro i j
+  rw [Matrix.smul_apply, smul_eq_mul]
+  exact mul_nonneg (inv_nonneg.2 g.uniformRate_pos.le) (g.uniformShift_nonneg i j)
+
+/-- `P` is a stochastic matrix: nonnegative entries, unit row sums. -/
+theorem uniformKernelMatrix_rowSum (g : FiniteRateGenerator S) (i : S) :
+    ∑ j, g.uniformKernelMatrix i j = 1 := by
+  simp only [uniformKernelMatrix, Matrix.add_apply, Matrix.smul_apply,
+    smul_eq_mul, Finset.sum_add_distrib]
+  have hRow : ∑ k, g.matrix i k = 0 := g.row_sum_zero i
+  rw [← Finset.mul_sum, hRow]
+  simp [Matrix.one_apply]
+
+/-- `Q = λ (P - I)`. -/
+theorem matrix_eq_uniformRate_smul (g : FiniteRateGenerator S) :
+    g.matrix = g.uniformRate • (g.uniformKernelMatrix - 1) := by
+  unfold uniformKernelMatrix
+  rw [add_sub_cancel_left, smul_smul, mul_inv_cancel₀ g.uniformRate_pos.ne',
+    one_smul]
+
+/-- Uniformisation factorisation: `exp (t Q) = exp (t B) * exp (-(λ t) I)`
+with `B = Q + λ I` entrywise nonnegative. -/
+theorem exp_eq_exp_uniformShift_mul (g : FiniteRateGenerator S) (t : ℝ) :
+    NormedSpace.exp (t • g.matrix) =
+      NormedSpace.exp (t • g.uniformShift) *
+        (Real.exp (-(g.uniformRate * t)) • (1 : Matrix S S ℝ)) := by
+  have hSplit : t • g.matrix =
+      t • g.uniformShift + (-(g.uniformRate * t)) • (1 : Matrix S S ℝ) := by
+    unfold uniformShift
+    rw [smul_add, smul_smul, add_assoc, ← add_smul]
+    have : t * g.uniformRate + -(g.uniformRate * t) = 0 := by ring
+    rw [this, zero_smul, add_zero]
+  have hComm : Commute (t • g.uniformShift)
+      ((-(g.uniformRate * t)) • (1 : Matrix S S ℝ)) :=
+    ((Commute.one_right g.uniformShift).smul_right _).smul_left _
+  rw [hSplit, Matrix.exp_add_of_commute _ _ hComm, exp_smul_one]
+
+/-- Entrywise nonnegativity of the matrix exponential for nonnegative time. -/
+theorem exp_nonneg (g : FiniteRateGenerator S) {t : ℝ} (ht : 0 ≤ t) :
+    MatrixNonneg (NormedSpace.exp (t • g.matrix)) := by
+  rw [exp_eq_exp_uniformShift_mul]
+  intro i j
+  rw [Matrix.mul_apply]
+  refine Finset.sum_nonneg fun k _ => mul_nonneg
+    ((g.uniformShift_nonneg.exp_smul ht) i k) ?_
+  rw [Matrix.smul_apply, smul_eq_mul]
+  exact mul_nonneg (Real.exp_nonneg _) (by rw [Matrix.one_apply]; split_ifs <;> norm_num)
+
+/-- Unit row sums of the exponential. -/
+theorem exp_rowSum (g : FiniteRateGenerator S) (t : ℝ) (i : S) :
+    ∑ j, NormedSpace.exp (t • g.matrix) i j = 1 :=
+  exp_smul_rowSum g.row_sum_zero t i
+
+/-- Entrywise derivative of `u ↦ exp (u M)`, right-multiplied form. -/
+theorem hasDerivAt_exp_entry_right (M : Matrix S S ℝ) (t : ℝ) (i j : S) :
+    HasDerivAt (fun u : ℝ => NormedSpace.exp (u • M) i j)
+      (∑ k, NormedSpace.exp (t • M) i k * M k j) t := by
+  open scoped Matrix.Norms.Operator in
+  have h := hasDerivAt_exp_smul_const (𝕂 := ℝ) M t
+  open scoped Matrix.Norms.Operator in
+  have hL := ((LinearMap.toContinuousLinearMap
+    (Matrix.entryLinearMap ℝ ℝ i j)).hasFDerivAt).comp_hasDerivAt t h
+  exact hL
+
+/-- Entrywise derivative of `u ↦ exp (u M)`, left-multiplied form. -/
+theorem hasDerivAt_exp_entry_left (M : Matrix S S ℝ) (t : ℝ) (i j : S) :
+    HasDerivAt (fun u : ℝ => NormedSpace.exp (u • M) i j)
+      (∑ k, M i k * NormedSpace.exp (t • M) k j) t := by
+  open scoped Matrix.Norms.Operator in
+  have h := hasDerivAt_exp_smul_const' (𝕂 := ℝ) M t
+  open scoped Matrix.Norms.Operator in
+  have hL := ((LinearMap.toContinuousLinearMap
+    (Matrix.entryLinearMap ℝ ℝ i j)).hasFDerivAt).comp_hasDerivAt t h
+  exact hL
+
+/-- The Markov semigroup generated by ANY finite rate generator, with
+stochasticity proved by uniformisation rather than assumed. -/
+noncomputable def semigroup (g : FiniteRateGenerator S) :
+    FiniteMarkovSemigroup S where
+  generator := g
+  transition t i j := NormedSpace.exp (t • g.matrix) i j
+  transition_nonneg := fun {t} ht i j => g.exp_nonneg ht i j
+  transition_sum_one := fun t i => g.exp_rowSum t i
+  transition_zero := fun i j => by
+    simp [Matrix.one_apply]
+  transition_add := fun l r i j => by
+    rw [add_smul, Matrix.exp_add_of_commute _ _
+      (((Commute.refl g.matrix).smul_left _).smul_right _), Matrix.mul_apply]
+  transition_hasDerivAt_left := fun t i j =>
+    hasDerivAt_exp_entry_left g.matrix t i j
+  transition_hasDerivAt_right := fun t i j =>
+    hasDerivAt_exp_entry_right g.matrix t i j
+
+/-- The uniformised semigroup is entrywise the matrix-exponential candidate. -/
+theorem semigroup_transition_eq_exponentialCandidate (g : FiniteRateGenerator S)
+    (t : ℝ) (i j : S) :
+    g.semigroup.transition t i j = g.exponentialCandidate t i j :=
+  rfl
+
+end FiniteRateGenerator
+
+namespace FiniteMarkovSemigroup
+
+/-- A certified Markov semigroup is determined by its generator: two
+semigroups with the same generator have the same transition entries.  The
+proof differentiates `s ↦ ∑ m, A_s(i, m) B_{t-s}(m, j)`, which is constant. -/
+theorem transition_eq_of_generator_eq {A B : FiniteMarkovSemigroup S}
+    (hGen : A.generator = B.generator) (t : ℝ) (i j : S) :
+    A.transition t i j = B.transition t i j := by
+  have hQ : ∀ x y, B.generator x y = A.generator x y := by
+    intro x y; rw [hGen]
+  let f : ℝ → ℝ := fun s => ∑ m, A.transition s i m * B.transition (t - s) m j
+  have hDeriv : ∀ s, HasDerivAt f 0 s := by
+    intro s
+    have hTerm : ∀ m ∈ (Finset.univ : Finset S), HasDerivAt
+        (fun s => A.transition s i m * B.transition (t - s) m j)
+        ((∑ k, A.transition s i k * A.generator k m) *
+            B.transition (t - s) m j +
+          A.transition s i m *
+            ((∑ k, B.generator m k * B.transition (t - s) k j) * (-1))) s := by
+      intro m _
+      have hB := (B.transition_hasDerivAt_left (t - s) m j).comp s
+        ((hasDerivAt_id s).const_sub t)
+      exact (A.transition_hasDerivAt_right s i m).mul hB
+    have hSum := HasDerivAt.sum hTerm
+    have hZero : ∑ m, ((∑ k, A.transition s i k * A.generator k m) *
+            B.transition (t - s) m j +
+          A.transition s i m *
+            ((∑ k, B.generator m k * B.transition (t - s) k j) * (-1))) = 0 := by
+      simp_rw [hQ]
+      have e : ∑ m, (∑ k, A.transition s i k * A.generator k m) *
+            B.transition (t - s) m j =
+          ∑ m, A.transition s i m *
+            ∑ k, A.generator m k * B.transition (t - s) k j := by
+        simp_rw [Finset.sum_mul, Finset.mul_sum]
+        rw [Finset.sum_comm]
+        refine Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun k _ => ?_
+        ring
+      rw [Finset.sum_add_distrib, e]
+      have e2 : ∀ m, A.transition s i m *
+          ((∑ k, A.generator m k * B.transition (t - s) k j) * (-1)) =
+          -(A.transition s i m *
+            ∑ k, A.generator m k * B.transition (t - s) k j) := by
+        intro m; ring
+      simp_rw [e2, Finset.sum_neg_distrib]
+      ring
+    rw [hZero] at hSum
+    convert hSum using 1
+    funext u
+    simp [f, Finset.sum_apply]
+  have hConst := is_const_of_deriv_eq_zero
+    (fun s => (hDeriv s).differentiableAt) (fun s => (hDeriv s).deriv) 0 t
+  have h0 : f 0 = B.transition t i j := by
+    simp [f, A.transition_zero, Finset.sum_ite_eq]
+  have h1 : f t = A.transition t i j := by
+    simp [f, B.transition_zero, Finset.sum_ite_eq']
+  rw [← h0, ← h1, hConst]
+
+end FiniteMarkovSemigroup
+
+end Uniformisation
+
+namespace TwoStateRates
+
+/-- The general uniformised semigroup of the two-state generator has exactly
+the closed-form transition entries (fep-149..154). -/
+theorem uniformised_transition_eq (rates : TwoStateRates) (time : ℝ)
+    (source target : Bool) :
+    rates.rateGenerator.semigroup.transition time source target =
+      rates.transition time source target :=
+  FiniteMarkovSemigroup.transition_eq_of_generator_eq
+    (A := rates.rateGenerator.semigroup) (B := rates.certifiedSemigroup)
+    rfl time source target
+
+/-- The matrix-exponential candidate of the two-state generator is the
+closed-form transition. -/
+theorem exponentialCandidate_eq_transition (rates : TwoStateRates)
+    (time : ℝ) (source target : Bool) :
+    rates.rateGenerator.exponentialCandidate time source target =
+      rates.transition time source target :=
+  rates.uniformised_transition_eq time source target
+
+/-- Sampling the uniformised semigroup recovers the closed-form kernel. -/
+theorem uniformised_kernel_eq (rates : TwoStateRates) (time : ℝ)
+    (hTime : 0 ≤ time) :
+    rates.rateGenerator.semigroup.kernel time hTime = rates.kernel time hTime := by
+  apply FiniteKernel.ext_mass
+  funext source target
+  exact rates.uniformised_transition_eq time source target
+
+end TwoStateRates
+
 end FEP.ContinuousTimeMarkov
