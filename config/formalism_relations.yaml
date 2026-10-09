@@ -583,6 +583,11 @@ edges:
     target: fep-009
     kind: conceptual
     rationale: The finite blanket foundation proves a normalized conditional factorization and ties each transition row to it, but neither theorem consumes fep-005's finite partition declarations or fep-009's measure-theoretic conditional-independence declarations. A formal cross-topic edge awaits an explicit carrier bridge.
+  - source: fep-007
+    target: fep-028
+    kind: formal
+    rationale: With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep007_normalizedMessage_is_fep028_softmax
   - source: fep-008
     target: fep-028
     kind: conceptual
@@ -643,6 +648,11 @@ edges:
     target: fep-044
     kind: conceptual
     rationale: The explicit quadratic Bregman instance and the alpha-divergence proxy are neighboring but mathematically distinct divergence families.
+  - source: fep-029
+    target: fep-104
+    kind: formal
+    rationale: fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance
   - source: fep-030
     target: fep-031
     kind: conceptual
@@ -696,6 +706,16 @@ edges:
     kind: formal
     rationale: The composed theorem uses fep-042's success count to construct fep-036's smoothed empirical prior before conjugate updating. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorems `fep_fep036.FEP036.fep036_smoothedRate_pos` and `fep_fep036.FEP036.fep036_smoothedRate_lt_one` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged.
     witness: FEPComposed.fep036_empiricalPosterior_closed
+  - source: fep-046
+    target: fep-045
+    kind: formal
+    rationale: A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep046_single_break_is_fep045_bernoulli
+  - source: fep-050
+    target: fep-049
+    kind: formal
+    rationale: Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).
+    witness: FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production
   - source: fep-051
     target: fep-017
     kind: formal_pairing
@@ -714,7 +734,7 @@ edges:
   - source: fep-054
     target: fep-017
     kind: formal_pairing
-    rationale: Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.
+    rationale: Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep054_involution_of_fep017_posterior
   - source: fep-055
     target: fep-019
@@ -759,7 +779,7 @@ edges:
   - source: fep-063
     target: fep-014
     kind: formal_pairing
-    rationale: Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.
+    rationale: Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep063_channel_dpi_bounds_fep014
   - source: fep-064
     target: fep-041
@@ -889,7 +909,7 @@ edges:
   - source: fep-089
     target: fep-006
     kind: formal_pairing
-    rationale: Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.
+    rationale: The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep089_finite_jet_shift_specializes_fep006
   - source: fep-090
     target: fep-043
@@ -904,7 +924,7 @@ edges:
   - source: fep-092
     target: fep-032
     kind: formal_pairing
-    rationale: On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.
+    rationale: On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep092_quadratic_convergence_specializes_fep032
   - source: fep-093
     target: fep-010
@@ -994,7 +1014,7 @@ edges:
   - source: fep-110
     target: fep-028
     kind: formal_pairing
-    rationale: Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.
+    rationale: Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.
     witness: FEPComposed.fep110_product_of_experts_refines_fep028_normalization
   - source: fep-111
     target: fep-025
@@ -1019,12 +1039,12 @@ edges:
   - source: fep-115
     target: fep-042
     kind: formal_pairing
-    rationale: The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.
+    rationale: The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep115_frequency_union_bound_extends_fep042_counts
   - source: fep-116
     target: fep-001
     kind: formal_pairing
-    rationale: The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.
+    rationale: The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.
     witness: FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound
   - source: fep-117
     target: fep-017

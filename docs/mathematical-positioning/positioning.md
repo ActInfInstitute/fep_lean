@@ -8,7 +8,7 @@ Package version: `1.6.0`.
 
 Source origin: `checkout`. Source hashes describe the bytes read for this analysis.
 
-The projection contains 168 topics, 22 families, 14 overlapping domains, and 146 authored relations.
+The projection contains 168 topics, 22 families, 14 overlapping domains, and 150 authored relations.
 
 ## Family coordinates
 
@@ -19675,6 +19675,8 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-005` → `fep-009` (conceptual): The finite blanket foundation proves a normalized conditional factorization and ties each transition row to it, but neither theorem consumes fep-005's finite partition declarations or fep-009's measure-theoretic conditional-independence declarations. A formal cross-topic edge awaits an explicit carrier bridge.
 
+- `fep-007` → `fep-028` (formal): With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep007_normalizedMessage_is_fep028_softmax`.
+
 - `fep-008` → `fep-028` (conceptual): Finite argmin existence and finite softmax normalization represent deterministic and stochastic policy-selection layers.
 
 - `fep-011` → `fep-026` (formal): The composed theorem identifies self-information and scalar prior complexity as the same negative-log functional, fixing their shared sign convention. Witness: `FEPComposed.fep026_priorComplexity_is_fep011_surprise`.
@@ -19701,6 +19703,8 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-029` → `fep-044` (conceptual): The explicit quadratic Bregman instance and the alpha-divergence proxy are neighboring but mathematically distinct divergence families.
 
+- `fep-029` → `fep-104` (formal): fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance`.
+
 - `fep-030` → `fep-031` (conceptual): A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.
 
 - `fep-031` → `fep-030` (formal): The composed theorem rewrites the binary Gibbs law at zero inverse temperature to one half and invokes fep-030's entropy equality characterization. Witness: `FEPComposed.fep031_zeroBeta_binary_maxEntropy`.
@@ -19723,13 +19727,17 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-042` → `fep-036` (formal): The composed theorem uses fep-042's success count to construct fep-036's smoothed empirical prior before conjugate updating. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorems `fep_fep036.FEP036.fep036_smoothedRate_pos` and `fep_fep036.FEP036.fep036_smoothedRate_lt_one` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged. Witness: `FEPComposed.fep036_empiricalPosterior_closed`.
 
+- `fep-046` → `fep-045` (formal): A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep046_single_break_is_fep045_bernoulli`.
+
+- `fep-050` → `fep-049` (formal): Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production`.
+
 - `fep-051` → `fep-017` (formal_pairing): Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion. Witness: `FEPComposed.fep051_rn_reconstruction_refines_fep017`.
 
 - `fep-052` → `fep-017` (formal_pairing): On a countable latent carrier, both topic surfaces certify the same predictive-almost-everywhere likelihood-ratio representation. Witness: `FEPComposed.fep052_posterior_tilt_is_fep017_posterior`.
 
 - `fep-053` → `fep-017` (formal_pairing): Kernel Bayes and fep-017 reconstruct the same swapped joint law, with the new topic keeping the native posterior notation visible. Witness: `FEPComposed.fep053_joint_reconstruction_extends_fep017`.
 
-- `fep-054` → `fep-017` (formal_pairing): Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Witness: `FEPComposed.fep054_involution_of_fep017_posterior`.
+- `fep-054` → `fep-017` (formal_pairing): Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep054_involution_of_fep017_posterior`.
 
 - `fep-055` → `fep-019` (formal_pairing): Composite Bayesian inversion uses exactly the chronological predictive law identified by fep-019's measure--kernel associativity theorem. Witness: `FEPComposed.fep055_composite_inversion_uses_fep019`.
 
@@ -19747,7 +19755,7 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-062` → `fep-035` (formal_pairing): The fixed-sample IWAE inequality and fep-035's strict two-point Jensen law expose respectively the weak and strict finite logarithmic boundaries. Witness: `FEPComposed.fep062_iwae_jensen_uses_fep035`.
 
-- `fep-063` → `fep-014` (formal_pairing): Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. Witness: `FEPComposed.fep063_channel_dpi_bounds_fep014`.
+- `fep-063` → `fep-014` (formal_pairing): Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep063_channel_dpi_bounds_fep014`.
 
 - `fep-064` → `fep-041` (formal_pairing): Rate--distortion weak duality is accompanied by the measure-native nonnegativity law for the mutual-information ingredient's KL semantics. Witness: `FEPComposed.fep064_rateDistortion_uses_fep041_mutualInformation`.
 
@@ -19799,13 +19807,13 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-088` → `fep-043` (formal_pairing): The predictive-error derivative and fep-043's quadratic derivative are the same scalar geometry at curvature `precision / 2`. Witness: `FEPComposed.fep088_prediction_gradient_extends_fep043`.
 
-- `fep-089` → `fep-006` (formal_pairing): Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting. Witness: `FEPComposed.fep089_finite_jet_shift_specializes_fep006`.
+- `fep-089` → `fep-006` (formal_pairing): The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep089_finite_jet_shift_specializes_fep006`.
 
 - `fep-090` → `fep-043` (formal_pairing): A generalized-filter correction exposes its shift-minus-gradient equation; the same coordinate gradient is backed by fep-043's exact quadratic derivative. Witness: `FEPComposed.fep090_generalized_correction_combines_fep043`.
 
 - `fep-091` → `fep-016` (formal_pairing): Precision modulation is monotone in the predictive energy and specializes fep-016's nonnegative weighted quadratic at the lower precision. Witness: `FEPComposed.fep091_precision_modulation_refines_fep016`.
 
-- `fep-092` → `fep-032` (formal_pairing): On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target. Witness: `FEPComposed.fep092_quadratic_convergence_specializes_fep032`.
+- `fep-092` → `fep-032` (formal_pairing): On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep092_quadratic_convergence_specializes_fep032`.
 
 - `fep-093` → `fep-010` (formal_pairing): The supported forward/reverse ratio reconstructs path mass, while the identity kernel supplies the original catalogue's concrete reversibility witness on an arbitrary measure carrier. Witness: `FEPComposed.fep093_path_ratio_extends_fep010_reversal`.
 
@@ -19841,7 +19849,7 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-109` → `fep-021` (formal_pairing): Independent-agent EFE additivity is paired with the original truncated EFE sign convention and its exact epistemic-balance premise. Witness: `FEPComposed.fep109_independent_efe_extends_fep021`.
 
-- `fep-110` → `fep-028` (formal_pairing): Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Witness: `FEPComposed.fep110_product_of_experts_refines_fep028_normalization`.
+- `fep-110` → `fep-028` (formal_pairing): Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing. Witness: `FEPComposed.fep110_product_of_experts_refines_fep028_normalization`.
 
 - `fep-111` → `fep-025` (formal_pairing): The two-agent consensus step conserves pointwise mass; the original antisymmetric-current theorem conserves total divergence. Witness: `FEPComposed.fep111_consensus_mass_extends_fep025_conservation`.
 
@@ -19851,9 +19859,9 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-114` → `fep-036` (formal_pairing): The finite-sample sub-Gaussian tail certificate is paired with the original strict positivity of a Laplace-smoothed empirical rate. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorem `fep_fep036.FEP036.fep036_smoothedRate_pos` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged. Witness: `FEPComposed.fep114_subgaussian_tail_refines_fep036_empirical_rate`.
 
-- `fep-115` → `fep-042` (formal_pairing): The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts. Witness: `FEPComposed.fep115_frequency_union_bound_extends_fep042_counts`.
+- `fep-115` → `fep-042` (formal_pairing): The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep115_frequency_union_bound_extends_fep042_counts`.
 
-- `fep-116` → `fep-001` (formal_pairing): The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL. Witness: `FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound`.
+- `fep-116` → `fep-001` (formal_pairing): The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation. Witness: `FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound`.
 
 - `fep-117` → `fep-017` (formal_pairing): Finite posterior odds obey Bayes multiplication, while the measure-native fep-017 posterior reconstructs its complete swapped joint law. Witness: `FEPComposed.fep117_posterior_odds_extends_fep017_bayes`.
 
@@ -20003,8 +20011,8 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/compositions/causal_predictive.lean` | `6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7` |
 | `formal/compositions/collective_learning.lean` | `dd955765c85e05b70c39847c5f439303e879717ff437b0e36d7ca1969acde4e5` |
 | `formal/compositions/continuous_time.lean` | `6c19c0fc1952141f3451d9da385c5d853608f36aab91bcfcda09b559c09510a8` |
-| `formal/compositions/control_temporal.lean` | `98ce41a805e7ac2a2eba43f7ba89664e5c77c7bbe20380c756d0bd3ff288aed2` |
-| `formal/compositions/core.lean` | `2fcd89a1fd11865206fbb85afabdf6bc45d60bfae7fc72e098704364b49afad9` |
+| `formal/compositions/control_temporal.lean` | `0cbdf3642bed611af2593db1df7e57f93fed79db047193b09c2e6de1e461a379` |
+| `formal/compositions/core.lean` | `ed36f94fd73bafdf813eda4eb0b3ff04566f4102554d119f1d21e2e02a66b0a2` |
 | `formal/compositions/efe_policy_selection.lean` | `27b1b26c1af403e387850f77ddf9804467c44ee5085ab5a74b2ee75cb4ba6c7d` |
 | `formal/compositions/efe_time_scale_separation.lean` | `93f15c1daaa53f51634e2da4b5b080b5ffe68a8a7d15881b427c14a20891c81f` |
 | `formal/compositions/exponential_family.lean` | `618ef2cf9838134b1a1815410a1cac84ce2daa6c030be2ac4d4e577caa83e1d1` |
@@ -20023,7 +20031,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/compositions/policy_trees.lean` | `98a74b0976bbac14a784887c38cdaf95db373a071667ecc66bd7f2b7ea657db4` |
 | `formal/compositions/risk_calibration.lean` | `428430da8985d59619fe00975b79eff4151ccd90d3e078fbb10796c17f8cb455` |
 | `formal/compositions/smooth_reference_kernel.lean` | `156464de9e7c33e16fa22bd6939fa64938b03ee4f5554fb3ecd48fbfaed6d397` |
-| `formal/compositions/thermo_geometry.lean` | `d4f5683ae70c9e3a20e849aa1c6446639e4e9ced08762cacb1d4564afdf83745` |
+| `formal/compositions/thermo_geometry.lean` | `ae0510fafddafd63e094e8280cdfaaae1be1d89977a0bc2f45e86b701c44e167` |
 | `formal/continuous_time_markov.lean` | `47545a9d994578878c1e314dc16a858b3527459f3ef49a6903bee943ef7b5e83` |
 | `formal/controlled_markov.lean` | `7cb9c18603f96adab7106f0930eb3d2870b42dd101fe1eff05fce9a8bf889652` |
 | `formal/decision_risk.lean` | `0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689` |
@@ -20068,7 +20076,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/temporal_inference.lean` | `3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10` |
 | `formal/variational_duality.lean` | `7ed615bca08b812cb940a91326e335ae0f45eff27be716d734da4f49def09749` |
 | `inputs/catalogue_metadata.yaml` | `e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd` |
-| `inputs/formalism_relations.yaml` | `a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e` |
+| `inputs/formalism_relations.yaml` | `68826c891cb3e5abaebada33394ed3caf8d97411eb3100be381534950a3299ae` |
 | `inputs/positioning.yaml` | `d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d` |
 | `inputs/theorem_maturity.yaml` | `7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded` |
 | `lean_source.py` | `8bf35005a2f360805af28eb8918dd988c48b33941c6e2dad7215d22c787b804c` |

@@ -304,4 +304,49 @@ theorem fep106_replicator_links_fep028_fep038
       fep_fep028.FEP028.fep028_softmax_probs_sum_one
         gamma cost policies hPolicies⟩
 
+/-- Discharging fep-050's second-law premise with fep-049's nonnegative
+quadratic entropy production derives the Landauer work bound.  The explicit
+`hBalance` premise identifies the erasure's total entropy change with the
+constitutive-law entropy production; it is a modelling assumption, not a
+consequence of either topic. -/
+theorem fep050_landauer_work_bound_from_fep049_entropy_production
+    {Edge : Type*} [Fintype Edge] {W Q T kB : ℝ} (hT : 0 < T)
+    (conductance force : Edge → ℝ)
+    (hConductance : ∀ edge, 0 ≤ conductance edge)
+    (hBalance : fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =
+      fep_fep049.FEP049.fep049_entropyProduction conductance force)
+    (hWorkHeat : Q ≤ W) :
+    fep_fep050.FEP050.fep050_landauerBound kB T ≤ W := by
+  have hSecondLaw : 0 ≤ fep_fep050.FEP050.fep050_totalEntropyChange Q T kB := by
+    rw [hBalance]
+    exact fep_fep049.FEP049.fep049_entropyProduction_nonneg
+      conductance force hConductance
+  exact fep_fep050.FEP050.fep050_landauer_work_bound hT hSecondLaw hWorkHeat
+
+/-- fep-029's scalar quadratic Bregman divergence is the one-coordinate
+instance of the generic Bregman divergence of fep-104 with potential `v 0 ^ 2`
+and gradient `2 * v 0`; the fep-104 three-point identity therefore yields the
+scalar three-point law for fep-029's divergence. -/
+theorem fep029_quadraticBregman_is_fep104_scalar_instance (x y z : ℝ) :
+    bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+        (fun _ => x) (fun _ => y) =
+        fep_fep029.FEP029.fep029_quadraticBregman x y ∧
+      fep_fep029.FEP029.fep029_quadraticBregman x z -
+          fep_fep029.FEP029.fep029_quadraticBregman x y -
+          fep_fep029.FEP029.fep029_quadraticBregman y z =
+        2 * (y - z) * (x - y) := by
+  have hIdentify : ∀ a b : ℝ,
+      bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+          (fun _ => a) (fun _ => b) =
+        fep_fep029.FEP029.fep029_quadraticBregman a b := by
+    intro a b
+    simp [bregmanDivergence, coordinatePairing,
+      fep_fep029.FEP029.fep029_quadraticBregman]
+  refine ⟨hIdentify x y, ?_⟩
+  have hThree := fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity
+    (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)
+    (fun _ => x) (fun _ => y) (fun _ => z)
+  rw [hIdentify, hIdentify, hIdentify] at hThree
+  simpa [coordinatePairing, mul_sub, sub_mul] using hThree
+
 end FEPComposed

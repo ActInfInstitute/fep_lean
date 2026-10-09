@@ -739,6 +739,13 @@
         "target": "fep-009"
       },
       {
+        "kind": "formal",
+        "rationale": "With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).",
+        "source": "fep-007",
+        "target": "fep-028",
+        "witness": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax"
+      },
+      {
         "kind": "conceptual",
         "rationale": "Finite argmin existence and finite softmax normalization represent deterministic and stochastic policy-selection layers.",
         "source": "fep-008",
@@ -825,6 +832,13 @@
         "target": "fep-044"
       },
       {
+        "kind": "formal",
+        "rationale": "fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).",
+        "source": "fep-029",
+        "target": "fep-104",
+        "witness": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance"
+      },
+      {
         "kind": "conceptual",
         "rationale": "A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.",
         "source": "fep-030",
@@ -900,6 +914,20 @@
         "witness": "FEPComposed.fep036_empiricalPosterior_closed"
       },
       {
+        "kind": "formal",
+        "rationale": "A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).",
+        "source": "fep-046",
+        "target": "fep-045",
+        "witness": "FEPComposed.fep046_single_break_is_fep045_bernoulli"
+      },
+      {
+        "kind": "formal",
+        "rationale": "Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).",
+        "source": "fep-050",
+        "target": "fep-049",
+        "witness": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production"
+      },
+      {
         "kind": "formal_pairing",
         "rationale": "Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion.",
         "source": "fep-051",
@@ -922,7 +950,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
+        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-054",
         "target": "fep-017",
         "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -985,7 +1013,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
+        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-063",
         "target": "fep-014",
         "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -1167,7 +1195,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
+        "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-089",
         "target": "fep-006",
         "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -1188,7 +1216,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
+        "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-092",
         "target": "fep-032",
         "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -1314,7 +1342,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
+        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
         "source": "fep-110",
         "target": "fep-028",
         "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -1349,14 +1377,14 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
+        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-115",
         "target": "fep-042",
         "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
+        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-116",
         "target": "fep-001",
         "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"
@@ -2525,14 +2553,14 @@
     }
   ],
   "counts": {
-    "authored_edges": 146,
+    "authored_edges": 150,
     "capabilities": 50,
     "domains": 14,
     "families": 22,
     "formal_modules": 71,
     "relation_kinds": {
       "conceptual": 8,
-      "formal": 20,
+      "formal": 24,
       "formal_pairing": 118
     },
     "semantic_dispositions": {
@@ -8283,7 +8311,7 @@
       "target": "core-active-inference"
     },
     {
-      "count": 2,
+      "count": 3,
       "kind": "formal",
       "source": "core-active-inference",
       "target": "core-active-inference"
@@ -8307,7 +8335,7 @@
       "target": "core-bayesian-mechanics"
     },
     {
-      "count": 4,
+      "count": 5,
       "kind": "formal",
       "source": "core-bayesian-mechanics",
       "target": "core-bayesian-mechanics"
@@ -8361,6 +8389,12 @@
       "target": "core-information-geometry"
     },
     {
+      "count": 1,
+      "kind": "formal",
+      "source": "core-information-geometry",
+      "target": "information-geometry-and-geometric-optimization"
+    },
+    {
       "count": 2,
       "kind": "formal",
       "source": "core-thermodynamics",
@@ -8379,7 +8413,7 @@
       "target": "core-thermodynamics"
     },
     {
-      "count": 2,
+      "count": 3,
       "kind": "formal",
       "source": "core-thermodynamics",
       "target": "core-thermodynamics"
@@ -10571,6 +10605,13 @@
       "target": "fep-009"
     },
     {
+      "kind": "formal",
+      "rationale": "With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-007",
+      "target": "fep-028",
+      "witness": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax"
+    },
+    {
       "kind": "conceptual",
       "rationale": "Finite argmin existence and finite softmax normalization represent deterministic and stochastic policy-selection layers.",
       "source": "fep-008",
@@ -10657,6 +10698,13 @@
       "target": "fep-044"
     },
     {
+      "kind": "formal",
+      "rationale": "fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-029",
+      "target": "fep-104",
+      "witness": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance"
+    },
+    {
       "kind": "conceptual",
       "rationale": "A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.",
       "source": "fep-030",
@@ -10732,6 +10780,20 @@
       "witness": "FEPComposed.fep036_empiricalPosterior_closed"
     },
     {
+      "kind": "formal",
+      "rationale": "A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-046",
+      "target": "fep-045",
+      "witness": "FEPComposed.fep046_single_break_is_fep045_bernoulli"
+    },
+    {
+      "kind": "formal",
+      "rationale": "Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106).",
+      "source": "fep-050",
+      "target": "fep-049",
+      "witness": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production"
+    },
+    {
       "kind": "formal_pairing",
       "rationale": "Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion.",
       "source": "fep-051",
@@ -10754,7 +10816,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
+      "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-054",
       "target": "fep-017",
       "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -10817,7 +10879,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
+      "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-063",
       "target": "fep-014",
       "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -10999,7 +11061,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
+      "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-089",
       "target": "fep-006",
       "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -11020,7 +11082,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
+      "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-092",
       "target": "fep-032",
       "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -11146,7 +11208,7 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
+      "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
       "source": "fep-110",
       "target": "fep-028",
       "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -11181,14 +11243,14 @@
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
+      "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-115",
       "target": "fep-042",
       "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
     },
     {
       "kind": "formal_pairing",
-      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
+      "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
       "source": "fep-116",
       "target": "fep-001",
       "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"
@@ -11600,8 +11662,8 @@
     "formal/compositions/causal_predictive.lean": "6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7",
     "formal/compositions/collective_learning.lean": "dd955765c85e05b70c39847c5f439303e879717ff437b0e36d7ca1969acde4e5",
     "formal/compositions/continuous_time.lean": "6c19c0fc1952141f3451d9da385c5d853608f36aab91bcfcda09b559c09510a8",
-    "formal/compositions/control_temporal.lean": "98ce41a805e7ac2a2eba43f7ba89664e5c77c7bbe20380c756d0bd3ff288aed2",
-    "formal/compositions/core.lean": "2fcd89a1fd11865206fbb85afabdf6bc45d60bfae7fc72e098704364b49afad9",
+    "formal/compositions/control_temporal.lean": "0cbdf3642bed611af2593db1df7e57f93fed79db047193b09c2e6de1e461a379",
+    "formal/compositions/core.lean": "ed36f94fd73bafdf813eda4eb0b3ff04566f4102554d119f1d21e2e02a66b0a2",
     "formal/compositions/efe_policy_selection.lean": "27b1b26c1af403e387850f77ddf9804467c44ee5085ab5a74b2ee75cb4ba6c7d",
     "formal/compositions/efe_time_scale_separation.lean": "93f15c1daaa53f51634e2da4b5b080b5ffe68a8a7d15881b427c14a20891c81f",
     "formal/compositions/exponential_family.lean": "618ef2cf9838134b1a1815410a1cac84ce2daa6c030be2ac4d4e577caa83e1d1",
@@ -11620,7 +11682,7 @@
     "formal/compositions/policy_trees.lean": "98a74b0976bbac14a784887c38cdaf95db373a071667ecc66bd7f2b7ea657db4",
     "formal/compositions/risk_calibration.lean": "428430da8985d59619fe00975b79eff4151ccd90d3e078fbb10796c17f8cb455",
     "formal/compositions/smooth_reference_kernel.lean": "156464de9e7c33e16fa22bd6939fa64938b03ee4f5554fb3ecd48fbfaed6d397",
-    "formal/compositions/thermo_geometry.lean": "d4f5683ae70c9e3a20e849aa1c6446639e4e9ced08762cacb1d4564afdf83745",
+    "formal/compositions/thermo_geometry.lean": "ae0510fafddafd63e094e8280cdfaaae1be1d89977a0bc2f45e86b701c44e167",
     "formal/continuous_time_markov.lean": "47545a9d994578878c1e314dc16a858b3527459f3ef49a6903bee943ef7b5e83",
     "formal/controlled_markov.lean": "7cb9c18603f96adab7106f0930eb3d2870b42dd101fe1eff05fce9a8bf889652",
     "formal/decision_risk.lean": "0b3142c0c85dbb99e5b8813440825996b65bb1ec0066057af152d4ef72e31689",
@@ -11665,7 +11727,7 @@
     "formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
     "formal/variational_duality.lean": "7ed615bca08b812cb940a91326e335ae0f45eff27be716d734da4f49def09749",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
-    "inputs/formalism_relations.yaml": "a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e",
+    "inputs/formalism_relations.yaml": "68826c891cb3e5abaebada33394ed3caf8d97411eb3100be381534950a3299ae",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
     "inputs/theorem_maturity.yaml": "7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded",
     "lean_source.py": "8bf35005a2f360805af28eb8918dd988c48b33941c6e2dad7215d22c787b804c",
@@ -120710,6 +120772,86 @@
         "statement": "theorem fep004_bernoulliMetric_specialization (p v w : ℝ) :\n    fep_fep004.FEP004.fep004_fisherMetric\n        (ι := Unit)\n        (fun _ => fep_fep038.FEP038.fep038_fisherInformation p)\n        (fun _ => v) (fun _ => w) =\n      fep_fep038.FEP038.fep038_fisherMetric p v w",
         "statement_sha256": "993be8f56f32f67d0374b536051468d0843e941182dce42ab56418ea4fc02d1b"
       },
+      "FEPComposed.fep007_normalizedMessage_is_fep028_softmax": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "gamma"
+            ],
+            "role": "typed_binder",
+            "source": "(gamma : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "cost"
+            ],
+            "role": "typed_binder",
+            "source": "(cost : Fin 10 → ℝ)",
+            "type_source": "Fin 10 → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "neighbors"
+            ],
+            "role": "typed_binder",
+            "source": "(neighbors : Finset (Fin 8))",
+            "type_source": "Finset (Fin 8)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hNeighbors"
+            ],
+            "role": "typed_binder",
+            "source": "(hNeighbors : neighbors.Nonempty)",
+            "type_source": "neighbors.Nonempty",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "node"
+            ],
+            "role": "typed_binder",
+            "source": "(node : Fin 8)",
+            "type_source": "Fin 8",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ target : Fin 8,\n      fep_fep007.FEP007.fep007_normalizedMessage\n          (fun _ source =>\n            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))\n          (fun _ => 1) neighbors node target =\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          (Fin.castLE (by norm_num) target)) ∧\n      (∑ policy ∈ neighbors.map\n          ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩,\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          policy = 1)",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "fep_fep007.FEP007.fep007_normalizedMessage_sum_one",
+            "qualified_name": "fep_fep007.FEP007.fep007_normalizedMessage_sum_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.fep_all",
+          "FepSketches.controlled_markov",
+          "FepSketches.temporal_inference"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEPComposed",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEPComposed.fep007_normalizedMessage_is_fep028_softmax",
+        "source_line": 368,
+        "source_owner": "src/fep_lean/formal/compositions/control_temporal.lean",
+        "statement": "theorem fep007_normalizedMessage_is_fep028_softmax\n    (gamma : ℝ) (cost : Fin 10 → ℝ) (neighbors : Finset (Fin 8))\n    (hNeighbors : neighbors.Nonempty) (node : Fin 8) :\n    (∀ target : Fin 8,\n      fep_fep007.FEP007.fep007_normalizedMessage\n          (fun _ source =>\n            Real.exp (-gamma * cost (Fin.castLE (by norm_num) source)))\n          (fun _ => 1) neighbors node target =\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          (Fin.castLE (by norm_num) target)) ∧\n      (∑ policy ∈ neighbors.map\n          ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩,\n        fep_fep028.FEP028.fep028_softmax gamma cost\n          (neighbors.map ⟨Fin.castLE (by norm_num), Fin.castLE_injective _⟩)\n          policy = 1)",
+        "statement_sha256": "c6ec46a8f7769f48fa053643e483fc1538d6a4242cc0da632360cc3651d628b3"
+      },
       "FEPComposed.fep012_softmax_entropyRegularizedCost_le": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -121464,6 +121606,48 @@
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep027_priorPredictive_is_fep019\n    {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]\n    (μ : Measure α) (κ : Kernel α β) [SFinite μ] [IsSFiniteKernel κ] :\n    (fep_fep027.FEP027.fep027_hierarchicalJoint μ κ).snd =\n      fep_fep019.FEP019.fep019_priorPredictive κ μ",
         "statement_sha256": "770f616b5b44b5ed1ac0f74b0a1de35fda9bfa2afcc70a24285736bd22746835"
+      },
+      "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x",
+              "y",
+              "z"
+            ],
+            "role": "typed_binder",
+            "source": "(x y z : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)\n        (fun _ => x) (fun _ => y) =\n        fep_fep029.FEP029.fep029_quadraticBregman x y ∧\n      fep_fep029.FEP029.fep029_quadraticBregman x z -\n          fep_fep029.FEP029.fep029_quadraticBregman x y -\n          fep_fep029.FEP029.fep029_quadraticBregman y z =\n        2 * (y - z) * (x - y)",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity",
+            "qualified_name": "fep_fep104.FEP104.fep104_mirrorDescent_threePoint_identity",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.fep_all",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEPComposed",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance",
+        "source_line": 330,
+        "source_owner": "src/fep_lean/formal/compositions/thermo_geometry.lean",
+        "statement": "theorem fep029_quadraticBregman_is_fep104_scalar_instance (x y z : ℝ) :\n    bregmanDivergence (d := 1) (fun v => v 0 ^ 2) (fun v _ => 2 * v 0)\n        (fun _ => x) (fun _ => y) =\n        fep_fep029.FEP029.fep029_quadraticBregman x y ∧\n      fep_fep029.FEP029.fep029_quadraticBregman x z -\n          fep_fep029.FEP029.fep029_quadraticBregman x y -\n          fep_fep029.FEP029.fep029_quadraticBregman y z =\n        2 * (y - z) * (x - y)",
+        "statement_sha256": "cef0776c169b7097f07502c175c3e5167e4a14affdca02dd236663257153429a"
       },
       "FEPComposed.fep031_zeroBeta_binary_maxEntropy": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -122300,6 +122484,182 @@
         "source_owner": "src/fep_lean/formal/compositions/core.lean",
         "statement": "theorem fep041_informationGain_is_fep014_kl\n    {State : Type*} [MeasurableSpace State]\n    (posterior prior : Measure State)\n    [IsFiniteMeasure posterior] [IsFiniteMeasure prior] :\n    fep_fep041.FEP041.fep041_informationGain posterior prior =\n        InformationTheory.klDiv posterior prior ∧\n      (fep_fep041.FEP041.fep041_informationGain posterior prior = 0 ↔\n        posterior = prior)",
         "statement_sha256": "63ab0110391c9ac83777b99becebd113e5178b3d94be56261a93cf68f87a99b2"
+      },
+      "FEPComposed.fep046_single_break_is_fep045_bernoulli": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p",
+              "l₀",
+              "l₁"
+            ],
+            "role": "typed_binder",
+            "source": "(p l₀ l₁ : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "fep_fep046.FEP046.fep046_stickWeights\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        [fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) true] ∧\n      fep_fep046.FEP046.fep046_remainder\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) false ∧\n      ∑ b : Bool, fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) b = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "fep_fep046.FEP046.fep046_mass_conservation",
+            "qualified_name": "fep_fep046.FEP046.fep046_mass_conservation",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.fep_all",
+          "FepSketches.active_inference",
+          "FepSketches.information_geometry",
+          "FepSketches.markov_blanket",
+          "FepSketches.statistical_convergence",
+          "Mathlib.Analysis.SpecialFunctions.BinaryEntropy"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEPComposed",
+        "namespace_variable_context": [
+          "{Ω : Type*}"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEPComposed.fep046_single_break_is_fep045_bernoulli",
+        "source_line": 330,
+        "source_owner": "src/fep_lean/formal/compositions/core.lean",
+        "statement": "theorem fep046_single_break_is_fep045_bernoulli (p l₀ l₁ : ℝ) :\n    fep_fep046.FEP046.fep046_stickWeights\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        [fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) true] ∧\n      fep_fep046.FEP046.fep046_remainder\n          [fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁] =\n        fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) false ∧\n      ∑ b : Bool, fep_fep045.FEP045.fep045_bernoulliMass\n          (fep_fep045.FEP045.fep045_posteriorParameter p l₀ l₁) b = 1",
+        "statement_sha256": "dd982859e1b9f4470aefa5ffb441364cf3bbf433d4b2b894f97e3890f3c132e0"
+      },
+      "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Edge"
+            ],
+            "role": "typed_binder",
+            "source": "{Edge : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Edge]",
+            "type_source": "Fintype Edge",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "W",
+              "Q",
+              "T",
+              "kB"
+            ],
+            "role": "typed_binder",
+            "source": "{W Q T kB : ℝ}",
+            "type_source": "ℝ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hT"
+            ],
+            "role": "typed_binder",
+            "source": "(hT : 0 < T)",
+            "type_source": "0 < T",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "conductance",
+              "force"
+            ],
+            "role": "typed_binder",
+            "source": "(conductance force : Edge → ℝ)",
+            "type_source": "Edge → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hConductance"
+            ],
+            "role": "typed_binder",
+            "source": "(hConductance : ∀ edge, 0 ≤ conductance edge)",
+            "type_source": "∀ edge, 0 ≤ conductance edge",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hBalance"
+            ],
+            "role": "typed_binder",
+            "source": "(hBalance : fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =\n      fep_fep049.FEP049.fep049_entropyProduction conductance force)",
+            "type_source": "fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =\n      fep_fep049.FEP049.fep049_entropyProduction conductance force",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hWorkHeat"
+            ],
+            "role": "typed_binder",
+            "source": "(hWorkHeat : Q ≤ W)",
+            "type_source": "Q ≤ W",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "fep_fep050.FEP050.fep050_landauerBound kB T ≤ W",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "fep_fep049.FEP049.fep049_entropyProduction_nonneg",
+            "qualified_name": "fep_fep049.FEP049.fep049_entropyProduction_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "fep_fep050.FEP050.fep050_landauer_work_bound",
+            "qualified_name": "fep_fep050.FEP050.fep050_landauer_work_bound",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.fep_all",
+          "FepSketches.path_thermodynamics",
+          "FepSketches.geometric_optimization"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEPComposed",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production",
+        "source_line": 312,
+        "source_owner": "src/fep_lean/formal/compositions/thermo_geometry.lean",
+        "statement": "theorem fep050_landauer_work_bound_from_fep049_entropy_production\n    {Edge : Type*} [Fintype Edge] {W Q T kB : ℝ} (hT : 0 < T)\n    (conductance force : Edge → ℝ)\n    (hConductance : ∀ edge, 0 ≤ conductance edge)\n    (hBalance : fep_fep050.FEP050.fep050_totalEntropyChange Q T kB =\n      fep_fep049.FEP049.fep049_entropyProduction conductance force)\n    (hWorkHeat : Q ≤ W) :\n    fep_fep050.FEP050.fep050_landauerBound kB T ≤ W",
+        "statement_sha256": "82ff123cea446838c45179e6b5ad754244b725192146e1734cd271f8f1c918a0"
       },
       "FEPComposed.fep051_rn_reconstruction_refines_fep017": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
