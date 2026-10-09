@@ -3,6 +3,8 @@ import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Basic.Real.Basic
 import Mathlib.Order.Filter.Tendsto
 import Mathlib.Topology.Algebra.Monoid
@@ -166,6 +168,75 @@ theorem shift_top_zero {order : ℕ} (jet : FiniteJet order) :
     (shift 1 jet).coefficient order = 0 := by
   change jet.coefficient (order + 1) = 0
   exact jet.truncated (order + 1) (by omega)
+
+/-- The order-`order` jet of `f` at `t`: coordinate `k` is the `k`-th iterated
+derivative `iteratedDeriv k f t` for `k ≤ order` and zero above the truncation. -/
+noncomputable def functionJet (order : ℕ) (f : ℝ → ℝ) (t : ℝ) : FiniteJet order where
+  coefficient k := if k ≤ order then iteratedDeriv k f t else 0
+  truncated degree hDegree := by
+    simp [show ¬ degree ≤ order by omega]
+
+theorem functionJet_coefficient_of_le {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k ≤ order) :
+    (functionJet order f t).coefficient k = iteratedDeriv k f t := by
+  simp [functionJet, hk]
+
+/-- The one-step shift of the jet of `f` is the jet of `deriv f` on every
+coordinate strictly below the truncation order: the shift realises
+differentiation. -/
+theorem shift_one_functionJet {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k < order) :
+    (shift 1 (functionJet order f t)).coefficient k =
+      (functionJet order (deriv f) t).coefficient k := by
+  rw [shift_coefficient, functionJet_coefficient_of_le f t (by omega),
+    functionJet_coefficient_of_le (deriv f) t (by omega), iteratedDeriv_succ']
+
+/-- The `m`-fold shift of the jet of `f` is the jet of the `m`-th iterated
+derivative on every coordinate `k` with `k + m ≤ order`. -/
+theorem shift_functionJet {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k + m ≤ order) :
+    (shift m (functionJet order f t)).coefficient k =
+      (functionJet order (iteratedDeriv m f) t).coefficient k := by
+  rw [shift_coefficient, functionJet_coefficient_of_le f t hk,
+    functionJet_coefficient_of_le (iteratedDeriv m f) t (by omega),
+    iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate,
+    Function.iterate_add_apply]
+
+/-- The `(m + 1)`-fold shift is the one-step shift of the `m`-fold shift
+(semigroup law via `shift_add`). -/
+theorem shift_functionJet_succ {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) (k : ℕ) :
+    (shift (m + 1) (functionJet order f t)).coefficient k =
+      (shift 1 (shift m (functionJet order f t))).coefficient k := by
+  rw [show m + 1 = 1 + m from Nat.add_comm m 1, shift_add]
+
+/-- Truncation boundary: the top coordinate of the shifted jet is zero, while
+the jet of `deriv f` keeps the genuine `(order + 1)`-th derivative there. -/
+theorem shift_one_functionJet_top {order : ℕ} (f : ℝ → ℝ) (t : ℝ) :
+    (shift 1 (functionJet order f t)).coefficient order = 0 ∧
+      (functionJet order (deriv f) t).coefficient order =
+        iteratedDeriv (order + 1) f t := by
+  refine ⟨shift_top_zero _, ?_⟩
+  rw [functionJet_coefficient_of_le (deriv f) t le_rfl, iteratedDeriv_succ']
+
+theorem iteratedDeriv_exp_eq (k : ℕ) (t : ℝ) : iteratedDeriv k Real.exp t = Real.exp t := by
+  induction k generalizing t with
+  | zero => simp
+  | succ k ih =>
+    rw [iteratedDeriv_succ', Real.deriv_exp]
+    exact ih t
+
+/-- Nonvacuous witness: every retained coordinate of the exponential jet is
+`exp t ≠ 0`, and the shift agrees with the jet of the derivative (again `exp`)
+below the truncation order while the top coordinate of the shift is zero. -/
+theorem exp_jet_shift_witness (order : ℕ) (t : ℝ) :
+    (∀ k, k ≤ order → (functionJet order Real.exp t).coefficient k ≠ 0) ∧
+      (∀ k, k < order →
+        (shift 1 (functionJet order Real.exp t)).coefficient k =
+          (functionJet order (deriv Real.exp) t).coefficient k) ∧
+      (shift 1 (functionJet order Real.exp t)).coefficient order = 0 := by
+  refine ⟨fun k hk => ?_, fun k hk => shift_one_functionJet _ t hk, shift_top_zero _⟩
+  rw [functionJet_coefficient_of_le _ t hk, iteratedDeriv_exp_eq]
+  exact (Real.exp_pos t).ne'
 
 /-- A concrete first-order jet with value and velocity coefficients. -/
 def firstOrderJet (value velocity : ℝ) : FiniteJet 1 where

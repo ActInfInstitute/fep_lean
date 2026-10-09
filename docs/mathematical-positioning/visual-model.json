@@ -11658,7 +11658,7 @@
     "formal/perception_action_loop.lean": "e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1",
     "formal/policy_tree.lean": "2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88",
     "formal/posterior_convergence.lean": "1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20",
-    "formal/predictive_coding.lean": "166d8b1394b67216d93c5290ed05ee5816a9c9e5beaeb06783f6f188a79df65a",
+    "formal/predictive_coding.lean": "3d62d7fcd3d4f469789049487ae757f687ec4ffe899a2367061bb2d57b389081",
     "formal/scalar_gaussian_semigroup.lean": "d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e",
     "formal/smooth_information_geometry.lean": "571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8",
     "formal/statistical_convergence.lean": "6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0",
@@ -90042,6 +90042,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90052,10 +90054,86 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.doubledPrecision_nontrivial_witness",
-        "source_line": 296,
+        "source_line": 367,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem doubledPrecision_nontrivial_witness :\n    precisionEnergy 2 1 0 = 2 * precisionEnergy 1 1 0 ∧\n      precisionEnergy 1 1 0 < precisionEnergy 2 1 0",
         "statement_sha256": "b54edeab2332f3d1280f8c586b9821dcb09c03220ba1b332cc2e81ea50376fb0"
+      },
+      "FEP.PredictiveCoding.exp_jet_shift_witness": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "(order : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ k, k ≤ order → (functionJet order Real.exp t).coefficient k ≠ 0) ∧\n      (∀ k, k < order →\n        (shift 1 (functionJet order Real.exp t)).coefficient k =\n          (functionJet order (deriv Real.exp) t).coefficient k) ∧\n      (shift 1 (functionJet order Real.exp t)).coefficient order = 0",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "functionJet_coefficient_of_le",
+            "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "iteratedDeriv_exp_eq",
+            "qualified_name": "FEP.PredictiveCoding.iteratedDeriv_exp_eq",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "shift_one_functionJet",
+            "qualified_name": "FEP.PredictiveCoding.shift_one_functionJet",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "shift_top_zero",
+            "qualified_name": "FEP.PredictiveCoding.shift_top_zero",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.exp_jet_shift_witness",
+        "source_line": 231,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem exp_jet_shift_witness (order : ℕ) (t : ℝ) :\n    (∀ k, k ≤ order → (functionJet order Real.exp t).coefficient k ≠ 0) ∧\n      (∀ k, k < order →\n        (shift 1 (functionJet order Real.exp t)).coefficient k =\n          (functionJet order (deriv Real.exp) t).coefficient k) ∧\n      (shift 1 (functionJet order Real.exp t)).coefficient order = 0",
+        "statement_sha256": "a3b750b233446db388704d840317c45e783331ceab8e61b4fd805a21c11d81e3"
       },
       "FEP.PredictiveCoding.firstOrderCorrection_witness": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -90070,6 +90148,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90080,7 +90160,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderCorrection_witness",
-        "source_line": 259,
+        "source_line": 330,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderCorrection_witness :\n    let corrected",
         "statement_sha256": "f717f20d22be56c827d69bacf8468951aefec13d2a43834cc398129abbafb401"
@@ -90117,6 +90197,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90127,7 +90209,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_shift_boundary",
-        "source_line": 187,
+        "source_line": 258,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_shift_boundary (value velocity : ℝ) :\n    (shift 1 (firstOrderJet value velocity)).coefficient 0 = velocity ∧\n      (shift 1 (firstOrderJet value velocity)).coefficient 1 = 0",
         "statement_sha256": "6c21452307bd1ac67e5dc578f45c1d7f6bc16b350c47387a951457b1763dfdf9"
@@ -90157,6 +90239,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90167,7 +90251,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_value",
-        "source_line": 178,
+        "source_line": 249,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_value (value velocity : ℝ) :\n    (firstOrderJet value velocity).coefficient 0 = value",
         "statement_sha256": "b780a71e3377ba7a07fbc0d32111c0e6022be5aaa153a1769a3c4be112d3c61a"
@@ -90197,6 +90281,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90207,10 +90293,91 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.firstOrderJet_velocity",
-        "source_line": 183,
+        "source_line": 254,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem firstOrderJet_velocity (value velocity : ℝ) :\n    (firstOrderJet value velocity).coefficient 1 = velocity",
         "statement_sha256": "8d0565d9a1727e815a12d36c8408e6c84f0e1186ac4b8b8a351e381e521f5cad"
+      },
+      "FEP.PredictiveCoding.functionJet_coefficient_of_le": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "{order : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : ℝ → ℝ)",
+            "type_source": "ℝ → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "{k : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hk"
+            ],
+            "role": "typed_binder",
+            "source": "(hk : k ≤ order)",
+            "type_source": "k ≤ order",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(functionJet order f t).coefficient k = iteratedDeriv k f t",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+        "source_line": 179,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem functionJet_coefficient_of_le {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k ≤ order) :\n    (functionJet order f t).coefficient k = iteratedDeriv k f t",
+        "statement_sha256": "efa8abb3d913089fccad79a99edf275cb80d51d06d2dc982ba809367bfdaebb3"
       },
       "FEP.PredictiveCoding.generalizedCoordinateEnergy_hasDerivAt": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -90274,6 +90441,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90284,7 +90453,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedCoordinateEnergy_hasDerivAt",
-        "source_line": 233,
+        "source_line": 304,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedCoordinateEnergy_hasDerivAt {order : ℕ}\n    (precision : ℕ → ℝ) (target estimate : FiniteJet order) (degree : ℕ) :\n    HasDerivAt\n      (fun candidate =>\n        precisionEnergy (precision degree) (target.coefficient degree) candidate)\n      (precisionEnergyGradient (precision degree)\n        (target.coefficient degree) (estimate.coefficient degree))\n      (estimate.coefficient degree)",
         "statement_sha256": "e4cb27d3abe7405622e5049ea946cef080eb4ceaa19fcb0af07467d12637c53f"
@@ -90354,6 +90523,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90364,7 +90535,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedFilteringStep_equation",
-        "source_line": 223,
+        "source_line": 294,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedFilteringStep_equation {order : ℕ} (stepSize : ℝ)\n    (precision : ℕ → ℝ) (target estimate : FiniteJet order)\n    (degree : ℕ) :\n    (generalizedFilteringStep stepSize precision target estimate).coefficient degree =\n      estimate.coefficient degree + stepSize *\n        ((shift 1 estimate).coefficient degree -\n          precisionEnergyGradient (precision degree)\n            (target.coefficient degree) (estimate.coefficient degree))",
         "statement_sha256": "692a7cfe5a9acc3bc0d4f1e20a227d52ee881820b92a4911f90979d1a9eca375"
@@ -90421,6 +90592,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90431,7 +90604,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.generalizedFlow_top_boundary",
-        "source_line": 245,
+        "source_line": 316,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem generalizedFlow_top_boundary {order : ℕ} (precision : ℕ → ℝ)\n    (target estimate : FiniteJet order) :\n    (generalizedFlow precision target estimate).coefficient order =\n      -precisionEnergyGradient (precision order)\n        (target.coefficient order) (estimate.coefficient order)",
         "statement_sha256": "42f59822f3206209670e13d3af05d43eb8940a92e8d45fda6735ca7e7e05b9dd"
@@ -90449,6 +90622,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90459,7 +90634,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.halfStep_energy_witness",
-        "source_line": 395,
+        "source_line": 466,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem halfStep_energy_witness :\n    precisionEnergy 2 1 0 = 1 ∧\n      predictionUpdate (1 / 2) 1 0 = 1 / 2 ∧\n      precisionEnergy 2 1 (predictionUpdate (1 / 2) 1 0) = 1 / 4",
         "statement_sha256": "900f852cb7a96c04d156cf8f8896f2c7963d5f81921b50655a3e4ff7542db67d"
@@ -90517,6 +90692,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90527,7 +90704,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.hierarchicalEnergy_nonneg",
-        "source_line": 103,
+        "source_line": 105,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem hierarchicalEnergy_nonneg\n    {Level : Type*} [Fintype Level]\n    (precision error : Level → ℝ)\n    (hPrecision : ∀ level, 0 ≤ precision level) :\n    0 ≤ hierarchicalEnergy precision error",
         "statement_sha256": "65ba0496da0b9e4762826eeebc06678874361525ced2f4d2c44b02b22db7d874"
@@ -90567,6 +90744,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90577,7 +90756,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.hierarchicalEnergy_succ",
-        "source_line": 114,
+        "source_line": 116,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem hierarchicalEnergy_succ {depth : ℕ}\n    (precision error : Fin (depth + 1) → ℝ) :\n    hierarchicalEnergy precision error =\n      precision 0 / 2 * error 0 ^ 2 +\n        ∑ level : Fin depth,\n          precision level.succ / 2 * error level.succ ^ 2",
         "statement_sha256": "2a389e11f043edcf33ef99ae08e75c950c607416bbbe3aebb674648ab4eb5bfa"
@@ -90654,6 +90833,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90664,7 +90845,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionEnergy_tendsto_zero",
-        "source_line": 381,
+        "source_line": 452,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionEnergy_tendsto_zero\n    (precision : ℝ) {stepSize : ℝ} (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (target estimate : ℝ) :\n    Tendsto\n      (fun iterations => precisionEnergy precision target\n        (iteratePredictionUpdate stepSize target iterations estimate))\n      atTop (nhds 0)",
         "statement_sha256": "3fc140f44a72befd789d13d4541a195125f18b75421cffff69fa6960536f2d69"
@@ -90712,6 +90893,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90722,7 +90905,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionError",
-        "source_line": 347,
+        "source_line": 418,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionError\n    (stepSize target estimate : ℝ) (iterations : ℕ) :\n    predictionError target\n        (iteratePredictionUpdate stepSize target iterations estimate) =\n      (1 - stepSize) ^ iterations * predictionError target estimate",
         "statement_sha256": "a9473096f24489a076b1531daa8bd2c20282e70a3f2b161f1bf4260aaf515477"
@@ -90789,6 +90972,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90799,10 +90984,61 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.iteratePredictionError_tendsto_zero",
-        "source_line": 360,
+        "source_line": 431,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem iteratePredictionError_tendsto_zero\n    {stepSize : ℝ} (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (target estimate : ℝ) :\n    Tendsto\n      (fun iterations => predictionError target\n        (iteratePredictionUpdate stepSize target iterations estimate))\n      atTop (nhds 0)",
         "statement_sha256": "583d6a81fbfff0b6313b3c08c48704fb45984d8c830be4678101c14fade1f680"
+      },
+      "FEP.PredictiveCoding.iteratedDeriv_exp_eq": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "iteratedDeriv k Real.exp t = Real.exp t",
+        "context_binders": [],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.iteratedDeriv_exp_eq",
+        "source_line": 221,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem iteratedDeriv_exp_eq (k : ℕ) (t : ℝ) : iteratedDeriv k Real.exp t = Real.exp t",
+        "statement_sha256": "a846d1151a902fb89f2ea35cb1bd87d6d3ded48dba24ec2073e16ac5f71e721b"
       },
       "FEP.PredictiveCoding.precisionEnergy_derivative_eq_gradient": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -90837,6 +91073,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90847,7 +91085,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_derivative_eq_gradient",
-        "source_line": 90,
+        "source_line": 92,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_derivative_eq_gradient\n    (precision observation estimate : ℝ) :\n    HasDerivAt (fun candidate => precisionEnergy precision observation candidate)\n      (precisionEnergyGradient precision observation estimate) estimate",
         "statement_sha256": "6ae930689b6770a1246d0825288ea9347979b4ebc174490e94aef2853652ae61"
@@ -90897,6 +91135,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90907,7 +91147,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_eq_zero_iff",
-        "source_line": 45,
+        "source_line": 47,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_eq_zero_iff {precision : ℝ}\n    (hPrecision : 0 < precision) (observation estimate : ℝ) :\n    precisionEnergy precision observation estimate = 0 ↔\n      estimate = observation",
         "statement_sha256": "01a9ee70ca7e2cdacbc9a8529de50f6443906762bf255312b9f80affb42ee4ff"
@@ -90938,6 +91178,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -90948,7 +91190,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_hasDerivAt",
-        "source_line": 74,
+        "source_line": 76,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_hasDerivAt (precision observation estimate : ℝ) :\n    HasDerivAt (fun candidate => precisionEnergy precision observation candidate)\n      (-precision * predictionError observation estimate) estimate",
         "statement_sha256": "3c7dd16edc5a4bb2bf141ef6c186379c0f6ce121b643f9936561d537f633b2a1"
@@ -91016,6 +91258,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91026,7 +91270,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_mono",
-        "source_line": 271,
+        "source_line": 342,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_mono {lower upper : ℝ}\n    (hLowerNonneg : 0 ≤ lower) (hPrecision : lower ≤ upper)\n    (observation estimate : ℝ) :\n    0 ≤ precisionEnergy lower observation estimate ∧\n      precisionEnergy lower observation estimate ≤\n        precisionEnergy upper observation estimate",
         "statement_sha256": "c373aa0e791fc94c471d7e52511cdcb6fbc1f8f25173b38981cfdb7d2c447c1e"
@@ -91076,6 +91320,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91086,7 +91332,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_nonneg",
-        "source_line": 38,
+        "source_line": 40,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_nonneg {precision : ℝ} (hPrecision : 0 ≤ precision)\n    (observation estimate : ℝ) :\n    0 ≤ precisionEnergy precision observation estimate",
         "statement_sha256": "0ebc1576504aa52cd10695f7e5007d4006d887cb6af38f94f48bc5b1dc6d0833"
@@ -91146,6 +91392,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91156,7 +91404,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_pos",
-        "source_line": 61,
+        "source_line": 63,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_pos {precision : ℝ} (hPrecision : 0 < precision)\n    {observation estimate : ℝ} (hError : observation ≠ estimate) :\n    0 < precisionEnergy precision observation estimate",
         "statement_sha256": "59cc60b9b6969226a24bf212f4183becd1e71a65e5cb3cade45a3b48f414b41d"
@@ -91188,6 +91436,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91198,7 +91448,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionEnergy_scale",
-        "source_line": 283,
+        "source_line": 354,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionEnergy_scale (scale precision observation estimate : ℝ) :\n    precisionEnergy (scale * precision) observation estimate =\n      scale * precisionEnergy precision observation estimate",
         "statement_sha256": "577a76f3296d7f19f002bbc6a8a9cf1a444d11825b5e9477cace0883b558f4ce"
@@ -91230,6 +91480,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91240,7 +91492,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.precisionGradient_scale",
-        "source_line": 290,
+        "source_line": 361,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem precisionGradient_scale (scale precision observation estimate : ℝ) :\n    precisionEnergyGradient (scale * precision) observation estimate =\n      scale * precisionEnergyGradient precision observation estimate",
         "statement_sha256": "e318e126855afe357984aa5e8b8c214e62356f3c5fbb5f08800cfb30c9ea93f2"
@@ -91279,6 +91531,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91289,7 +91543,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionEnergy_contraction",
-        "source_line": 314,
+        "source_line": 385,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionEnergy_contraction\n    (precision stepSize target estimate : ℝ) :\n    precisionEnergy precision target\n        (predictionUpdate stepSize target estimate) =\n      (1 - stepSize) ^ 2 * precisionEnergy precision target estimate",
         "statement_sha256": "00bfc855049be3d4757ec69cd32bbfcdad39cede54b114ec4b9ac29b0f7d39ee"
@@ -91374,6 +91628,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91384,7 +91640,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionEnergy_strictDecrease",
-        "source_line": 324,
+        "source_line": 395,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionEnergy_strictDecrease {precision stepSize target estimate : ℝ}\n    (hPrecision : 0 < precision) (hStepPositive : 0 < stepSize)\n    (hStepBelowTwo : stepSize < 2) (hError : target ≠ estimate) :\n    precisionEnergy precision target (predictionUpdate stepSize target estimate) <\n      precisionEnergy precision target estimate",
         "statement_sha256": "4d3c3529c857feb942502715e114fa19a692929c42f0901a73538de64a4f28ec"
@@ -91415,6 +91671,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91425,7 +91683,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.predictionError_update",
-        "source_line": 307,
+        "source_line": 378,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem predictionError_update (stepSize target estimate : ℝ) :\n    predictionError target (predictionUpdate stepSize target estimate) =\n      (1 - stepSize) * predictionError target estimate",
         "statement_sha256": "876a95cfd59b90e24634449e8dc2e64cadd1d2386937b111b3739044211dab82"
@@ -91475,6 +91733,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91485,7 +91745,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_add",
-        "source_line": 157,
+        "source_line": 159,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_add {order : ℕ} (first second : ℕ) (jet : FiniteJet order) :\n    shift (first + second) jet = shift first (shift second jet)",
         "statement_sha256": "6d2dd1327b57abe3e1c6b1aa6d7bd427eaf35ee361ed906705a8ecdf2c1a1446"
@@ -91535,6 +91795,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91545,10 +91807,370 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_coefficient",
-        "source_line": 146,
+        "source_line": 148,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_coefficient {order : ℕ} (steps degree : ℕ)\n    (jet : FiniteJet order) :\n    (shift steps jet).coefficient degree = jet.coefficient (degree + steps)",
         "statement_sha256": "07f584fe6705057427628394bc22955b293e973b62e859e35912176697760d4b"
+      },
+      "FEP.PredictiveCoding.shift_functionJet": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "{order : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "m"
+            ],
+            "role": "typed_binder",
+            "source": "(m : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : ℝ → ℝ)",
+            "type_source": "ℝ → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "{k : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hk"
+            ],
+            "role": "typed_binder",
+            "source": "(hk : k + m ≤ order)",
+            "type_source": "k + m ≤ order",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(shift m (functionJet order f t)).coefficient k =\n      (functionJet order (iteratedDeriv m f) t).coefficient k",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "functionJet_coefficient_of_le",
+            "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "shift_coefficient",
+            "qualified_name": "FEP.PredictiveCoding.shift_coefficient",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.shift_functionJet",
+        "source_line": 196,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem shift_functionJet {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k + m ≤ order) :\n    (shift m (functionJet order f t)).coefficient k =\n      (functionJet order (iteratedDeriv m f) t).coefficient k",
+        "statement_sha256": "46df7eee78ddeea39747dc743b9e04694f2c0677a1424177d4a9b62d963ce5ec"
+      },
+      "FEP.PredictiveCoding.shift_functionJet_succ": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "{order : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "m"
+            ],
+            "role": "typed_binder",
+            "source": "(m : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : ℝ → ℝ)",
+            "type_source": "ℝ → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(shift (m + 1) (functionJet order f t)).coefficient k =\n      (shift 1 (shift m (functionJet order f t))).coefficient k",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "shift_add",
+            "qualified_name": "FEP.PredictiveCoding.shift_add",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.shift_functionJet_succ",
+        "source_line": 207,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem shift_functionJet_succ {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) (k : ℕ) :\n    (shift (m + 1) (functionJet order f t)).coefficient k =\n      (shift 1 (shift m (functionJet order f t))).coefficient k",
+        "statement_sha256": "4c89e22dfc2999364b2fd06e1c80d7737683cb28d1dbd066ef49dfcf1e96dc37"
+      },
+      "FEP.PredictiveCoding.shift_one_functionJet": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "{order : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : ℝ → ℝ)",
+            "type_source": "ℝ → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "{k : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hk"
+            ],
+            "role": "typed_binder",
+            "source": "(hk : k < order)",
+            "type_source": "k < order",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(shift 1 (functionJet order f t)).coefficient k =\n      (functionJet order (deriv f) t).coefficient k",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "functionJet_coefficient_of_le",
+            "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "shift_coefficient",
+            "qualified_name": "FEP.PredictiveCoding.shift_coefficient",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.shift_one_functionJet",
+        "source_line": 187,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem shift_one_functionJet {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}\n    (hk : k < order) :\n    (shift 1 (functionJet order f t)).coefficient k =\n      (functionJet order (deriv f) t).coefficient k",
+        "statement_sha256": "3d3bdffd64f6812613cb21870b0bff269f5676b2e6dc9a5a75132fdee9c6e06c"
+      },
+      "FEP.PredictiveCoding.shift_one_functionJet_top": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "order"
+            ],
+            "role": "typed_binder",
+            "source": "{order : ℕ}",
+            "type_source": "ℕ",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : ℝ → ℝ)",
+            "type_source": "ℝ → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "t"
+            ],
+            "role": "typed_binder",
+            "source": "(t : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(shift 1 (functionJet order f t)).coefficient order = 0 ∧\n      (functionJet order (deriv f) t).coefficient order =\n        iteratedDeriv (order + 1) f t",
+        "context_binders": [],
+        "declaration_mentions": [
+          {
+            "identifier": "functionJet_coefficient_of_le",
+            "qualified_name": "FEP.PredictiveCoding.functionJet_coefficient_of_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "shift_top_zero",
+            "qualified_name": "FEP.PredictiveCoding.shift_top_zero",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "Mathlib.Algebra.BigOperators.Group.Finset.Basic",
+          "Mathlib.Algebra.Order.Ring.Basic",
+          "Mathlib.Analysis.Calculus.Deriv.Add",
+          "Mathlib.Analysis.Calculus.Deriv.Mul",
+          "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
+          "Mathlib.Basic.Real.Basic",
+          "Mathlib.Order.Filter.Tendsto",
+          "Mathlib.Topology.Algebra.Monoid",
+          "Mathlib.Tactic"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PredictiveCoding",
+        "namespace_variable_context": [],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PredictiveCoding.shift_one_functionJet_top",
+        "source_line": 214,
+        "source_owner": "src/fep_lean/formal/predictive_coding.lean",
+        "statement": "theorem shift_one_functionJet_top {order : ℕ} (f : ℝ → ℝ) (t : ℝ) :\n    (shift 1 (functionJet order f t)).coefficient order = 0 ∧\n      (functionJet order (deriv f) t).coefficient order =\n        iteratedDeriv (order + 1) f t",
+        "statement_sha256": "6bab7e46d70ac4ebe915211c93e38b5371714ace1a0dd1e2e5dab8c56c88b553"
       },
       "FEP.PredictiveCoding.shift_top_zero": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -91584,6 +92206,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91594,7 +92218,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_top_zero",
-        "source_line": 165,
+        "source_line": 167,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_top_zero {order : ℕ} (jet : FiniteJet order) :\n    (shift 1 jet).coefficient order = 0",
         "statement_sha256": "1a453b796f2dbb1a22d6d13c99538b8e5c7a71ce945ae0482d33567752356480"
@@ -91633,6 +92257,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91643,7 +92269,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.shift_zero",
-        "source_line": 150,
+        "source_line": 152,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem shift_zero {order : ℕ} (jet : FiniteJet order) :\n    shift 0 jet = jet",
         "statement_sha256": "dd3dde0191a5149263f8628742d3bbbb476c5e21f8e60e09919e514e3215e50c"
@@ -91661,6 +92287,8 @@
           "Mathlib.Analysis.Calculus.Deriv.Add",
           "Mathlib.Analysis.Calculus.Deriv.Mul",
           "Mathlib.Analysis.Calculus.Deriv.Pow",
+          "Mathlib.Analysis.Calculus.IteratedDeriv.Defs",
+          "Mathlib.Analysis.SpecialFunctions.ExpDeriv",
           "Mathlib.Basic.Real.Basic",
           "Mathlib.Order.Filter.Tendsto",
           "Mathlib.Topology.Algebra.Monoid",
@@ -91671,7 +92299,7 @@
         "namespace_variable_context": [],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PredictiveCoding.twoLevelEnergy_witness",
-        "source_line": 124,
+        "source_line": 126,
         "source_owner": "src/fep_lean/formal/predictive_coding.lean",
         "statement": "theorem twoLevelEnergy_witness :\n    hierarchicalEnergy\n      (fun level : Fin 2 => if level = 0 then 2 else 4)\n      (fun level : Fin 2 => if level = 0 then 3 else 1) = 11",
         "statement_sha256": "4cba23200c20c955a3bcedd1efcc53b22d46c5d5c6bd0fff6534546d9802d9a8"
