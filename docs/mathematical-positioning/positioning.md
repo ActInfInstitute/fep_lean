@@ -20038,7 +20038,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/declarations.py` | `26ca913d57a85a6ef744c8e72efcf678b5113a3c0de084b497a790fb452fdc16` |
 | `formal/efe_policy_selection.lean` | `7fe5a3da8b5fd42b0dd1604ddfc69b12ebc23f2ec149e7b1a548d54ee884f750` |
 | `formal/efe_time_scale_separation.lean` | `36ac0144659f2e6472d32778a37f987b93477c4f58fb07145cc97f593f482973` |
-| `formal/empirical_risk.lean` | `d1a9230237c237648c167bd677d347eb4aacbb3e70c93914bb6ab52498064067` |
+| `formal/empirical_risk.lean` | `ad7b177fb05adb7de51db99596287709429917359e6cda4c78667f9a8f039213` |
 | `formal/exponential_family.lean` | `5d12165f38e1d18b03f03869fcc907720a41aac243589d96a99a57e41601dbc9` |
 | `formal/fin4_gaussian_semigroup.lean` | `a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c` |
 | `formal/finite_information.lean` | `8d5cae82d2c1046056dcf8d65c0758ebf04f6afef7d2d1edb795ec1be746989d` |

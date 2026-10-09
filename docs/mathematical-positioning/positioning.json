@@ -7950,7 +7950,7 @@
       "lean_module": "FepSketches.empirical_risk",
       "resource": "empirical_risk.lean",
       "role": "foundation",
-      "theorem_count": 17
+      "theorem_count": 38
     },
     {
       "declaration_namespace": "FEP.PolicyTrees",
@@ -8939,7 +8939,7 @@
     "formal/declarations.py": "26ca913d57a85a6ef744c8e72efcf678b5113a3c0de084b497a790fb452fdc16",
     "formal/efe_policy_selection.lean": "7fe5a3da8b5fd42b0dd1604ddfc69b12ebc23f2ec149e7b1a548d54ee884f750",
     "formal/efe_time_scale_separation.lean": "36ac0144659f2e6472d32778a37f987b93477c4f58fb07145cc97f593f482973",
-    "formal/empirical_risk.lean": "d1a9230237c237648c167bd677d347eb4aacbb3e70c93914bb6ab52498064067",
+    "formal/empirical_risk.lean": "ad7b177fb05adb7de51db99596287709429917359e6cda4c78667f9a8f039213",
     "formal/exponential_family.lean": "5d12165f38e1d18b03f03869fcc907720a41aac243589d96a99a57e41601dbc9",
     "formal/fin4_gaussian_semigroup.lean": "a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c",
     "formal/finite_information.lean": "8d5cae82d2c1046056dcf8d65c0758ebf04f6afef7d2d1edb795ec1be746989d",
@@ -53964,6 +53964,631 @@
         "statement": "theorem brierExcess_eq_sqError (target forecast : ℝ) :\n    bernoulliBrierScore target forecast - bernoulliBrierScore target target =\n      (forecast - target) ^ 2",
         "statement_sha256": "d8b850fd61ba4818626cc86a96961c6be7af8b2f61772d3e7ce12ec5e5ab141c"
       },
+      "FEP.EmpiricalRisk.dirichletBinary_bernoulliBayes_bridge": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "success",
+              "failure"
+            ],
+            "role": "typed_binder",
+            "source": "(success failure : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "successPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(successPositive : 0 < success)",
+            "type_source": "0 < success",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "failurePositive"
+            ],
+            "role": "typed_binder",
+            "source": "(failurePositive : 0 < failure)",
+            "type_source": "0 < failure",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "let α",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.dirichletBinary_bernoulliBayes_bridge",
+        "source_line": 548,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem dirichletBinary_bernoulliBayes_bridge (success failure : ℝ)\n    (successPositive : 0 < success) (failurePositive : 0 < failure) :\n    let α",
+        "statement_sha256": "611a4aeb24bb0b73830072f816f3f16155e99449c67ddafddf8ce3c1f8e84663"
+      },
+      "FEP.EmpiricalRisk.dirichletPosterior_total": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ k, dirichletPosterior α n k = dirichletTotal α n",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.dirichletPosterior_total",
+        "source_line": 383,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem dirichletPosterior_total (α : K → ℝ) (n : K → ℕ) :\n    ∑ k, dirichletPosterior α n k = dirichletTotal α n",
+        "statement_sha256": "58bb1ccc55f8a23a0242b34fc2ecb188b5ea087b8c5818a52b79e2599ec8ae6f"
+      },
+      "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_countProbability": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "xs"
+            ],
+            "role": "typed_binder",
+            "source": "(xs : List K)",
+            "type_source": "List K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "dirichletSequenceProbability α xs =\n      polyaCountProbability α (fun k => xs.count k)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "dirichletSequenceProbability_eq_counts",
+            "qualified_name": "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_counts",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "listCountSum",
+            "qualified_name": "FEP.EmpiricalRisk.listCountSum",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_countProbability",
+        "source_line": 510,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem dirichletSequenceProbability_eq_countProbability (α : K → ℝ)\n    (xs : List K) :\n    dirichletSequenceProbability α xs =\n      polyaCountProbability α (fun k => xs.count k)",
+        "statement_sha256": "fe5a07e0a4336f2cbb73efc967c761308eecbaf28c416417493ed9c8a29dfbed"
+      },
+      "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_counts": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "xs"
+            ],
+            "role": "typed_binder",
+            "source": "(xs : List K)",
+            "type_source": "List K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∀ α : K → ℝ, dirichletSequenceProbability α xs =\n      (∏ k, risingFactorial (α k) (xs.count k)) /\n        risingFactorial (∑ k, α k) xs.length",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "risingFactorial_succ_left",
+            "qualified_name": "FEP.EmpiricalRisk.risingFactorial_succ_left",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "risingFactorial_zero",
+            "qualified_name": "FEP.EmpiricalRisk.risingFactorial_zero",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_counts",
+        "source_line": 469,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem dirichletSequenceProbability_eq_counts (xs : List K) :\n    ∀ α : K → ℝ, dirichletSequenceProbability α xs =\n      (∏ k, risingFactorial (α k) (xs.count k)) /\n        risingFactorial (∑ k, α k) xs.length",
+        "statement_sha256": "f5efdc8b3027bc9747ed07fc61bf27e8d27fce64ecf88bc0155bb47b57829a11"
+      },
+      "FEP.EmpiricalRisk.dirichletSequenceProbability_exchangeable": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "xs",
+              "ys"
+            ],
+            "role": "typed_binder",
+            "source": "{xs ys : List K}",
+            "type_source": "List K",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "permutation"
+            ],
+            "role": "typed_binder",
+            "source": "(permutation : xs.Perm ys)",
+            "type_source": "xs.Perm ys",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "dirichletSequenceProbability α xs = dirichletSequenceProbability α ys",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "dirichletSequenceProbability_eq_countProbability",
+            "qualified_name": "FEP.EmpiricalRisk.dirichletSequenceProbability_eq_countProbability",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.dirichletSequenceProbability_exchangeable",
+        "source_line": 519,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem dirichletSequenceProbability_exchangeable (α : K → ℝ)\n    {xs ys : List K} (permutation : xs.Perm ys) :\n    dirichletSequenceProbability α xs = dirichletSequenceProbability α ys",
+        "statement_sha256": "cc5c26012e5c8ebaa6bddf65cbff7ccc4f19f68e1daaa496e33453fb964d4ef1"
+      },
       "FEP.EmpiricalRisk.expectation_add": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -55234,6 +55859,2163 @@
         "source_owner": "src/fep_lean/formal/empirical_risk.lean",
         "statement": "theorem laplaceSquaredRisk_le (sampling : FiniteLaw Ω)\n    (successes : Ω → ℕ) (sampleCount : ℕ) (target : ℝ)\n    (sampleCountPositive : 0 < sampleCount)\n    (successesAtMost : ∀ outcome, successes outcome ≤ sampleCount)\n    (targetBounds : target ∈ Set.Icc (0 : ℝ) 1) :\n    VariationalDuality.expectation sampling (fun outcome =>\n      (laplaceEstimate (successes outcome) sampleCount - target) ^ 2) ≤\n      2 * shrinkage sampleCount ^ 2 *\n          VariationalDuality.expectation sampling (fun outcome =>\n            (empiricalRate (successes outcome) sampleCount - target) ^ 2) +\n        2 * (1 / ((sampleCount : ℝ) + 2)) ^ 2",
         "statement_sha256": "058c104c9d58a611fbc83f863ce36b41457d6f7f56a1bfc6189624bac32f8fab"
+      },
+      "FEP.EmpiricalRisk.learnedKernel_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "R"
+            ],
+            "role": "typed_binder",
+            "source": "{R : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : R → K → ℝ)",
+            "type_source": "R → K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : R → K → ℕ)",
+            "type_source": "R → K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "alphaNonneg"
+            ],
+            "role": "typed_binder",
+            "source": "(alphaNonneg : ∀ r k, 0 ≤ α r k)",
+            "type_source": "∀ r k, 0 ≤ α r k",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "r"
+            ],
+            "role": "typed_binder",
+            "source": "(r : R)",
+            "type_source": "R",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ learnedKernel α n r k",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "polyaPredictive_nonneg",
+            "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.learnedKernel_nonneg",
+        "source_line": 595,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem learnedKernel_nonneg {R : Type*} (α : R → K → ℝ) (n : R → K → ℕ)\n    (alphaNonneg : ∀ r k, 0 ≤ α r k) (r : R) (k : K) :\n    0 ≤ learnedKernel α n r k",
+        "statement_sha256": "dc4b0d45fee0478e837125cbc4b822a76e05b2776bba8b7888d2d7eb264082ce"
+      },
+      "FEP.EmpiricalRisk.learnedKernel_row_sum_one": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "R"
+            ],
+            "role": "typed_binder",
+            "source": "{R : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : R → K → ℝ)",
+            "type_source": "R → K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : R → K → ℕ)",
+            "type_source": "R → K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "rowPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(rowPositive : ∀ r, 0 < ∑ k, α r k + ∑ k, (n r k : ℝ))",
+            "type_source": "∀ r, 0 < ∑ k, α r k + ∑ k, (n r k : ℝ)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "r"
+            ],
+            "role": "typed_binder",
+            "source": "(r : R)",
+            "type_source": "R",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ k, learnedKernel α n r k = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "polyaPredictive_sum_one",
+            "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_sum_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.learnedKernel_row_sum_one",
+        "source_line": 601,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem learnedKernel_row_sum_one {R : Type*} (α : R → K → ℝ) (n : R → K → ℕ)\n    (rowPositive : ∀ r, 0 < ∑ k, α r k + ∑ k, (n r k : ℝ)) (r : R) :\n    ∑ k, learnedKernel α n r k = 1",
+        "statement_sha256": "c07d87648f495f6c6a4719ccf8b086a32b2914a89fafca6167f608d5601903fc"
+      },
+      "FEP.EmpiricalRisk.learnedLikelihood_normalised": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S"
+            ],
+            "role": "typed_binder",
+            "source": "{S : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : S → K → ℝ)",
+            "type_source": "S → K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : S → K → ℕ)",
+            "type_source": "S → K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "alphaPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(alphaPositive : ∀ s k, 0 < α s k)",
+            "type_source": "∀ s k, 0 < α s k",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty K]",
+            "type_source": "Nonempty K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "s"
+            ],
+            "role": "typed_binder",
+            "source": "(s : S)",
+            "type_source": "S",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ o, 0 ≤ learnedLikelihood α n s o) ∧\n      ∑ o, learnedLikelihood α n s o = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "learnedKernel_nonneg",
+            "qualified_name": "FEP.EmpiricalRisk.learnedKernel_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "learnedKernel_row_sum_one",
+            "qualified_name": "FEP.EmpiricalRisk.learnedKernel_row_sum_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.learnedLikelihood_normalised",
+        "source_line": 618,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem learnedLikelihood_normalised {S : Type*} (α : S → K → ℝ)\n    (n : S → K → ℕ) (alphaPositive : ∀ s k, 0 < α s k) [Nonempty K] (s : S) :\n    (∀ o, 0 ≤ learnedLikelihood α n s o) ∧\n      ∑ o, learnedLikelihood α n s o = 1",
+        "statement_sha256": "e2cd7a6a90f7700b2832a3d20dbf92c6e7d08e2953e2e6aee444b853f0b08b09"
+      },
+      "FEP.EmpiricalRisk.learnedTransition_normalised": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "S",
+              "U"
+            ],
+            "role": "typed_binder",
+            "source": "{S U : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : S × U → K → ℝ)",
+            "type_source": "S × U → K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : S × U → K → ℕ)",
+            "type_source": "S × U → K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "alphaPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(alphaPositive : ∀ r k, 0 < α r k)",
+            "type_source": "∀ r k, 0 < α r k",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty K]",
+            "type_source": "Nonempty K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "s"
+            ],
+            "role": "typed_binder",
+            "source": "(s : S)",
+            "type_source": "S",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "u"
+            ],
+            "role": "typed_binder",
+            "source": "(u : U)",
+            "type_source": "U",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ s', 0 ≤ learnedTransition α n s u s') ∧\n      ∑ s', learnedTransition α n s u s' = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "learnedKernel_nonneg",
+            "qualified_name": "FEP.EmpiricalRisk.learnedKernel_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "learnedKernel_row_sum_one",
+            "qualified_name": "FEP.EmpiricalRisk.learnedKernel_row_sum_one",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.learnedTransition_normalised",
+        "source_line": 629,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem learnedTransition_normalised {S U : Type*} (α : S × U → K → ℝ)\n    (n : S × U → K → ℕ) (alphaPositive : ∀ r k, 0 < α r k) [Nonempty K]\n    (s : S) (u : U) :\n    (∀ s', 0 ≤ learnedTransition α n s u s') ∧\n      ∑ s', learnedTransition α n s u s' = 1",
+        "statement_sha256": "cf39c5af5311a318b58da227d802adfa35bbf040bd1c57f222d7689660ff0373"
+      },
+      "FEP.EmpiricalRisk.listCountSum": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "xs"
+            ],
+            "role": "typed_binder",
+            "source": "(xs : List K)",
+            "type_source": "List K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ k, xs.count k = xs.length",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.listCountSum",
+        "source_line": 502,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem listCountSum (xs : List K) : ∑ k, xs.count k = xs.length",
+        "statement_sha256": "4fc359e0d67234acc080609b118ac3d7669efc364ab2693fd226242d68e0145f"
+      },
+      "FEP.EmpiricalRisk.polyaCountProbability_succ": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "polyaCountProbability α (n + (Pi.single x 1 : K → ℕ)) =\n      polyaPredictive α n x * polyaCountProbability α n",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "risingFactorial_succ_right",
+            "qualified_name": "FEP.EmpiricalRisk.risingFactorial_succ_right",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaCountProbability_succ",
+        "source_line": 430,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaCountProbability_succ (α : K → ℝ) (n : K → ℕ) (x : K) :\n    polyaCountProbability α (n + (Pi.single x 1 : K → ℕ)) =\n      polyaPredictive α n x * polyaCountProbability α n",
+        "statement_sha256": "e8dbd10499542f8db6067f5f5972ee6f515dd234736795ecbf41d18c4da0f24e"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_binary": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "success",
+              "failure"
+            ],
+            "role": "typed_binder",
+            "source": "(success failure : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : Bool → ℕ)",
+            "type_source": "Bool → ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "polyaPredictive (binaryPseudoCounts success failure) n true =\n      (success + (n true : ℝ)) /\n        (success + failure + ((n true : ℝ) + (n false : ℝ)))",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_binary",
+        "source_line": 537,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_binary (success failure : ℝ) (n : Bool → ℕ) :\n    polyaPredictive (binaryPseudoCounts success failure) n true =\n      (success + (n true : ℝ)) /\n        (success + failure + ((n true : ℝ) + (n false : ℝ)))",
+        "statement_sha256": "54f1bf3cab5ec77b2abb4225a71beb10d5abbf2cac753361f8379601cd93cc7e"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_binary_laplace": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : Bool → ℕ)",
+            "type_source": "Bool → ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "polyaPredictive (binaryPseudoCounts 1 1) n true =\n      laplaceEstimate (n true) (n true + n false)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "polyaPredictive_binary",
+            "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_binary",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_binary_laplace",
+        "source_line": 571,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_binary_laplace (n : Bool → ℕ) :\n    polyaPredictive (binaryPseudoCounts 1 1) n true =\n      laplaceEstimate (n true) (n true + n false)",
+        "statement_sha256": "9ec1348a697e8bbc9b21cd94431d41fdd4d462e5af7f15009af74638e52ce940"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_eq_posterior_normalised": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "polyaPredictive α n k =\n      dirichletPosterior α n k / ∑ j, dirichletPosterior α n j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "dirichletPosterior_total",
+            "qualified_name": "FEP.EmpiricalRisk.dirichletPosterior_total",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_eq_posterior_normalised",
+        "source_line": 389,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_eq_posterior_normalised (α : K → ℝ) (n : K → ℕ) (k : K) :\n    polyaPredictive α n k =\n      dirichletPosterior α n k / ∑ j, dirichletPosterior α n j",
+        "statement_sha256": "1ad85aae7ed9633fe75cededcb3250e185fc7d85430d9cfeaf5b1df02abf0ae2"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "alphaNonneg"
+            ],
+            "role": "typed_binder",
+            "source": "(alphaNonneg : ∀ k, 0 ≤ α k)",
+            "type_source": "∀ k, 0 ≤ α k",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ polyaPredictive α n k",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_nonneg",
+        "source_line": 396,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_nonneg (α : K → ℝ) (n : K → ℕ)\n    (alphaNonneg : ∀ k, 0 ≤ α k) (k : K) :\n    0 ≤ polyaPredictive α n k",
+        "statement_sha256": "b7bffc3c7044d2e627c6006c3edf729ed94195febadcf199dee62f8211d90d76"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_ones": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "polyaPredictive (fun _ => (1 : ℝ)) n k =\n      ((n k : ℝ) + 1) / ((∑ j, (n j : ℝ)) + Fintype.card K)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_ones",
+        "source_line": 581,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_ones (n : K → ℕ) (k : K) :\n    polyaPredictive (fun _ => (1 : ℝ)) n k =\n      ((n k : ℝ) + 1) / ((∑ j, (n j : ℝ)) + Fintype.card K)",
+        "statement_sha256": "fa243e52384550e6330d3100b48e1ee8350b77e16d4e0cb0f880f58f8b19269b"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "alphaPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(alphaPositive : ∀ k, 0 < α k)",
+            "type_source": "∀ k, 0 < α k",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty K]",
+            "type_source": "Nonempty K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "k"
+            ],
+            "role": "typed_binder",
+            "source": "(k : K)",
+            "type_source": "K",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < polyaPredictive α n k",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_pos",
+        "source_line": 414,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_pos (α : K → ℝ) (n : K → ℕ)\n    (alphaPositive : ∀ k, 0 < α k) [Nonempty K] (k : K) :\n    0 < polyaPredictive α n k",
+        "statement_sha256": "6c263ba17bd878ff136d99616b0f68058022429e7e492cacf3184a91499cced7"
+      },
+      "FEP.EmpiricalRisk.polyaPredictive_sum_one": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α"
+            ],
+            "role": "typed_binder",
+            "source": "(α : K → ℝ)",
+            "type_source": "K → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "n"
+            ],
+            "role": "typed_binder",
+            "source": "(n : K → ℕ)",
+            "type_source": "K → ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "totalPositive"
+            ],
+            "role": "typed_binder",
+            "source": "(totalPositive : 0 < ∑ j, α j + ∑ j, (n j : ℝ))",
+            "type_source": "0 < ∑ j, α j + ∑ j, (n j : ℝ)",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ k, polyaPredictive α n k = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          },
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [DecidableEq K] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.polyaPredictive_sum_one",
+        "source_line": 406,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem polyaPredictive_sum_one (α : K → ℝ) (n : K → ℕ)\n    (totalPositive : 0 < ∑ j, α j + ∑ j, (n j : ℝ)) :\n    ∑ k, polyaPredictive α n k = 1",
+        "statement_sha256": "8d28b81898df235bbb82a328662ceb84665bfbff6dfa9920a8a664a778d2c789"
+      },
+      "FEP.EmpiricalRisk.risingFactorial_succ_left": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "a"
+            ],
+            "role": "typed_binder",
+            "source": "(a : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "m"
+            ],
+            "role": "typed_binder",
+            "source": "(m : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "risingFactorial a (m + 1) = a * risingFactorial (a + 1) m",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.risingFactorial_succ_left",
+        "source_line": 354,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem risingFactorial_succ_left (a : ℝ) (m : ℕ) :\n    risingFactorial a (m + 1) = a * risingFactorial (a + 1) m",
+        "statement_sha256": "79cdd2d1b7965e6df5a533765622f76a39d6798c1143b40735704c2997b0c257"
+      },
+      "FEP.EmpiricalRisk.risingFactorial_succ_right": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "a"
+            ],
+            "role": "typed_binder",
+            "source": "(a : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "m"
+            ],
+            "role": "typed_binder",
+            "source": "(m : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "risingFactorial a (m + 1) = risingFactorial a m * (a + m)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.risingFactorial_succ_right",
+        "source_line": 365,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem risingFactorial_succ_right (a : ℝ) (m : ℕ) :\n    risingFactorial a (m + 1) = risingFactorial a m * (a + m)",
+        "statement_sha256": "2eb70411adaa126d2a872a7bee2d93387e782d4da34385ed55e6aee412dbb1ef"
+      },
+      "FEP.EmpiricalRisk.risingFactorial_zero": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "a"
+            ],
+            "role": "typed_binder",
+            "source": "(a : ℝ)",
+            "type_source": "ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "risingFactorial a 0 = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Ω"
+            ],
+            "role": "typed_binder",
+            "source": "{Ω : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Ω]",
+            "type_source": "Fintype Ω",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "K"
+            ],
+            "role": "typed_binder",
+            "source": "{K : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype K]",
+            "type_source": "Fintype K",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq K]",
+            "type_source": "DecidableEq K",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.learning_theory"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.EmpiricalRisk",
+        "namespace_variable_context": [
+          "{Ω : Type*} [Fintype Ω]",
+          "{K : Type*} [Fintype K] [DecidableEq K]"
+        ],
+        "preceding_scope_directives": [
+          {
+            "directive": "omit",
+            "interpretation": "Preceding source directive; active scopes and elaborated binder inclusion are not inferred.",
+            "source": "omit [Fintype Ω] in"
+          }
+        ],
+        "qualified_name": "FEP.EmpiricalRisk.risingFactorial_zero",
+        "source_line": 351,
+        "source_owner": "src/fep_lean/formal/empirical_risk.lean",
+        "statement": "theorem risingFactorial_zero (a : ℝ) : risingFactorial a 0 = 1",
+        "statement_sha256": "40ffad503ce92de35ef7891201f4c8ed86983fb9bcfa24a7339cc9863681ae44"
       },
       "FEP.EmpiricalRisk.shrinkage_le_one": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
