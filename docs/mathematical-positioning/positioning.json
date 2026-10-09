@@ -921,7 +921,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct.",
+        "rationale": "Native double Bayesian inversion recovers the original likelihood almost everywhere, while the fep-017 posterior recovers the prior after a Markov likelihood; the pairing keeps these two sides of involution distinct. Neither conjunct is derived from the other. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-054",
         "target": "fep-017",
         "witness": "FEPComposed.fep054_involution_of_fep017_posterior"
@@ -984,7 +984,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced.",
+        "rationale": "Finite-channel contraction is paired with the native nonnegativity of the pre-channel KL quantity; no unsupported finite-to-measure identification is introduced. The fep-014 conjunct is nonnegativity for arbitrary native measures and is unrelated to the finite channel inequality. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-063",
         "target": "fep-014",
         "witness": "FEPComposed.fep063_channel_dpi_bounds_fep014"
@@ -1166,7 +1166,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Finite-jet shifts satisfy their native additive law and instantiate fep-006's generic discrete-flow semigroup under one-degree shifting.",
+        "rationale": "The witness conjoins the native finite-jet shift additive law with fep-006's iterate-flow additivity instantiated at the one-degree shift. Neither conjunct is derived from the other, because no theorem identifies `shift n` with the n-fold iterate of `shift 1`. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-089",
         "target": "fep-006",
         "witness": "FEPComposed.fep089_finite_jet_shift_specializes_fep006"
@@ -1187,7 +1187,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "On the shared stability interval, predictive error tends to zero and the equivalent centered quadratic iteration from fep-032 tends to its target.",
+        "rationale": "On the shared stability interval, the fep-092 predictive error tends to zero and, separately, fep-032's quadratic iteration tends to its target. The witness conjoins two independent convergence theorems and proves no equivalence between the two iterations. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-092",
         "target": "fep-032",
         "witness": "FEPComposed.fep092_quadratic_convergence_specializes_fep032"
@@ -1313,7 +1313,7 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged.",
+        "rationale": "Positive-normalizer unit-weight product-of-experts pooling and nonempty-support softmax each expose exact finite normalization; the pairing does not identify their weighting conventions. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorem `fep_fep028.FEP028.fep028_softmax_probs_sum_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. Reviewed 2026-10-08 (LEAN-6, issue 104), the two normalization conjuncts are independent, so the row stays a pairing.",
         "source": "fep-110",
         "target": "fep-028",
         "witness": "FEPComposed.fep110_product_of_experts_refines_fep028_normalization"
@@ -1348,14 +1348,14 @@
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization through finite counts.",
+        "rationale": "The simultaneous finite-alphabet frequency bound is paired with the original exact Bernoulli likelihood factorization; the witness conjoins the two statements and the likelihood conjunct does not consume the frequency bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-115",
         "target": "fep-042",
         "witness": "FEPComposed.fep115_frequency_union_bound_extends_fep042_counts"
       },
       {
         "kind": "formal_pairing",
-        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL.",
+        "rationale": "The finite posterior loss-gap bound, conditional on a certified log-MGF budget, is paired with fep-001's measure-native variational upper bound without equating finite real KL and native extended KL; the fep-001 conjunct is an independent instance of its variational upper bound and is not derived from the PAC-Bayes bound. Reviewed 2026-10-08 (LEAN-6, issue 104), kept as a pairing, not a derivation.",
         "source": "fep-116",
         "target": "fep-001",
         "witness": "FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound"
@@ -8949,7 +8949,7 @@
     "formal/temporal_inference.lean": "3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10",
     "formal/variational_duality.lean": "82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f",
     "inputs/catalogue_metadata.yaml": "e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd",
-    "inputs/formalism_relations.yaml": "a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e",
+    "inputs/formalism_relations.yaml": "1fbf56c873f8625bdbc30b81acccaae01b3459f783382b7a13df69cd4552f61b",
     "inputs/positioning.yaml": "d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d",
     "inputs/theorem_maturity.yaml": "7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded",
     "lean_source.py": "8bf35005a2f360805af28eb8918dd988c48b33941c6e2dad7215d22c787b804c",

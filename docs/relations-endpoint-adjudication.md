@@ -102,3 +102,27 @@ theorem, which is theorem-structure evidence, not a spurious namespace mention.
    Lean-authoring relations effort, deliberately not simulated here. The
    review-namespace-qualified tightening (125/125 green) remains available as
    a strictly stronger, non-breaking gate if that wave lands.
+
+## LEAN-6 review: pairings whose witnesses are named like derivations (2026-10-08)
+
+Issue #104 asked whether any `formal_pairing` edge whose witness name says
+"specializes", "refines", "extends", or "bounds" is in fact a derivation that
+should be tagged `formal`. The test applied is strict: re-tag only if the
+witness statement consumes one endpoint's theorem and produces the other
+endpoint's statement (or an exact instance of it). A witness that conjoins two
+independently proved endpoint laws is a pairing, however it is named. This
+section is maintained by hand; no generator writes it.
+
+| Edge | Witness | Statement shape | Decision |
+| --- | --- | --- | --- |
+| fep-089 → fep-006 | `FEPComposed.fep089_finite_jet_shift_specializes_fep006` | `shift (a+b) j = shift a (shift b j) ∧ iterateFlow (shift 1) (a+b) j = iterateFlow (shift 1) a (iterateFlow (shift 1) b j)` | Keep pairing. The second conjunct is fep-006's additivity at the one-degree shift, but nothing identifies `shift n` with the n-fold iterate of `shift 1`, so the native law is not used to obtain it. |
+| fep-092 → fep-032 | `FEPComposed.fep092_quadratic_convergence_specializes_fep032` | `Tendsto (predictionError ∘ iteratePredictionUpdate) ∧ Tendsto (fep032_quadraticUpdate^[n] estimate) (nhds target)` | Keep pairing; rationale tightened. The old wording called the iterations "equivalent", which the witness does not prove. |
+| fep-110 → fep-028 | `FEPComposed.fep110_product_of_experts_refines_fep028_normalization` | `∑ unitWeightProductOfExpertsPool = 1 ∧ ∑ fep028_softmax = 1` | Keep pairing. Two unrelated normalization laws; the rationale already disclaims identifying the weighting conventions. |
+| fep-115 → fep-042 | `FEPComposed.fep115_frequency_union_bound_extends_fep042_counts` | `law.real (⋃ deviation events) ≤ card * failure ∧ fep042_bernoulliLikelihood = p^successes * (1-p)^failures` | Keep pairing; rationale tightened. The likelihood factorization does not consume the union bound. |
+| fep-116 → fep-001 | `FEPComposed.fep116_pac_bayes_refines_fep001_variational_bound` | `E_posterior[pop] ≤ E_posterior[emp] + (KL + log(1/δ))/β ∧ surprisal ≤ fep001_variationalUpperBound ...` | Keep pairing; rationale tightened. The fep-001 conjunct is an independent instance, not a consequence of the finite PAC-Bayes bound. |
+| fep-063 → fep-014 | `FEPComposed.fep063_channel_dpi_bounds_fep014` | `finiteKL (channel actual) (channel reference) ≤ finiteKL actual reference ∧ 0 ≤ klDiv nativeActual nativeReference` | Keep pairing; rationale tightened. The native measures are unrelated to the finite laws, so the second conjunct is not a bound on the first. |
+| fep-054 → fep-017 | `FEPComposed.fep054_involution_of_fep017_posterior` | `(likelihood†prior)†(likelihood ∘ₘ prior) =ᵐ[prior] likelihood ∧ posterior ∘ₘ likelihood ∘ₘ prior = prior` | Keep pairing; rationale tightened. Each conjunct is its own topic's theorem; neither is derived from the other. |
+
+Outcome: zero re-tags. The `formal` edge count is not raised by this review.
+Every kept row now states in its `rationale` that it was reviewed on this date
+and why it is not a derivation.
