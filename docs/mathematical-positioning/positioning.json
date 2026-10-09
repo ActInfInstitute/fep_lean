@@ -7908,7 +7908,7 @@
       "lean_module": "FepSketches.collective_inference",
       "resource": "collective_inference.lean",
       "role": "foundation",
-      "theorem_count": 13
+      "theorem_count": 41
     },
     {
       "declaration_namespace": "FEP.LearningTheory",
@@ -8878,7 +8878,7 @@
     "formal/active_inference.lean": "ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5",
     "formal/bayesian_model_reduction.lean": "264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a",
     "formal/causal_dynamics.lean": "5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e",
-    "formal/collective_inference.lean": "c073fe37fa86b8e7619af4d5ffcf0b8ba5579243b5d824ac0053df197fed55a5",
+    "formal/collective_inference.lean": "484ef59cff1ef3bee40f3ce422b6deaa8af5ebd4295efae8d86b70432cd64175",
     "formal/composed.lean": "ee98a530a653471420cd68fe393c3d7aa4bc0f4980ad38c43b36bb3db77b1629",
     "formal/compositions/bayesian_model_reduction.lean": "320f0faa836ca9d902646b6eb497eee28111f889ce6a81921dead50b9b0be8d0",
     "formal/compositions/causal_predictive.lean": "6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7",
@@ -18481,6 +18481,338 @@
         "statement": "theorem sharedConditional_mixture_preserves_joint\n    {Input Output : Type*} [Fintype Input] [Fintype Output]\n    (weight : ℝ) (hWeightNonneg : 0 ≤ weight)\n    (hWeightLeOne : weight ≤ 1)\n    (left right : FiniteLaw Input) (kernel : FiniteKernel Input Output) :\n    kernel.joint (mixLaw weight hWeightNonneg hWeightLeOne left right) =\n      mixLaw weight hWeightNonneg hWeightLeOne\n        (kernel.joint left) (kernel.joint right)",
         "statement_sha256": "51948fbd98a6ae7e7d700e1c234b8310f59ba795340e14482548ae8b36a59516"
       },
+      "FEP.CollectiveInference.asymMatrix3_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : Fin 3)",
+            "type_source": "Fin 3",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ asymMatrix3 i j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.asymMatrix3_nonneg",
+        "source_line": 753,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem asymMatrix3_nonneg (i j : Fin 3) : 0 ≤ asymMatrix3 i j",
+        "statement_sha256": "5e0197009f318e76cb0beffdb3c0563e042fa4313bceba311ad3e551ec159b43"
+      },
+      "FEP.CollectiveInference.asymMatrix3_row": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i"
+            ],
+            "role": "typed_binder",
+            "source": "(i : Fin 3)",
+            "type_source": "Fin 3",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ j, asymMatrix3 i j = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.asymMatrix3_row",
+        "source_line": 756,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem asymMatrix3_row (i : Fin 3) : ∑ j, asymMatrix3 i j = 1",
+        "statement_sha256": "526e3ba54cda036fa921fac98d26067e33ead655f3df426d1deb57a429927c2c"
+      },
+      "FEP.CollectiveInference.asymMatrix3_scrambling": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "(3 / 5 : ℝ) ≤ scramblingCoefficient asymMatrix3",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.asymMatrix3_scrambling",
+        "source_line": 759,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem asymMatrix3_scrambling : (3 / 5 : ℝ) ≤ scramblingCoefficient asymMatrix3",
+        "statement_sha256": "510a7fe91bfd4a891cf10966688d2bf4d58a8d781e1382f8ca02545b8c2f9c5d"
+      },
+      "FEP.CollectiveInference.asymMatrix3_strict_contraction": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "0 < scramblingCoefficient asymMatrix3 ∧\n      1 ≤ valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧\n      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) ≤\n        (2 / 5 : ℝ) * valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧\n      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) <\n        valueSpread (![1, 0, 0] : Fin 3 → ℝ)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "asymMatrix3_row",
+            "qualified_name": "FEP.CollectiveInference.asymMatrix3_row",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "asymMatrix3_scrambling",
+            "qualified_name": "FEP.CollectiveInference.asymMatrix3_scrambling",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "sub_le_valueSpread",
+            "qualified_name": "FEP.CollectiveInference.sub_le_valueSpread",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_mixStep_le",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_mixStep_lt",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_lt",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_nonneg",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.asymMatrix3_strict_contraction",
+        "source_line": 768,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem asymMatrix3_strict_contraction :\n    0 < scramblingCoefficient asymMatrix3 ∧\n      1 ≤ valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧\n      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) ≤\n        (2 / 5 : ℝ) * valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧\n      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) <\n        valueSpread (![1, 0, 0] : Fin 3 → ℝ)",
+        "statement_sha256": "307ee5935859e3f442042f409b5a5b9fa85483cf11ec4bb1adf0c5ccc399ee54"
+      },
       "FEP.CollectiveInference.boolConsensus_nonzero_strict_witness": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [],
@@ -18920,6 +19252,233 @@
         "statement": "theorem consensusMass_conserved\n    {State : Type*} [Fintype State]\n    (left right : FiniteLaw State) (state : State) :\n    consensusLeft left right state + consensusRight left right state =\n      left state + right state",
         "statement_sha256": "a5afefff7b8dc493bb53f0b7c2b37ecbe0eed4b9a237bfd4e8dfd798d5b11be5"
       },
+      "FEP.CollectiveInference.consensusMatrix2_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : Fin 2)",
+            "type_source": "Fin 2",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ consensusMatrix2 i j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.consensusMatrix2_nonneg",
+        "source_line": 710,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem consensusMatrix2_nonneg (i j : Fin 2) : 0 ≤ consensusMatrix2 i j",
+        "statement_sha256": "9c2d1870da79f0d8f5ce644e8d02f43d18aa9b517ec563f1fbd420f92d2142a3"
+      },
+      "FEP.CollectiveInference.consensusMatrix2_row": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i"
+            ],
+            "role": "typed_binder",
+            "source": "(i : Fin 2)",
+            "type_source": "Fin 2",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ j, consensusMatrix2 i j = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.consensusMatrix2_row",
+        "source_line": 713,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem consensusMatrix2_row (i : Fin 2) : ∑ j, consensusMatrix2 i j = 1",
+        "statement_sha256": "8561d451e85f991ed7ea0256ff3bcbbb92c7bcae7709942f77079538f77577ca"
+      },
+      "FEP.CollectiveInference.consensusMatrix2_scrambling": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "(1 / 2 : ℝ) ≤ scramblingCoefficient consensusMatrix2",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.consensusMatrix2_scrambling",
+        "source_line": 717,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem consensusMatrix2_scrambling : (1 / 2 : ℝ) ≤ scramblingCoefficient consensusMatrix2",
+        "statement_sha256": "09e59d2a58df422fc3de6854e267e8da2910ab9f8122e6cff44feeae6e2bc1b7"
+      },
       "FEP.CollectiveInference.consensus_gap_contracts": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -19142,6 +19701,145 @@
         "source_owner": "src/fep_lean/formal/collective_inference.lean",
         "statement": "theorem consensus_gap_tendsto_zero\n    {State : Type*} [Fintype State]\n    (left right : FiniteLaw State) (state : State) :\n    Tendsto\n      (fun iterations =>\n        beliefGap (consensusIterate (left, right) iterations).1\n          (consensusIterate (left, right) iterations).2 state)\n      atTop (nhds 0)",
         "statement_sha256": "0a6272f1a7a93a66f0c3dccb63ac210313f9290621b3c3359d693ea7cdff9c31"
+      },
+      "FEP.CollectiveInference.consensus_spread_le_half": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "left",
+              "right"
+            ],
+            "role": "typed_binder",
+            "source": "(left right : FiniteLaw State)",
+            "type_source": "FiniteLaw State",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "s"
+            ],
+            "role": "typed_binder",
+            "source": "(s : State)",
+            "type_source": "State",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "valueSpread ![consensusLeft left right s, consensusRight left right s] ≤\n      (1 / 2 : ℝ) * valueSpread ![left s, right s]",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "consensusMatrix2_row",
+            "qualified_name": "FEP.CollectiveInference.consensusMatrix2_row",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "consensusMatrix2_scrambling",
+            "qualified_name": "FEP.CollectiveInference.consensusMatrix2_scrambling",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "mixStep_consensusMatrix2",
+            "qualified_name": "FEP.CollectiveInference.mixStep_consensusMatrix2",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_mixStep_le",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_nonneg",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.consensus_spread_le_half",
+        "source_line": 739,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem consensus_spread_le_half\n    {State : Type*} [Fintype State] (left right : FiniteLaw State) (s : State) :\n    valueSpread ![consensusLeft left right s, consensusRight left right s] ≤\n      (1 / 2 : ℝ) * valueSpread ![left s, right s]",
+        "statement_sha256": "c95a939eab885f9db6ebded512f2d4aeb78dcce35ed2a6db2c0fabf4e74d8499"
       },
       "FEP.CollectiveInference.coupledPotential_contracts": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -19376,6 +20074,500 @@
         "statement": "theorem coupledPotential_strict_descent\n    {State : Type*} [Fintype State]\n    (left right : FiniteLaw State) (state : State)\n    (separated : left state ≠ right state) :\n    coupledPotential (consensusLeft left right) (consensusRight left right) state <\n      coupledPotential left right state",
         "statement_sha256": "0be9499730869dd6fe7113ae6f0ae3fc6b8d26f8285f84f51b214781a575ca3a"
       },
+      "FEP.CollectiveInference.crossEntropy_linearPool_left": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hw"
+            ],
+            "role": "typed_binder",
+            "source": "(hw : ∀ i, 0 ≤ w i)",
+            "type_source": "∀ i, 0 ≤ w i",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "crossEntropy (linearPool w hw hsum p) q =\n      ∑ i, w i * crossEntropy (p i) q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.crossEntropy_linearPool_left",
+        "source_line": 421,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem crossEntropy_linearPool_left\n    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (q : FiniteLaw α) :\n    crossEntropy (linearPool w hw hsum p) q =\n      ∑ i, w i * crossEntropy (p i) q",
+        "statement_sha256": "4f035f3d18bcb50d27ddd04e6aa1873f896db3b88207621ff11e8323180f9a63"
+      },
+      "FEP.CollectiveInference.crossEntropy_self_eq_entropy": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "crossEntropy p p = entropy p",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.crossEntropy_self_eq_entropy",
+        "source_line": 439,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem crossEntropy_self_eq_entropy (p : FiniteLaw α) :\n    crossEntropy p p = entropy p",
+        "statement_sha256": "f690f9bc5b7bae125cd5d149a7259a23f9f7c07c521a6b3aed1c931790a57753"
+      },
+      "FEP.CollectiveInference.identityMixing2_no_contraction": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "scramblingCoefficient identityMixing2 = 0 ∧\n      0 < valueSpread (![1, 0] : Fin 2 → ℝ) ∧\n      valueSpread (mixStep identityMixing2 ![1, 0]) =\n        valueSpread (![1, 0] : Fin 2 → ℝ)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "identityMixing2_nonneg",
+            "qualified_name": "FEP.CollectiveInference.identityMixing2_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "sub_le_valueSpread",
+            "qualified_name": "FEP.CollectiveInference.sub_le_valueSpread",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.identityMixing2_no_contraction",
+        "source_line": 796,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem identityMixing2_no_contraction :\n    scramblingCoefficient identityMixing2 = 0 ∧\n      0 < valueSpread (![1, 0] : Fin 2 → ℝ) ∧\n      valueSpread (mixStep identityMixing2 ![1, 0]) =\n        valueSpread (![1, 0] : Fin 2 → ℝ)",
+        "statement_sha256": "c24061f64dd0940d4aacb509b8b853ce187477ca31c0cbe541aa5876cb1a4a64"
+      },
+      "FEP.CollectiveInference.identityMixing2_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : Fin 2)",
+            "type_source": "Fin 2",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ identityMixing2 i j",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.identityMixing2_nonneg",
+        "source_line": 788,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem identityMixing2_nonneg (i j : Fin 2) : 0 ≤ identityMixing2 i j",
+        "statement_sha256": "abd0ea990013ca61a436c35b6e26b1c214719001fa35f6889ae1d8ebd9c168f3"
+      },
+      "FEP.CollectiveInference.identityMixing2_row": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i"
+            ],
+            "role": "typed_binder",
+            "source": "(i : Fin 2)",
+            "type_source": "Fin 2",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ j, identityMixing2 i j = 1",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.identityMixing2_row",
+        "source_line": 791,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem identityMixing2_row (i : Fin 2) : ∑ j, identityMixing2 i j = 1",
+        "statement_sha256": "e045cd205bdd67deaa713a27779709450631d0034548f54c71963115beabea3f"
+      },
       "FEP.CollectiveInference.independentEFE_additive": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -19513,6 +20705,1786 @@
         "source_owner": "src/fep_lean/formal/collective_inference.lean",
         "statement": "theorem independentEFE_additive\n    (predictiveLeft preferenceLeft : FiniteLaw State₁)\n    (predictiveRight preferenceRight : FiniteLaw State₂)\n    (ambiguityLeft : State₁ → ℝ) (ambiguityRight : State₂ → ℝ)\n    (preferenceLeftPositive : ∀ state, 0 < preferenceLeft state)\n    (preferenceRightPositive : ∀ state, 0 < preferenceRight state) :\n    independentCollectiveEFE predictiveLeft preferenceLeft\n        predictiveRight preferenceRight ambiguityLeft ambiguityRight =\n      expectedFreeEnergy predictiveLeft preferenceLeft ambiguityLeft +\n        expectedFreeEnergy predictiveRight preferenceRight ambiguityRight",
         "statement_sha256": "89e116e143c2fe3d564e47f9a0ba0ef73ac9232195e6c60073df5f54b2fde42d"
+      },
+      "FEP.CollectiveInference.linearPool_kl_decomposition": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hw"
+            ],
+            "role": "typed_binder",
+            "source": "(hw : ∀ i, 0 ≤ w i)",
+            "type_source": "∀ i, 0 ≤ w i",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hq"
+            ],
+            "role": "typed_binder",
+            "source": "(hq : ∀ x, 0 < q x)",
+            "type_source": "∀ x, 0 < q x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hpool"
+            ],
+            "role": "typed_binder",
+            "source": "(hpool : ∀ x, 0 < linearPool w hw hsum p x)",
+            "type_source": "∀ x, 0 < linearPool w hw hsum p x",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ i, w i * finiteKL (p i) q =\n      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) +\n        finiteKL (linearPool w hw hsum p) q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "crossEntropy_linearPool_left",
+            "qualified_name": "FEP.CollectiveInference.crossEntropy_linearPool_left",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "crossEntropy_self_eq_entropy",
+            "qualified_name": "FEP.CollectiveInference.crossEntropy_self_eq_entropy",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy"
+            ],
+            "identifier": "finiteKL_eq_crossEntropy_sub_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.linearPool_kl_decomposition",
+        "source_line": 445,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem linearPool_kl_decomposition\n    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (q : FiniteLaw α)\n    (hq : ∀ x, 0 < q x)\n    (hpool : ∀ x, 0 < linearPool w hw hsum p x) :\n    ∑ i, w i * finiteKL (p i) q =\n      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) +\n        finiteKL (linearPool w hw hsum p) q",
+        "statement_sha256": "0affc35641bfd006f3714861590f1cf139ba6a92dc8659348bd383312e61bd8f"
+      },
+      "FEP.CollectiveInference.linearPool_kl_minimal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hw"
+            ],
+            "role": "typed_binder",
+            "source": "(hw : ∀ i, 0 ≤ w i)",
+            "type_source": "∀ i, 0 ≤ w i",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hq"
+            ],
+            "role": "typed_binder",
+            "source": "(hq : ∀ x, 0 < q x)",
+            "type_source": "∀ x, 0 < q x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hpool"
+            ],
+            "role": "typed_binder",
+            "source": "(hpool : ∀ x, 0 < linearPool w hw hsum p x)",
+            "type_source": "∀ x, 0 < linearPool w hw hsum p x",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) ≤\n      ∑ i, w i * finiteKL (p i) q",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "linearPool_kl_decomposition",
+            "qualified_name": "FEP.CollectiveInference.linearPool_kl_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.linearPool_kl_minimal",
+        "source_line": 470,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem linearPool_kl_minimal\n    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (q : FiniteLaw α)\n    (hq : ∀ x, 0 < q x)\n    (hpool : ∀ x, 0 < linearPool w hw hsum p x) :\n    ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) ≤\n      ∑ i, w i * finiteKL (p i) q",
+        "statement_sha256": "e670d90fcd370c97cdbbf2bb354836bf33426df3bfb0ebf22d6642d337795d6c"
+      },
+      "FEP.CollectiveInference.linearPool_kl_unique_minimiser": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hw"
+            ],
+            "role": "typed_binder",
+            "source": "(hw : ∀ i, 0 ≤ w i)",
+            "type_source": "∀ i, 0 ≤ w i",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hq"
+            ],
+            "role": "typed_binder",
+            "source": "(hq : ∀ x, 0 < q x)",
+            "type_source": "∀ x, 0 < q x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hpool"
+            ],
+            "role": "typed_binder",
+            "source": "(hpool : ∀ x, 0 < linearPool w hw hsum p x)",
+            "type_source": "∀ x, 0 < linearPool w hw hsum p x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hle"
+            ],
+            "role": "typed_binder",
+            "source": "(hle : ∑ i, w i * finiteKL (p i) q ≤\n      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p))",
+            "type_source": "∑ i, w i * finiteKL (p i) q ≤\n      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p)",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "q = linearPool w hw hsum p",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "linearPool_kl_decomposition",
+            "qualified_name": "FEP.CollectiveInference.linearPool_kl_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.linearPool_kl_unique_minimiser",
+        "source_line": 482,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem linearPool_kl_unique_minimiser\n    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (q : FiniteLaw α)\n    (hq : ∀ x, 0 < q x)\n    (hpool : ∀ x, 0 < linearPool w hw hsum p x)\n    (hle : ∑ i, w i * finiteKL (p i) q ≤\n      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p)) :\n    q = linearPool w hw hsum p",
+        "statement_sha256": "3eed6706f4dec1059aa1c089fedcfe4b0cc3d90eca863484c978f2aa002d0f7a"
+      },
+      "FEP.CollectiveInference.logPoolNormalizer_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < logPoolNormalizer w p",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.logPoolNormalizer_pos",
+        "source_line": 507,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem logPoolNormalizer_pos (w : ι → ℝ) (p : ι → FiniteLaw α) :\n    0 < logPoolNormalizer w p",
+        "statement_sha256": "911eb89bdb09df86db5aa894c684aa52f6657f3c621bd00bc49425a8e84897f5"
+      },
+      "FEP.CollectiveInference.logPool_kl_decomposition": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hp"
+            ],
+            "role": "typed_binder",
+            "source": "(hp : ∀ i x, 0 < p i x)",
+            "type_source": "∀ i x, 0 < p i x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ i, w i * finiteKL q (p i) =\n      finiteKL q (logPool w p) - Real.log (logPoolNormalizer w p)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_crossEntropy_sub_entropy"
+            ],
+            "identifier": "finiteKL_eq_crossEntropy_sub_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "logPool_pos",
+            "qualified_name": "FEP.CollectiveInference.logPool_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "log_logPool",
+            "qualified_name": "FEP.CollectiveInference.log_logPool",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.logPool_kl_decomposition",
+        "source_line": 533,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem logPool_kl_decomposition\n    (w : ι → ℝ) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α) :\n    ∑ i, w i * finiteKL q (p i) =\n      finiteKL q (logPool w p) - Real.log (logPoolNormalizer w p)",
+        "statement_sha256": "99f76b53a81224a069e7b5fa904fa07e66c069ff1acb1782339a258e59e824ca"
+      },
+      "FEP.CollectiveInference.logPool_kl_minimal": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hp"
+            ],
+            "role": "typed_binder",
+            "source": "(hp : ∀ i x, 0 < p i x)",
+            "type_source": "∀ i x, 0 < p i x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ i, w i * finiteKL (logPool w p) (p i) ≤ ∑ i, w i * finiteKL q (p i)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_self"
+            ],
+            "identifier": "finiteKL_self",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "logPool_kl_decomposition",
+            "qualified_name": "FEP.CollectiveInference.logPool_kl_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.logPool_kl_minimal",
+        "source_line": 570,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem logPool_kl_minimal\n    (w : ι → ℝ) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α) :\n    ∑ i, w i * finiteKL (logPool w p) (p i) ≤ ∑ i, w i * finiteKL q (p i)",
+        "statement_sha256": "e2201aaab627f9ff901c5e29cf8862b3ddb0ec63ff4b3254aed256a4321d5651"
+      },
+      "FEP.CollectiveInference.logPool_kl_unique_minimiser": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hsum"
+            ],
+            "role": "typed_binder",
+            "source": "(hsum : ∑ i, w i = 1)",
+            "type_source": "∑ i, w i = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hp"
+            ],
+            "role": "typed_binder",
+            "source": "(hp : ∀ i x, 0 < p i x)",
+            "type_source": "∀ i x, 0 < p i x",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "q"
+            ],
+            "role": "typed_binder",
+            "source": "(q : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hle"
+            ],
+            "role": "typed_binder",
+            "source": "(hle : ∑ i, w i * finiteKL q (p i) ≤\n      ∑ i, w i * finiteKL (logPool w p) (p i))",
+            "type_source": "∑ i, w i * finiteKL q (p i) ≤\n      ∑ i, w i * finiteKL (logPool w p) (p i)",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "q = logPool w p",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_eq_zero_iff"
+            ],
+            "identifier": "finiteKL_eq_zero_iff",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_nonneg"
+            ],
+            "identifier": "finiteKL_nonneg",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.FiniteInformation.finiteKL_self"
+            ],
+            "identifier": "finiteKL_self",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "logPool_kl_decomposition",
+            "qualified_name": "FEP.CollectiveInference.logPool_kl_decomposition",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.logPool_kl_unique_minimiser",
+        "source_line": 579,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem logPool_kl_unique_minimiser\n    (w : ι → ℝ) (hsum : ∑ i, w i = 1)\n    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α)\n    (hle : ∑ i, w i * finiteKL q (p i) ≤\n      ∑ i, w i * finiteKL (logPool w p) (p i)) :\n    q = logPool w p",
+        "statement_sha256": "d181459e8b73e130dbccf4814d4d922d6eaa333ba0330d910f932f9840e4ee08"
+      },
+      "FEP.CollectiveInference.logPool_pos": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 < logPool w p x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "logPoolNormalizer_pos",
+            "qualified_name": "FEP.CollectiveInference.logPoolNormalizer_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.logPool_pos",
+        "source_line": 519,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem logPool_pos (w : ι → ℝ) (p : ι → FiniteLaw α) (x : α) :\n    0 < logPool w p x",
+        "statement_sha256": "4e5426c36fdc34f68adeed1584eb78816654493fd98a0e450f1c95e5865a9b44"
+      },
+      "FEP.CollectiveInference.log_logPool": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "w"
+            ],
+            "role": "typed_binder",
+            "source": "(w : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "p"
+            ],
+            "role": "typed_binder",
+            "source": "(p : ι → FiniteLaw α)",
+            "type_source": "ι → FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : α)",
+            "type_source": "α",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "Real.log (logPool w p x) =\n      (∑ i, w i * Real.log (p i x)) - Real.log (logPoolNormalizer w p)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{α ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty α]",
+            "type_source": "Nonempty α",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "logPoolNormalizer_pos",
+            "qualified_name": "FEP.CollectiveInference.logPoolNormalizer_pos",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{α ι : Type*} [Fintype α] [Fintype ι]",
+          "[Nonempty α]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.log_logPool",
+        "source_line": 523,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem log_logPool (w : ι → ℝ) (p : ι → FiniteLaw α) (x : α) :\n    Real.log (logPool w p x) =\n      (∑ i, w i * Real.log (p i x)) - Real.log (logPoolNormalizer w p)",
+        "statement_sha256": "63217818295153094f254aef640fc4c5e7e8c2504dff55dc0f734c91b190b22b"
+      },
+      "FEP.CollectiveInference.mixStep_consensusMatrix2": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State"
+            ],
+            "role": "typed_binder",
+            "source": "{State : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "left",
+              "right"
+            ],
+            "role": "typed_binder",
+            "source": "(left right : FiniteLaw State)",
+            "type_source": "FiniteLaw State",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "s"
+            ],
+            "role": "typed_binder",
+            "source": "(s : State)",
+            "type_source": "State",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "mixStep consensusMatrix2 ![left s, right s] =\n      ![consensusLeft left right s, consensusRight left right s]",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.mixStep_consensusMatrix2",
+        "source_line": 726,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem mixStep_consensusMatrix2\n    {State : Type*} [Fintype State] (left right : FiniteLaw State) (s : State) :\n    mixStep consensusMatrix2 ![left s, right s] =\n      ![consensusLeft left right s, consensusRight left right s]",
+        "statement_sha256": "60c1e503e1a7d242734124f6978d7dbaf0882a9bdee09b309bd02044873988dd"
+      },
+      "FEP.CollectiveInference.mixStep_diff_le": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "W"
+            ],
+            "role": "typed_binder",
+            "source": "(W : ι → ι → ℝ)",
+            "type_source": "ι → ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hrow"
+            ],
+            "role": "typed_binder",
+            "source": "(hrow : ∀ i, ∑ j, W i j = 1)",
+            "type_source": "∀ i, ∑ j, W i j = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : ι)",
+            "type_source": "ι",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "mixStep W x i - mixStep W x j ≤ (1 - rowOverlap W i j) * valueSpread x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty ι]",
+            "type_source": "Nonempty ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{ι : Type*} [Fintype ι] [Nonempty ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.mixStep_diff_le",
+        "source_line": 630,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem mixStep_diff_le\n    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)\n    (x : ι → ℝ) (i j : ι) :\n    mixStep W x i - mixStep W x j ≤ (1 - rowOverlap W i j) * valueSpread x",
+        "statement_sha256": "5c3e801ddab0312b555ba710ed2d573792c939c38b4e723426d9172ae694dd91"
       },
       "FEP.CollectiveInference.productAgent_joint_mass": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -19871,6 +22843,123 @@
         "statement": "theorem productKernel_sum_one\n    (left : FiniteKernel State₁ Observation₁)\n    (right : FiniteKernel State₂ Observation₂)\n    (state : State₁ × State₂) :\n    ∑ observation, productKernel left right state observation = 1",
         "statement_sha256": "4c8ee5c8df802696a428c8cb3c07f130dc4f029613a56c6cfb568bb2b189ab51"
       },
+      "FEP.CollectiveInference.sub_le_valueSpread": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "i",
+              "j"
+            ],
+            "role": "typed_binder",
+            "source": "(i j : ι)",
+            "type_source": "ι",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "x i - x j ≤ valueSpread x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty ι]",
+            "type_source": "Nonempty ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{ι : Type*} [Fintype ι] [Nonempty ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.sub_le_valueSpread",
+        "source_line": 622,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem sub_le_valueSpread (x : ι → ℝ) (i j : ι) : x i - x j ≤ valueSpread x",
+        "statement_sha256": "66b7390fdd7e50866c9a213c55fc142404135c2100fc42a453a48c0d4a71aa71"
+      },
       "FEP.CollectiveInference.unitWeightProductOfExpertsPool_sum_one": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
         "binders": [
@@ -19978,6 +23067,404 @@
         "source_owner": "src/fep_lean/formal/collective_inference.lean",
         "statement": "theorem unitWeightProductOfExpertsPool_sum_one\n    {State : Type*} [Fintype State]\n    (left right : FiniteLaw State)\n    (normalizerPositive : 0 < productOfExpertsNormalizer left right) :\n    ∑ state, unitWeightProductOfExpertsPool left right normalizerPositive state = 1",
         "statement_sha256": "e0234db655db56b2eff6ef2194eb4a8f516d17be519eaa72107abb83714c0ef3"
+      },
+      "FEP.CollectiveInference.valueSpread_mixStep_le": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "W"
+            ],
+            "role": "typed_binder",
+            "source": "(W : ι → ι → ℝ)",
+            "type_source": "ι → ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hrow"
+            ],
+            "role": "typed_binder",
+            "source": "(hrow : ∀ i, ∑ j, W i j = 1)",
+            "type_source": "∀ i, ∑ j, W i j = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "valueSpread (mixStep W x) ≤ (1 - scramblingCoefficient W) * valueSpread x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty ι]",
+            "type_source": "Nonempty ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "mixStep_diff_le",
+            "qualified_name": "FEP.CollectiveInference.mixStep_diff_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "valueSpread_nonneg",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_nonneg",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{ι : Type*} [Fintype ι] [Nonempty ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_le",
+        "source_line": 672,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem valueSpread_mixStep_le\n    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)\n    (x : ι → ℝ) :\n    valueSpread (mixStep W x) ≤ (1 - scramblingCoefficient W) * valueSpread x",
+        "statement_sha256": "7fc07439f2b329fb6c75b4f3dabf139ac3f0f94de986cc6d89801237eccf96ac"
+      },
+      "FEP.CollectiveInference.valueSpread_mixStep_lt": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "W"
+            ],
+            "role": "typed_binder",
+            "source": "(W : ι → ι → ℝ)",
+            "type_source": "ι → ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hrow"
+            ],
+            "role": "typed_binder",
+            "source": "(hrow : ∀ i, ∑ j, W i j = 1)",
+            "type_source": "∀ i, ∑ j, W i j = 1",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hδ"
+            ],
+            "role": "typed_binder",
+            "source": "(hδ : 0 < scramblingCoefficient W)",
+            "type_source": "0 < scramblingCoefficient W",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hx"
+            ],
+            "role": "typed_binder",
+            "source": "(hx : 0 < valueSpread x)",
+            "type_source": "0 < valueSpread x",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "valueSpread (mixStep W x) < valueSpread x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty ι]",
+            "type_source": "Nonempty ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "valueSpread_mixStep_le",
+            "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_le",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{ι : Type*} [Fintype ι] [Nonempty ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.valueSpread_mixStep_lt",
+        "source_line": 695,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem valueSpread_mixStep_lt\n    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)\n    (x : ι → ℝ) (hδ : 0 < scramblingCoefficient W) (hx : 0 < valueSpread x) :\n    valueSpread (mixStep W x) < valueSpread x",
+        "statement_sha256": "706db959a34fc8985a4ed299518818a5c2ed49ec124ff0b2a7f9a0a1c3107e90"
+      },
+      "FEP.CollectiveInference.valueSpread_nonneg": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "x"
+            ],
+            "role": "typed_binder",
+            "source": "(x : ι → ℝ)",
+            "type_source": "ι → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "0 ≤ valueSpread x",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "State₁",
+              "State₂",
+              "Observation₁",
+              "Observation₂"
+            ],
+            "role": "typed_binder",
+            "source": "{State₁ State₂ Observation₁ Observation₂ : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₁]",
+            "type_source": "Fintype State₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State₂]",
+            "type_source": "Fintype State₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₁]",
+            "type_source": "Fintype Observation₁",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Observation₂]",
+            "type_source": "Fintype Observation₂",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "ι"
+            ],
+            "role": "typed_binder",
+            "source": "{ι : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype ι]",
+            "type_source": "Fintype ι",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty ι]",
+            "type_source": "Nonempty ι",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.finite_information"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.CollectiveInference",
+        "namespace_variable_context": [
+          "{State₁ State₂ Observation₁ Observation₂ : Type*}\n  [Fintype State₁] [Fintype State₂]\n  [Fintype Observation₁] [Fintype Observation₂]",
+          "{ι : Type*} [Fintype ι] [Nonempty ι]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.CollectiveInference.valueSpread_nonneg",
+        "source_line": 615,
+        "source_owner": "src/fep_lean/formal/collective_inference.lean",
+        "statement": "theorem valueSpread_nonneg (x : ι → ℝ) : 0 ≤ valueSpread x",
+        "statement_sha256": "e139878bf783a3069fba9fd24cf64bc7c27c895787d95b09975d9f8b9dfe2c36"
       },
       "FEP.ContinuousTimeMarkov.ActionIndexedSemigroup.selectedActionTransition_eq_sampledSemigroup": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -40799,6 +44286,14 @@
           }
         ],
         "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.CollectiveInference.crossEntropy_self_eq_entropy"
+            ],
+            "identifier": "crossEntropy_self_eq_entropy",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
           {
             "candidates": [
               "FEP.FiniteInformation.weighted_klFun_eq_log_score"

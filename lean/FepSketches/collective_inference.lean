@@ -398,4 +398,424 @@ theorem coupledPotential_strict_descent
     exact sq_pos_of_ne_zero (sub_ne_zero.mpr separated)
   linarith
 
+/-! ## Linear and logarithmic opinion pools -/
+
+section OpinionPools
+
+variable {α ι : Type*} [Fintype α] [Fintype ι]
+
+/-- Linear opinion pool `∑ᵢ wᵢ pᵢ` for convex weights. -/
+noncomputable def linearPool
+    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) : FiniteLaw α where
+  mass x := ∑ i, w i * p i x
+  nonneg x := Finset.sum_nonneg fun i _ => mul_nonneg (hw i) ((p i).nonneg x)
+  sum_one := by
+    have each : ∀ i, ∑ x, w i * p i x = w i := fun i => by
+      rw [← Finset.mul_sum, (p i).sum_one, mul_one]
+    rw [Finset.sum_comm]
+    simp only [each]
+    exact hsum
+
+/-- Cross-entropy is affine in its first argument over a linear pool. -/
+theorem crossEntropy_linearPool_left
+    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (q : FiniteLaw α) :
+    crossEntropy (linearPool w hw hsum p) q =
+      ∑ i, w i * crossEntropy (p i) q := by
+  calc
+    crossEntropy (linearPool w hw hsum p) q =
+        ∑ x, ∑ i, w i * (-(p i x) * Real.log (q x)) := by
+      refine Finset.sum_congr rfl fun x _ => ?_
+      change -(∑ i, w i * p i x) * Real.log (q x) = _
+      rw [neg_mul, Finset.sum_mul, ← Finset.sum_neg_distrib]
+      exact Finset.sum_congr rfl fun i _ => by ring
+    _ = ∑ i, w i * crossEntropy (p i) q := by
+      rw [Finset.sum_comm]
+      refine Finset.sum_congr rfl fun i _ => ?_
+      rw [crossEntropy, Finset.mul_sum]
+
+/-- Self cross-entropy is entropy. -/
+theorem crossEntropy_self_eq_entropy (p : FiniteLaw α) :
+    crossEntropy p p = entropy p := by
+  simp only [crossEntropy, entropy, Real.negMulLog]
+
+/-- Pythagorean identity for the linear pool: for every full-support `q`,
+`∑ wᵢ KL(pᵢ‖q) = ∑ wᵢ KL(pᵢ‖q*) + KL(q*‖q)`, where `q* = ∑ wᵢ pᵢ`. -/
+theorem linearPool_kl_decomposition
+    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (q : FiniteLaw α)
+    (hq : ∀ x, 0 < q x)
+    (hpool : ∀ x, 0 < linearPool w hw hsum p x) :
+    ∑ i, w i * finiteKL (p i) q =
+      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) +
+        finiteKL (linearPool w hw hsum p) q := by
+  have h1 : ∀ i, finiteKL (p i) q = crossEntropy (p i) q - entropy (p i) :=
+    fun i => finiteKL_eq_crossEntropy_sub_entropy _ _ hq
+  have h2 : ∀ i, finiteKL (p i) (linearPool w hw hsum p) =
+      crossEntropy (p i) (linearPool w hw hsum p) - entropy (p i) :=
+    fun i => finiteKL_eq_crossEntropy_sub_entropy _ _ hpool
+  have h3 : finiteKL (linearPool w hw hsum p) q =
+      crossEntropy (linearPool w hw hsum p) q -
+        entropy (linearPool w hw hsum p) :=
+    finiteKL_eq_crossEntropy_sub_entropy _ _ hq
+  have hself := crossEntropy_linearPool_left w hw hsum p (linearPool w hw hsum p)
+  rw [crossEntropy_self_eq_entropy] at hself
+  have hq' := crossEntropy_linearPool_left w hw hsum p q
+  simp only [h1, h2, h3, mul_sub, Finset.sum_sub_distrib]
+  linarith
+
+/-- The linear pool minimises the weighted forward KL among full-support
+laws. -/
+theorem linearPool_kl_minimal
+    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (q : FiniteLaw α)
+    (hq : ∀ x, 0 < q x)
+    (hpool : ∀ x, 0 < linearPool w hw hsum p x) :
+    ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p) ≤
+      ∑ i, w i * finiteKL (p i) q := by
+  rw [linearPool_kl_decomposition w hw hsum p q hq hpool]
+  linarith [finiteKL_nonneg (linearPool w hw hsum p) q]
+
+/-- Uniqueness: a full-support law that does no worse than the linear pool
+equals it. -/
+theorem linearPool_kl_unique_minimiser
+    (w : ι → ℝ) (hw : ∀ i, 0 ≤ w i) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (q : FiniteLaw α)
+    (hq : ∀ x, 0 < q x)
+    (hpool : ∀ x, 0 < linearPool w hw hsum p x)
+    (hle : ∑ i, w i * finiteKL (p i) q ≤
+      ∑ i, w i * finiteKL (p i) (linearPool w hw hsum p)) :
+    q = linearPool w hw hsum p := by
+  rw [linearPool_kl_decomposition w hw hsum p q hq hpool] at hle
+  have hzero : finiteKL (linearPool w hw hsum p) q = 0 :=
+    le_antisymm (by linarith) (finiteKL_nonneg _ _)
+  exact ((finiteKL_eq_zero_iff _ _).mp hzero).symm
+
+variable [Nonempty α]
+
+/-- Unnormalized geometric pool `∏ pᵢ^{wᵢ}` at an atom. -/
+noncomputable def logPoolWeight
+    (w : ι → ℝ) (p : ι → FiniteLaw α) (x : α) : ℝ :=
+  Real.exp (∑ i, w i * Real.log (p i x))
+
+/-- Normalizer `Z = ∑ₓ ∏ pᵢ(x)^{wᵢ}` of the geometric pool. -/
+noncomputable def logPoolNormalizer
+    (w : ι → ℝ) (p : ι → FiniteLaw α) : ℝ :=
+  ∑ x, logPoolWeight w p x
+
+theorem logPoolNormalizer_pos (w : ι → ℝ) (p : ι → FiniteLaw α) :
+    0 < logPoolNormalizer w p :=
+  Finset.sum_pos (fun _ _ => Real.exp_pos _) Finset.univ_nonempty
+
+/-- Normalized geometric pool (product of experts with exponents `wᵢ`). -/
+noncomputable def logPool (w : ι → ℝ) (p : ι → FiniteLaw α) : FiniteLaw α where
+  mass x := logPoolWeight w p x / logPoolNormalizer w p
+  nonneg x := div_nonneg (Real.exp_pos _).le (logPoolNormalizer_pos w p).le
+  sum_one := by
+    rw [← Finset.sum_div]
+    exact div_self (logPoolNormalizer_pos w p).ne'
+
+theorem logPool_pos (w : ι → ℝ) (p : ι → FiniteLaw α) (x : α) :
+    0 < logPool w p x :=
+  div_pos (Real.exp_pos _) (logPoolNormalizer_pos w p)
+
+theorem log_logPool (w : ι → ℝ) (p : ι → FiniteLaw α) (x : α) :
+    Real.log (logPool w p x) =
+      (∑ i, w i * Real.log (p i x)) - Real.log (logPoolNormalizer w p) := by
+  change Real.log (logPoolWeight w p x / logPoolNormalizer w p) = _
+  unfold logPoolWeight
+  rw [Real.log_div (Real.exp_pos _).ne' (logPoolNormalizer_pos w p).ne',
+    Real.log_exp]
+
+/-- Log-pool identity: for every law `q` and full-support experts,
+`∑ wᵢ KL(q‖pᵢ) = KL(q‖q_log) − log Z`. -/
+theorem logPool_kl_decomposition
+    (w : ι → ℝ) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α) :
+    ∑ i, w i * finiteKL q (p i) =
+      finiteKL q (logPool w p) - Real.log (logPoolNormalizer w p) := by
+  have key : ∑ i, w i * crossEntropy q (p i) =
+      crossEntropy q (logPool w p) - Real.log (logPoolNormalizer w p) := by
+    calc
+      ∑ i, w i * crossEntropy q (p i) =
+          ∑ x, -(q x) * ∑ i, w i * Real.log (p i x) := by
+        simp only [crossEntropy]
+        simp_rw [Finset.mul_sum]
+        rw [Finset.sum_comm]
+        refine Finset.sum_congr rfl fun x _ => ?_
+        exact Finset.sum_congr rfl fun i _ => by ring
+      _ = ∑ x, (-(q x) * Real.log (logPool w p x) -
+            Real.log (logPoolNormalizer w p) * q x) := by
+        refine Finset.sum_congr rfl fun x _ => ?_
+        have := log_logPool w p x
+        have h : ∑ i, w i * Real.log (p i x) =
+            Real.log (logPool w p x) + Real.log (logPoolNormalizer w p) := by
+          linarith
+        rw [h]; ring
+      _ = _ := by
+        rw [Finset.sum_sub_distrib, ← Finset.mul_sum, q.sum_one, mul_one]
+        rfl
+  have h1 : ∀ i, finiteKL q (p i) = crossEntropy q (p i) - entropy q :=
+    fun i => finiteKL_eq_crossEntropy_sub_entropy _ _ (hp i)
+  have h2 : finiteKL q (logPool w p) =
+      crossEntropy q (logPool w p) - entropy q :=
+    finiteKL_eq_crossEntropy_sub_entropy _ _ (logPool_pos w p)
+  have hw : ∑ i, w i * entropy q = entropy q := by
+    rw [← Finset.sum_mul, hsum, one_mul]
+  simp only [h1, h2, mul_sub, Finset.sum_sub_distrib]
+  linarith
+
+/-- The geometric pool attains the value `−log Z` and no law does better. -/
+theorem logPool_kl_minimal
+    (w : ι → ℝ) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α) :
+    ∑ i, w i * finiteKL (logPool w p) (p i) ≤ ∑ i, w i * finiteKL q (p i) := by
+  rw [logPool_kl_decomposition w hsum p hp, logPool_kl_decomposition w hsum p hp,
+    finiteKL_self]
+  linarith [finiteKL_nonneg q (logPool w p)]
+
+/-- Uniqueness of the geometric-pool minimiser. -/
+theorem logPool_kl_unique_minimiser
+    (w : ι → ℝ) (hsum : ∑ i, w i = 1)
+    (p : ι → FiniteLaw α) (hp : ∀ i x, 0 < p i x) (q : FiniteLaw α)
+    (hle : ∑ i, w i * finiteKL q (p i) ≤
+      ∑ i, w i * finiteKL (logPool w p) (p i)) :
+    q = logPool w p := by
+  rw [logPool_kl_decomposition w hsum p hp, logPool_kl_decomposition w hsum p hp,
+    finiteKL_self] at hle
+  exact (finiteKL_eq_zero_iff _ _).mp
+    (le_antisymm (by linarith) (finiteKL_nonneg _ _))
+
+end OpinionPools
+
+/-! ## Dobrushin contraction for row-stochastic mixing -/
+
+section Dobrushin
+
+variable {ι : Type*} [Fintype ι] [Nonempty ι]
+
+/-- Spread `max x − min x` of a finite vector of scalar beliefs. -/
+noncomputable def valueSpread (x : ι → ℝ) : ℝ :=
+  Finset.univ.sup' Finset.univ_nonempty x - Finset.univ.inf' Finset.univ_nonempty x
+
+/-- Row overlap `∑ₖ min(W i k, W j k)`. -/
+noncomputable def rowOverlap (W : ι → ι → ℝ) (i j : ι) : ℝ :=
+  ∑ k, min (W i k) (W j k)
+
+/-- Scrambling (Dobrushin overlap) coefficient `δ = min_{i,j} rowOverlap`. -/
+noncomputable def scramblingCoefficient (W : ι → ι → ℝ) : ℝ :=
+  Finset.univ.inf' (Finset.univ_nonempty (α := ι × ι))
+    (fun ij => rowOverlap W ij.1 ij.2)
+
+/-- Mixing step `(W x)ᵢ = ∑ₖ W i k · x k`. -/
+noncomputable def mixStep (W : ι → ι → ℝ) (x : ι → ℝ) : ι → ℝ :=
+  fun i => ∑ k, W i k * x k
+
+theorem valueSpread_nonneg (x : ι → ℝ) : 0 ≤ valueSpread x := by
+  obtain ⟨i⟩ := ‹Nonempty ι›
+  unfold valueSpread
+  have h1 := Finset.le_sup' x (Finset.mem_univ i)
+  have h2 := Finset.inf'_le x (Finset.mem_univ i)
+  linarith
+
+theorem sub_le_valueSpread (x : ι → ℝ) (i j : ι) : x i - x j ≤ valueSpread x := by
+  unfold valueSpread
+  have h1 := Finset.le_sup' x (Finset.mem_univ i)
+  have h2 := Finset.inf'_le x (Finset.mem_univ j)
+  linarith
+
+/-- Pairwise bound: two mixed coordinates differ by at most `(1 − overlap)`
+times the input spread. -/
+theorem mixStep_diff_le
+    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)
+    (x : ι → ℝ) (i j : ι) :
+    mixStep W x i - mixStep W x j ≤ (1 - rowOverlap W i j) * valueSpread x := by
+  have hM : ∀ k, x k ≤ Finset.univ.sup' Finset.univ_nonempty x :=
+    fun k => Finset.le_sup' x (Finset.mem_univ k)
+  have hm : ∀ k, Finset.univ.inf' Finset.univ_nonempty x ≤ x k :=
+    fun k => Finset.inf'_le x (Finset.mem_univ k)
+  set M := Finset.univ.sup' Finset.univ_nonempty x
+  set mn := Finset.univ.inf' Finset.univ_nonempty x
+  have hA : ∑ k, (W i k - min (W i k) (W j k)) * x k ≤
+      (1 - rowOverlap W i j) * M := by
+    calc
+      _ ≤ ∑ k, (W i k - min (W i k) (W j k)) * M :=
+        Finset.sum_le_sum fun k _ =>
+          mul_le_mul_of_nonneg_left (hM k) (sub_nonneg.mpr (min_le_left _ _))
+      _ = (1 - rowOverlap W i j) * M := by
+        rw [← Finset.sum_mul, Finset.sum_sub_distrib, hrow i]
+        rfl
+  have hB : (1 - rowOverlap W i j) * mn ≤
+      ∑ k, (W j k - min (W i k) (W j k)) * x k := by
+    calc
+      (1 - rowOverlap W i j) * mn =
+          ∑ k, (W j k - min (W i k) (W j k)) * mn := by
+        rw [← Finset.sum_mul, Finset.sum_sub_distrib, hrow j]
+        rfl
+      _ ≤ _ :=
+        Finset.sum_le_sum fun k _ =>
+          mul_le_mul_of_nonneg_left (hm k) (sub_nonneg.mpr (min_le_right _ _))
+  have hdiff : mixStep W x i - mixStep W x j =
+      ∑ k, (W i k - min (W i k) (W j k)) * x k -
+        ∑ k, (W j k - min (W i k) (W j k)) * x k := by
+    simp only [mixStep, ← Finset.sum_sub_distrib]
+    exact Finset.sum_congr rfl fun k _ => by ring
+  have hs : valueSpread x = M - mn := rfl
+  have hexp : (1 - rowOverlap W i j) * (M - mn) =
+      (1 - rowOverlap W i j) * M - (1 - rowOverlap W i j) * mn := by ring
+  rw [hdiff, hs, hexp]
+  linarith
+
+/-- Dobrushin contraction: `spread (W x) ≤ (1 − δ) · spread x` for every
+row-stochastic `W`, with `δ` the scrambling coefficient. -/
+theorem valueSpread_mixStep_le
+    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)
+    (x : ι → ℝ) :
+    valueSpread (mixStep W x) ≤ (1 - scramblingCoefficient W) * valueSpread x := by
+  obtain ⟨i, _, hi⟩ := Finset.exists_mem_eq_sup' (Finset.univ_nonempty (α := ι))
+    (mixStep W x)
+  obtain ⟨j, _, hj⟩ := Finset.exists_mem_eq_inf' (Finset.univ_nonempty (α := ι))
+    (mixStep W x)
+  have hδ : scramblingCoefficient W ≤ rowOverlap W i j :=
+    Finset.inf'_le (fun ij : ι × ι => rowOverlap W ij.1 ij.2)
+      (Finset.mem_univ (i, j))
+  have hspread : valueSpread (mixStep W x) = mixStep W x i - mixStep W x j := by
+    unfold valueSpread
+    rw [hi, hj]
+  rw [hspread]
+  calc
+    mixStep W x i - mixStep W x j ≤ (1 - rowOverlap W i j) * valueSpread x :=
+      mixStep_diff_le W hrow x i j
+    _ ≤ (1 - scramblingCoefficient W) * valueSpread x :=
+      mul_le_mul_of_nonneg_right (by linarith) (valueSpread_nonneg x)
+
+/-- Strict contraction when the coefficient is positive and the input is not
+already in consensus. -/
+theorem valueSpread_mixStep_lt
+    (W : ι → ι → ℝ) (hrow : ∀ i, ∑ j, W i j = 1)
+    (x : ι → ℝ) (hδ : 0 < scramblingCoefficient W) (hx : 0 < valueSpread x) :
+    valueSpread (mixStep W x) < valueSpread x := by
+  have h := valueSpread_mixStep_le W hrow x
+  nlinarith [mul_pos hδ hx]
+
+end Dobrushin
+
+/-! ## Dobrushin witnesses -/
+
+/-- The fixed two-agent `[[3/4, 1/4], [1/4, 3/4]]` consensus matrix. -/
+noncomputable def consensusMatrix2 : Fin 2 → Fin 2 → ℝ :=
+  fun i j => if i = j then 3 / 4 else 1 / 4
+
+theorem consensusMatrix2_nonneg (i j : Fin 2) : 0 ≤ consensusMatrix2 i j := by
+  unfold consensusMatrix2; split_ifs <;> norm_num
+
+theorem consensusMatrix2_row (i : Fin 2) : ∑ j, consensusMatrix2 i j = 1 := by
+  fin_cases i <;> simp [consensusMatrix2, Fin.sum_univ_two] <;> norm_num
+
+/-- The two-agent matrix has scrambling coefficient at least `1/2`. -/
+theorem consensusMatrix2_scrambling : (1 / 2 : ℝ) ≤ scramblingCoefficient consensusMatrix2 := by
+  unfold scramblingCoefficient
+  rw [Finset.le_inf'_iff]
+  rintro ⟨i, j⟩ _
+  fin_cases i <;> fin_cases j <;>
+    simp [rowOverlap, consensusMatrix2, Fin.sum_univ_two] <;> norm_num
+
+/-- The mixing step of `consensusMatrix2` is exactly `consensusLeft` /
+`consensusRight` at each atom. -/
+theorem mixStep_consensusMatrix2
+    {State : Type*} [Fintype State] (left right : FiniteLaw State) (s : State) :
+    mixStep consensusMatrix2 ![left s, right s] =
+      ![consensusLeft left right s, consensusRight left right s] := by
+  funext i
+  fin_cases i <;>
+    simp only [mixStep, consensusMatrix2, Fin.sum_univ_two, consensusLeft,
+      consensusRight, convexMixture, Fin.zero_eta, Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_zero, Matrix.cons_val_one] <;>
+    norm_num
+
+/-- The fixed two-agent consensus step is an instance of Dobrushin
+contraction with `δ ≥ 1/2`. -/
+theorem consensus_spread_le_half
+    {State : Type*} [Fintype State] (left right : FiniteLaw State) (s : State) :
+    valueSpread ![consensusLeft left right s, consensusRight left right s] ≤
+      (1 / 2 : ℝ) * valueSpread ![left s, right s] := by
+  rw [← mixStep_consensusMatrix2]
+  have h := valueSpread_mixStep_le consensusMatrix2 consensusMatrix2_row ![left s, right s]
+  have hs := valueSpread_nonneg ![left s, right s]
+  have hδ := consensusMatrix2_scrambling
+  nlinarith
+
+/-- A concrete asymmetric three-agent row-stochastic matrix. -/
+noncomputable def asymMatrix3 : Fin 3 → Fin 3 → ℝ :=
+  ![![1 / 2, 1 / 4, 1 / 4], ![1 / 5, 3 / 5, 1 / 5], ![1 / 10, 3 / 10, 3 / 5]]
+
+theorem asymMatrix3_nonneg (i j : Fin 3) : 0 ≤ asymMatrix3 i j := by
+  fin_cases i <;> fin_cases j <;> norm_num [asymMatrix3]
+
+theorem asymMatrix3_row (i : Fin 3) : ∑ j, asymMatrix3 i j = 1 := by
+  fin_cases i <;> simp [asymMatrix3, Fin.sum_univ_three] <;> norm_num
+
+theorem asymMatrix3_scrambling : (3 / 5 : ℝ) ≤ scramblingCoefficient asymMatrix3 := by
+  unfold scramblingCoefficient
+  rw [Finset.le_inf'_iff]
+  rintro ⟨i, j⟩ _
+  fin_cases i <;> fin_cases j <;>
+    simp [rowOverlap, asymMatrix3, Fin.sum_univ_three] <;> norm_num [min_def]
+
+/-- Three-agent witness: `δ ≥ 3/5 > 0`, so the vector `(1,0,0)` (spread `≥ 1`)
+strictly contracts, with ratio at most `2/5`. -/
+theorem asymMatrix3_strict_contraction :
+    0 < scramblingCoefficient asymMatrix3 ∧
+      1 ≤ valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧
+      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) ≤
+        (2 / 5 : ℝ) * valueSpread (![1, 0, 0] : Fin 3 → ℝ) ∧
+      valueSpread (mixStep asymMatrix3 ![1, 0, 0]) <
+        valueSpread (![1, 0, 0] : Fin 3 → ℝ) := by
+  have hδ := asymMatrix3_scrambling
+  have hx : 1 ≤ valueSpread (![1, 0, 0] : Fin 3 → ℝ) := by
+    have := sub_le_valueSpread (![1, 0, 0] : Fin 3 → ℝ) 0 1
+    simpa using this
+  have hle := valueSpread_mixStep_le asymMatrix3 asymMatrix3_row ![1, 0, 0]
+  refine ⟨by linarith, hx, by nlinarith [valueSpread_nonneg (![1, 0, 0] : Fin 3 → ℝ)],
+    valueSpread_mixStep_lt asymMatrix3 asymMatrix3_row _
+      (by linarith) (by linarith)⟩
+
+/-- Identity mixing (no coupling). -/
+noncomputable def identityMixing2 : Fin 2 → Fin 2 → ℝ :=
+  fun i j => if i = j then 1 else 0
+
+theorem identityMixing2_nonneg (i j : Fin 2) : 0 ≤ identityMixing2 i j := by
+  unfold identityMixing2; split_ifs <;> norm_num
+
+theorem identityMixing2_row (i : Fin 2) : ∑ j, identityMixing2 i j = 1 := by
+  fin_cases i <;> simp [identityMixing2]
+
+/-- Non-scrambling witness: the identity has `δ = 0`, and the spread of
+`(1,0)` is unchanged by mixing, so no contraction occurs. -/
+theorem identityMixing2_no_contraction :
+    scramblingCoefficient identityMixing2 = 0 ∧
+      0 < valueSpread (![1, 0] : Fin 2 → ℝ) ∧
+      valueSpread (mixStep identityMixing2 ![1, 0]) =
+        valueSpread (![1, 0] : Fin 2 → ℝ) := by
+  have hle : scramblingCoefficient identityMixing2 ≤ 0 := by
+    have h := Finset.inf'_le (fun ij : Fin 2 × Fin 2 => rowOverlap identityMixing2 ij.1 ij.2)
+      (Finset.mem_univ ((0, 1) : Fin 2 × Fin 2))
+    have h0 : rowOverlap identityMixing2 0 1 = 0 := by
+      simp [rowOverlap, identityMixing2, Fin.sum_univ_two]
+    exact h.trans h0.le
+  have hge : 0 ≤ scramblingCoefficient identityMixing2 := by
+    unfold scramblingCoefficient
+    rw [Finset.le_inf'_iff]
+    rintro ⟨i, j⟩ _
+    exact Finset.sum_nonneg fun k _ =>
+      le_min (identityMixing2_nonneg _ _) (identityMixing2_nonneg _ _)
+  have hmix : mixStep identityMixing2 ![1, 0] = ![1, 0] := by
+    funext i
+    fin_cases i <;> simp [mixStep, identityMixing2]
+  refine ⟨le_antisymm hle hge, ?_, by rw [hmix]⟩
+  have := sub_le_valueSpread (![1, 0] : Fin 2 → ℝ) 0 1
+  simp at this
+  linarith
+
 end FEP.CollectiveInference

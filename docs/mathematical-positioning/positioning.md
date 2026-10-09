@@ -19997,7 +19997,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/active_inference.lean` | `ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5` |
 | `formal/bayesian_model_reduction.lean` | `264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a` |
 | `formal/causal_dynamics.lean` | `5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e` |
-| `formal/collective_inference.lean` | `c073fe37fa86b8e7619af4d5ffcf0b8ba5579243b5d824ac0053df197fed55a5` |
+| `formal/collective_inference.lean` | `484ef59cff1ef3bee40f3ce422b6deaa8af5ebd4295efae8d86b70432cd64175` |
 | `formal/composed.lean` | `ee98a530a653471420cd68fe393c3d7aa4bc0f4980ad38c43b36bb3db77b1629` |
 | `formal/compositions/bayesian_model_reduction.lean` | `320f0faa836ca9d902646b6eb497eee28111f889ce6a81921dead50b9b0be8d0` |
 | `formal/compositions/causal_predictive.lean` | `6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7` |
