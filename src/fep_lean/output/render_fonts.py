@@ -26,6 +26,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from fep_lean._paths import FepLeanError
 from fep_lean.output.manuscript import UNIFIED_FORMALISM_CATALOGUE_FILENAME
 
 __all__ = [
@@ -52,7 +53,7 @@ PROSE_ROLE = "main"
 _ROLE_COMMANDS = {CODE_ROLE: "setmonofont", PROSE_ROLE: "setmainfont"}
 
 
-class FontProbeError(RuntimeError):
+class FontProbeError(RuntimeError, FepLeanError):
     """Raised when the font requirement cannot be established at all.
 
     Not knowing is not the same as being covered: a render host without

@@ -9,6 +9,17 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+
+class FepLeanError(Exception):
+    """Common base of every package-defined exception.
+
+    Package errors keep their historical built-in base (``ValueError``,
+    ``RuntimeError``, ...) alongside this one, so existing ``except`` clauses
+    are unaffected while callers can catch ``FepLeanError`` for any of them.
+    Lives in ``_paths`` because every layer can already import it cycle-free.
+    """
+
+
 _PACKAGE_DIR = Path(__file__).resolve().parent  # src/fep_lean/
 _CHECKOUT_MARKERS = (
     "config/topics.yaml",

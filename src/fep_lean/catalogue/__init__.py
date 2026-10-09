@@ -8,6 +8,8 @@ Public API
     FEPTopicCatalogue   — in-memory catalogue loaded from config/topics.yaml
 """
 
+from typing import TYPE_CHECKING
+
 from fep_lean.catalogue.novelty import (
     FormalismNoveltyLedger,
     FormalismNoveltyRecord,
@@ -15,10 +17,7 @@ from fep_lean.catalogue.novelty import (
     load_formalism_novelty,
 )
 from fep_lean.catalogue.registry import (
-    BODIES,
     BODY_MODULE_MANIFEST,
-    LATEX_EQUATIONS,
-    THEOREM_LATEX,
     BodyModule,
     RegistryValidationError,
     validate_body_family_ownership,
@@ -49,6 +48,21 @@ from fep_lean.catalogue.topics import (
     FEPTopicCatalogue,
     TopicEntry,
 )
+
+if TYPE_CHECKING:
+    from fep_lean.catalogue.registry import BODIES, LATEX_EQUATIONS, THEOREM_LATEX
+
+
+def __getattr__(name: str) -> object:
+    """Resolve the lazily built registry maps on first access (PEP 562)."""
+    if name in {"BODIES", "LATEX_EQUATIONS", "THEOREM_LATEX"}:
+        from fep_lean.catalogue import registry
+
+        value = getattr(registry, name)
+        globals()[name] = value
+        return value
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
 
 __all__ = [
     "BODIES",

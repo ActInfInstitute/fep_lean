@@ -10,6 +10,7 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
 from fep_lean.lean_source import lean_code_without_comments
 
 _TOPIC_ID_RE = re.compile(r"^fep-(\d{3})$")
@@ -28,7 +29,7 @@ _RECORD_FIELDS = frozenset(
 )
 
 
-class NoveltyValidationError(ValueError):
+class NoveltyValidationError(ValueError, FepLeanError):
     """Raised when an expansion row lacks a reviewable mathematical delta."""
 
 

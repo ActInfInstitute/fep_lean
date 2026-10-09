@@ -18,8 +18,9 @@ from typing import Any, cast
 import yaml
 
 from fep_lean import _SOURCE_RUNTIME_SHA256, __version__
+from fep_lean._paths import FepLeanError
+from fep_lean.catalogue import registry as _registry
 from fep_lean.catalogue.registry import (
-    BODIES,
     BODY_MODULE_MANIFEST,
     validate_body_family_ownership,
     validate_body_roster,
@@ -91,7 +92,7 @@ EVIDENCE_BOUNDARY = (
 )
 
 
-class PositioningError(ValueError):
+class PositioningError(ValueError, FepLeanError):
     """An input or projection failed the slice's bounded contract."""
 
 
@@ -295,7 +296,9 @@ def _theorem_analysis_index(paths: Mapping[str, Path]) -> dict[str, dict[str, An
     )
     return cast(
         dict[str, dict[str, Any]],
-        json.loads(_cached_theorem_analysis(tuple(BODIES.items()), formal_sources)),
+        json.loads(
+            _cached_theorem_analysis(tuple(_registry.BODIES.items()), formal_sources)
+        ),
     )
 
 
@@ -846,6 +849,13 @@ def _source_paths(
     return dict(sorted(paths.items()))
 
 
+def __getattr__(name: str) -> object:
+    """Expose ``BODIES`` lazily so importing this module skips registry build."""
+    if name == "BODIES":
+        return _registry.BODIES
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 def _hashes(paths: Mapping[str, Path]) -> dict[str, str]:
     return {
         name: hashlib.sha256(path.read_bytes()).hexdigest()
@@ -980,10 +990,12 @@ def build_mathematical_positioning(
     raw = {name: load_yaml(path) for name, path in inputs.items()}
     _validate_body_literals(paths)
     metadata = load_catalogue_metadata(inputs["catalogue_metadata.yaml"])
-    validate_body_roster(BODIES, metadata.topic_ids)
+    validate_body_roster(_registry.BODIES, metadata.topic_ids)
     validate_body_family_ownership({row.id: row.family for row in metadata.records})
     audit = load_theorem_maturity(
-        inputs["theorem_maturity.yaml"], bodies=BODIES, roster_ids=metadata.topic_ids
+        inputs["theorem_maturity.yaml"],
+        bodies=_registry.BODIES,
+        roster_ids=metadata.topic_ids,
     )
     graph = load_formalism_graph(
         inputs["formalism_relations.yaml"], roster_ids=metadata.topic_ids
@@ -1047,11 +1059,11 @@ def build_mathematical_positioning(
                 },
                 "body_source": ownership[topic_id],
                 "canonical_body_sha256": hashlib.sha256(
-                    BODIES[topic_id].encode()
+                    _registry.BODIES[topic_id].encode()
                 ).hexdigest(),
                 "body_theorem_count": len(
                     LEAN_THEOREM_RE.findall(
-                        lean_code_without_comments(BODIES[topic_id])
+                        lean_code_without_comments(_registry.BODIES[topic_id])
                     )
                 ),
             }

@@ -52,6 +52,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from fep_lean._paths import FepLeanError
+
 if TYPE_CHECKING:
     from fep_lean.catalogue.topics import TopicEntry
 
@@ -1168,7 +1170,7 @@ class HermesExplainer:
         )
 
 
-class HermesAPIError(Exception):
+class HermesAPIError(FepLeanError):
     """Raised for API/transport failures from :meth:`HermesExplainer._call_api`."""
 
     def __init__(

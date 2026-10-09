@@ -26,6 +26,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from fep_lean._paths import FepLeanError
+
 __all__ = [
     "MANUSCRIPT_COPIED_FIGURES",
     "MANUSCRIPT_SVG_FIGURES",
@@ -78,7 +80,7 @@ RASTER_WIDTH_PX = 2000
 RASTERIZER = "rsvg-convert"
 
 
-class SvgRasterError(RuntimeError):
+class SvgRasterError(RuntimeError, FepLeanError):
     """A cited figure could not be produced from its SVG projection."""
 
 

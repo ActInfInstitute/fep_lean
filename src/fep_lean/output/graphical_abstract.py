@@ -20,20 +20,14 @@ from __future__ import annotations
 import struct
 import zlib
 from pathlib import Path
-from typing import cast
-
-import matplotlib
-
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.axes import Axes
-from matplotlib.backends.backend_agg import FigureCanvasAgg
-from matplotlib.figure import Figure
-from matplotlib.patches import Rectangle
+from typing import TYPE_CHECKING, cast
 
 from fep_lean.catalogue.schema import CatalogueMetadataManifest, load_catalogue_metadata
 from fep_lean.output.fsutil import atomic_write_bytes
+
+if TYPE_CHECKING:
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
 
 __all__ = [
     "GRAPHICAL_ABSTRACT_RELATIVE",
@@ -66,6 +60,8 @@ _BAND = "#f4f4f1"
 
 def _encode_png_rgb(width: int, height: int, rgba: bytes) -> bytes:
     """Encode raw RGBA canvas bytes as a canonical 8-bit RGB PNG."""
+
+    import numpy as np
 
     canvas = np.frombuffer(rgba, dtype=np.uint8).reshape(height, width, 4)
     # One filter-type-0 byte per scanline, then the RGB triplets.
@@ -109,6 +105,8 @@ def _stage_box(
     Coordinates are inches on the 7.68 x 5.12 canvas; font sizes are points.
     Every bullet line is kept short enough for a 2.18-inch box at 8 pt.
     """
+
+    from matplotlib.patches import Rectangle
 
     ax.add_patch(
         Rectangle(
@@ -321,6 +319,8 @@ def _draw(fig: Figure, metadata: CatalogueMetadataManifest) -> None:
     )
 
     # Honesty band: the boundary the whole pipeline enforces.
+    from matplotlib.patches import Rectangle
+
     ax.add_patch(
         Rectangle(
             (0.22, 0.16),
@@ -358,6 +358,12 @@ def render_graphical_abstract(project_root: Path) -> Path:
 
     project_root = Path(project_root)
     metadata = load_catalogue_metadata(project_root / "config/catalogue_metadata.yaml")
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
     fig = plt.figure(figsize=(CANVAS_W, CANVAS_H), dpi=200)
     try:
         _draw(fig, metadata)

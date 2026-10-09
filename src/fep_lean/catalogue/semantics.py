@@ -17,13 +17,14 @@ from typing import Any
 
 import yaml
 
+from fep_lean._paths import FepLeanError
 from fep_lean.lean_source import (
     LEAN_THEOREM_RE,
     lean_code_without_comments,
 )
 
 
-class SemanticValidationError(ValueError):
+class SemanticValidationError(ValueError, FepLeanError):
     """Raised when semantic review data cannot be trusted as a projection input."""
 
 
