@@ -324,7 +324,7 @@ def test_shipped_graph_conserves_relation_and_capability_state() -> None:
     assert expansion_topic_ids <= theorem_witnessed_sources
 
     assert Counter(edge.kind for edge in graph.edges) == {
-        EdgeKind.FORMAL: 20,
+        EdgeKind.FORMAL: 24,
         EdgeKind.FORMAL_PAIRING: 118,
         EdgeKind.CONCEPTUAL: 8,
     }

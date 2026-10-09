@@ -52,13 +52,12 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `markov_blanket` | foundation | `FEP.MarkovBlanket` | finite_information |
 | `variational_duality` | foundation | `FEP.VariationalDuality` | finite_information |
 
-## Layer 3 (10 modules)
+## Layer 3 (9 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
 | `bayesian_model_reduction` | foundation | `FEP.BayesianModelReduction` | variational_duality, gaussian_information_geometry |
 | `causal_dynamics` | foundation | `FEP.CausalDynamics` | markov_blanket |
-| `compositions.core` | composition | `FEPComposed` | fep_all, active_inference, information_geometry, markov_blanket, statistical_convergence |
 | `compositions.exponential_family` | composition | `FEPComposed` | fep_all, exponential_family |
 | `compositions.measure_variational` | composition | `FEPComposed` | fep_all, measure_bayes, variational_duality |
 | `controlled_markov` | foundation | `FEP.ControlledMarkov` | active_inference |
@@ -83,11 +82,12 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `policy_tree` | foundation | `FEP.PolicyTrees` | controlled_markov |
 | `temporal_inference` | foundation | `FEP.TemporalInference` | controlled_markov |
 
-## Layer 5 (6 modules)
+## Layer 5 (7 modules)
 
 | Module | Role | Namespace | Depends on |
 | --- | --- | --- | --- |
 | `compositions.control_temporal` | composition | `FEPComposed` | fep_all, controlled_markov, temporal_inference |
+| `compositions.core` | composition | `FEPComposed` | fep_all, active_inference, information_geometry, markov_blanket, statistical_convergence, controlled_markov, temporal_inference, path_thermodynamics, geometric_optimization |
 | `compositions.policy_trees` | composition | `FEPComposed` | fep_all, policy_tree |
 | `compositions.risk_calibration` | composition | `FEPComposed` | fep_all, empirical_risk |
 | `continuous_time_markov` | foundation | `FEP.ContinuousTimeMarkov` | finite_markov_dynamics, active_inference, decision_risk, markov_blanket |
@@ -102,7 +102,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 | `compositions.efe_policy_selection` | composition | `FEPComposed` | fep_all, efe_policy_selection |
 | `compositions.finite_policy_action` | composition | `FEPComposed.FinitePolicyAction` | policy_tree, active_inference, controlled_markov, decision_risk, finite_posterior_learning |
 | `efe_time_scale_separation` | foundation | `FEP.TimeScaleEFE` | continuous_time_markov, path_thermodynamics, active_inference, ness_flow |
-| `helmholtz_ao_ness` | foundation | `FEP.HelmholtzAoNess` | continuous_time_markov |
+| `helmholtz_ao_ness` | foundation | `FEP.HelmholtzAoNess` | continuous_time_markov, geometric_mechanics |
 | `markov_semigroup` | foundation | `FEP.MarkovSemigroup` | continuous_time_markov, native_blanket |
 | `perception_action_loop` | foundation | `FEP.PerceptionActionLoop` | active_inference, controlled_markov, finite_markov_dynamics, temporal_inference, continuous_time_markov |
 | `posterior_convergence` | foundation | `FEP.PosteriorConvergence` | gaussian_information_geometry, finite_posterior_learning, measure_bayes |

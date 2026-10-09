@@ -463,4 +463,525 @@ theorem irreversibleForward_unitWork_not_jarzynski :
   rw [hSum] at hNormalization
   linarith
 
+/-! ## Markov path laws -/
+
+section MarkovPaths
+
+variable {S : Type*} [Fintype S]
+
+/-- Mass of a length-`n+1` trajectory under a homogeneous Markov chain:
+initial mass times the product of stage transition masses. -/
+def markovPathMass (kernel : FiniteKernel S S) (initial : FiniteLaw S) (n : ℕ)
+    (path : Fin (n + 1) → S) : ℝ :=
+  initial (path 0) * ∏ t : Fin n, kernel (path t.castSucc) (path t.succ)
+
+/-- Mass of the same trajectory read backwards, in forward coordinates, under a
+chain driven by `reverse` and started from `final` at the last time. -/
+def markovReverseMass (reverse : FiniteKernel S S) (final : FiniteLaw S) (n : ℕ)
+    (path : Fin (n + 1) → S) : ℝ :=
+  final (path (Fin.last n)) * ∏ t : Fin n, reverse (path t.succ) (path t.castSucc)
+
+/-- Appending one step multiplies the path mass by one transition mass. -/
+theorem markovPathMass_snoc (kernel : FiniteKernel S S) (initial : FiniteLaw S)
+    (n : ℕ) (path : Fin (n + 1) → S) (next : S) :
+    markovPathMass kernel initial (n + 1)
+        (Fin.snoc (α := fun _ => S) path next) =
+      markovPathMass kernel initial n path * kernel (path (Fin.last n)) next := by
+  unfold markovPathMass
+  rw [Fin.prod_univ_castSucc]
+  have hStage : ∀ t : Fin n,
+      kernel ((Fin.snoc (α := fun _ => S) path next) t.castSucc.castSucc)
+          ((Fin.snoc (α := fun _ => S) path next) t.castSucc.succ) =
+        kernel (path t.castSucc) (path t.succ) := by
+    intro t
+    rw [Fin.succ_castSucc, Fin.snoc_castSucc, Fin.snoc_castSucc]
+  have hZero : (Fin.snoc (α := fun _ => S) path next) (0 : Fin (n + 2)) =
+      path 0 := by
+    rw [← Fin.castSucc_zero, Fin.snoc_castSucc]
+  have hLast : (Fin.snoc (α := fun _ => S) path next)
+      (Fin.last n).castSucc = path (Fin.last n) := Fin.snoc_castSucc _ _ _
+  have hNext : (Fin.snoc (α := fun _ => S) path next)
+      (Fin.last n).succ = next := by
+    rw [Fin.succ_last]
+    exact Fin.snoc_last _ _
+  rw [Finset.prod_congr rfl (fun t _ => hStage t), hZero, hLast, hNext]
+  ring
+
+/-- Every Markov path mass is nonnegative. -/
+theorem markovPathMass_nonneg (kernel : FiniteKernel S S)
+    (initial : FiniteLaw S) (n : ℕ) (path : Fin (n + 1) → S) :
+    0 ≤ markovPathMass kernel initial n path :=
+  mul_nonneg (initial.nonneg _)
+    (Finset.prod_nonneg fun _ _ => kernel.nonneg _ _)
+
+/-- Total Markov path mass is one, by induction on the horizon. -/
+theorem markovPathMass_sum_one (kernel : FiniteKernel S S)
+    (initial : FiniteLaw S) (n : ℕ) :
+    ∑ path : Fin (n + 1) → S, markovPathMass kernel initial n path = 1 := by
+  induction n with
+  | zero =>
+      have hBase : ∀ path : Fin 1 → S,
+          markovPathMass kernel initial 0 path = initial (path 0) := by
+        intro path
+        simp [markovPathMass]
+      simp_rw [hBase]
+      rw [Fintype.sum_equiv (Equiv.funUnique (Fin 1) S) _ (fun s => initial s)
+        (fun path => by simp)]
+      exact initial.sum_one
+  | succ n ih =>
+      rw [← (Fin.snocEquiv fun _ : Fin (n + 2) => S).sum_comp, Fintype.sum_prod_type]
+      have hSnoc : ∀ (next : S) (path : Fin (n + 1) → S),
+          markovPathMass kernel initial (n + 1)
+              ((Fin.snocEquiv fun _ : Fin (n + 2) => S) (next, path)) =
+            markovPathMass kernel initial n path *
+              kernel (path (Fin.last n)) next := by
+        intro next path
+        exact markovPathMass_snoc kernel initial n path next
+      simp_rw [hSnoc]
+      rw [Finset.sum_comm]
+      calc
+        (∑ path : Fin (n + 1) → S, ∑ next : S,
+            markovPathMass kernel initial n path *
+              kernel (path (Fin.last n)) next) =
+            ∑ path : Fin (n + 1) → S, markovPathMass kernel initial n path := by
+          apply Finset.sum_congr rfl
+          intro path _
+          rw [← Finset.mul_sum, (kernel.sum_one _), mul_one]
+        _ = 1 := ih
+
+/-- Forward Markov path law on `Fin (n+1) → S`, normalized by
+`markovPathMass_sum_one`. -/
+def markovPathLaw (kernel : FiniteKernel S S) (initial : FiniteLaw S) (n : ℕ) :
+    FiniteLaw (Fin (n + 1) → S) where
+  mass := markovPathMass kernel initial n
+  nonneg := markovPathMass_nonneg kernel initial n
+  sum_one := markovPathMass_sum_one kernel initial n
+
+/-- Reversal of a trajectory: read it backwards. -/
+def pathReverse (n : ℕ) (path : Fin (n + 1) → S) : Fin (n + 1) → S :=
+  path ∘ Fin.rev
+
+omit [Fintype S] in
+/-- Trajectory reversal is an involution. -/
+theorem pathReverse_involutive (n : ℕ) :
+    Function.Involutive (pathReverse (S := S) n) := by
+  intro path
+  funext i
+  simp [pathReverse]
+
+/-- The aligned reverse mass is the reverse chain's forward mass at the
+reversed trajectory. -/
+theorem markovReverseMass_eq (reverse : FiniteKernel S S) (final : FiniteLaw S)
+    (n : ℕ) (path : Fin (n + 1) → S) :
+    markovReverseMass reverse final n path =
+      markovPathMass reverse final n (pathReverse n path) := by
+  unfold markovReverseMass markovPathMass pathReverse
+  simp only [Function.comp_apply, Fin.rev_zero, Fin.rev_castSucc, Fin.rev_succ]
+  congr 1
+  exact (Equiv.prod_comp Fin.revPerm
+    fun t => reverse (path t.succ) (path t.castSucc)).symm
+
+/-- Reverse-driven path law, expressed in forward-path coordinates. -/
+def markovReversePathLaw (reverse : FiniteKernel S S) (final : FiniteLaw S)
+    (n : ℕ) : FiniteLaw (Fin (n + 1) → S) where
+  mass := markovReverseMass reverse final n
+  nonneg path := by
+    rw [markovReverseMass_eq]
+    exact markovPathMass_nonneg reverse final n _
+  sum_one := by
+    simp_rw [markovReverseMass_eq]
+    exact (Equiv.sum_comp (pathReverse_involutive (S := S) n).toPerm
+      (markovPathMass reverse final n)).trans
+      (markovPathMass_sum_one reverse final n)
+
+/-- The forward Markov path law paired with a reverse-driven chain, with
+trajectory reversal as the involution. -/
+noncomputable def markovPathProtocol
+    (kernel : FiniteKernel S S) (initial : FiniteLaw S)
+    (reverse : FiniteKernel S S) (final : FiniteLaw S) (n : ℕ) :
+    FinitePathProtocol (Fin (n + 1) → S) where
+  forward := markovPathLaw kernel initial n
+  reverseAligned := markovReversePathLaw reverse final n
+  reversal := pathReverse n
+  reversal_involutive := pathReverse_involutive n
+
+/-- Supported trajectories have positive forward mass. -/
+theorem markovPathMass_pos (kernel : FiniteKernel S S) (initial : FiniteLaw S)
+    (hInitial : ∀ s, 0 < initial s) (hKernel : ∀ a b, 0 < kernel a b)
+    (n : ℕ) (path : Fin (n + 1) → S) :
+    0 < markovPathMass kernel initial n path :=
+  mul_pos (hInitial _) (Finset.prod_pos fun _ _ => hKernel _ _)
+
+/-- Supported trajectories have positive aligned reverse mass. -/
+theorem markovReverseMass_pos (reverse : FiniteKernel S S) (final : FiniteLaw S)
+    (hFinal : ∀ s, 0 < final s) (hReverse : ∀ a b, 0 < reverse a b)
+    (n : ℕ) (path : Fin (n + 1) → S) :
+    0 < markovReverseMass reverse final n path :=
+  mul_pos (hFinal _) (Finset.prod_pos fun _ _ => hReverse _ _)
+
+/-- Pathwise entropy production of a Markov path protocol is a boundary log
+ratio plus the sum of stage log ratios `log (K_{x_t x_{t+1}} / R_{x_{t+1} x_t})`. -/
+theorem pathwiseEntropyProduction_markov
+    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)
+    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)
+    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b)
+    (n : ℕ) (path : Fin (n + 1) → S) :
+    pathwiseEntropyProduction
+        (markovPathProtocol kernel initial reverse final n) path =
+      Real.log (initial (path 0) / final (path (Fin.last n))) +
+        ∑ t : Fin n, Real.log
+          (kernel (path t.castSucc) (path t.succ) /
+            reverse (path t.succ) (path t.castSucc)) := by
+  have hRatio : pathRatio (markovPathProtocol kernel initial reverse final n)
+      path = (initial (path 0) / final (path (Fin.last n))) *
+        ∏ t : Fin n, (kernel (path t.castSucc) (path t.succ) /
+          reverse (path t.succ) (path t.castSucc)) := by
+    change markovPathMass kernel initial n path /
+      markovReverseMass reverse final n path = _
+    unfold markovPathMass markovReverseMass
+    rw [Finset.prod_div_distrib, mul_div_mul_comm]
+  unfold pathwiseEntropyProduction
+  rw [hRatio, Real.log_mul (div_pos (hInitial _) (hFinal _)).ne'
+    (Finset.prod_pos fun _ _ => div_pos (hKernel _ _) (hReverse _ _)).ne',
+    Real.log_prod fun _ _ => (div_pos (hKernel _ _) (hReverse _ _)).ne']
+
+/-- Path KL splits into the boundary term plus the sum of expected stage log
+ratios, for every horizon `n`. -/
+theorem entropyProduction_markov_decomposition
+    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)
+    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)
+    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b)
+    (n : ℕ) :
+    entropyProduction (markovPathProtocol kernel initial reverse final n) =
+      (∑ path : Fin (n + 1) → S, markovPathLaw kernel initial n path *
+          Real.log (initial (path 0) / final (path (Fin.last n)))) +
+        ∑ t : Fin n, ∑ path : Fin (n + 1) → S,
+          markovPathLaw kernel initial n path *
+            Real.log (kernel (path t.castSucc) (path t.succ) /
+              reverse (path t.succ) (path t.castSucc)) := by
+  rw [entropyProduction_eq_expected_logRatio _
+    (fun path => markovPathMass_pos kernel initial hInitial hKernel n path)
+    (fun path => by
+      change 0 < markovReverseMass reverse final n path
+      exact markovReverseMass_pos reverse final hFinal hReverse n path)]
+  have hPath : ∀ path : Fin (n + 1) → S,
+      (markovPathProtocol kernel initial reverse final n).forward path =
+        markovPathLaw kernel initial n path := fun _ => rfl
+  simp_rw [hPath, pathwiseEntropyProduction_markov kernel reverse initial final
+    hInitial hFinal hKernel hReverse, mul_add, Finset.mul_sum]
+  rw [Finset.sum_add_distrib, Finset.sum_comm (s := Finset.univ)]
+
+/-! ### One-step paths -/
+
+/-- A two-point trajectory sums as a double sum over its endpoints. -/
+theorem sum_pathTwo (g : (Fin 2 → S) → ℝ) :
+    ∑ path : Fin 2 → S, g path = ∑ i : S, ∑ j : S, g ![i, j] := by
+  rw [← (finTwoArrowEquiv S).symm.sum_comp, Fintype.sum_prod_type]
+  rfl
+
+/-- One-step forward path mass is the joint mass `π₀ i K_{ij}`. -/
+theorem markovPathMass_one (kernel : FiniteKernel S S) (initial : FiniteLaw S)
+    (path : Fin 2 → S) :
+    markovPathMass kernel initial 1 path = initial (path 0) * kernel (path 0) (path 1) := by
+  simp [markovPathMass]
+
+/-- One-step aligned reverse mass is `ρ_j R_{ji}`. -/
+theorem markovReverseMass_one (reverse : FiniteKernel S S) (final : FiniteLaw S)
+    (path : Fin 2 → S) :
+    markovReverseMass reverse final 1 path = final (path 1) * reverse (path 1) (path 0) := by
+  simp [markovReverseMass]
+
+/-- One-step path KL as a double sum of joint-weighted log ratios. -/
+theorem entropyProduction_markov_oneStep
+    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)
+    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)
+    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b) :
+    entropyProduction (markovPathProtocol kernel initial reverse final 1) =
+      ∑ i : S, ∑ j : S, initial i * kernel i j *
+        Real.log (initial i * kernel i j / (final j * reverse j i)) := by
+  rw [entropyProduction_eq_expected_logRatio _
+    (fun path => markovPathMass_pos kernel initial hInitial hKernel 1 path)
+    (fun path => by
+      change 0 < markovReverseMass reverse final 1 path
+      exact markovReverseMass_pos reverse final hFinal hReverse 1 path),
+    sum_pathTwo]
+  apply Finset.sum_congr rfl
+  intro i _
+  apply Finset.sum_congr rfl
+  intro j _
+  change markovPathMass kernel initial 1 ![i, j] *
+    Real.log (markovPathMass kernel initial 1 ![i, j] /
+      markovReverseMass reverse final 1 ![i, j]) = _
+  rw [markovPathMass_one, markovReverseMass_one]
+  simp
+
+/-- One-step path KL as boundary entropy term plus the stage log-ratio sum. -/
+theorem entropyProduction_markov_oneStep_split
+    (kernel reverse : FiniteKernel S S) (initial final : FiniteLaw S)
+    (hInitial : ∀ s, 0 < initial s) (hFinal : ∀ s, 0 < final s)
+    (hKernel : ∀ a b, 0 < kernel a b) (hReverse : ∀ a b, 0 < reverse a b) :
+    entropyProduction (markovPathProtocol kernel initial reverse final 1) =
+      (∑ i : S, initial i * Real.log (initial i) -
+          ∑ j : S, kernel.predictive initial j * Real.log (final j)) +
+        ∑ i : S, ∑ j : S, initial i * kernel i j *
+          Real.log (kernel i j / reverse j i) := by
+  rw [entropyProduction_markov_oneStep kernel reverse initial final hInitial
+    hFinal hKernel hReverse]
+  have hTerm : ∀ i j : S, initial i * kernel i j *
+      Real.log (initial i * kernel i j / (final j * reverse j i)) =
+        (initial i * kernel i j * Real.log (initial i) -
+          initial i * kernel i j * Real.log (final j)) +
+        initial i * kernel i j * Real.log (kernel i j / reverse j i) := by
+    intro i j
+    have hI := (hInitial i).ne'
+    have hF := (hFinal j).ne'
+    have hK := (hKernel i j).ne'
+    have hR := (hReverse j i).ne'
+    rw [Real.log_div (mul_ne_zero hI hK) (mul_ne_zero hF hR),
+      Real.log_div hK hR, Real.log_mul hI hK, Real.log_mul hF hR]
+    ring
+  have hBoundaryStart : ∑ i : S, ∑ j : S, initial i * kernel i j *
+      Real.log (initial i) = ∑ i : S, initial i * Real.log (initial i) := by
+    apply Finset.sum_congr rfl
+    intro i _
+    calc
+      ∑ j : S, initial i * kernel i j * Real.log (initial i) =
+          (initial i * ∑ j : S, kernel i j) * Real.log (initial i) := by
+        rw [Finset.mul_sum, Finset.sum_mul]
+      _ = initial i * Real.log (initial i) := by rw [kernel.sum_one, mul_one]
+  have hBoundaryEnd : ∑ i : S, ∑ j : S, initial i * kernel i j *
+      Real.log (final j) =
+        ∑ j : S, kernel.predictive initial j * Real.log (final j) := by
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro j _
+    rw [FiniteKernel.predictive_mass, Finset.sum_mul]
+  simp_rw [hTerm, Finset.sum_add_distrib, Finset.sum_sub_distrib]
+  rw [hBoundaryStart, hBoundaryEnd]
+
+/-! ### Stationary one-step production and detailed balance -/
+
+/-- Stationary Schnakenberg form: when both path endpoints carry the same
+supported law `π`, one-step path KL against the same kernel run on the
+reversed trajectory is `∑ π_i K_ij log (π_i K_ij / (π_j K_ji))`. -/
+theorem entropyProduction_markov_schnakenberg
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b) :
+    entropyProduction (markovPathProtocol kernel law kernel law 1) =
+      ∑ i : S, ∑ j : S, law i * kernel i j *
+        Real.log (law i * kernel i j / (law j * kernel j i)) :=
+  entropyProduction_markov_oneStep kernel kernel law law hLaw hLaw hKernel
+    hKernel
+
+/-- The Schnakenberg form is the `localAffinity`-weighted probability flux. -/
+theorem entropyProduction_markov_eq_localAffinity
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b) :
+    entropyProduction (markovPathProtocol kernel law kernel law 1) =
+      ∑ i : S, ∑ j : S, law i * kernel i j * localAffinity law kernel i j :=
+  entropyProduction_markov_schnakenberg kernel law hLaw hKernel
+
+/-- For an invariant supported law the boundary entropy term vanishes, leaving
+only the stage log-ratio sum `∑ π_i K_ij log (K_ij / K_ji)`. -/
+theorem entropyProduction_markov_stationary
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hLaw : ∀ s, 0 < law s) (hKernel : ∀ a b, 0 < kernel a b)
+    (hInvariant : IsInvariant law kernel) :
+    entropyProduction (markovPathProtocol kernel law kernel law 1) =
+      ∑ i : S, ∑ j : S, law i * kernel i j *
+        Real.log (kernel i j / kernel j i) := by
+  rw [entropyProduction_markov_oneStep_split kernel kernel law law hLaw hLaw
+    hKernel hKernel]
+  have hInv : kernel.predictive law = law := hInvariant
+  rw [hInv, sub_self, zero_add]
+
+/-- Under detailed balance the forward and reversed one-step path laws agree. -/
+theorem markovPathLaw_eq_reverse_of_reversible
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hReversible : IsReversible law kernel) :
+    markovPathLaw kernel law 1 = markovReversePathLaw kernel law 1 := by
+  apply FiniteLaw.ext_mass
+  funext path
+  change markovPathMass kernel law 1 path = markovReverseMass kernel law 1 path
+  rw [markovPathMass_one, markovReverseMass_one]
+  exact hReversible (path 0) (path 1)
+
+/-- Detailed balance gives exactly zero one-step path entropy production, with
+no support hypothesis. -/
+theorem entropyProduction_markov_reversible_zero
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hReversible : IsReversible law kernel) :
+    entropyProduction (markovPathProtocol kernel law kernel law 1) = 0 := by
+  unfold entropyProduction
+  change finiteKL (markovPathLaw kernel law 1)
+    (markovReversePathLaw kernel law 1) = 0
+  rw [markovPathLaw_eq_reverse_of_reversible kernel law hReversible]
+  exact finiteKL_self _
+
+/-- Detailed balance cancels every local affinity (zero numerator/denominator
+ratio is `1`, or the totalized `0` at a zero edge). -/
+theorem localAffinity_zero_of_reversible
+    (kernel : FiniteKernel S S) (law : FiniteLaw S)
+    (hReversible : IsReversible law kernel) (source target : S) :
+    localAffinity law kernel source target = 0 := by
+  unfold localAffinity
+  rw [hReversible source target]
+  by_cases h : law target * kernel target source = 0
+  · simp [h]
+  · rw [div_self h, Real.log_one]
+
+/-! ### Bayesian time-reversed kernel -/
+
+/-- Time-reversed kernel of a chain against a supported invariant law:
+`K†_{ab} = π_b K_{ba} / π_a`. -/
+noncomputable def reversedKernel (law : FiniteLaw S) (kernel : FiniteKernel S S)
+    (hLaw : ∀ s, 0 < law s) (hInvariant : IsInvariant law kernel) :
+    FiniteKernel S S where
+  mass a b := law b * kernel b a / law a
+  nonneg a b := div_nonneg (mul_nonneg (law.nonneg b) (kernel.nonneg b a)) (hLaw a).le
+  sum_one a := by
+    have hInv : kernel.predictive law a = law a := by
+      rw [show kernel.predictive law = law from hInvariant]
+    rw [FiniteKernel.predictive_mass] at hInv
+    rw [← Finset.sum_div, hInv]
+    exact div_self (hLaw a).ne'
+
+/-- The reversed kernel satisfies detailed balance against the original. -/
+theorem reversedKernel_detailedBalance (law : FiniteLaw S)
+    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)
+    (hInvariant : IsInvariant law kernel) (a b : S) :
+    law a * reversedKernel law kernel hLaw hInvariant a b =
+      law b * kernel b a := by
+  change law a * (law b * kernel b a / law a) = _
+  field_simp [(hLaw a).ne']
+
+/-- Detailed balance makes the reversed kernel the kernel itself. -/
+theorem reversedKernel_eq_of_reversible (law : FiniteLaw S)
+    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)
+    (hReversible : IsReversible law kernel) :
+    reversedKernel law kernel hLaw (isInvariant_of_isReversible law kernel hReversible) =
+      kernel := by
+  apply FiniteKernel.ext_mass
+  funext a b
+  change law b * kernel b a / law a = kernel a b
+  rw [div_eq_iff (hLaw a).ne', ← hReversible a b]
+  ring
+
+/-- Telescoping of stage ratios of a positive function along a trajectory. -/
+theorem prod_stage_ratio_telescope (n : ℕ) (f : Fin (n + 1) → ℝ)
+    (hf : ∀ i, f i ≠ 0) :
+    ∏ t : Fin n, f t.castSucc / f t.succ = f 0 / f (Fin.last n) := by
+  induction n with
+  | zero => simp [div_self (hf 0)]
+  | succ n ih =>
+      rw [Fin.prod_univ_castSucc]
+      have hIh := ih (fun i => f i.castSucc) (fun i => hf _)
+      simp only [Fin.succ_castSucc] at hIh ⊢
+      rw [hIh]
+      simp only [Fin.castSucc_zero, Fin.succ_last]
+      have h1 := hf (Fin.last n).castSucc
+      have h2 := hf (Fin.last (n + 1))
+      field_simp
+
+/-- Stationary time-reversal duality for every horizon: the chain driven by the
+reversed kernel and started from `π`, read backwards, has exactly the forward
+path mass of the original chain started from `π`. -/
+theorem markovReverseMass_reversedKernel (law : FiniteLaw S)
+    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)
+    (hInvariant : IsInvariant law kernel) (n : ℕ) (path : Fin (n + 1) → S) :
+    markovReverseMass (reversedKernel law kernel hLaw hInvariant) law n path =
+      markovPathMass kernel law n path := by
+  have hStage : ∀ t : Fin n,
+      reversedKernel law kernel hLaw hInvariant (path t.succ) (path t.castSucc) =
+        (law (path t.castSucc) / law (path t.succ)) *
+          kernel (path t.castSucc) (path t.succ) := by
+    intro t
+    change law (path t.castSucc) * kernel (path t.castSucc) (path t.succ) /
+      law (path t.succ) = _
+    ring
+  unfold markovReverseMass markovPathMass
+  rw [Finset.prod_congr rfl (fun t _ => hStage t), Finset.prod_mul_distrib,
+    prod_stage_ratio_telescope n (fun i => law (path i)) (fun i => (hLaw _).ne')]
+  have hLast := (hLaw (path (Fin.last n))).ne'
+  field_simp
+
+/-- Under invariance the reversed-kernel chain reproduces the forward path law. -/
+theorem markovReversePathLaw_reversedKernel (law : FiniteLaw S)
+    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)
+    (hInvariant : IsInvariant law kernel) (n : ℕ) :
+    markovReversePathLaw (reversedKernel law kernel hLaw hInvariant) law n =
+      markovPathLaw kernel law n := by
+  apply FiniteLaw.ext_mass
+  funext path
+  exact markovReverseMass_reversedKernel law kernel hLaw hInvariant n path
+
+/-- The Bayesian time reversal of a stationary chain has zero path entropy
+production against the chain itself: reversal by `K†` is the identity on laws. -/
+theorem entropyProduction_markov_reversedKernel_zero (law : FiniteLaw S)
+    (kernel : FiniteKernel S S) (hLaw : ∀ s, 0 < law s)
+    (hInvariant : IsInvariant law kernel) (n : ℕ) :
+    entropyProduction (markovPathProtocol kernel law
+      (reversedKernel law kernel hLaw hInvariant) law n) = 0 := by
+  unfold entropyProduction
+  change finiteKL (markovPathLaw kernel law n)
+    (markovReversePathLaw (reversedKernel law kernel hLaw hInvariant) law n) = 0
+  rw [markovReversePathLaw_reversedKernel]
+  exact finiteKL_self _
+
+end MarkovPaths
+
+/-! ## Irreversible three-state stationary chain -/
+
+/-- Full-support biased three-cycle: stay or step back with mass `1/4`, step
+forward with mass `1/2`. -/
+noncomputable def biasedCycleKernel : FiniteKernel (Fin 3) (Fin 3) where
+  mass := ![![1 / 4, 1 / 2, 1 / 4], ![1 / 4, 1 / 4, 1 / 2],
+    ![1 / 2, 1 / 4, 1 / 4]]
+  nonneg i j := by fin_cases i <;> fin_cases j <;> norm_num
+  sum_one i := by
+    fin_cases i <;> norm_num [Fin.sum_univ_succ]
+
+/-- The biased cycle is strictly positive. -/
+theorem biasedCycleKernel_pos (i j : Fin 3) : 0 < biasedCycleKernel i j := by
+  fin_cases i <;> fin_cases j <;> norm_num [biasedCycleKernel]
+
+/-- The uniform law is invariant for the doubly stochastic biased cycle. -/
+theorem biasedCycle_invariant :
+    IsInvariant (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel := by
+  apply FiniteLaw.ext_mass
+  funext j
+  rw [FiniteKernel.predictive_mass]
+  fin_cases j <;>
+    norm_num [biasedCycleKernel, FiniteLaw.uniform, Fin.sum_univ_succ]
+
+/-- The biased cycle violates detailed balance against its stationary law. -/
+theorem biasedCycle_not_reversible :
+    ¬ IsReversible (FiniteLaw.uniform : FiniteLaw (Fin 3)) biasedCycleKernel := by
+  intro hReversible
+  have h := hReversible 0 1
+  norm_num [biasedCycleKernel, FiniteLaw.uniform] at h
+
+/-- Exact stationary one-step entropy production of the biased cycle:
+`(1/4) log 2`. -/
+theorem biasedCycle_entropyProduction :
+    entropyProduction (markovPathProtocol biasedCycleKernel
+      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1) =
+      Real.log 2 / 4 := by
+  rw [entropyProduction_markov_stationary biasedCycleKernel FiniteLaw.uniform
+    (fun _ => by simp [FiniteLaw.uniform]) biasedCycleKernel_pos
+    biasedCycle_invariant]
+  norm_num [Fin.sum_univ_succ, biasedCycleKernel, FiniteLaw.uniform]
+  have hHalf : Real.log (1 / 2 : ℝ) = -Real.log 2 := by
+    rw [one_div, Real.log_inv]
+  rw [hHalf]
+  ring
+
+/-- The biased cycle has strictly positive stationary entropy production. -/
+theorem biasedCycle_entropyProduction_pos :
+    0 < entropyProduction (markovPathProtocol biasedCycleKernel
+      FiniteLaw.uniform biasedCycleKernel FiniteLaw.uniform 1) := by
+  rw [biasedCycle_entropyProduction]
+  have := Real.log_pos (by norm_num : (1 : ℝ) < 2)
+  linarith
+
 end FEP.PathThermodynamics

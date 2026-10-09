@@ -1207,4 +1207,289 @@ theorem boolZeroBudget_unique_feasible (joint : FiniteLaw (Bool × Bool))
   rcases xy with ⟨x, y⟩
   cases x <;> cases y <;> simp [boolZeroDistortionJoint, htf, hft, htt, hff]
 
+/-! ## Gibbs maximum entropy under a mean-energy constraint -/
+
+/-- Unnormalized partition function `Z(β) = ∑ exp(-β E)`. -/
+noncomputable def energyPartition (E : α → ℝ) (β : ℝ) : ℝ :=
+  ∑ x, Real.exp (-β * E x)
+
+/-- The energy partition function is strictly positive. -/
+theorem energyPartition_pos [Nonempty α] (E : α → ℝ) (β : ℝ) :
+    0 < energyPartition E β :=
+  Finset.sum_pos (fun _ _ => Real.exp_pos _) Finset.univ_nonempty
+
+/-- The Gibbs law `p_β(x) = exp(-β E x) / Z(β)`. -/
+noncomputable def energyGibbsLaw [Nonempty α] (E : α → ℝ) (β : ℝ) :
+    FiniteLaw α where
+  mass x := Real.exp (-β * E x) / energyPartition E β
+  nonneg x := div_nonneg (Real.exp_pos _).le (energyPartition_pos E β).le
+  sum_one := by
+    rw [← Finset.sum_div]
+    exact div_self (energyPartition_pos E β).ne'
+
+/-- Every atom of the Gibbs law is positive. -/
+theorem energyGibbsLaw_pos [Nonempty α] (E : α → ℝ) (β : ℝ) (x : α) :
+    0 < energyGibbsLaw E β x :=
+  div_pos (Real.exp_pos _) (energyPartition_pos E β)
+
+/-- Entropy decomposition against the Gibbs law:
+`H(q) = β⟨E⟩_q + log Z - KL(q ‖ p_β)`. -/
+theorem entropy_eq_energy_add_logPartition_sub_kl [Nonempty α]
+    (E : α → ℝ) (β : ℝ) (q : FiniteLaw α) :
+    entropy q = β * expectation q E + Real.log (energyPartition E β) -
+      finiteKL q (energyGibbsLaw E β) := by
+  rw [finiteKL_eq_crossEntropy_sub_entropy q _ (energyGibbsLaw_pos E β)]
+  have hlog : ∀ x, -(q x) * Real.log (energyGibbsLaw E β x) =
+      q x * (β * E x) + q x * Real.log (energyPartition E β) := by
+    intro x
+    change -(q x) * Real.log (Real.exp (-β * E x) / energyPartition E β) = _
+    rw [Real.log_div (Real.exp_pos _).ne' (energyPartition_pos E β).ne',
+      Real.log_exp]
+    ring
+  have hce : crossEntropy q (energyGibbsLaw E β) =
+      β * expectation q E + Real.log (energyPartition E β) := by
+    unfold crossEntropy expectation
+    rw [Finset.sum_congr rfl fun x _ => hlog x, Finset.sum_add_distrib,
+      ← Finset.sum_mul, q.sum_one, one_mul, Finset.mul_sum]
+    congr 1
+    refine Finset.sum_congr rfl fun x _ => by ring
+  rw [hce]
+  ring
+
+/-- Gibbs maximum entropy: among all finite laws with the same mean energy as
+`p_β`, the Gibbs law has maximal entropy, and uniquely so. -/
+theorem energyGibbs_maxEntropy [Nonempty α] (E : α → ℝ) (β : ℝ)
+    (q : FiniteLaw α)
+    (hq : expectation q E = expectation (energyGibbsLaw E β) E) :
+    entropy q ≤ entropy (energyGibbsLaw E β) ∧
+      (entropy q = entropy (energyGibbsLaw E β) ↔ q = energyGibbsLaw E β) := by
+  have hq' := entropy_eq_energy_add_logPartition_sub_kl E β q
+  have hg := entropy_eq_energy_add_logPartition_sub_kl E β
+    (energyGibbsLaw E β)
+  rw [finiteKL_self] at hg
+  rw [hq] at hq'
+  refine ⟨?_, ?_⟩
+  · linarith [finiteKL_nonneg q (energyGibbsLaw E β)]
+  · rw [← finiteKL_eq_zero_iff]
+    constructor <;> intro h <;> linarith
+
+/-- Strict form: a mean-energy-matched law different from `p_β` has strictly
+smaller entropy. -/
+theorem energyGibbs_entropy_lt_of_ne [Nonempty α] (E : α → ℝ) (β : ℝ)
+    (q : FiniteLaw α)
+    (hq : expectation q E = expectation (energyGibbsLaw E β) E)
+    (hne : q ≠ energyGibbsLaw E β) :
+    entropy q < entropy (energyGibbsLaw E β) :=
+  lt_of_le_of_ne (energyGibbs_maxEntropy E β q hq).1
+    fun h => hne ((energyGibbs_maxEntropy E β q hq).2.mp h)
+
+/-- With the zero energy, the Gibbs law is uniform. -/
+theorem energyGibbsLaw_zero_energy [Nonempty α] (β : ℝ) :
+    energyGibbsLaw (fun _ : α => (0 : ℝ)) β = FiniteLaw.uniform := by
+  apply FiniteLaw.ext_mass
+  funext x
+  simp [energyGibbsLaw, energyPartition, FiniteLaw.uniform]
+
+/-- Strict constrained witness on `Bool`: with zero energy every law meets the
+mean-energy constraint, and the biased law has entropy strictly below the
+Gibbs (uniform) law. -/
+theorem boolBiased_entropy_lt_zeroEnergyGibbs (β : ℝ) :
+    entropy boolBiased <
+      entropy (energyGibbsLaw (fun _ : Bool => (0 : ℝ)) β) := by
+  have hne : boolBiased ≠ energyGibbsLaw (fun _ : Bool => (0 : ℝ)) β := by
+    rw [energyGibbsLaw_zero_energy]
+    intro h
+    have := congrArg (fun r : FiniteLaw Bool => r.mass true) h
+    simp [boolBiased, FiniteLaw.uniform] at this
+    norm_num at this
+  refine energyGibbs_entropy_lt_of_ne _ β boolBiased ?_ hne
+  simp [expectation]
+
+/-! ## Helmholtz free energy on finite laws
+
+For energies `E` and temperature `T > 0`, the Gibbs law `exp (-E/T) / Z(T)`
+satisfies the exact Helmholtz decomposition
+`⟨E⟩_q - T H(q) = F(T) + T KL(q ‖ p_T)` with `F(T) = -T log Z(T)`.  This is a
+finite-law identification of `F` with a variational free energy; it does not
+alter the abstract `dF/dT = -S` statement for unspecified `U, S`. -/
+
+/-- Partition function `Z(T) = ∑ exp (-E x / T)`. -/
+noncomputable def helmholtzPartition (E : α → ℝ) (T : ℝ) : ℝ :=
+  ∑ x, Real.exp (-E x / T)
+
+/-- Helmholtz free energy `F(T) = -T log Z(T)`. -/
+noncomputable def helmholtzFreeEnergy (E : α → ℝ) (T : ℝ) : ℝ :=
+  -T * Real.log (helmholtzPartition E T)
+
+theorem helmholtzPartition_pos [Nonempty α] (E : α → ℝ) (T : ℝ) :
+    0 < helmholtzPartition E T :=
+  Finset.sum_pos (fun _ _ => Real.exp_pos _) Finset.univ_nonempty
+
+/-- Gibbs law with mass `exp (-E x / T) / Z(T)`. -/
+noncomputable def helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) (T : ℝ) :
+    FiniteLaw α where
+  mass x := Real.exp (-E x / T) / helmholtzPartition E T
+  nonneg x := div_nonneg (Real.exp_pos _).le (helmholtzPartition_pos E T).le
+  sum_one := by
+    rw [← Finset.sum_div]
+    exact div_self (helmholtzPartition_pos E T).ne'
+
+theorem helmholtzGibbsLaw_pos [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :
+    0 < helmholtzGibbsLaw E T x :=
+  div_pos (Real.exp_pos _) (helmholtzPartition_pos E T)
+
+theorem log_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) (T : ℝ) (x : α) :
+    Real.log (helmholtzGibbsLaw E T x) =
+      -E x / T - Real.log (helmholtzPartition E T) := by
+  change Real.log (Real.exp (-E x / T) / helmholtzPartition E T) = _
+  rw [Real.log_div (Real.exp_pos _).ne' (helmholtzPartition_pos E T).ne',
+    Real.log_exp]
+
+/-- Helmholtz decomposition: mean energy minus `T` times entropy equals the
+free energy plus `T` times the KL divergence to the Gibbs law. -/
+theorem helmholtz_decomposition [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)
+    (q : FiniteLaw α) :
+    expectation q E - T * entropy q =
+      helmholtzFreeEnergy E T + T * finiteKL q (helmholtzGibbsLaw E T) := by
+  rw [finiteKL_eq_crossEntropy_sub_entropy q _ (helmholtzGibbsLaw_pos E T)]
+  have hcross : crossEntropy q (helmholtzGibbsLaw E T) =
+      expectation q E / T + Real.log (helmholtzPartition E T) := by
+    unfold crossEntropy expectation
+    simp_rw [log_helmholtzGibbsLaw]
+    have h : ∀ x, -q x * (-E x / T - Real.log (helmholtzPartition E T)) =
+        q x * E x / T + q x * Real.log (helmholtzPartition E T) := by
+      intro x; ring
+    simp_rw [h]
+    rw [Finset.sum_add_distrib, ← Finset.sum_div, ← Finset.sum_mul, q.sum_one,
+      one_mul]
+  rw [hcross]
+  unfold helmholtzFreeEnergy
+  field_simp
+  ring
+
+/-- Variational characterisation: the Gibbs free energy lower-bounds the
+variational free energy of every law. -/
+theorem helmholtzFreeEnergy_le [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)
+    (q : FiniteLaw α) :
+    helmholtzFreeEnergy E T ≤ expectation q E - T * entropy q := by
+  rw [helmholtz_decomposition E hT q]
+  have := mul_nonneg hT.le (finiteKL_nonneg q (helmholtzGibbsLaw E T))
+  linarith
+
+/-- Equality holds exactly at the Gibbs law. -/
+theorem helmholtzFreeEnergy_eq_iff [Nonempty α] (E : α → ℝ) {T : ℝ}
+    (hT : 0 < T) (q : FiniteLaw α) :
+    expectation q E - T * entropy q = helmholtzFreeEnergy E T ↔
+      q = helmholtzGibbsLaw E T := by
+  rw [helmholtz_decomposition E hT q, ← finiteKL_eq_zero_iff]
+  constructor
+  · intro h
+    have : T * finiteKL q (helmholtzGibbsLaw E T) = 0 := by linarith
+    exact (mul_eq_zero.mp this).resolve_left hT.ne'
+  · intro h
+    rw [h, mul_zero, add_zero]
+
+/-- Strict inequality away from the Gibbs law. -/
+theorem helmholtzFreeEnergy_lt [Nonempty α] (E : α → ℝ) {T : ℝ} (hT : 0 < T)
+    (q : FiniteLaw α) (hq : q ≠ helmholtzGibbsLaw E T) :
+    helmholtzFreeEnergy E T < expectation q E - T * entropy q := by
+  refine lt_of_le_of_ne (helmholtzFreeEnergy_le E hT q) fun h => hq ?_
+  exact (helmholtzFreeEnergy_eq_iff E hT q).mp h.symm
+
+/-- Entropy of the Gibbs law in terms of the energy-weighted Boltzmann sum. -/
+theorem entropy_helmholtzGibbsLaw [Nonempty α] (E : α → ℝ) {T : ℝ}
+    (hT : 0 < T) :
+    entropy (helmholtzGibbsLaw E T) =
+      (∑ x, Real.exp (-E x / T) * E x) / (T * helmholtzPartition E T) +
+        Real.log (helmholtzPartition E T) := by
+  have hZ := (helmholtzPartition_pos E T).ne'
+  have hterm : ∀ x, Real.negMulLog (helmholtzGibbsLaw E T x) =
+      Real.exp (-E x / T) * E x / (T * helmholtzPartition E T) +
+        Real.exp (-E x / T) / helmholtzPartition E T *
+          Real.log (helmholtzPartition E T) := by
+    intro x
+    rw [Real.negMulLog, log_helmholtzGibbsLaw]
+    change -(Real.exp (-E x / T) / helmholtzPartition E T) * _ = _
+    field_simp
+    ring
+  unfold entropy
+  simp_rw [hterm]
+  rw [Finset.sum_add_distrib, ← Finset.sum_div, ← Finset.sum_mul,
+    ← Finset.sum_div]
+  have : (∑ x, Real.exp (-E x / T)) / helmholtzPartition E T = 1 :=
+    div_self hZ
+  rw [this, one_mul]
+
+/-- Thermodynamic derivative: `dF/dT = -S(p_T)`. -/
+theorem hasDerivAt_helmholtzFreeEnergy [Nonempty α] (E : α → ℝ) {T : ℝ}
+    (hT : 0 < T) :
+    HasDerivAt (helmholtzFreeEnergy E) (-entropy (helmholtzGibbsLaw E T)) T := by
+  have hterm : ∀ x, HasDerivAt (fun t : ℝ => Real.exp (-E x / t))
+      (Real.exp (-E x / T) * (E x / T ^ 2)) T := by
+    intro x
+    have h1 : HasDerivAt (fun t : ℝ => -E x / t) (E x / T ^ 2) T := by
+      have := (hasDerivAt_inv hT.ne').const_mul (-E x)
+      convert this using 1
+      · funext t; simp [div_eq_mul_inv]
+      · field_simp
+    exact h1.exp
+  have hZ : HasDerivAt (helmholtzPartition E)
+      (∑ x, Real.exp (-E x / T) * (E x / T ^ 2)) T := by
+    have := HasDerivAt.fun_sum (u := Finset.univ) (fun x _ => hterm x)
+    convert this using 1
+    funext t; simp [helmholtzPartition]
+  have hlog := hZ.log (helmholtzPartition_pos E T).ne'
+  have hF := (hasDerivAt_id T).neg.mul hlog
+  have hfun : helmholtzFreeEnergy E =
+      (-id) * fun y => Real.log (helmholtzPartition E y) := by
+    funext t; simp [helmholtzFreeEnergy]
+  rw [hfun]
+  refine hF.congr_deriv ?_
+  have hZpos := helmholtzPartition_pos E T
+  rw [entropy_helmholtzGibbsLaw E hT]
+  simp only [id, Pi.neg_apply]
+  have : (∑ x, Real.exp (-E x / T) * (E x / T ^ 2)) =
+      (∑ x, Real.exp (-E x / T) * E x) / T ^ 2 := by
+    rw [Finset.sum_div]
+    exact Finset.sum_congr rfl fun x _ => by ring
+  rw [this]
+  field_simp
+  ring
+
+/-- Two-level energy: `0` on `false`, `1` on `true`. -/
+def helmholtzBoolEnergy : Bool → ℝ := fun b => if b then 1 else 0
+
+theorem helmholtzPartition_bool (T : ℝ) :
+    helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1 := by
+  simp [helmholtzPartition, helmholtzBoolEnergy]
+
+/-- Non-vacuity: at every positive temperature the uniform (non-Gibbs) law on
+the two-level system has strictly larger variational free energy than `F(T)`. -/
+theorem helmholtz_bool_uniform_gt {T : ℝ} (hT : 0 < T) :
+    helmholtzFreeEnergy helmholtzBoolEnergy T <
+      expectation (FiniteLaw.uniform : FiniteLaw Bool) helmholtzBoolEnergy -
+        T * entropy (FiniteLaw.uniform : FiniteLaw Bool) := by
+  apply helmholtzFreeEnergy_lt _ hT
+  intro h
+  have h0 := congrArg (fun p : FiniteLaw Bool => p.mass false) h
+  have hZ : helmholtzPartition helmholtzBoolEnergy T = Real.exp (-1 / T) + 1 :=
+    helmholtzPartition_bool T
+  have hZpos := helmholtzPartition_pos helmholtzBoolEnergy T
+  simp only [FiniteLaw.uniform, helmholtzGibbsLaw, helmholtzBoolEnergy,
+    Fintype.card_bool] at h0
+  rw [hZ] at h0
+  simp only [Bool.false_eq_true, ↓reduceIte, neg_zero, zero_div,
+    Real.exp_zero] at h0
+  have hpos : 0 < Real.exp (-1 / T) := Real.exp_pos _
+  have h1 : Real.exp (-1 / T) = 1 := by
+    field_simp at h0
+    push_cast at h0
+    have e : -1 / T = -(1 / T) := by ring
+    rw [e]
+    linarith
+  have h2 := Real.exp_eq_one_iff _ |>.mp h1
+  have : (0 : ℝ) < 1 / T := by positivity
+  have : -1 / T = -(1 / T) := by ring
+  linarith
+
 end FEP.VariationalDuality

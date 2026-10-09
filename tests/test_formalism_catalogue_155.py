@@ -71,6 +71,16 @@ NEW_CAPABILITY_IDS = {
     "cap-standalone-efe-theorems",
     "cap-geometric-mechanics-solenoidal",
 }
+# Reviewed derivational edges added after the 1.5 release (LEAN-8, issue 106).
+# Edges are kept sorted by source, so a new edge from a released core topic
+# lands inside the released prefix; excluding exactly these keys keeps every
+# released edge row byte-identical under the historical digest.
+NEW_EDGE_KEYS = {
+    ("fep-007", "formal", "fep-028"),
+    ("fep-029", "formal", "fep-104"),
+    ("fep-046", "formal", "fep-045"),
+    ("fep-050", "formal", "fep-049"),
+}
 H1_0_FEP014_ASSUMPTION = (
     "Self-divergence uses SigmaFinite; zero-characterization and the chain rule use "
     "finite measures; the chain rule additionally requires Markov kernels. The pin "
@@ -265,7 +275,17 @@ def test_expansion_vii_preserves_released_rows_except_reviewed_deltas() -> None:
         == baseline["capabilities_digest"]
     )
     assert (
-        _length_prefixed_sha256([_canonical(row) for row in relations["edges"][:98]])
+        _length_prefixed_sha256(
+            [
+                _canonical(row)
+                for row in [
+                    edge
+                    for edge in relations["edges"]
+                    if (edge["source"], edge["kind"], edge["target"])
+                    not in NEW_EDGE_KEYS
+                ][:98]
+            ]
+        )
         == baseline["edges_digest"]
     )
 

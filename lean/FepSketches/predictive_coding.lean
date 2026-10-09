@@ -3,8 +3,13 @@ import Mathlib.Algebra.Order.Ring.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
+import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.Basic.Real.Basic
+import Mathlib.Analysis.Convex.SpecificFunctions.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Order.Filter.Tendsto
+import Mathlib.Probability.Distributions.Gaussian.Real
 import Mathlib.Topology.Algebra.Monoid
 import Mathlib.Tactic
 
@@ -166,6 +171,75 @@ theorem shift_top_zero {order : ℕ} (jet : FiniteJet order) :
     (shift 1 jet).coefficient order = 0 := by
   change jet.coefficient (order + 1) = 0
   exact jet.truncated (order + 1) (by omega)
+
+/-- The order-`order` jet of `f` at `t`: coordinate `k` is the `k`-th iterated
+derivative `iteratedDeriv k f t` for `k ≤ order` and zero above the truncation. -/
+noncomputable def functionJet (order : ℕ) (f : ℝ → ℝ) (t : ℝ) : FiniteJet order where
+  coefficient k := if k ≤ order then iteratedDeriv k f t else 0
+  truncated degree hDegree := by
+    simp [show ¬ degree ≤ order by omega]
+
+theorem functionJet_coefficient_of_le {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k ≤ order) :
+    (functionJet order f t).coefficient k = iteratedDeriv k f t := by
+  simp [functionJet, hk]
+
+/-- The one-step shift of the jet of `f` is the jet of `deriv f` on every
+coordinate strictly below the truncation order: the shift realises
+differentiation. -/
+theorem shift_one_functionJet {order : ℕ} (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k < order) :
+    (shift 1 (functionJet order f t)).coefficient k =
+      (functionJet order (deriv f) t).coefficient k := by
+  rw [shift_coefficient, functionJet_coefficient_of_le f t (by omega),
+    functionJet_coefficient_of_le (deriv f) t (by omega), iteratedDeriv_succ']
+
+/-- The `m`-fold shift of the jet of `f` is the jet of the `m`-th iterated
+derivative on every coordinate `k` with `k + m ≤ order`. -/
+theorem shift_functionJet {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) {k : ℕ}
+    (hk : k + m ≤ order) :
+    (shift m (functionJet order f t)).coefficient k =
+      (functionJet order (iteratedDeriv m f) t).coefficient k := by
+  rw [shift_coefficient, functionJet_coefficient_of_le f t hk,
+    functionJet_coefficient_of_le (iteratedDeriv m f) t (by omega),
+    iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate, iteratedDeriv_eq_iterate,
+    Function.iterate_add_apply]
+
+/-- The `(m + 1)`-fold shift is the one-step shift of the `m`-fold shift
+(semigroup law via `shift_add`). -/
+theorem shift_functionJet_succ {order : ℕ} (m : ℕ) (f : ℝ → ℝ) (t : ℝ) (k : ℕ) :
+    (shift (m + 1) (functionJet order f t)).coefficient k =
+      (shift 1 (shift m (functionJet order f t))).coefficient k := by
+  rw [show m + 1 = 1 + m from Nat.add_comm m 1, shift_add]
+
+/-- Truncation boundary: the top coordinate of the shifted jet is zero, while
+the jet of `deriv f` keeps the genuine `(order + 1)`-th derivative there. -/
+theorem shift_one_functionJet_top {order : ℕ} (f : ℝ → ℝ) (t : ℝ) :
+    (shift 1 (functionJet order f t)).coefficient order = 0 ∧
+      (functionJet order (deriv f) t).coefficient order =
+        iteratedDeriv (order + 1) f t := by
+  refine ⟨shift_top_zero _, ?_⟩
+  rw [functionJet_coefficient_of_le (deriv f) t le_rfl, iteratedDeriv_succ']
+
+theorem iteratedDeriv_exp_eq (k : ℕ) (t : ℝ) : iteratedDeriv k Real.exp t = Real.exp t := by
+  induction k generalizing t with
+  | zero => simp
+  | succ k ih =>
+    rw [iteratedDeriv_succ', Real.deriv_exp]
+    exact ih t
+
+/-- Nonvacuous witness: every retained coordinate of the exponential jet is
+`exp t ≠ 0`, and the shift agrees with the jet of the derivative (again `exp`)
+below the truncation order while the top coordinate of the shift is zero. -/
+theorem exp_jet_shift_witness (order : ℕ) (t : ℝ) :
+    (∀ k, k ≤ order → (functionJet order Real.exp t).coefficient k ≠ 0) ∧
+      (∀ k, k < order →
+        (shift 1 (functionJet order Real.exp t)).coefficient k =
+          (functionJet order (deriv Real.exp) t).coefficient k) ∧
+      (shift 1 (functionJet order Real.exp t)).coefficient order = 0 := by
+  refine ⟨fun k hk => ?_, fun k hk => shift_one_functionJet _ t hk, shift_top_zero _⟩
+  rw [functionJet_coefficient_of_le _ t hk, iteratedDeriv_exp_eq]
+  exact (Real.exp_pos t).ne'
 
 /-- A concrete first-order jet with value and velocity coefficients. -/
 def firstOrderJet (value velocity : ℝ) : FiniteJet 1 where
@@ -397,5 +471,169 @@ theorem halfStep_energy_witness :
       predictionUpdate (1 / 2) 1 0 = 1 / 2 ∧
       precisionEnergy 2 1 (predictionUpdate (1 / 2) 1 0) = 1 / 4 := by
   norm_num [precisionEnergy, predictionError, predictionUpdate]
+
+/-! ## Precision as inference -/
+
+/-- Scalar free energy of a precision `precision` given a fixed prediction
+error `error`: `precision/2 * error² - log(precision)/2`.  The log term is the
+Gaussian normaliser that makes precision an inferred quantity rather than a
+free weight. -/
+noncomputable def precisionFreeEnergy (error precision : ℝ) : ℝ :=
+  precision * error ^ 2 / 2 - Real.log precision / 2
+
+/-- Exact gap to the candidate optimum `1/error²`. -/
+theorem precisionFreeEnergy_sub_opt {error : ℝ} (hError : error ≠ 0)
+    {precision : ℝ} (hPrecision : 0 < precision) :
+    precisionFreeEnergy error precision - precisionFreeEnergy error (1 / error ^ 2) =
+      (error ^ 2 * precision - 1 - Real.log (error ^ 2 * precision)) / 2 := by
+  have hE : 0 < error ^ 2 := by positivity
+  have hLog : Real.log (error ^ 2 * precision) =
+      Real.log (error ^ 2) + Real.log precision :=
+    Real.log_mul hE.ne' hPrecision.ne'
+  have hInv : Real.log (1 / error ^ 2) = -Real.log (error ^ 2) := by
+    rw [one_div, Real.log_inv]
+  rw [precisionFreeEnergy, precisionFreeEnergy, hInv, hLog]
+  field_simp
+  ring
+
+/-- The free energy is minimised at `1/error²`. -/
+theorem precisionFreeEnergy_min {error : ℝ} (hError : error ≠ 0)
+    {precision : ℝ} (hPrecision : 0 < precision) :
+    precisionFreeEnergy error (1 / error ^ 2) ≤
+      precisionFreeEnergy error precision := by
+  have hE : 0 < error ^ 2 := by positivity
+  have hGap := precisionFreeEnergy_sub_opt hError hPrecision
+  have hLe := Real.log_le_sub_one_of_pos (mul_pos hE hPrecision)
+  linarith
+
+/-- The minimiser `1/error²` is unique. -/
+theorem precisionFreeEnergy_eq_iff {error : ℝ} (hError : error ≠ 0)
+    {precision : ℝ} (hPrecision : 0 < precision) :
+    precisionFreeEnergy error precision =
+        precisionFreeEnergy error (1 / error ^ 2) ↔
+      precision = 1 / error ^ 2 := by
+  have hE : 0 < error ^ 2 := by positivity
+  have hGap := precisionFreeEnergy_sub_opt hError hPrecision
+  have hX : 0 < error ^ 2 * precision := mul_pos hE hPrecision
+  constructor
+  · intro hEq
+    by_contra hNe
+    have hX1 : error ^ 2 * precision ≠ 1 := by
+      intro h
+      apply hNe
+      field_simp
+      linarith
+    have := Real.log_lt_sub_one_of_pos hX hX1
+    linarith
+  · intro h
+    rw [h]
+
+/-- Derivative of the precision free energy in the precision. -/
+theorem precisionFreeEnergy_hasDerivAt (error : ℝ) {precision : ℝ}
+    (hPrecision : 0 < precision) :
+    HasDerivAt (precisionFreeEnergy error)
+      (error ^ 2 / 2 - 1 / (2 * precision)) precision := by
+  have h1 : HasDerivAt (fun p : ℝ => p * error ^ 2 / 2) (error ^ 2 / 2) precision := by
+    simpa using ((hasDerivAt_id precision).mul_const (error ^ 2)).div_const 2
+  have h2 := (Real.hasDerivAt_log hPrecision.ne').div_const 2
+  have h3 := h1.sub h2
+  have hF : precisionFreeEnergy error =
+      (fun p : ℝ => p * error ^ 2 / 2) - fun x => Real.log x / 2 := by
+    funext p
+    simp [precisionFreeEnergy]
+  rw [hF]
+  convert h3 using 1
+  field_simp
+
+/-- The free energy is strictly convex on positive precisions. -/
+theorem precisionFreeEnergy_strictConvexOn (error : ℝ) :
+    StrictConvexOn ℝ (Set.Ioi 0) (precisionFreeEnergy error) := by
+  refine ⟨convex_Ioi 0, fun x hx y hy hxy a b ha hb hab => ?_⟩
+  have hLog := strictConcaveOn_log_Ioi.2 hx hy hxy ha hb hab
+  simp only [smul_eq_mul, precisionFreeEnergy] at hLog ⊢
+  nlinarith [hLog]
+
+/-- Boundary case: with zero prediction error no precision is optimal; the
+free energy is unbounded below as precision grows. -/
+theorem precisionFreeEnergy_zero_error_unbounded (M : ℝ) :
+    ∃ precision : ℝ, 0 < precision ∧ precisionFreeEnergy 0 precision < M := by
+  refine ⟨Real.exp (-2 * M + 2), Real.exp_pos _, ?_⟩
+  rw [precisionFreeEnergy, Real.log_exp]
+  linarith
+
+/-! ## Linear-Gaussian chain: energy equals negative log-density -/
+
+/-- Chain energy: precision-weighted errors minus half the log-precisions. -/
+noncomputable def gaussianChainEnergy {Level : Type*} [Fintype Level]
+    (precision error : Level → ℝ) : ℝ :=
+  hierarchicalEnergy precision error - (∑ level, Real.log (precision level)) / 2
+
+/-- One Gaussian factor: `-log N(x; μ, v)` is the precision-form energy plus
+`log(2π)/2`, with precision `1/v`. -/
+theorem neg_log_gaussianPDFReal (mean x : ℝ) {variance : NNReal}
+    (hVariance : variance ≠ 0) :
+    -Real.log (ProbabilityTheory.gaussianPDFReal mean variance x) =
+      (1 / (variance : ℝ)) / 2 * (x - mean) ^ 2
+        - Real.log (1 / (variance : ℝ)) / 2 + Real.log (2 * Real.pi) / 2 := by
+  have hV : 0 < (variance : ℝ) := by
+    exact_mod_cast pos_iff_ne_zero.mpr hVariance
+  have hPi := Real.pi_pos
+  have hArg : 0 < 2 * Real.pi * (variance : ℝ) := by positivity
+  have hSqrt : 0 < √(2 * Real.pi * (variance : ℝ)) := Real.sqrt_pos.mpr hArg
+  rw [ProbabilityTheory.gaussianPDFReal, Real.log_mul (inv_ne_zero hSqrt.ne')
+    (Real.exp_pos _).ne', Real.log_inv, Real.log_exp, Real.log_sqrt hArg.le,
+    Real.log_mul (by positivity) hV.ne', one_div, Real.log_inv]
+  field_simp
+  ring
+
+/-- A hierarchy of independent Gaussian conditionals (explicit means and
+variances per level, observed values `x`): the chain energy equals the
+negative log of the product of Gaussian densities up to `n/2 · log(2π)`. -/
+theorem gaussianChainEnergy_eq_neg_log_prod
+    {Level : Type*} [Fintype Level]
+    (mean x : Level → ℝ) (variance : Level → NNReal)
+    (hVariance : ∀ level, variance level ≠ 0) :
+    -Real.log (∏ level, ProbabilityTheory.gaussianPDFReal
+        (mean level) (variance level) (x level)) =
+      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))
+          (fun level => x level - mean level) +
+        (Fintype.card Level : ℝ) / 2 * Real.log (2 * Real.pi) := by
+  have hNe : ∀ level ∈ (Finset.univ : Finset Level),
+      ProbabilityTheory.gaussianPDFReal (mean level) (variance level) (x level) ≠ 0 :=
+    fun level _ => (ProbabilityTheory.gaussianPDFReal_pos _ _ _ (hVariance level)).ne'
+  rw [Real.log_prod hNe, ← Finset.sum_neg_distrib]
+  simp_rw [neg_log_gaussianPDFReal _ _ (hVariance _)]
+  rw [gaussianChainEnergy, hierarchicalEnergy, Finset.sum_add_distrib,
+    Finset.sum_sub_distrib, ← Finset.sum_div, ← Finset.sum_div]
+  simp [Finset.sum_const, Finset.card_univ]
+  ring
+
+/-- Two-level instance with explicit means and variances. -/
+theorem gaussianChain_twoLevel
+    (mean x : Fin 2 → ℝ) (variance : Fin 2 → NNReal)
+    (hVariance : ∀ level, variance level ≠ 0) :
+    -Real.log (ProbabilityTheory.gaussianPDFReal (mean 0) (variance 0) (x 0) *
+        ProbabilityTheory.gaussianPDFReal (mean 1) (variance 1) (x 1)) =
+      gaussianChainEnergy (fun level => 1 / (variance level : ℝ))
+          (fun level => x level - mean level) + Real.log (2 * Real.pi) := by
+  have := gaussianChainEnergy_eq_neg_log_prod mean x variance hVariance
+  rw [Fin.prod_univ_two] at this
+  rw [this]
+  simp
+
+/-- Numeric witness consistent with `twoLevel_energy_witness`: precisions
+`2, 4` (variances `1/2, 1/4`) and errors `3, 1` give hierarchical energy `11`
+and chain energy `11 - (3/2) log 2`. -/
+theorem twoLevel_chain_energy_witness :
+    gaussianChainEnergy
+      (fun level : Fin 2 => if level = 0 then 2 else 4)
+      (fun level : Fin 2 => if level = 0 then 3 else 1) =
+        11 - 3 / 2 * Real.log 2 := by
+  have h4 : Real.log 4 = 2 * Real.log 2 := by
+    rw [show (4 : ℝ) = 2 ^ 2 by norm_num, Real.log_pow]; norm_num
+  rw [gaussianChainEnergy, twoLevelEnergy_witness]
+  simp [Fin.sum_univ_two, h4]
+  ring
+
 
 end FEP.PredictiveCoding

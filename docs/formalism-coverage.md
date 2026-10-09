@@ -14,25 +14,25 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1369 |
-| Foundation theorem declarations | 1037 |
-| Total theorem declarations | 1953 |
+| Formal-resource theorem declarations | 1469 |
+| Foundation theorem declarations | 1133 |
+| Total theorem declarations | 2053 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 801 |
-| Total definitions | 896 |
+| Formal-resource definitions | 824 |
+| Total definitions | 919 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
 | Formal-resource structures | 53 |
 | Distinct Mathlib imports | 70 |
 | Topic-to-import edges | 225 |
-| Formal-resource import edges | 272 |
-| Internal formal-module dependencies | 162 |
-| Authored formalism relations | 146 |
-| Derivational formal relations | 20 |
+| Formal-resource import edges | 282 |
+| Internal formal-module dependencies | 167 |
+| Authored formalism relations | 150 |
+| Derivational formal relations | 24 |
 | Checked formal pairings | 118 |
-| All theorem-witnessed relations | 138 |
-| Composed theorem declarations | 332 |
+| All theorem-witnessed relations | 142 |
+| Composed theorem declarations | 336 |
 | Capability nodes (retained history) | 50 |
 | Unresolved capability nodes | 0 |
 | Satisfied capability nodes | 50 |
@@ -234,22 +234,22 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | Module | Role | Theorems | Definitions | Structures | Internal dependencies |
 | --- | --- | ---: | ---: | ---: | --- |
 | `FepSketches.finite_probability` | `foundation` | 19 | 13 | 2 | — |
-| `FepSketches.finite_information` | `foundation` | 25 | 7 | 0 | `FepSketches.finite_probability` |
+| `FepSketches.finite_information` | `foundation` | 31 | 8 | 0 | `FepSketches.finite_probability` |
 | `FepSketches.active_inference` | `foundation` | 44 | 35 | 3 | `FepSketches.finite_information` |
 | `FepSketches.markov_blanket` | `foundation` | 9 | 8 | 2 | `FepSketches.finite_information` |
 | `FepSketches.information_geometry` | `foundation` | 33 | 14 | 1 | `FepSketches.finite_probability` |
 | `FepSketches.statistical_convergence` | `foundation` | 7 | 8 | 0 | — |
 | `FepSketches.measure_bayes` | `foundation` | 12 | 0 | 0 | `FepSketches.finite_probability` |
-| `FepSketches.variational_duality` | `foundation` | 56 | 32 | 3 | `FepSketches.finite_information` |
+| `FepSketches.variational_duality` | `foundation` | 74 | 38 | 3 | `FepSketches.finite_information` |
 | `FepSketches.controlled_markov` | `foundation` | 30 | 28 | 2 | `FepSketches.active_inference` |
 | `FepSketches.temporal_inference` | `foundation` | 34 | 18 | 1 | `FepSketches.controlled_markov` |
 | `FepSketches.finite_markov_dynamics` | `foundation` | 17 | 6 | 0 | `FepSketches.finite_probability` |
 | `FepSketches.causal_dynamics` | `foundation` | 34 | 18 | 2 | `FepSketches.markov_blanket` |
-| `FepSketches.predictive_coding` | `foundation` | 30 | 10 | 1 | — |
+| `FepSketches.predictive_coding` | `foundation` | 47 | 13 | 1 | — |
 | `FepSketches.ness_flow` | `foundation` | 9 | 6 | 0 | — |
-| `FepSketches.path_thermodynamics` | `foundation` | 25 | 12 | 1 | `FepSketches.finite_markov_dynamics`, `FepSketches.variational_duality` |
+| `FepSketches.path_thermodynamics` | `foundation` | 56 | 20 | 1 | `FepSketches.finite_markov_dynamics`, `FepSketches.variational_duality` |
 | `FepSketches.geometric_optimization` | `foundation` | 25 | 17 | 3 | `FepSketches.information_geometry` |
-| `FepSketches.collective_inference` | `foundation` | 13 | 15 | 0 | `FepSketches.finite_information` |
+| `FepSketches.collective_inference` | `foundation` | 41 | 26 | 0 | `FepSketches.finite_information` |
 | `FepSketches.learning_theory` | `foundation` | 12 | 9 | 0 | `FepSketches.variational_duality` |
 | `FepSketches.empirical_risk` | `foundation` | 17 | 9 | 0 | `FepSketches.learning_theory` |
 | `FepSketches.policy_tree` | `foundation` | 13 | 13 | 2 | `FepSketches.controlled_markov` |
@@ -274,11 +274,11 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.perception_action_loop` | `foundation` | 22 | 6 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.controlled_markov`, `FepSketches.finite_markov_dynamics`, `FepSketches.temporal_inference` |
 | `FepSketches.bayesian_model_reduction` | `foundation` | 10 | 3 | 0 | `FepSketches.gaussian_information_geometry`, `FepSketches.variational_duality` |
 | `FepSketches.efe_time_scale_separation` | `foundation` | 37 | 8 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.ness_flow`, `FepSketches.path_thermodynamics` |
-| `FepSketches.helmholtz_ao_ness` | `foundation` | 26 | 11 | 0 | `FepSketches.continuous_time_markov` |
+| `FepSketches.helmholtz_ao_ness` | `foundation` | 22 | 5 | 0 | `FepSketches.continuous_time_markov`, `FepSketches.geometric_mechanics` |
 | `FepSketches.geometric_mechanics` | `foundation` | 37 | 23 | 0 | — |
 | `FepSketches.law_weighted_split` | `foundation` | 7 | 5 | 0 | `FepSketches.helmholtz_ao_ness` |
 | `FepSketches.h3_reference_model` | `foundation` | 53 | 48 | 2 | `FepSketches.fin4_gaussian_semigroup`, `FepSketches.markov_semigroup` |
-| `FepSketches.compositions.core` | `composition` | 22 | 1 | 0 | `FepSketches.active_inference`, `FepSketches.information_geometry`, `FepSketches.markov_blanket`, `FepSketches.statistical_convergence` |
+| `FepSketches.compositions.core` | `composition` | 26 | 1 | 0 | `FepSketches.active_inference`, `FepSketches.controlled_markov`, `FepSketches.geometric_optimization`, `FepSketches.information_geometry`, `FepSketches.markov_blanket`, `FepSketches.path_thermodynamics`, `FepSketches.statistical_convergence`, `FepSketches.temporal_inference` |
 | `FepSketches.compositions.measure_variational` | `composition` | 14 | 0 | 0 | `FepSketches.measure_bayes`, `FepSketches.variational_duality` |
 | `FepSketches.compositions.control_temporal` | `composition` | 14 | 0 | 0 | `FepSketches.controlled_markov`, `FepSketches.temporal_inference` |
 | `FepSketches.compositions.causal_predictive` | `composition` | 14 | 0 | 0 | `FepSketches.causal_dynamics`, `FepSketches.predictive_coding` |
@@ -315,6 +315,7 @@ These edges are maintained scientific review data. `conceptual` means explanator
 | fep-003 | `formal` | fep-021 | `FEPComposed.fep003_pragmaticCost_efe_balance` | The composed theorem feeds fep-003's discounted ENNReal pragmatic cost directly into fep-021's EFE convention and proves the exact epistemic balance. |
 | fep-004 | `formal` | fep-038 | `FEPComposed.fep004_bernoulliMetric_specialization` | The composed theorem specializes fep-004's finite positive-weight Fisher metric to the one-coordinate Bernoulli information weight computed by fep-038. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries both endpoints through their Fisher-metric definitions (`fep_fep004.FEP004.fep004_fisherMetric`, `fep_fep038.FEP038.fep038_fisherMetric`) without invoking either topic's reviewed theorems; the row stands unchanged. |
 | fep-005 | `conceptual` | fep-009 | — | The finite blanket foundation proves a normalized conditional factorization and ties each transition row to it, but neither theorem consumes fep-005's finite partition declarations or fep-009's measure-theoretic conditional-independence declarations. A formal cross-topic edge awaits an explicit carrier bridge. |
+| fep-007 | `formal` | fep-028 | `FEPComposed.fep007_normalizedMessage_is_fep028_softmax` | With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106). |
 | fep-008 | `conceptual` | fep-028 | — | Finite argmin existence and finite softmax normalization represent deterministic and stochastic policy-selection layers. |
 | fep-011 | `formal` | fep-026 | `FEPComposed.fep026_priorComplexity_is_fep011_surprise` | The composed theorem identifies self-information and scalar prior complexity as the same negative-log functional, fixing their shared sign convention. |
 | fep-012 | `formal` | fep-028 | `FEPComposed.fep012_softmax_entropyRegularizedCost_le` | The composed theorem supplies fep-012's entropy-regularized policy objective with fep-028's globally normalized unit-interval softmax law. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-028 through its reviewed supporting theorems `fep_fep028.FEP028.fep028_softmax_nonneg` and `fep_fep028.FEP028.fep028_softmax_le_one` rather than the primary `fep_fep028.FEP028.fep028_softmax_sum_univ`; the row stands unchanged. |
@@ -328,6 +329,7 @@ These edges are maintained scientific review data. `conceptual` means explanator
 | fep-025 | `formal` | fep-049 | `FEPComposed.fep025_current_dissipation_nonneg` | The composed theorem feeds fep-025's antisymmetric probability-current field into fep-049's nonnegative linear-resistance entropy-production law. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-049 through its reviewed supporting theorem `fep_fep049.FEP049.fep049_entropyProduction_nonneg` rather than the primary `fep_fep049.FEP049.fep049_entropyProduction_eq_zero_iff`; the row stands unchanged. |
 | fep-027 | `formal` | fep-019 | `FEPComposed.fep027_priorPredictive_is_fep019` | The composed theorem identifies fep-027's child marginal with fep-019's prior-predictive measure-kernel composition. |
 | fep-029 | `conceptual` | fep-044 | — | The explicit quadratic Bregman instance and the alpha-divergence proxy are neighboring but mathematically distinct divergence families. |
+| fep-029 | `formal` | fep-104 | `FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance` | fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106). |
 | fep-030 | `conceptual` | fep-031 | — | A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem. |
 | fep-031 | `formal` | fep-030 | `FEPComposed.fep031_zeroBeta_binary_maxEntropy` | The composed theorem rewrites the binary Gibbs law at zero inverse temperature to one half and invokes fep-030's entropy equality characterization. |
 | fep-032 | `formal` | fep-043 | `FEPComposed.fep032_update_is_fep043_gradientStep` | The composed theorem identifies a gradient step on fep-043's exact quadratic landscape with fep-032's globally convergent centered update at effective step size 2aη. |
@@ -339,6 +341,8 @@ These edges are maintained scientific review data. `conceptual` means explanator
 | fep-039 | `formal` | fep-005 | `FEPComposed.fep039_partitionEnergy_conservation` | The composed theorem aggregates state energies over fep-005's four unique partition fibres and proves that fep-039's local-energy sum conserves total state energy. |
 | fep-041 | `formal` | fep-014 | `FEPComposed.fep041_informationGain_is_fep014_kl` | The composed theorem identifies fep-041 information gain with the native KL divergence and invokes fep-014's finite-measure separation law. |
 | fep-042 | `formal` | fep-036 | `FEPComposed.fep036_empiricalPosterior_closed` | The composed theorem uses fep-042's success count to construct fep-036's smoothed empirical prior before conjugate updating. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorems `fep_fep036.FEP036.fep036_smoothedRate_pos` and `fep_fep036.FEP036.fep036_smoothedRate_lt_one` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged. |
+| fep-046 | `formal` | fep-045 | `FEPComposed.fep046_single_break_is_fep045_bernoulli` | A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106). |
+| fep-050 | `formal` | fep-049 | `FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production` | Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106). |
 | fep-051 | `formal_pairing` | fep-017 | `FEPComposed.fep051_rn_reconstruction_refines_fep017` | Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion. |
 | fep-052 | `formal_pairing` | fep-017 | `FEPComposed.fep052_posterior_tilt_is_fep017_posterior` | On a countable latent carrier, both topic surfaces certify the same predictive-almost-everywhere likelihood-ratio representation. |
 | fep-053 | `formal_pairing` | fep-017 | `FEPComposed.fep053_joint_reconstruction_extends_fep017` | Kernel Bayes and fep-017 reconstruct the same swapped joint law, with the new topic keeping the native posterior notation visible. |

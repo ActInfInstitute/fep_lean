@@ -8,7 +8,7 @@ Package version: `1.6.0`.
 
 Source origin: `checkout`. Source hashes describe the bytes read for this analysis.
 
-The projection contains 168 topics, 22 families, 14 overlapping domains, and 146 authored relations.
+The projection contains 168 topics, 22 families, 14 overlapping domains, and 150 authored relations.
 
 ## Family coordinates
 
@@ -19675,6 +19675,8 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-005` → `fep-009` (conceptual): The finite blanket foundation proves a normalized conditional factorization and ties each transition row to it, but neither theorem consumes fep-005's finite partition declarations or fep-009's measure-theoretic conditional-independence declarations. A formal cross-topic edge awaits an explicit carrier bridge.
 
+- `fep-007` → `fep-028` (formal): With unit incoming messages and factor exp(-gamma * cost), fep-007's normalized sum-product message equals fep-028's support-aware softmax on the support embedded from the eight nodes into the ten policies, and fep-007's primary message-normalization theorem derives the unit sum of that softmax. The embedding and the exponential factor are explicit in the witness; no general belief-propagation or free-energy claim is made. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep007_normalizedMessage_is_fep028_softmax`.
+
 - `fep-008` → `fep-028` (conceptual): Finite argmin existence and finite softmax normalization represent deterministic and stochastic policy-selection layers.
 
 - `fep-011` → `fep-026` (formal): The composed theorem identifies self-information and scalar prior complexity as the same negative-log functional, fixing their shared sign convention. Witness: `FEPComposed.fep026_priorComplexity_is_fep011_surprise`.
@@ -19701,6 +19703,8 @@ Every edge is retained in authored order and with its original kind, rationale, 
 
 - `fep-029` → `fep-044` (conceptual): The explicit quadratic Bregman instance and the alpha-divergence proxy are neighboring but mathematically distinct divergence families.
 
+- `fep-029` → `fep-104` (formal): fep-029's scalar quadratic Bregman divergence is the one-coordinate instance of the generic Bregman divergence of fep-104 with potential v0^2 and gradient 2*v0, and fep-104's mirror-descent three-point identity yields the scalar three-point law for it. Scalar case only; no claim about other potentials or the alpha-divergence proxy. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep029_quadraticBregman_is_fep104_scalar_instance`.
+
 - `fep-030` → `fep-031` (conceptual): A general constrained maximum-entropy derivation of Gibbs laws remains outside the binary zero-inverse-temperature theorem.
 
 - `fep-031` → `fep-030` (formal): The composed theorem rewrites the binary Gibbs law at zero inverse temperature to one half and invokes fep-030's entropy equality characterization. Witness: `FEPComposed.fep031_zeroBeta_binary_maxEntropy`.
@@ -19722,6 +19726,10 @@ Every edge is retained in authored order and with its original kind, rationale, 
 - `fep-041` → `fep-014` (formal): The composed theorem identifies fep-041 information gain with the native KL divergence and invokes fep-014's finite-measure separation law. Witness: `FEPComposed.fep041_informationGain_is_fep014_kl`.
 
 - `fep-042` → `fep-036` (formal): The composed theorem uses fep-042's success count to construct fep-036's smoothed empirical prior before conjugate updating. Reviewed 2026-09-22 against the primary-qualified endpoint rule. The witness carries fep-036 through its reviewed supporting theorems `fep_fep036.FEP036.fep036_smoothedRate_pos` and `fep_fep036.FEP036.fep036_smoothedRate_lt_one` rather than the primary `fep_fep036.FEP036.fep036_smoothedRate_tendsto_of_empiricalRate`; the row stands unchanged. Witness: `FEPComposed.fep036_empiricalPosterior_closed`.
+
+- `fep-046` → `fep-045` (formal): A single stick-breaking fraction is the Bernoulli law of fep-045 (allocated weight is the true mass, residual is the false mass), and fep-046's mass-conservation theorem derives the normalization of fep-045's conjugate posterior mass function at the posterior parameter. One break only; no Dirichlet-process or infinite-series claim. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep046_single_break_is_fep045_bernoulli`.
+
+- `fep-050` → `fep-049` (formal): Discharging fep-050's second-law premise with fep-049's nonnegative quadratic entropy production derives the Landauer work bound. The identification of the erasure's total entropy change with the constitutive-law entropy production is an explicit premise (`hBalance`) of the witness, a modelling assumption rather than a consequence of either topic. Added 2026-10-08 (LEAN-8, issue 106). Witness: `FEPComposed.fep050_landauer_work_bound_from_fep049_entropy_production`.
 
 - `fep-051` → `fep-017` (formal_pairing): Radon--Nikodym reconstruction and posterior joint reconstruction are the measure-level reconstruction laws on either side of Bayesian inversion. Witness: `FEPComposed.fep051_rn_reconstruction_refines_fep017`.
 
@@ -19997,14 +20005,14 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/active_inference.lean` | `ab5cb5df2d7a79b2265de527629858ae7fa7e2b7e94db2b6c6838943147d86c5` |
 | `formal/bayesian_model_reduction.lean` | `264ce160b0e29ec37f4fe3b4a10e9fe82ff3b650a96c0f0e425524fa53d99b8a` |
 | `formal/causal_dynamics.lean` | `5e8ec0e0bc65ab87ccc5f93685d162e744ddc43c8958b5f7fc7f6ff47cec460e` |
-| `formal/collective_inference.lean` | `c073fe37fa86b8e7619af4d5ffcf0b8ba5579243b5d824ac0053df197fed55a5` |
+| `formal/collective_inference.lean` | `2e419786135021c8fe884a706e3c3bf6db56254c5bc5b83c16dbbef3a7b84639` |
 | `formal/composed.lean` | `ee98a530a653471420cd68fe393c3d7aa4bc0f4980ad38c43b36bb3db77b1629` |
 | `formal/compositions/bayesian_model_reduction.lean` | `320f0faa836ca9d902646b6eb497eee28111f889ce6a81921dead50b9b0be8d0` |
 | `formal/compositions/causal_predictive.lean` | `6ce9bbd13722f66765537460193428d0f77003a8abbca3d16bfc3ae389f0e0a7` |
 | `formal/compositions/collective_learning.lean` | `dd955765c85e05b70c39847c5f439303e879717ff437b0e36d7ca1969acde4e5` |
 | `formal/compositions/continuous_time.lean` | `6c19c0fc1952141f3451d9da385c5d853608f36aab91bcfcda09b559c09510a8` |
 | `formal/compositions/control_temporal.lean` | `98ce41a805e7ac2a2eba43f7ba89664e5c77c7bbe20380c756d0bd3ff288aed2` |
-| `formal/compositions/core.lean` | `2fcd89a1fd11865206fbb85afabdf6bc45d60bfae7fc72e098704364b49afad9` |
+| `formal/compositions/core.lean` | `5ce07f7f61ffa33852ad55f13f5ca11ac99ce47a60f1f6a1604ccbe37da1d471` |
 | `formal/compositions/efe_policy_selection.lean` | `27b1b26c1af403e387850f77ddf9804467c44ee5085ab5a74b2ee75cb4ba6c7d` |
 | `formal/compositions/efe_time_scale_separation.lean` | `93f15c1daaa53f51634e2da4b5b080b5ffe68a8a7d15881b427c14a20891c81f` |
 | `formal/compositions/exponential_family.lean` | `618ef2cf9838134b1a1815410a1cac84ce2daa6c030be2ac4d4e577caa83e1d1` |
@@ -20033,7 +20041,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/empirical_risk.lean` | `d1a9230237c237648c167bd677d347eb4aacbb3e70c93914bb6ab52498064067` |
 | `formal/exponential_family.lean` | `5d12165f38e1d18b03f03869fcc907720a41aac243589d96a99a57e41601dbc9` |
 | `formal/fin4_gaussian_semigroup.lean` | `a7c14d2fdeb44c61ffa4012d6eccc8d00051be916ab536e2658f4ef3652d260c` |
-| `formal/finite_information.lean` | `3d52e359f9cb6a44a4b228f1353f63bfe1eb69170b653e20c1c2a8b72720bd45` |
+| `formal/finite_information.lean` | `8d5cae82d2c1046056dcf8d65c0758ebf04f6afef7d2d1edb795ec1be746989d` |
 | `formal/finite_markov_dynamics.lean` | `5798cbfd93cddfac652bb76effc278796e549ff9124632cba00bfaecf9448f89` |
 | `formal/finite_posterior_learning.lean` | `c7b8e6bb97f33edc75ffb627cd03998c22943a2b2f34017d12ab5b1d24c86cc6` |
 | `formal/finite_probability.lean` | `eb019691997b8c9a2e3dfbe127bf3336610c5dd12bb035e559dc1d77842c9a66` |
@@ -20046,7 +20054,7 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/gnn_document.lean` | `49bafbbf1816fb7bb65642a9595ce3a1073d5b5eb1189f331c5437025cffe57a` |
 | `formal/gnn_render_statements.lean` | `dd17bd9b3107c9a0f94b137b43ce3c1cf87f13c6bd8e96ff3084f3f94e0ae83c` |
 | `formal/h3_reference_model.lean` | `eb4f49d24fb49bfd064421d7f88e4cc554f7df5989690c28138b900adebfe47a` |
-| `formal/helmholtz_ao_ness.lean` | `cc0c6172e152dcbcf6db7a128630d15003514a7fcb37bbac965d174d262f0021` |
+| `formal/helmholtz_ao_ness.lean` | `79916bbc70b3388fcf39f808bef6c16d86ab42c4e08b4ea12df143ccbfd0319e` |
 | `formal/information_geometry.lean` | `958226855247a5658dd96594c4fd002aa07de3d81f232ff5e7cdbbf8e42e6fb6` |
 | `formal/law_weighted_split.lean` | `def5e9bbc82209660b18a353625799b860253d0701985bc0a2ce362bdd01dd1e` |
 | `formal/learning_theory.lean` | `d1d8784be113bb95ce26ba21307e5cd5e033bd888f197d1464485ecdbdeac88f` |
@@ -20057,18 +20065,18 @@ SHA-256 values bind the bytes read for this informational projection. They are n
 | `formal/measure_bayes.lean` | `a8d81f59d449761a19960663fde0c8b5208cbc2db8966d6ddb2081175e3be133` |
 | `formal/native_blanket.lean` | `b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b` |
 | `formal/ness_flow.lean` | `fcf58cdd04feac36a46095b12c744f4c29683444ea56895b43531daa0b5e7de4` |
-| `formal/path_thermodynamics.lean` | `bac2fde1b9e0bfafa78b3f622662aa8169c6d1510cc19ffec5a9e955dd5dbf00` |
+| `formal/path_thermodynamics.lean` | `ba726b7c4bebe273092e1247cf6d67b7d78585adbf267dd8c05ff0d5e48e5c6e` |
 | `formal/perception_action_loop.lean` | `e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1` |
 | `formal/policy_tree.lean` | `2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88` |
 | `formal/posterior_convergence.lean` | `1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20` |
-| `formal/predictive_coding.lean` | `166d8b1394b67216d93c5290ed05ee5816a9c9e5beaeb06783f6f188a79df65a` |
+| `formal/predictive_coding.lean` | `2b4589e435d281a04ac123f0289a2ffca4f6306b683a36aa2dd32b0d1d051782` |
 | `formal/scalar_gaussian_semigroup.lean` | `d99665db1366fd8cfa58c43313fb85fc81f68d36eb70a768b26d4c2f9570a05e` |
 | `formal/smooth_information_geometry.lean` | `571789ed86eb4ca7516c47621d555b4c12a467fd61f3854a009484de4debf1f8` |
 | `formal/statistical_convergence.lean` | `6984bb60ec822da2af08d94472bdae67ac743aaa0b6ef8dec0c83538aa60ade0` |
 | `formal/temporal_inference.lean` | `3672617b92818a501bb5b6e5f0082cf1713b0a272e21926186787a6945649f10` |
-| `formal/variational_duality.lean` | `82697feb382e0c66599fadb1e6eabeb142ad95f1784e8d46216b939f3da4a90f` |
+| `formal/variational_duality.lean` | `fdc4e5e2d22f0fc2a08cf5b1264c52b93ccd71dd25e1a72064acf632b331e8b0` |
 | `inputs/catalogue_metadata.yaml` | `e50020964ece9caeeb05dad04ccae7c709389d5983c386056efc975e51a4e5bd` |
-| `inputs/formalism_relations.yaml` | `a071c8290d3583281e403a8270109cf49ee03a26a489a2908b91d3223134ed2e` |
+| `inputs/formalism_relations.yaml` | `8665aa1c7ac5a72f7eea383c61c5719e9a5183559273b38709fa2a1d3f86cb2d` |
 | `inputs/positioning.yaml` | `d18b1e937babd732ac94414935f606e671ffb54a19f022de15b0dc45ed245e2d` |
 | `inputs/theorem_maturity.yaml` | `7f096a3b8ff8493d1759bbb0af39253bef3f34d159f4d443a9fd1c8f9618aded` |
 | `lean_source.py` | `8bf35005a2f360805af28eb8918dd988c48b33941c6e2dad7215d22c787b804c` |
