@@ -227,6 +227,11 @@ def test_h2_5d_owner_imports_namespace_and_h2_5c_reuse_are_exact() -> None:
         source,
     )
     assert "Kernel.Posterior" not in source
+    # FORM-S14 admits Schur complements for the dimension-generic statement,
+    # which stays algebraic: measure-level Gaussian conditioning is a recorded
+    # Mathlib gap (docs/lean4.md#gaussian-conditioning-gap-memo).
+    assert "theorem blanketConditionalCovarianceCrossZeroIff" in source
+    assert "theorem fin4_blanket_generic_instance" in source
     assert "05d_gaussian_conditioning" not in source
     assert not re.search(
         r"\b(?:causal|intervention|H2_7|H3|SDE|Ito|Itô|FokkerPlanck|"
