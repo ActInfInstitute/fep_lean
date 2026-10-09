@@ -14,20 +14,20 @@ Counts describe canonical source coverage. Compilation evidence and full externa
 | Maintained formal modules | 71 |
 | Foundation modules | 45 |
 | Topic theorem declarations | 584 |
-| Formal-resource theorem declarations | 1541 |
-| Foundation theorem declarations | 1205 |
-| Total theorem declarations | 2125 |
+| Formal-resource theorem declarations | 1559 |
+| Foundation theorem declarations | 1223 |
+| Total theorem declarations | 2143 |
 | Topic definitions | 95 |
-| Formal-resource definitions | 865 |
-| Total definitions | 960 |
+| Formal-resource definitions | 877 |
+| Total definitions | 972 |
 | Topic abbreviations | 7 |
 | Formal-resource abbreviations | 31 |
 | Total abbreviations | 38 |
-| Formal-resource structures | 54 |
+| Formal-resource structures | 55 |
 | Distinct Mathlib imports | 70 |
 | Topic-to-import edges | 225 |
-| Formal-resource import edges | 286 |
-| Internal formal-module dependencies | 168 |
+| Formal-resource import edges | 287 |
+| Internal formal-module dependencies | 169 |
 | Authored formalism relations | 150 |
 | Derivational formal relations | 24 |
 | Checked formal pairings | 118 |
@@ -271,7 +271,7 @@ These packaged modules are a distinct proof surface from the generated topic ske
 | `FepSketches.gnn_denotation_continuous` | `foundation` | 9 | 12 | 2 | `FepSketches.gnn_document`, `FepSketches.linear_gaussian_semigroup` |
 | `FepSketches.gnn_render_statements` | `foundation` | 7 | 8 | 1 | `FepSketches.active_inference`, `FepSketches.finite_markov_dynamics`, `FepSketches.finite_probability`, `FepSketches.gnn_denotation`, `FepSketches.gnn_document` |
 | `FepSketches.efe_policy_selection` | `foundation` | 9 | 3 | 0 | `FepSketches.controlled_markov`, `FepSketches.policy_tree`, `FepSketches.variational_duality` |
-| `FepSketches.perception_action_loop` | `foundation` | 22 | 6 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.controlled_markov`, `FepSketches.finite_markov_dynamics`, `FepSketches.temporal_inference` |
+| `FepSketches.perception_action_loop` | `foundation` | 40 | 18 | 1 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.controlled_markov`, `FepSketches.finite_markov_dynamics`, `FepSketches.policy_tree`, `FepSketches.temporal_inference` |
 | `FepSketches.bayesian_model_reduction` | `foundation` | 10 | 3 | 0 | `FepSketches.gaussian_information_geometry`, `FepSketches.variational_duality` |
 | `FepSketches.efe_time_scale_separation` | `foundation` | 37 | 8 | 0 | `FepSketches.active_inference`, `FepSketches.continuous_time_markov`, `FepSketches.ness_flow`, `FepSketches.path_thermodynamics` |
 | `FepSketches.helmholtz_ao_ness` | `foundation` | 22 | 5 | 0 | `FepSketches.continuous_time_markov`, `FepSketches.geometric_mechanics` |

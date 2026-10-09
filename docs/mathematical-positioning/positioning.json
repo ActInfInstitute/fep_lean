@@ -8090,7 +8090,7 @@
       "lean_module": "FepSketches.perception_action_loop",
       "resource": "perception_action_loop.lean",
       "role": "foundation",
-      "theorem_count": 22
+      "theorem_count": 40
     },
     {
       "declaration_namespace": "FEP.BayesianModelReduction",
@@ -8967,7 +8967,7 @@
     "formal/native_blanket.lean": "b6f99c2560e5c2ca9670caf7a4af887e7ea81befd465292aaacfbb7bb278bc2b",
     "formal/ness_flow.lean": "80102f366d6e54604b7a76cdb663fe9dc2354bdfac0e2d671c20f73567c19890",
     "formal/path_thermodynamics.lean": "75b63d5a506e98801475f23789fde02ef4c05c3fb72aae66d94969232c836f98",
-    "formal/perception_action_loop.lean": "e0fe4b34b6c5725e3a445024183ecf62c9cb17c277e31bc93b2ff722384619e1",
+    "formal/perception_action_loop.lean": "9a60e3d8166644e4ff265d92e2424ea081ca3c34d5b7d11e15970104119c101b",
     "formal/policy_tree.lean": "2ac7813362f0c9e5c4a163ee9a56449409a6a6a08aaed0d8a5ad24220417bd88",
     "formal/posterior_convergence.lean": "1449b1eb5eff7a709e08f96147597d4f662d0ce7b07d0c165c1d7fb0cf51ff20",
     "formal/predictive_coding.lean": "2b4589e435d281a04ac123f0289a2ffca4f6306b683a36aa2dd32b0d1d051782",
@@ -99664,6 +99664,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -99674,10 +99675,1510 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.actionEvidence_eq_predictive_of_identity",
-        "source_line": 145,
+        "source_line": 146,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem actionEvidence_eq_predictive_of_identity [DecidableEq State]\n    (belief : FiniteLaw State) (outcome : Outcome)\n    (transition : ControlledKernel State Policy)\n    (hIdentity : ∀ action, transition action = FiniteKernel.identity)\n    (policy : Policy) (emission : FiniteKernel State Outcome) :\n    actionEvidence belief transition emission policy outcome =\n      emission.predictive belief outcome",
         "statement_sha256": "2da1f209d989ee577cc860babd90a96f122cc65a138880c1e64f574a9ba7e9c3"
+      },
+      "FEP.PerceptionActionLoop.bayesEFETree_eq_pomdpTree": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "model"
+            ],
+            "role": "typed_binder",
+            "source": "(model : BayesianBeliefModel Belief State Action Outcome)",
+            "type_source": "BayesianBeliefModel Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "support"
+            ],
+            "role": "typed_binder",
+            "source": "(support : ∀ belief, FullSupport (bayesGenerative model belief))",
+            "type_source": "∀ belief, FullSupport (bayesGenerative model belief)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "efePolicyTreeModel (bayesEFEPolicyTreeModel model support) =\n      pomdpPolicyTreeModel (bayesReachablePOMDP model initial)\n        (fun _ belief action =>\n          expectedFreeEnergy (bayesGenerative model belief) action)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.bayesEFETree_eq_pomdpTree",
+        "source_line": 651,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem bayesEFETree_eq_pomdpTree\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (initial : Belief) :\n    efePolicyTreeModel (bayesEFEPolicyTreeModel model support) =\n      pomdpPolicyTreeModel (bayesReachablePOMDP model initial)\n        (fun _ belief action =>\n          expectedFreeEnergy (bayesGenerative model belief) action)",
+        "statement_sha256": "eeaacf061d149d5e51cac4e881801d612d879a3326a890dedba8edca34aac89f"
+      },
+      "FEP.PerceptionActionLoop.bayesRiskAmbiguity_eq_sophisticated": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty Action]",
+            "type_source": "Nonempty Action",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "model"
+            ],
+            "role": "typed_binder",
+            "source": "(model : BayesianBeliefModel Belief State Action Outcome)",
+            "type_source": "BayesianBeliefModel Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "support"
+            ],
+            "role": "typed_binder",
+            "source": "(support : ∀ belief, FullSupport (bayesGenerative model belief))",
+            "type_source": "∀ belief, FullSupport (bayesGenerative model belief)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "depth"
+            ],
+            "role": "typed_binder",
+            "source": "(depth : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "sophisticatedEFEValue (bayesSophisticatedModel model) depth belief =\n      optimalTreeValue\n        (riskAmbiguityPolicyTreeModel (bayesEFEPolicyTreeModel model support))\n        depth belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "bayesSophisticatedValue_eq_optimalTree",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_optimalTree",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.PolicyTrees.optimalEFEValue_eq_riskAmbiguity"
+            ],
+            "identifier": "optimalEFEValue_eq_riskAmbiguity",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.bayesRiskAmbiguity_eq_sophisticated",
+        "source_line": 860,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem bayesRiskAmbiguity_eq_sophisticated [Nonempty Action]\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (depth : ℕ) (belief : Belief) :\n    sophisticatedEFEValue (bayesSophisticatedModel model) depth belief =\n      optimalTreeValue\n        (riskAmbiguityPolicyTreeModel (bayesEFEPolicyTreeModel model support))\n        depth belief",
+        "statement_sha256": "23d4083ad99e910ed01ab9d8366a2818bf99cb261ba4a3ca3c830d227fb91ae1"
+      },
+      "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_optimalTree": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty Action]",
+            "type_source": "Nonempty Action",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "model"
+            ],
+            "role": "typed_binder",
+            "source": "(model : BayesianBeliefModel Belief State Action Outcome)",
+            "type_source": "BayesianBeliefModel Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "support"
+            ],
+            "role": "typed_binder",
+            "source": "(support : ∀ belief, FullSupport (bayesGenerative model belief))",
+            "type_source": "∀ belief, FullSupport (bayesGenerative model belief)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "depth"
+            ],
+            "role": "typed_binder",
+            "source": "(depth : ℕ)",
+            "type_source": "ℕ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "sophisticatedEFEValue (bayesSophisticatedModel model) depth belief =\n      optimalTreeValue (efePolicyTreeModel (bayesEFEPolicyTreeModel model support))\n        depth belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_optimalTree",
+        "source_line": 663,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem bayesSophisticatedValue_eq_optimalTree [Nonempty Action]\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (depth : ℕ) (belief : Belief) :\n    sophisticatedEFEValue (bayesSophisticatedModel model) depth belief =\n      optimalTreeValue (efePolicyTreeModel (bayesEFEPolicyTreeModel model support))\n        depth belief",
+        "statement_sha256": "617b57366ea8375818e19a77d6fc97899a1b0b49926bc75feca19c5392093309"
+      },
+      "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_pomdpOptimum": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty Action]",
+            "type_source": "Nonempty Action",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq Belief]",
+            "type_source": "DecidableEq Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "model"
+            ],
+            "role": "typed_binder",
+            "source": "(model : BayesianBeliefModel Belief State Action Outcome)",
+            "type_source": "BayesianBeliefModel Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "support"
+            ],
+            "role": "typed_binder",
+            "source": "(support : ∀ belief, FullSupport (bayesGenerative model belief))",
+            "type_source": "∀ belief, FullSupport (bayesGenerative model belief)",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "initial"
+            ],
+            "role": "typed_binder",
+            "source": "(initial : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ (policy : ℕ → Belief → Action) (horizon : ℕ) (belief : Belief),\n      sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief ≤\n        beliefFeedbackValue (bayesReachablePOMDP model initial)\n          (fun _ belief action =>\n            expectedFreeEnergy (bayesGenerative model belief) action)\n          policy horizon belief) ∧\n      ∃ policy : ℕ → Belief → Action, ∀ (horizon : ℕ) (belief : Belief),\n        sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief =\n          beliefFeedbackValue (bayesReachablePOMDP model initial)\n            (fun _ belief action =>\n              expectedFreeEnergy (bayesGenerative model belief) action)\n            policy horizon belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "bayesEFETree_eq_pomdpTree",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesEFETree_eq_pomdpTree",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "bayesSophisticatedValue_eq_optimalTree",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_optimalTree",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "optimalTreeValue_eq_beliefFeedback",
+            "qualified_name": "FEP.PerceptionActionLoop.optimalTreeValue_eq_beliefFeedback",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "optimalTreeValue_le_beliefFeedback",
+            "qualified_name": "FEP.PerceptionActionLoop.optimalTreeValue_le_beliefFeedback",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_pomdpOptimum",
+        "source_line": 830,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem bayesSophisticatedValue_eq_pomdpOptimum [Nonempty Action] [DecidableEq Belief]\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (initial : Belief) :\n    (∀ (policy : ℕ → Belief → Action) (horizon : ℕ) (belief : Belief),\n      sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief ≤\n        beliefFeedbackValue (bayesReachablePOMDP model initial)\n          (fun _ belief action =>\n            expectedFreeEnergy (bayesGenerative model belief) action)\n          policy horizon belief) ∧\n      ∃ policy : ℕ → Belief → Action, ∀ (horizon : ℕ) (belief : Belief),\n        sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief =\n          beliefFeedbackValue (bayesReachablePOMDP model initial)\n            (fun _ belief action =>\n              expectedFreeEnergy (bayesGenerative model belief) action)\n            policy horizon belief",
+        "statement_sha256": "81778a51b326fd1abc2ba7b306a7dd62b790312fc58751361c1c718cf88f8a9c"
+      },
+      "FEP.PerceptionActionLoop.bayesUpdate_eq_actionBeliefUpdate": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "model"
+            ],
+            "role": "typed_binder",
+            "source": "(model : BayesianBeliefModel Belief State Action Outcome)",
+            "type_source": "BayesianBeliefModel Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Action)",
+            "type_source": "Action",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "outcome"
+            ],
+            "role": "typed_binder",
+            "source": "(outcome : Outcome)",
+            "type_source": "Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hEvidence"
+            ],
+            "role": "typed_binder",
+            "source": "(hEvidence : 0 < actionEvidence (model.interpret belief)\n      model.generative.transition model.generative.likelihood action outcome)",
+            "type_source": "0 < actionEvidence (model.interpret belief)\n      model.generative.transition model.generative.likelihood action outcome",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "model.interpret (model.update belief action outcome) =\n      actionBeliefUpdate (model.interpret belief) model.generative.transition\n        model.generative.likelihood action outcome hEvidence",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.bayesUpdate_eq_actionBeliefUpdate",
+        "source_line": 588,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem bayesUpdate_eq_actionBeliefUpdate\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (belief : Belief) (action : Action) (outcome : Outcome)\n    (hEvidence : 0 < actionEvidence (model.interpret belief)\n      model.generative.transition model.generative.likelihood action outcome) :\n    model.interpret (model.update belief action outcome) =\n      actionBeliefUpdate (model.interpret belief) model.generative.transition\n        model.generative.likelihood action outcome hEvidence",
+        "statement_sha256": "a2f647ee84d083701427ca5eb735e60d7acb1a62b836e736bfde508c4b3845db"
+      },
+      "FEP.PerceptionActionLoop.boolBayesOpenLoop_value_half": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "openLoopValue (boolBeliefTreeModel boolBayesUpdate)\n        (boolOpenLoopPlan action) none = 1 / 2",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_rootObservation",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_rootObservation",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayesOpenLoop_value_half",
+        "source_line": 996,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayesOpenLoop_value_half (action : Bool) :\n    openLoopValue (boolBeliefTreeModel boolBayesUpdate)\n        (boolOpenLoopPlan action) none = 1 / 2",
+        "statement_sha256": "6d0b9bd738d24ad08a7a284077d1089662885bb85a14257b35dba5ababb0564e"
+      },
+      "FEP.PerceptionActionLoop.boolBayesTree_value_zero": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree none\n      = 0",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_rootObservation",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_rootObservation",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayesTree_value_zero",
+        "source_line": 987,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayesTree_value_zero :\n    policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree none\n      = 0",
+        "statement_sha256": "2084ecbbc5935e53162295b4b12dbb653c972ccce928f93e6523bd43879ab5f2"
+      },
+      "FEP.PerceptionActionLoop.boolBayes_filtered": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Option Bool)",
+            "type_source": "Option Bool",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action",
+              "outcome"
+            ],
+            "role": "typed_binder",
+            "source": "(action outcome : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "hEvidence"
+            ],
+            "role": "typed_binder",
+            "source": "(hEvidence : 0 < boolBayesGenerative.likelihood.predictive\n      (predictedState\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action) outcome)",
+            "type_source": "0 < boolBayesGenerative.likelihood.predictive\n      (predictedState\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action) outcome",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "boolBayesInterpret (boolBayesUpdate belief action outcome) =\n      filteredBelief boolBayesGenerative\n        (predictedState\n          (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n          action) outcome hEvidence",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_predictedState",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedState",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayes_filtered",
+        "source_line": 920,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayes_filtered (belief : Option Bool) (action outcome : Bool)\n    (hEvidence : 0 < boolBayesGenerative.likelihood.predictive\n      (predictedState\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action) outcome) :\n    boolBayesInterpret (boolBayesUpdate belief action outcome) =\n      filteredBelief boolBayesGenerative\n        (predictedState\n          (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n          action) outcome hEvidence",
+        "statement_sha256": "ef243c0a21174d53a058a419e974a87ce9168f81cec9c779f5894a8582787f07"
+      },
+      "FEP.PerceptionActionLoop.boolBayes_predictedOutcome": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Option Bool)",
+            "type_source": "Option Bool",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "predictedOutcome\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action = boolBayesInterpret belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_predictedState",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedState",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedOutcome",
+        "source_line": 908,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayes_predictedOutcome (belief : Option Bool) (action : Bool) :\n    predictedOutcome\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action = boolBayesInterpret belief",
+        "statement_sha256": "da6bd83c086802998daf357dd18463a43a86ee7b649665eee2515ab59a5faafb"
+      },
+      "FEP.PerceptionActionLoop.boolBayes_predictedState": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Option Bool)",
+            "type_source": "Option Bool",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "predictedState\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action = boolBayesInterpret belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedState",
+        "source_line": 901,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayes_predictedState (belief : Option Bool) (action : Bool) :\n    predictedState\n        (withInitialState boolBayesGenerative (boolBayesInterpret belief))\n        action = boolBayesInterpret belief",
+        "statement_sha256": "09f5e070b939d4031836bd53c212cbe579520abdd19459da30e2532875d942d6"
+      },
+      "FEP.PerceptionActionLoop.boolBayes_rederives_feedbackWitness": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "(∀ a o, boolBayesInterpret (boolBayesUpdate none a o) =\n        boolBeliefInterpret (boolFeedbackModel.update false a o)) ∧\n      policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree\n          none =\n        policyTreeValue boolFeedbackModel boolFeedbackTree false ∧\n      policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree\n          none <\n        openLoopValue (boolBeliefTreeModel boolBayesUpdate)\n          (boolOpenLoopPlan action) none",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayesOpenLoop_value_half",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayesOpenLoop_value_half",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "boolBayesTree_value_zero",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayesTree_value_zero",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.PolicyTrees.boolFeedbackTree_value_zero"
+            ],
+            "identifier": "boolFeedbackTree_value_zero",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayes_rederives_feedbackWitness",
+        "source_line": 1008,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayes_rederives_feedbackWitness (action : Bool) :\n    (∀ a o, boolBayesInterpret (boolBayesUpdate none a o) =\n        boolBeliefInterpret (boolFeedbackModel.update false a o)) ∧\n      policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree\n          none =\n        policyTreeValue boolFeedbackModel boolFeedbackTree false ∧\n      policyTreeValue (boolBeliefTreeModel boolBayesUpdate) boolFeedbackTree\n          none <\n        openLoopValue (boolBeliefTreeModel boolBayesUpdate)\n          (boolOpenLoopPlan action) none",
+        "statement_sha256": "bb549a18bea59e5f94c84e56f11d06e6cbe1d53e4e286c1adb0246461a7b26c9"
+      },
+      "FEP.PerceptionActionLoop.boolBayes_rootObservation": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Bool)",
+            "type_source": "Bool",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "predictedOutcome (bayesGenerative boolBayesModel none) action =\n      fairBoolLaw",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_predictedOutcome",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedOutcome",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolBayes_rootObservation",
+        "source_line": 981,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolBayes_rootObservation (action : Bool) :\n    predictedOutcome (bayesGenerative boolBayesModel none) action =\n      fairBoolLaw",
+        "statement_sha256": "06c64dc1f66ec95cbdf6b5b8a8efbeb339c2c63d8d4e314123d3a158e9336b5a"
+      },
+      "FEP.PerceptionActionLoop.boolKeepPrior_agreement_fails": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "policyTreeValue (boolBeliefTreeModel boolKeepPriorUpdate)\n        boolFeedbackTree none = 1 / 2 ∧\n      optimalTreeValue (boolBeliefTreeModel boolBayesUpdate) 2 none <\n        optimalTreeValue (boolBeliefTreeModel boolKeepPriorUpdate) 2 none",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayesTree_value_zero",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayesTree_value_zero",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "boolBayes_rootObservation",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_rootObservation",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.PolicyTrees.optimalTreeValue_le_tree"
+            ],
+            "identifier": "optimalTreeValue_le_tree",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolKeepPrior_agreement_fails",
+        "source_line": 1052,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolKeepPrior_agreement_fails :\n    policyTreeValue (boolBeliefTreeModel boolKeepPriorUpdate)\n        boolFeedbackTree none = 1 / 2 ∧\n      optimalTreeValue (boolBeliefTreeModel boolBayesUpdate) 2 none <\n        optimalTreeValue (boolBeliefTreeModel boolKeepPriorUpdate) 2 none",
+        "statement_sha256": "7c12ceab25f0a5dd5b4e9e647a51c83711f3a7a2395d75182e4a97372f2b635f"
+      },
+      "FEP.PerceptionActionLoop.boolKeepPrior_not_bayesian": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [],
+        "conclusion": "∃ (hEvidence : 0 < boolBayesGenerative.likelihood.predictive\n        (predictedState\n          (withInitialState boolBayesGenerative (boolBayesInterpret none))\n          false) true),\n      boolBayesInterpret (boolKeepPriorUpdate none false true) ≠\n        filteredBelief boolBayesGenerative\n          (predictedState\n            (withInitialState boolBayesGenerative (boolBayesInterpret none))\n            false) true hEvidence",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "boolBayes_filtered",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_filtered",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "boolBayes_predictedState",
+            "qualified_name": "FEP.PerceptionActionLoop.boolBayes_predictedState",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.boolKeepPrior_not_bayesian",
+        "source_line": 1025,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem boolKeepPrior_not_bayesian :\n    ∃ (hEvidence : 0 < boolBayesGenerative.likelihood.predictive\n        (predictedState\n          (withInitialState boolBayesGenerative (boolBayesInterpret none))\n          false) true),\n      boolBayesInterpret (boolKeepPriorUpdate none false true) ≠\n        filteredBelief boolBayesGenerative\n          (predictedState\n            (withInitialState boolBayesGenerative (boolBayesInterpret none))\n            false) true hEvidence",
+        "statement_sha256": "6de8d1b238d727b6fc0dfe5f3aa74d1c3f4a033b09db82db770dfc0f6673b8ba"
       },
       "FEP.PerceptionActionLoop.filteredBelief_eq_actionBeliefUpdate": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -99813,6 +101314,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -99823,7 +101325,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.filteredBelief_eq_actionBeliefUpdate",
-        "source_line": 170,
+        "source_line": 171,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem filteredBelief_eq_actionBeliefUpdate [DecidableEq State]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (outcome : Outcome)\n    (hEvidence : 0 < model.likelihood.predictive belief outcome)\n    (transition : ControlledKernel State Policy)\n    (hIdentity : ∀ action, transition action = FiniteKernel.identity)\n    (policy : Policy) :\n    filteredBelief model belief outcome hEvidence =\n      actionBeliefUpdate belief transition model.likelihood policy outcome\n        (identity_actionEvidence belief outcome transition hIdentity policy\n          model.likelihood hEvidence)",
         "statement_sha256": "b73779853fffe6acf79b1ff4f0db8c5ee2a6177e8644a64bfbba684761c56705"
@@ -99932,6 +101434,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -99942,7 +101445,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.filteredBelief_eq_forwardFilter",
-        "source_line": 123,
+        "source_line": 124,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem filteredBelief_eq_forwardFilter [DecidableEq State]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (outcome : Outcome)\n    (hEvidence : 0 < model.likelihood.predictive belief outcome) :\n    filteredBelief model belief outcome hEvidence =\n      forwardFilter belief FiniteKernel.identity model.likelihood outcome\n        (identity_forwardEvidence belief outcome FiniteKernel.identity rfl\n          model.likelihood hEvidence)",
         "statement_sha256": "a973953cc0c1b0609159429534a3b360f4b27011cf4afebe51577f3f1af591ec"
@@ -100044,6 +101547,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100054,7 +101558,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.finiteKL_joint_same_kernel",
-        "source_line": 267,
+        "source_line": 268,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem finiteKL_joint_same_kernel {α β : Type*} [Fintype α] [Fintype β]\n    (kernel : FiniteKernel α β) (actual reference : FiniteLaw α) :\n    finiteKL (kernel.joint actual) (kernel.joint reference) =\n      finiteKL actual reference",
         "statement_sha256": "23fcc14c3a3e1e32c6bdc1d9396bbc6c53ea228a3bd8b83d8a380ca268ddffcb"
@@ -100156,6 +101660,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100166,10 +101671,168 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.finiteKL_swappedJoint_eq",
-        "source_line": 339,
+        "source_line": 340,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem finiteKL_swappedJoint_eq\n    (model : GenerativeModel Policy State Outcome)\n    (actual reference : FiniteLaw State)\n    (hEvidenceAct : ∀ o, 0 < model.likelihood.predictive actual o)\n    (hEvidenceRef : ∀ o, 0 < model.likelihood.predictive reference o) :\n    finiteKL\n        ((posteriorKernel model actual hEvidenceAct).joint\n          (model.likelihood.predictive actual))\n        ((posteriorKernel model reference hEvidenceRef).joint\n          (model.likelihood.predictive reference)) =\n      finiteKL (model.likelihood.joint actual)\n        (model.likelihood.joint reference)",
         "statement_sha256": "77d2f7ba6474b29fba173d18bf58bd494f0785f610a1cda84f87e5c726deeade"
+      },
+      "FEP.PerceptionActionLoop.finiteLawMapSum": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "α",
+              "β"
+            ],
+            "role": "typed_binder",
+            "source": "{α β : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq β]",
+            "type_source": "DecidableEq β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype α]",
+            "type_source": "Fintype α",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype β]",
+            "type_source": "Fintype β",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "f"
+            ],
+            "role": "typed_binder",
+            "source": "(f : α → β)",
+            "type_source": "α → β",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "law"
+            ],
+            "role": "typed_binder",
+            "source": "(law : FiniteLaw α)",
+            "type_source": "FiniteLaw α",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "g"
+            ],
+            "role": "typed_binder",
+            "source": "(g : β → ℝ)",
+            "type_source": "β → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ y, law.map f y * g y = ∑ x, law x * g (f x)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.finiteLawMapSum",
+        "source_line": 714,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem finiteLawMapSum {α β : Type*} [DecidableEq β] [Fintype α] [Fintype β]\n    (f : α → β) (law : FiniteLaw α) (g : β → ℝ) :\n    ∑ y, law.map f y * g y = ∑ x, law x * g (f x)",
+        "statement_sha256": "0eda4a334460368e56c5578d82413a62b4b493159ce2d2ce98e94be7249fe9ce"
       },
       "FEP.PerceptionActionLoop.forwardEvidence_eq_predictive_of_identity": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -100278,6 +101941,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100288,7 +101952,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.forwardEvidence_eq_predictive_of_identity",
-        "source_line": 98,
+        "source_line": 99,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem forwardEvidence_eq_predictive_of_identity [DecidableEq State]\n    (belief : FiniteLaw State) (outcome : Outcome)\n    (transition : FiniteKernel State State)\n    (hIdentity : transition = FiniteKernel.identity)\n    (emission : FiniteKernel State Outcome) :\n    forwardEvidence belief transition emission outcome =\n      emission.predictive belief outcome",
         "statement_sha256": "0410335d45c5382b8e29c1d6e0a481dfc9ccf204394c7da237f3989aa87ba258"
@@ -100427,6 +102091,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100437,7 +102102,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.identity_actionEvidence",
-        "source_line": 157,
+        "source_line": 158,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem identity_actionEvidence [DecidableEq State]\n    (belief : FiniteLaw State) (outcome : Outcome)\n    (transition : ControlledKernel State Policy)\n    (hIdentity : ∀ action, transition action = FiniteKernel.identity)\n    (policy : Policy) (emission : FiniteKernel State Outcome)\n    (hEvidence : 0 < emission.predictive belief outcome) :\n    0 < actionEvidence belief transition emission policy outcome",
         "statement_sha256": "40a0f74d026bc83c93f66b98c831a6578b9f23a9261207ff624c51bac7cfe53b"
@@ -100566,6 +102231,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100576,7 +102242,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.identity_forwardEvidence",
-        "source_line": 110,
+        "source_line": 111,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem identity_forwardEvidence [DecidableEq State]\n    (belief : FiniteLaw State) (outcome : Outcome)\n    (transition : FiniteKernel State State)\n    (hIdentity : transition = FiniteKernel.identity)\n    (emission : FiniteKernel State Outcome)\n    (hEvidence : 0 < emission.predictive belief outcome) :\n    0 < forwardEvidence belief transition emission outcome",
         "statement_sha256": "50a18a813f8fb3d0b7f124a410588db1beb5e7c6b12c06b365aa29bc55c1096a"
@@ -100680,6 +102346,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100690,7 +102357,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.loop_fixed_point_is_boltzmann",
-        "source_line": 525,
+        "source_line": 526,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem loop_fixed_point_is_boltzmann (precision : ℝ)\n    (model : GenerativeModel Policy State Outcome)\n    (support : FullSupport model) (energy : ℝ)\n    (hflat : ∀ policy, expectedFreeEnergy model policy = energy) :\n    policyPosterior precision model support = model.policyPrior",
         "statement_sha256": "b96225338200867a8addaa5e73ee3f472703b27d0b3029ce88902edbcd45039f"
@@ -100825,6 +102492,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100835,10 +102503,340 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.loop_invariant_surprisal_bound",
-        "source_line": 478,
+        "source_line": 479,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem loop_invariant_surprisal_bound [Nonempty Policy]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (outcome : Outcome)\n    (hEvidence : 0 < model.likelihood.predictive belief outcome)\n    (support : FullSupport (withInitialState model\n      (filteredBelief model belief outcome hEvidence))) :\n    -Real.log (model.likelihood.predictive belief outcome) ≤\n        perceptionVFE model belief outcome hEvidence belief ∧\n      perceptionVFE model belief outcome hEvidence belief =\n        -Real.log (model.likelihood.predictive belief outcome) +\n          finiteKL belief (filteredBelief model belief outcome hEvidence) ∧\n      expectedFreeEnergy\n          (withInitialState model (filteredBelief model belief outcome hEvidence))\n          (selectedPolicy model (filteredBelief model belief outcome hEvidence)) =\n        risk (withInitialState model (filteredBelief model belief outcome hEvidence))\n            (selectedPolicy model (filteredBelief model belief outcome hEvidence)) +\n          ambiguity\n            (withInitialState model (filteredBelief model belief outcome hEvidence))\n            (selectedPolicy model (filteredBelief model belief outcome hEvidence))",
         "statement_sha256": "c08d3359a69266322b0c68058eaeff95adfd67e39a4f95bea2e9a307bb2e10f7"
+      },
+      "FEP.PerceptionActionLoop.optimalTreeValue_eq_beliefFeedback": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty Action]",
+            "type_source": "Nonempty Action",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq Belief]",
+            "type_source": "DecidableEq Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "pomdp"
+            ],
+            "role": "typed_binder",
+            "source": "(pomdp : ReachableBeliefPOMDP Belief State Action Outcome)",
+            "type_source": "ReachableBeliefPOMDP Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "cost"
+            ],
+            "role": "typed_binder",
+            "source": "(cost : ℕ → Belief → Action → ℝ)",
+            "type_source": "ℕ → Belief → Action → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∀ (horizon : ℕ) (belief : Belief),\n      optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon belief =\n        beliefFeedbackValue pomdp cost\n          (optimalTreeAction (pomdpPolicyTreeModel pomdp cost)) horizon belief\n  | 0, _ => rfl\n  | horizon + 1, belief => by\n      rw [optimalTreeValue_eq_min]\n      change\n        cost horizon belief\n              (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon belief) +\n            ∑ outcome,\n              actionObservationLaw (pomdp.interpret belief) pomdp.transition\n                  pomdp.emission\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                    belief) outcome *\n                optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon\n                  (pomdp.update belief\n                    (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                      belief) outcome) =\n          cost horizon belief\n              (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon belief) +\n            ∑ nextBelief,\n              reachableBeliefKernel pomdp\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                    belief) belief nextBelief *\n                beliefFeedbackValue pomdp cost\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost)) horizon\n                  nextBelief\n      rw [reachableBeliefKernel_sum]\n      apply congrArg\n      apply Finset.sum_congr rfl\n      intro outcome _\n      rw [optimalTreeValue_eq_beliefFeedback pomdp cost horizon]\n\n/-- The sophisticated Bayesian recursion is the reachable-belief POMDP optimum:\nit never exceeds any belief-feedback policy's value and is attained by the\nBellman-optimal one. -/\ntheorem bayesSophisticatedValue_eq_pomdpOptimum [Nonempty Action] [DecidableEq Belief]\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (initial : Belief) :\n    (∀ (policy : ℕ → Belief → Action) (horizon : ℕ) (belief : Belief),\n      sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief ≤\n        beliefFeedbackValue (bayesReachablePOMDP model initial)\n          (fun _ belief action =>\n            expectedFreeEnergy (bayesGenerative model belief) action)\n          policy horizon belief) ∧\n      ∃ policy : ℕ → Belief → Action, ∀ (horizon : ℕ) (belief : Belief),\n        sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief =\n          beliefFeedbackValue (bayesReachablePOMDP model initial)\n            (fun _ belief action =>\n              expectedFreeEnergy (bayesGenerative model belief) action)\n            policy horizon belief",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "bayesSophisticatedValue_eq_pomdpOptimum",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_pomdpOptimum",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "statement_reference"
+          },
+          {
+            "candidates": [
+              "FEP.PolicyTrees.optimalTreeValue_eq_min"
+            ],
+            "identifier": "optimalTreeValue_eq_min",
+            "resolution": "unresolved lexical scope",
+            "role": "statement_reference"
+          },
+          {
+            "identifier": "reachableBeliefKernel_sum",
+            "qualified_name": "FEP.PerceptionActionLoop.reachableBeliefKernel_sum",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "statement_reference"
+          },
+          {
+            "identifier": "bayesEFETree_eq_pomdpTree",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesEFETree_eq_pomdpTree",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "bayesSophisticatedValue_eq_optimalTree",
+            "qualified_name": "FEP.PerceptionActionLoop.bayesSophisticatedValue_eq_optimalTree",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "optimalTreeValue_le_beliefFeedback",
+            "qualified_name": "FEP.PerceptionActionLoop.optimalTreeValue_le_beliefFeedback",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.optimalTreeValue_eq_beliefFeedback",
+        "source_line": 790,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem optimalTreeValue_eq_beliefFeedback [Nonempty Action] [DecidableEq Belief]\n    (pomdp : ReachableBeliefPOMDP Belief State Action Outcome)\n    (cost : ℕ → Belief → Action → ℝ) :\n    ∀ (horizon : ℕ) (belief : Belief),\n      optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon belief =\n        beliefFeedbackValue pomdp cost\n          (optimalTreeAction (pomdpPolicyTreeModel pomdp cost)) horizon belief\n  | 0, _ => rfl\n  | horizon + 1, belief => by\n      rw [optimalTreeValue_eq_min]\n      change\n        cost horizon belief\n              (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon belief) +\n            ∑ outcome,\n              actionObservationLaw (pomdp.interpret belief) pomdp.transition\n                  pomdp.emission\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                    belief) outcome *\n                optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon\n                  (pomdp.update belief\n                    (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                      belief) outcome) =\n          cost horizon belief\n              (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon belief) +\n            ∑ nextBelief,\n              reachableBeliefKernel pomdp\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost) horizon\n                    belief) belief nextBelief *\n                beliefFeedbackValue pomdp cost\n                  (optimalTreeAction (pomdpPolicyTreeModel pomdp cost)) horizon\n                  nextBelief\n      rw [reachableBeliefKernel_sum]\n      apply congrArg\n      apply Finset.sum_congr rfl\n      intro outcome _\n      rw [optimalTreeValue_eq_beliefFeedback pomdp cost horizon]\n\n/-- The sophisticated Bayesian recursion is the reachable-belief POMDP optimum:\nit never exceeds any belief-feedback policy's value and is attained by the\nBellman-optimal one. -/\ntheorem bayesSophisticatedValue_eq_pomdpOptimum [Nonempty Action] [DecidableEq Belief]\n    (model : BayesianBeliefModel Belief State Action Outcome)\n    (support : ∀ belief, FullSupport (bayesGenerative model belief))\n    (initial : Belief) :\n    (∀ (policy : ℕ → Belief → Action) (horizon : ℕ) (belief : Belief),\n      sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief ≤\n        beliefFeedbackValue (bayesReachablePOMDP model initial)\n          (fun _ belief action =>\n            expectedFreeEnergy (bayesGenerative model belief) action)\n          policy horizon belief) ∧\n      ∃ policy : ℕ → Belief → Action, ∀ (horizon : ℕ) (belief : Belief),\n        sophisticatedEFEValue (bayesSophisticatedModel model) horizon belief =\n          beliefFeedbackValue (bayesReachablePOMDP model initial)\n            (fun _ belief action =>\n              expectedFreeEnergy (bayesGenerative model belief) action)\n            policy horizon belief",
+        "statement_sha256": "0fc7c3712c63e7c01fa2c90144e4c091b3d89aa55121a05def192c62b49923f8"
+      },
+      "FEP.PerceptionActionLoop.optimalTreeValue_le_beliefFeedback": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Nonempty Action]",
+            "type_source": "Nonempty Action",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq Belief]",
+            "type_source": "DecidableEq Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "pomdp"
+            ],
+            "role": "typed_binder",
+            "source": "(pomdp : ReachableBeliefPOMDP Belief State Action Outcome)",
+            "type_source": "ReachableBeliefPOMDP Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "cost"
+            ],
+            "role": "typed_binder",
+            "source": "(cost : ℕ → Belief → Action → ℝ)",
+            "type_source": "ℕ → Belief → Action → ℝ",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "policy"
+            ],
+            "role": "typed_binder",
+            "source": "(policy : ℕ → Belief → Action)",
+            "type_source": "ℕ → Belief → Action",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∀ (horizon : ℕ) (belief : Belief),\n      optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon belief ≤\n        beliefFeedbackValue pomdp cost policy horizon belief\n  | 0, _ => le_rfl\n  | horizon + 1, belief => by\n      have hAction",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "candidates": [
+              "FEP.PolicyTrees.optimalTreeAction_le"
+            ],
+            "identifier": "optimalTreeAction_le",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "candidates": [
+              "FEP.PolicyTrees.optimalTreeValue_eq_min"
+            ],
+            "identifier": "optimalTreeValue_eq_min",
+            "resolution": "unresolved lexical scope",
+            "role": "proof_reference"
+          },
+          {
+            "identifier": "reachableBeliefKernel_sum",
+            "qualified_name": "FEP.PerceptionActionLoop.reachableBeliefKernel_sum",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.optimalTreeValue_le_beliefFeedback",
+        "source_line": 753,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem optimalTreeValue_le_beliefFeedback [Nonempty Action] [DecidableEq Belief]\n    (pomdp : ReachableBeliefPOMDP Belief State Action Outcome)\n    (cost : ℕ → Belief → Action → ℝ) (policy : ℕ → Belief → Action) :\n    ∀ (horizon : ℕ) (belief : Belief),\n      optimalTreeValue (pomdpPolicyTreeModel pomdp cost) horizon belief ≤\n        beliefFeedbackValue pomdp cost policy horizon belief\n  | 0, _ => le_rfl\n  | horizon + 1, belief => by\n      have hAction",
+        "statement_sha256": "f84155070b81b1958da27b4a722381409c78d9ee0c6831120cf853c6e9de7fe7"
       },
       "FEP.PerceptionActionLoop.perceptionActionKernel_apply": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -100955,6 +102953,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -100965,7 +102964,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perceptionActionKernel_apply",
-        "source_line": 221,
+        "source_line": 222,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perceptionActionKernel_apply [Nonempty Policy] [DecidableEq State]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (hEvidence : ∀ o : Outcome, 0 < model.likelihood.predictive belief o)\n    (outcome : Outcome) (state : State) :\n    perceptionActionKernel model belief hEvidence outcome state =\n      perceptionActionStep model belief outcome (hEvidence outcome) state",
         "statement_sha256": "f2c1799c42005a7904b20fa942f3ee7a510f550b5bd87c3604aa52cbd88643e4"
@@ -101075,6 +103074,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101085,7 +103085,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perceptionActionStep_eq",
-        "source_line": 195,
+        "source_line": 196,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perceptionActionStep_eq [Nonempty Policy] [DecidableEq State]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (outcome : Outcome)\n    (hEvidence : 0 < model.likelihood.predictive belief outcome) :\n    perceptionActionStep model belief outcome hEvidence =\n      (model.transition (selectedPolicy model\n        (filteredBelief model belief outcome hEvidence))).predictive\n        (filteredBelief model belief outcome hEvidence)",
         "statement_sha256": "d2f5d29aff399f3bad2b07d36d6b515f4ac74d6c2fa1ed99a13516ab5645f90b"
@@ -101179,6 +103179,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101189,7 +103190,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perceptionVFE_gap",
-        "source_line": 463,
+        "source_line": 464,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perceptionVFE_gap\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (outcome : Outcome)\n    (hEvidence : 0 < model.likelihood.predictive belief outcome) :\n    perceptionVFE model belief outcome hEvidence belief =\n      -Real.log (model.likelihood.predictive belief outcome) +\n        finiteKL belief (filteredBelief model belief outcome hEvidence)",
         "statement_sha256": "8d5b36d6f42b862269a63ad93d83873b0503ce5a9e560ded8dff43ed8cede79a"
@@ -101323,6 +103324,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101333,7 +103335,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perception_kl_decomposition",
-        "source_line": 359,
+        "source_line": 360,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perception_kl_decomposition\n    (model : GenerativeModel Policy State Outcome)\n    (actual reference : FiniteLaw State)\n    (hReference : ∀ s, 0 < reference s)\n    (hLikelihood : ∀ s o, 0 < model.likelihood s o) :\n    finiteKL actual reference =\n      finiteKL (model.likelihood.predictive actual)\n          (model.likelihood.predictive reference) +\n        ∑ o : Outcome, model.likelihood.predictive actual o *\n          finiteKL\n            (filteredBelief model actual o\n              (predictive_pos_of_fullLikelihood model actual hLikelihood o))\n            (filteredBelief model reference o\n              (predictive_pos_of_fullLikelihood model reference hLikelihood o))",
         "statement_sha256": "532e597b78fdba9d1fb76ecc8ac8fc36e5b6cbcdf893d34b54a38f38734f75be"
@@ -101447,6 +103449,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101457,7 +103460,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perception_native_kl_nonincrease",
-        "source_line": 415,
+        "source_line": 416,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perception_native_kl_nonincrease\n    [MeasurableSpace State] [MeasurableSpace Outcome]\n    [DiscreteMeasurableSpace State] [DiscreteMeasurableSpace Outcome]\n    (model : GenerativeModel Policy State Outcome)\n    (actual reference : FiniteLaw State) :\n    InformationTheory.klDiv\n        (FEP.NativeBlanket.embeddedLaw (model.likelihood.predictive actual))\n        (FEP.NativeBlanket.embeddedLaw (model.likelihood.predictive reference)) ≤\n      InformationTheory.klDiv (FEP.NativeBlanket.embeddedLaw actual)\n        (FEP.NativeBlanket.embeddedLaw reference)",
         "statement_sha256": "0f55d493a92abbf89b8b111ef3e093a1714e3d4f14c217b0971968e02277527c"
@@ -101573,6 +103576,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101583,7 +103587,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.perception_step_kl_nonincrease",
-        "source_line": 397,
+        "source_line": 398,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem perception_step_kl_nonincrease\n    (model : GenerativeModel Policy State Outcome)\n    (actual reference : FiniteLaw State)\n    (hReference : ∀ s, 0 < reference s)\n    (hLikelihood : ∀ s o, 0 < model.likelihood s o) :\n    ∑ o : Outcome, model.likelihood.predictive actual o *\n        finiteKL\n          (filteredBelief model actual o\n            (predictive_pos_of_fullLikelihood model actual hLikelihood o))\n          (filteredBelief model reference o\n            (predictive_pos_of_fullLikelihood model reference hLikelihood o)) ≤\n      finiteKL actual reference",
         "statement_sha256": "2c52fb7424dfc7c2664ab132a6e4a027d5b4140be466c6d964dec6ca153f6070"
@@ -101667,6 +103671,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101677,7 +103682,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.policyPosterior_eq_controlPosterior",
-        "source_line": 512,
+        "source_line": 513,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem policyPosterior_eq_controlPosterior (precision : ℝ)\n    (model : GenerativeModel Policy State Outcome)\n    (support : FullSupport model) :\n    policyPosterior precision model support =\n      controlPosterior model.policyPrior precision (expectedFreeEnergy model)",
         "statement_sha256": "174b041a17d49e4c248f306c58f5884e80c5bbf25c42afa98f6a9437ca9acc0b"
@@ -101781,6 +103786,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101791,7 +103797,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.posteriorKernel_joint_eq_swap",
-        "source_line": 322,
+        "source_line": 323,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem posteriorKernel_joint_eq_swap\n    (model : GenerativeModel Policy State Outcome) (prior : FiniteLaw State)\n    (hEvidence : ∀ o, 0 < model.likelihood.predictive prior o)\n    (o : Outcome) (s : State) :\n    (posteriorKernel model prior hEvidence).joint\n        (model.likelihood.predictive prior) (o, s) =\n      (model.likelihood.joint prior) (s, o)",
         "statement_sha256": "8658d70074bea2b21d40d85d5a6f767c6d4465d522972b80ee7c9dff28983e32"
@@ -101918,6 +103924,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -101928,7 +103935,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.posterior_pos_of_support",
-        "source_line": 253,
+        "source_line": 254,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem posterior_pos_of_support\n    (model : GenerativeModel Policy State Outcome) (reference : FiniteLaw State)\n    (hReference : ∀ s, 0 < reference s)\n    (hLikelihood : ∀ s o, 0 < model.likelihood s o) (o : Outcome) (s : State) :\n    0 < model.likelihood.posterior reference o\n      (predictive_pos_of_fullLikelihood model reference hLikelihood o) s",
         "statement_sha256": "a69348a350af8fdae181452aba30868a062571f25f65d76af5c486b8414eef96"
@@ -102041,6 +104048,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -102051,7 +104059,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.prediction_dobrushin_contraction",
-        "source_line": 435,
+        "source_line": 436,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem prediction_dobrushin_contraction [DecidableEq State]\n    (model : GenerativeModel Policy State Outcome) (policy : Policy)\n    {coefficient : ℝ}\n    (hBound : FEP.FiniteMarkovDynamics.HasDobrushinBound\n      (model.transition policy) coefficient)\n    (left right : FiniteLaw State) :\n    FEP.FiniteMarkovDynamics.totalVariation\n        ((model.transition policy).predictive left)\n        ((model.transition policy).predictive right) ≤\n      coefficient * FEP.FiniteMarkovDynamics.totalVariation left right",
         "statement_sha256": "6451690ba1b8dae0a59b27aa2db01c320c5859f8b8c9e5e5d8ac70265aa9e220"
@@ -102145,6 +104153,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -102155,10 +104164,158 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.predictive_pos_of_fullLikelihood",
-        "source_line": 233,
+        "source_line": 234,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem predictive_pos_of_fullLikelihood\n    (model : GenerativeModel Policy State Outcome) (prior : FiniteLaw State)\n    (hLikelihood : ∀ s o, 0 < model.likelihood s o) (o : Outcome) :\n    0 < model.likelihood.predictive prior o",
         "statement_sha256": "2ad7b60b70f5fdd654725f3cdaa9e405e9362d39c1b31172694803a95931915e"
+      },
+      "FEP.PerceptionActionLoop.reachableBeliefKernel_sum": {
+        "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
+        "binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[DecidableEq Belief]",
+            "type_source": "DecidableEq Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "pomdp"
+            ],
+            "role": "typed_binder",
+            "source": "(pomdp : ReachableBeliefPOMDP Belief State Action Outcome)",
+            "type_source": "ReachableBeliefPOMDP Belief State Action Outcome",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "action"
+            ],
+            "role": "typed_binder",
+            "source": "(action : Action)",
+            "type_source": "Action",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "belief"
+            ],
+            "role": "typed_binder",
+            "source": "(belief : Belief)",
+            "type_source": "Belief",
+            "visibility": "explicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "continuation"
+            ],
+            "role": "typed_binder",
+            "source": "(continuation : Belief → ℝ)",
+            "type_source": "Belief → ℝ",
+            "visibility": "explicit"
+          }
+        ],
+        "conclusion": "∑ nextBelief,\n        reachableBeliefKernel pomdp action belief nextBelief *\n          continuation nextBelief =\n      ∑ outcome,\n        actionObservationLaw (pomdp.interpret belief) pomdp.transition\n            pomdp.emission action outcome *\n          continuation (pomdp.update belief action outcome)",
+        "context_binders": [
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Policy",
+              "State",
+              "Outcome"
+            ],
+            "role": "typed_binder",
+            "source": "{Policy State Outcome : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Policy]",
+            "type_source": "Fintype Policy",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype State]",
+            "type_source": "Fintype State",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Outcome]",
+            "type_source": "Fintype Outcome",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [
+              "Belief",
+              "Action"
+            ],
+            "role": "typed_binder",
+            "source": "{Belief Action : Type*}",
+            "type_source": "Type*",
+            "visibility": "implicit"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Belief]",
+            "type_source": "Fintype Belief",
+            "visibility": "instance"
+          },
+          {
+            "hypothesis_status": "source syntax; proposition elaboration not performed",
+            "names": [],
+            "role": "instance_requirement",
+            "source": "[Fintype Action]",
+            "type_source": "Fintype Action",
+            "visibility": "instance"
+          }
+        ],
+        "declaration_mentions": [
+          {
+            "identifier": "finiteLawMapSum",
+            "qualified_name": "FEP.PerceptionActionLoop.finiteLawMapSum",
+            "resolution": "exact or same-namespace source identifier",
+            "role": "proof_reference"
+          }
+        ],
+        "dependency_boundary": "Lexical declaration mentions and import context, not elaborated or minimal proof dependencies. Unresolved names remain unresolved.",
+        "import_context": [
+          "FepSketches.active_inference",
+          "FepSketches.controlled_markov",
+          "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
+          "FepSketches.temporal_inference",
+          "FepSketches.continuous_time_markov"
+        ],
+        "line_coordinate_kind": "formal_resource_file",
+        "namespace": "FEP.PerceptionActionLoop",
+        "namespace_variable_context": [
+          "{Policy State Outcome : Type*}\n  [Fintype Policy] [Fintype State] [Fintype Outcome]",
+          "{Belief Action : Type*} [Fintype Belief] [Fintype Action]"
+        ],
+        "preceding_scope_directives": [],
+        "qualified_name": "FEP.PerceptionActionLoop.reachableBeliefKernel_sum",
+        "source_line": 738,
+        "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
+        "statement": "theorem reachableBeliefKernel_sum [DecidableEq Belief]\n    (pomdp : ReachableBeliefPOMDP Belief State Action Outcome)\n    (action : Action) (belief : Belief) (continuation : Belief → ℝ) :\n    ∑ nextBelief,\n        reachableBeliefKernel pomdp action belief nextBelief *\n          continuation nextBelief =\n      ∑ outcome,\n        actionObservationLaw (pomdp.interpret belief) pomdp.transition\n            pomdp.emission action outcome *\n          continuation (pomdp.update belief action outcome)",
+        "statement_sha256": "6c7c99b8047d715e8b45304089d4dc523af0d9c2986327b2ed2b5e3e6d20b49a"
       },
       "FEP.PerceptionActionLoop.selectedPolicy_minimizes": {
         "analysis_boundary": "Source-grounded semantic analysis: exact Lean source slices and lexical roles, joined to maintained review prose. This is neither a certified translation, Lean elaboration, a minimal kernel dependency graph, nor LLM execution. A proposition-looking binder is not classified as a proved hypothesis by this parser.",
@@ -102256,6 +104413,7 @@
           "FepSketches.active_inference",
           "FepSketches.controlled_markov",
           "FepSketches.finite_markov_dynamics",
+          "FepSketches.policy_tree",
           "FepSketches.temporal_inference",
           "FepSketches.continuous_time_markov"
         ],
@@ -102266,7 +104424,7 @@
         ],
         "preceding_scope_directives": [],
         "qualified_name": "FEP.PerceptionActionLoop.selectedPolicy_minimizes",
-        "source_line": 65,
+        "source_line": 66,
         "source_owner": "src/fep_lean/formal/perception_action_loop.lean",
         "statement": "theorem selectedPolicy_minimizes [Nonempty Policy]\n    (model : GenerativeModel Policy State Outcome) (belief : FiniteLaw State)\n    (alternative : Policy) :\n    expectedFreeEnergy (withInitialState model belief)\n        (selectedPolicy model belief) ≤\n      expectedFreeEnergy (withInitialState model belief) alternative",
         "statement_sha256": "1e90ac58e8245e6cf459e59b40407e32742d64da55b4db5bb577771a4151e331"
