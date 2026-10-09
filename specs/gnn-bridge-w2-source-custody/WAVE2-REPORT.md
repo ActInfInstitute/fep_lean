@@ -102,6 +102,6 @@ an approval.
 - [Q5 proof](../gnn-bridge-q5-artifact-proof/REPORT.md)
 - [Q6 proof](../gnn-bridge-q6-activeinference-artifact/REPORT.md)
 - [Q7 proof](../gnn-bridge-q7-continuous-ou-proof/REPORT.md)
-- [H2 terminal receipt](../horizon-2-smooth-stochastic/readiness/terminal-acceptance.json)
+- [H2 terminal receipt](../done/horizon-2-smooth-stochastic/readiness/terminal-acceptance.json)
 - [H3.G0 eligibility boundary](../h3-reference-study/README.md)
 - [Current source pin](source-pin.json)

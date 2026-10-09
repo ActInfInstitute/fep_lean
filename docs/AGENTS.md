@@ -10,9 +10,17 @@ documentation-specific gates from the project root are:
 
 ```bash
 uv run python docs/check_links.py --strict --include-root
-uv run python docs/md_hygiene.py --strict
+uv run python docs/md_hygiene.py --strict --include-root
 uv run python docs/xref_audit.py
 ```
+
+`--include-root` widens `check_links.py` and `md_hygiene.py` from `docs/**` to
+every root `*.md`, every `AGENTS.md` / `README.md` under `src/`, `tests/`,
+`config/`, `scripts/`, `lean/`, and `manuscript/`, and the non-historical
+documents under `specs/`. Historical trees are explicitly excluded because
+they are retained receipts: `specs/done/**`, `specs/**/evidence/**`,
+`specs/**/gnn_output*`, `specs/**/gnn-input`, and `specs/**/fixtures`. Repair a
+broken link there by annotating the exclusion, never by rewriting the file.
 
 Use `uv run fep-lean catalogue` to materialize manuscript variables and the
 unified appendix before checking manuscript cross-references.
