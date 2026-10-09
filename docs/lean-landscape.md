@@ -9,7 +9,7 @@ roster and roles live in the manifest; this page projects them for navigation.
 
 - **Layer N** modules import only modules in strictly lower layers, so layers
   build in order and any module in layer N can be read after its predecessors.
-- Topic bodies (155 catalogue rows) live in family modules under
+- Topic bodies (168 catalogue rows) live in family modules under
   [`src/fep_lean/catalogue/bodies/`](../src/fep_lean/catalogue/bodies/), not
   here; the aggregate `fep_all.lean` covers all of them.
 - Regenerate with `uv run python scripts/_maint_build_lean_landscape.py`;

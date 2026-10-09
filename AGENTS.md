@@ -18,6 +18,27 @@ invariant, formal Lean identifiers, and explicit assumptions define the row's
 Compilation without `sorry` establishes that exact Lean body only; it does not
 promote the semantic disposition or prove the full FEP concept.
 
+## Which document is current
+
+| Document | Role | Status |
+| --- | --- | --- |
+| [README.md](README.md) | Project overview, first run, release line, contracts | Authoritative |
+| [AGENTS.md](AGENTS.md) | This agent contract; per-directory `AGENTS.md` files refine it | Authoritative |
+| [CLAUDE.md](CLAUDE.md) | Claude Code entry point that imports this contract | Authoritative (pointer) |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Environment, check tiers, repository rules, PR conventions | Authoritative |
+| [TODO.md](TODO.md) | Canonical open-only backlog, one linked Issue per row | Authoritative |
+| [CHANGELOG.md](CHANGELOG.md) | Release changes and their evidence boundary | Authoritative |
+| [docs/release.md](docs/release.md) | Release procedure and gate | Authoritative |
+| [SPEC.md](SPEC.md) | Functional specification of the validated catalogue | Authoritative |
+| [ISA.md](ISA.md) | Ideal state, anti-criteria and evidence gates (`status: active`, updated 2026-10-02) | Authoritative; dated in its front matter |
+| [PAI.md](PAI.md) | Agent command interface | Authoritative |
+| [HANDOFF.md](HANDOFF.md) | Next-reviewer protocol and evidence receipt, dated 2026-10-07 | Dated snapshot |
+| [SCOPE-2026-09-30.md](SCOPE-2026-09-30.md) | Retained preimplementation baseline of that day's scope review | Dated snapshot |
+| [SCOPE-2026-10-08.md](SCOPE-2026-10-08.md) | Unfiled improvement candidates; a candidate becomes live work only when it enters `TODO.md` with an Issue | Dated snapshot |
+
+When a snapshot and an authoritative document disagree, the authoritative
+document wins.
+
 ## Source of truth
 
 - `config/catalogue_metadata.yaml` — schema-2 roster seal, family membership,
